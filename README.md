@@ -1,0 +1,1 @@
+mvn tomcat7:run [-Dmaven.tomcat.port=<port no.>] (In case 8080 is busy]
