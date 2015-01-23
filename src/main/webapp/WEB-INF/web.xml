@@ -15,6 +15,24 @@
 	</listener>
 
 	<filter>
+		<filter-name>Set Character Encoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value><!-- 强制进行转码 -->
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>Set Character Encoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!--
+	<filter>
 		<filter-name>csrfFilter</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 		<async-supported>true</async-supported>
@@ -23,7 +41,9 @@
 		<filter-name>csrfFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-    
+
+-->
+
 	<!-- Processes application requests -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>
@@ -43,7 +63,7 @@
 
 	<!-- Disables Servlet Container welcome file handling. Needed for compatibility with Servlet 3.0 and Tomcat 7.0 -->
 	<welcome-file-list>
-		<welcome-file></welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>	
 
 </web-app>
