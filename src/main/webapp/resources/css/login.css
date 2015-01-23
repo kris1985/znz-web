@@ -1,0 +1,51 @@
+body{background:url(../img/bg.jpg)}
+.form-signin {
+    max-width: 220px;float:right;margin-right:40px;
+    padding: 15px;
+    
+	border: 6px solid #ccc;
+border-radius: 8px;
+background: #ccc;
+filter:alpha(opacity=90); /*IE滤镜，透明度50%*/
+-moz-opacity:0.9; /*Firefox私有，透明度50%*/
+opacity:0.9;
+margin-top:120px
+}
+
+#userName,#pwd{height:38px;font-size:12px}
+.checkbox label{font-size:12px}
+
+
+#loginBtn:hover{background-color: red;
+border-color: red;}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: normal;
+}
+
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+	margin-top: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

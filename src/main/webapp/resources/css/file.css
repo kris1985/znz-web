@@ -1,0 +1,45 @@
+body{color:black;font-size:12px;}
+.jstree{margin-left: 5px;}
+.jstree-default .jstree-anchor{color:#191919}
+.jstree-themeicon{width:0px}
+.jstree-anchor .jstree-icon {width:0px}
+.jstree-default .jstree-clicked {
+background: #0186e5;color:#fff;
+}
+.jstree-default  .jstree-hovered{
+font-weight:bold
+}
+
+.jstree-default .jstree-wholerow-clicked {
+background: #0186e5;
+color:#fff;
+}
+
+.top_bar{
+margin-bottom:5px;font-size:12px;
+}
+.nav_bar{border:1px solid #ccc;padding:4px;line-height:20px;
+
+}
+.nav_bar .item{cursor:pointer;margin:0 5px;}
+.nav_bar .item:hover{color:#0186e5;font-weight:bold}
+.glyphicon{font-size:12px;font-weight:normal}
+.search_div{float:right;border:1px solid #ccc;padding:3px;line-height:20px;width:12%}
+.folder_wrap{width:270px;height:300px;
+border:2px solid #fff;float:left;margin-right:5px;
+margin-bottom:10px;padding:5px;cursor:pointer;
+}
+.img_wrap{
+border:2px solid #fff;float:left;margin-right:20px;
+margin-bottom:10px;padding:5px;cursor:pointer;width:250px;
+}
+.img_wrap .img_txt{font-size:12px;text-align:center;margin-top:10px}
+.img_wraps:hover, .folder_wraps:hover{
+border:2px solid #b8d6fb;
+border-radius: 3px;
+background: #e1effc;
+filter:alpha(opacity=80); /*IE滤镜，透明度50%*/
+-moz-opacity:0.8; /*Firefox私有，透明度50%*/
+opacity:0.8;}
+.folder_wrap .folder_img{width:256px;}
+.folder_wrap .folder_txt{font-size:12px;text-align:center}
