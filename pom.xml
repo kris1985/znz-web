@@ -211,6 +211,7 @@
             <artifactId>zt-zip</artifactId>
             <version>1.8</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
@@ -221,6 +222,7 @@
             <artifactId>jetty-webapp</artifactId>
             <version>8.0.4.v20111024</version>
         </dependency>
+        -->
         <!-- Test -->
         <dependency>
             <groupId>org.springframework</groupId>

@@ -35,6 +35,7 @@ public class ImageUtil {
      */
     public  static void thumbnailImage1(File imgFile, int w, int h, String prevfix, boolean force){
         if(imgFile.exists()){
+            System.out.println("-------------imgFile-----------"+imgFile.getAbsolutePath());
             try {
                 // ImageIO 支持的图片类型 : [BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG, JPEG, WBMP, GIF, gif]
                 String types = Arrays.toString(ImageIO.getReaderFormatNames()).replace("]", ",");
