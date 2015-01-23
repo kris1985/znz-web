@@ -12,26 +12,27 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
+
     <title>指南针</title>
-<link href="<c:url value="/resources/css/default.css"/>" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<c:url value="/resources/js/swfupload.js" />"></script>
-<script type="text/javascript" src="js/swfupload.queue.js"></script>
-<script type="text/javascript" src="js/fileprogress.js"></script>
-<script type="text/javascript" src="js/handlers.js"></script>
+<link href="/znz-web/resources/css/swf.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/znz-web/resources/js/swfupload.js" /></script>
+<script type="text/javascript" src="/znz-web/resources/js/swfupload.queue.js"></script>
+<script type="text/javascript" src="/znz-web/resources/js/fileprogress.js"></script>
+<script type="text/javascript" src="/znz-web/resources/js/handlers.js"></script>
 <script type="text/javascript">
 		var swfu;
 
 		window.onload = function() {
 			var settings = {
-				flash_url : "swfupload/swfupload.swf",
-				upload_url: "/upload.php",
+				flash_url : "/znz-web/resources/swfupload.swf",
+				upload_url: "/znz-web/admin/file/upload",
 				post_params: {"PHPSESSID" : ""},
 				file_size_limit : "100 MB",
 				file_types : "*.*",
 				file_types_description : "All Files",
 				file_upload_limit : 10,  //配置上传个数
 				file_queue_limit : 0,
-				file_post_name : 'Filedata',
+				file_post_name : 'files',
 				custom_settings : {
 					progressTarget : "fsUploadProgress",
 					cancelButtonId : "btnCancel"
@@ -70,7 +71,7 @@
 </div>
 
 <div id="content">
-	<form id="form1" action="index.php" method="post" enctype="multipart/form-data">
+	<form id="form1" action="/znz-web/admin/file/update" method="post" enctype="multipart/form-data">
 		<p>点击“浏览”按钮，选择您要上传的文档文件后，系统将自动上传并在完成后提示您。</p>
 		<p>请勿上传包含中文文件名的文件！</p>
 		<div class="fieldset flash" id="fsUploadProgress">

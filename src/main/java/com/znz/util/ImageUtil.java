@@ -33,7 +33,7 @@ public class ImageUtil {
      * @param prevfix    生成缩略图的前缀
      * @param force        是否强制按照宽高生成缩略图(如果为false，则生成最佳比例缩略图)
      */
-    public void thumbnailImage1(File imgFile, int w, int h, String prevfix, boolean force){
+    public  static void thumbnailImage1(File imgFile, int w, int h, String prevfix, boolean force){
         if(imgFile.exists()){
             try {
                 // ImageIO 支持的图片类型 : [BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG, JPEG, WBMP, GIF, gif]
@@ -80,29 +80,32 @@ public class ImageUtil {
         }
     }
     
-    public void thumbnailImage(File dir, int w, int h, String prevfix, boolean force){
-    	File[] files = dir.listFiles();
+    public static void thumbnailImage(File file, int w, int h, String prevfix, boolean force){
+         if(!file.isDirectory()){
+             thumbnailImage1(file, w, h, prevfix, force);
+         }
+    	  File[] files = file.listFiles();
     	  if(files==null)return ;
     	  for (File f : files) {
               if(f.isDirectory()){// 判断是否文件夹
-            	  thumbnailImage(f,w,h,prevfix,force);
+            	  thumbnailImage(f, w, h, prevfix, force);
               }else{
-            	  thumbnailImage1(f, w, h, prevfix, force);
+                  thumbnailImage1(file, w, h, prevfix, force);
               }
           }
       
     }
     
-    public void thumbnailImage(String imagePath, int w, int h, String prevfix, boolean force){
+    public static void thumbnailImage(String imagePath, int w, int h, String prevfix, boolean force){
         File srcImg = new File(imagePath);
         thumbnailImage(srcImg, w, h, prevfix, force);
     }
     
-    public void thumbnailImage(String imagePath, int w, int h, boolean force){
+    public static void thumbnailImage(String imagePath, int w, int h, boolean force){
         thumbnailImage(imagePath, w, h, DEFAULT_THUMB_PREVFIX, DEFAULT_FORCE);
     }
     
-    public void thumbnailImage(String imagePath, int w, int h){
+    public static void thumbnailImage(String imagePath, int w, int h){
         thumbnailImage(imagePath, w, h, DEFAULT_FORCE);
     }
 }
