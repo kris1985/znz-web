@@ -4,7 +4,7 @@ right: 20px;
 width: 180px;
 z-index: 9999;
 }
-.skin ul li{float:left;display:block;width:16px;height:16px;margin-right:10px;text-indent:-9999px;
+.skin ul li{float:left;display:block;width:16px;height:16px;margin-right:10px;text-indent:-9999px;border:1px solid #00AEEF;
 cursor:pointer}
 
 .album{
@@ -25,7 +25,7 @@ cursor:pointer}
 	z-index:1;
 	margin:0 auto;
 	/**height:500px;**/
-	height:600px;
+	
 	overflow:hidden;
 }
 
@@ -35,7 +35,7 @@ cursor:pointer}
 	margin:0 auto;height:600px;
 	/**height:500px;**/
 	text-align:center;
-	overflow:hidden;border: 0px solid #fff;
+	overflow:hidden;
 }
 
 .album-image{
@@ -106,7 +106,7 @@ cursor:pointer}
 	line-height:60px;
 	font-size:100px;
 	color:#999;
-	background-color:#333;
+	font-size:130px;
 	opacity: 0.7;
 	filter:alpha(opacity=70);
 	text-decoration:none;
@@ -125,7 +125,7 @@ cursor:pointer}
 	line-height:60px;
 	font-size:100px;
 	color:#999;
-	background-color:#333;
+	font-size:130px;
 	opacity: 0.7;
 	filter:alpha(opacity=70);
 	text-decoration:none;
@@ -134,8 +134,8 @@ cursor:pointer}
 }
 
 .album-image-btn-prev:hover,.album-image-btn-next:hover{
-	color:#FFF;
-	background-color:#000;
+	color:#057BDF;
+	
 }
 
 .album-image-loading-overlay{
@@ -165,12 +165,12 @@ cursor:pointer}
 
 .album-carousel{
 	margin:0 auto;margin-top:2px;
-	width:980px;
+	width: 100%;
 	height:80px;
 	overflow:hidden;
 	position:fixed;left:50%;
-	margin-left:-490px;
-bottom: 60px;z-index:999;
+	margin-left:-50%;
+bottom: 50px;z-index:1999;
 }
 
 .album-carousel-btn-prev:link,.album-carousel-btn-prev:visited,.album-carousel-btn-prev:hover{
@@ -209,7 +209,7 @@ bottom: 60px;z-index:999;
 	z-index:1;
 	float:left;
 	margin:0;
-	width:880px;
+	width:94%;
 	height:80px;
 	background-color:#FFF;
 	overflow:hidden;
@@ -305,6 +305,7 @@ bottom: 60px;z-index:999;
 }
 
 #album-image{position: absolute;top:50%;left:50%;cursor: pointer;}
-
-.bs-glyphicons-list li{float:left;margin-right:30px;text-align:center;cursor:pointer}
-.bs-glyphicons-list li:hover{font-weight:bold}
+.bs-glyphicons-list{margin-top:-10px}
+.fixedBtns li{float:left;margin-right:30px;text-align:center;cursor:pointer;color:#ffffff}
+.fixedBtns li:hover{font-weight:bold;color:#057BDF}
+..bs-glyphicons-list{margin:0;margin-top:5px;}

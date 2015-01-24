@@ -4,5 +4,9 @@
  pageContext.setAttribute("basePath", request.getServletContext().getContextPath());
 %>
 <script>
- var basePath = <%= request.getServletContext().getContextPath()%>
+ var basePath = '<%= request.getServletContext().getContextPath()%>';
+
+ function getContextPath(){
+    return basePath;
+ }
 </script>

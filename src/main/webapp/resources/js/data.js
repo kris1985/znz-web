@@ -1,39 +1,10 @@
-﻿DATA={
+﻿var basePath = getContextPath();
+DATA={
 	menu:[{//一级菜单
 		menuid:'m001',
 		name:'主页',
 		code:'m001',
 		icon:'images/home.png'
-	},{
-		menuid:'m002',
-		name:'邮件',
-		code:'m002',
-		icon:'images/email.png'
-	},{
-		menuid:'m003',
-		name:'文件夹',
-		code:'m003',
-		icon:'images/portfolio.png'
-	},{
-		menuid:'m004',
-		name:'音乐',
-		code:'m004',
-		icon:'images/music.png'
-	},{
-		menuid:'m005',
-		name:'视频',
-		code:'m005',
-		icon:'images/video.png'
-	},{
-		menuid:'m006',
-		name:'备忘录',
-		code:'m006',
-		icon:'images/history.png'
-	},{
-		menuid:'m007',
-		name:'日历',
-		code:'m007',
-		icon:'images/calendar.png'
 	},{
 		menuid:'m008',
 		name:'RSS',
@@ -91,7 +62,7 @@
 			appid:'18',
 			icon:'friendgroup.png',
 			name:'用户管理',
-			url:'userList.html',
+			url:basePath+'/admin/user/users',
 			sonMenu:"[]",
 			asc:6
 		},
@@ -114,7 +85,7 @@
 			appid:'514',
 			icon:'folder_o.png',
 			name:'资料管理',
-			url:'file/list',
+			url:'files.html',
 			width:'1000',
 			sonMenu:"[]",
 			asc:8

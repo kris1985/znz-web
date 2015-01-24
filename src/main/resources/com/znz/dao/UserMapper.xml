@@ -22,33 +22,42 @@
     user_id, user_name, pwd, company, limit_ip_flag, limit_ips, access_flag, max_download_times, 
     download_per_day, download_total, phone, create_time, update_time, session_id, user_type
   </sql>
-  <!--
+  <!---->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from t_user
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
--->
+
   <select id="selectByUser" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from t_user
-    where user_name = #{userId,jdbcType=INTEGER}
+    where user_name = #{user_name,jdbcType=INTEGER}
   </select>
+
+
+    <select id="selectAllUser" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from t_user
+        where user_type = #{userType,jdbcType=INTEGER} order by user_id desc;
+    </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_user
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.znz.model.User" >
-    insert into t_user (user_id, user_name, pwd, 
+  <insert id="insert" parameterType="com.znz.model.User" useGeneratedKeys="true" keyProperty="user_id">
+
+    insert into t_user ( user_name, pwd,
       company, limit_ip_flag, limit_ips, 
       access_flag, max_download_times, download_per_day, 
       download_total, phone, create_time, 
       update_time, session_id, user_type
       )
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{limitIpFlag,jdbcType=INTEGER}, #{limitIps,jdbcType=VARCHAR}, 
       #{accessFlag,jdbcType=INTEGER}, #{maxDownloadTimes,jdbcType=INTEGER}, #{downloadPerDay,jdbcType=INTEGER}, 
       #{downloadTotal,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 

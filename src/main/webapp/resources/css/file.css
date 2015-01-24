@@ -18,10 +18,10 @@ color:#fff;
 .top_bar{
 margin-bottom:5px;font-size:12px;
 }
-.nav_bar{border:1px solid #ccc;padding:4px;line-height:20px;
+.nav_bar{border:1px solid #ccc;padding:4px;border-radius: 4px;height: 32px;
 
 }
-.nav_bar .item{cursor:pointer;margin:0 5px;}
+.nav_bar .item{cursor:pointer;margin:0 5px;padding:0;}
 .nav_bar .item:hover{color:#0186e5;font-weight:bold}
 .glyphicon{font-size:12px;font-weight:normal}
 .search_div{float:right;border:1px solid #ccc;padding:3px;line-height:20px;width:12%}

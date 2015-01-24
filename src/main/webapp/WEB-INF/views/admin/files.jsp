@@ -173,35 +173,35 @@ $(function(){
 			</div>
 
 			<div class="img_wrap">
-				<div class="pic_img"><a href="album.html" target="_blank"><img src="img/test5.JPG" width="230" height="220"></a> </div>
+				<div class="pic_img"><a href="album.html" target="_blank"><img src="img/demo/高靴140324200nVIP时装_017.jpg" width="230" height="220"></a> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 			<div class="img_wrap">
-				<div class="pic_img"><img src="img/test2.jpg" width="230" height="220"> </div>
+				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_018.jpg" width="230" height="220"> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 			<div class="img_wrap">
-				<div class="pic_img"><img src="img/test3.jpg" width="230" height="220"> </div>
+				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_019.jpg" width="230" height="220"> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 			<div class="img_wrap">
-				<div class="pic_img"><img src="img/test4.jpg" width="230" height="220"> </div>
+				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_020.jpg" width="230" height="220"> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 			<div class="img_wrap">
-				<div class="pic_img"><img src="img/test1.jpg" width="230" height="220"> </div>
+				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_021.jpg" width="230" height="220"> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 			<div class="img_wrap">
-				<div class="pic_img"><img src="img/test2.jpg" width="230" height="220"> </div>
+				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_022.jpg" width="230" height="220"> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 			<div class="img_wrap">
-				<div class="pic_img"><img src="img/test3.jpg" width="230" height="220"> </div>
+				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_023.jpg" width="230" height="220"> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 			<div class="img_wrap">
-				<div class="pic_img"><img src="img/test4.jpg" width="230" height="220"> </div>
+				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_024.jpg" width="230" height="220"> </div>
 				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
 			</div>
 	</div>
@@ -216,24 +216,33 @@ $(function(){
 						</div>
 		</div>
 		-->
-					<div class=" col-md-1"  style="margin-left: -22px;
-margin-right: 22px;margin-top:7px">
-						<img src="img/logo.png" height="28">
+
+
+
+
+
+		<div style="width:100%;position:relative;height:40px">
+			<div class="" style="width:105px;height;28px;position:absolute;left:1px;top:-4px">
+							<img src="img/logo2.jpg" height="45">
+			</div>
+			<div style="position:absolute;left:160px;top:0">
+				<div class="nav_bar" style="float:left;width:80%" >
+					<span class="item">指南针鞋讯女鞋</span>
+					<span class="path_arrow"><img src="img/path_arrow.png"></span>
+					<span class="item">国内女鞋vip</span>
+					<span class="path_arrow"><img src="img/path_arrow.png"></span><span class="item">女凉 女拖</span>
+				 </div>
+				 <div class="" style="float:right;width:19%;">
+					<div class="input-group">
+					  <input type="text" class="form-control" placeholder="搜索" style="height:32px">
+
+					  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 					</div>
-						<div class="nav_bar col-md-8" style="float:left;" >
-							<span class="item">指南针鞋讯女鞋</span>
-							<span class="path_arrow"><img src="img/path_arrow.png"></span>
-							<span class="item">国内女鞋vip</span>
-							<span class="path_arrow"><img src="img/path_arrow.png"></span><span class="item">女凉 女拖</span>
-						 </div>
+				 </div>
 
-					 <div class="col-md-3">
-						<div class="input-group">
-						  <input type="text" class="form-control" placeholder="搜索">
+		   </div>
 
-						  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-						</div>
-					 </div>
+		</div>
 
 
 	</div>
@@ -350,5 +359,6 @@ margin-right: 22px;margin-top:7px">
 });
 
 	</script>
+
 	</body>
 </html>
