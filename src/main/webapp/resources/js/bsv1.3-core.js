@@ -1398,7 +1398,7 @@ appIcon_t1 = appIcon_t0.extend({
 		});
 		appIcon.append($("<img>",{
 			alt:this.app.name ,
-			src:'icon/'+this.app.icon,//图片路径-------------------------------------------------------------------------------------------
+			src:'/znz-web/resources/icon/'+this.app.icon,//图片路径-------------------------------------------------------------------------------------------
 			"class":"appButton_appIconImg",
 			id:'icon_app_'+this.app.appid+'_'+this.app.asc+'_img'
 		
@@ -1486,7 +1486,7 @@ appIcon_t2 = appIcon_t0.extend({
 		});
 		appIcon.append($("<img>",{
 			alt:this.sApp.name ,
-			src:'icon/'+this.sApp.icon,
+			src:'/znz-web/resources/icon/'+this.sApp.icon,
 			"class":"appButton_appIconImg",
 			id:'icon_app_'+this.sApp.appid+'_'+this.sApp.asc+'_img'
 		

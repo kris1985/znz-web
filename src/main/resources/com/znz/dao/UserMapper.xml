@@ -15,7 +15,7 @@
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="session_id" property="sessionId" jdbcType="INTEGER" />
+    <result column="session_id" property="sessionId" jdbcType="VARCHAR" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -52,7 +52,7 @@
       #{company,jdbcType=VARCHAR}, #{limitIpFlag,jdbcType=INTEGER}, #{limitIps,jdbcType=VARCHAR}, 
       #{accessFlag,jdbcType=INTEGER}, #{maxDownloadTimes,jdbcType=INTEGER}, #{downloadPerDay,jdbcType=INTEGER}, 
       #{downloadTotal,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER}
+      #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.znz.model.User" >
@@ -145,7 +145,7 @@
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="sessionId != null" >
-        #{sessionId,jdbcType=INTEGER},
+        #{sessionId,jdbcType=VARCHAR},
       </if>
       <if test="userType != null" >
         #{userType,jdbcType=INTEGER},
@@ -192,7 +192,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="sessionId != null" >
-        session_id = #{sessionId,jdbcType=INTEGER},
+        session_id = #{sessionId,jdbcType=VARCHAR},
       </if>
       <if test="userType != null" >
         user_type = #{userType,jdbcType=INTEGER},
@@ -214,7 +214,7 @@
       phone = #{phone,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      session_id = #{sessionId,jdbcType=INTEGER},
+      session_id = #{sessionId,jdbcType=VARCHAR},
       user_type = #{userType,jdbcType=INTEGER}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>

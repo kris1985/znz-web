@@ -1,5 +1,7 @@
 package com.znz.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,6 +15,7 @@ import javax.imageio.ImageIO;
 /**
  * 生产缩略图工具类
  */
+@Slf4j
 public class ImageUtil {
 
 	
@@ -35,7 +38,6 @@ public class ImageUtil {
      */
     public  static void thumbnailImage1(File imgFile, int w, int h, String prevfix, boolean force){
         if(imgFile.exists()){
-            System.out.println("-------------imgFile-----------"+imgFile.getAbsolutePath());
             try {
                 // ImageIO 支持的图片类型 : [BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG, JPEG, WBMP, GIF, gif]
                 String types = Arrays.toString(ImageIO.getReaderFormatNames()).replace("]", ",");
@@ -45,10 +47,9 @@ public class ImageUtil {
                     suffix = imgFile.getName().substring(imgFile.getName().lastIndexOf(".") + 1);
                 }// 类型和图片后缀全部小写，然后判断后缀是否合法
                 if(suffix == null || types.toLowerCase().indexOf(suffix.toLowerCase()+",") < 0){
-                    System.out.println("Sorry, the image suffix is illegal. the standard image suffix is {}." + types);
+                    log.error("Sorry, the image suffix is illegal. the standard image suffix is {}.",types);
                     return ;
                 }
-                System.out.println("target image's size, width:"+w+" height:"+h);
                 Image img = ImageIO.read(imgFile);
                 // 根据原图与要求的缩略图比例，找到最合适的缩略图比例
                 if(!force){
@@ -57,12 +58,12 @@ public class ImageUtil {
                     if((width*1.0)/w < (height*1.0)/h){
                         if(width > w){
                             h = Integer.parseInt(new java.text.DecimalFormat("0").format(height * w/(width*1.0)));
-                            System.out.println("change image's height, width:+"+w+" height:"+h);
+                            log.info("change image's height, width:+"+w+" height:"+h);
                         }
                     } else {
                         if(height > h){
                             w = Integer.parseInt(new java.text.DecimalFormat("0").format(width * h/(height*1.0)));
-                            System.out.println("change image's width,  width:+"+w+" height:"+h);
+                            log.info("change image's width,  width:+"+w+" height:"+h);
                         }
                     }
                 }
@@ -77,7 +78,7 @@ public class ImageUtil {
                e.printStackTrace();
             }
         }else{
-        	 System.out.println("the src image is not exist.");
+            log.warn("the src image is not exist.");
         }
     }
     
@@ -91,7 +92,7 @@ public class ImageUtil {
               if(f.isDirectory()){// 判断是否文件夹
             	  thumbnailImage(f, w, h, prevfix, force);
               }else{
-                  thumbnailImage1(file, w, h, prevfix, force);
+                  thumbnailImage1(f, w, h, prevfix, force);
               }
           }
       

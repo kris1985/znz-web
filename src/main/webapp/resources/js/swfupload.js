@@ -923,7 +923,7 @@ SWFUpload.Console.writeLine = function (message) {
 			console.style.width = "700px";
 			console.style.height = "350px";
 			console.style.margin = "5px";
-			documentForm.appendChild(console);
+			//documentForm.appendChild(console);
 		}
 
 		console.value += message + "\n";

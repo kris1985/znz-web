@@ -10,7 +10,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <java-version>1.7</java-version>
+        <java-version>1.6</java-version>
         <org.springframework-version>4.0.1.RELEASE</org.springframework-version>
         <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
         <org.aspectj-version>1.7.4</org.aspectj-version>
@@ -74,13 +74,14 @@
             <version>1</version>
         </dependency>
 
-        <!-- Servlet -->
+        <!-- Servlet  -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
             <version>7.0.30</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
@@ -211,7 +212,7 @@
             <artifactId>zt-zip</artifactId>
             <version>1.8</version>
         </dependency>
-        <!--
+        <!--  -->
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
@@ -222,7 +223,21 @@
             <artifactId>jetty-webapp</artifactId>
             <version>8.0.4.v20111024</version>
         </dependency>
-        -->
+        <!--    -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>7.6.14.v20131031</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp-2.1</artifactId>
+            <version>7.1.6.v20100715</version>
+        </dependency>
+
+
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework</groupId>

@@ -29,7 +29,7 @@ public class User {
 
     private Date updateTime;
 
-    private Integer sessionId;
+    private String sessionId;
 
     private Integer userType;
 
@@ -137,11 +137,11 @@ public class User {
         this.updateTime = updateTime;
     }
 
-    public Integer getSessionId() {
+    public String getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(Integer sessionId) {
+    public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 

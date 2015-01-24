@@ -114,7 +114,7 @@
 			appid:'514',
 			icon:'folder_o.png',
 			name:'资料管理',
-			url:'files.html',
+			url:'file/list',
 			width:'1000',
 			sonMenu:"[]",
 			asc:8
