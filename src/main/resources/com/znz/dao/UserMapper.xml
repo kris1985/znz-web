@@ -49,8 +49,8 @@
     delete from t_user
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.znz.model.User" useGeneratedKeys="true" keyProperty="user_id">
 
+  <insert id="insert" parameterType="com.znz.model.User" >
     insert into t_user ( user_name, pwd,
       company, limit_ip_flag, limit_ips, 
       access_flag, max_download_times, download_per_day, 
@@ -63,6 +63,10 @@
       #{downloadTotal,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}
       )
+
+      <selectKey keyProperty="userId" resultType="int" order="AFTER">
+          select LAST_INSERT_ID()
+      </selectKey>
   </insert>
   <insert id="insertSelective" parameterType="com.znz.model.User" >
     insert into t_user

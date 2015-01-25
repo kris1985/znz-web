@@ -32,7 +32,7 @@
 	 <div class="form-group">
       <label for="lastname" class="col-sm-2 col-md-2 control-label">公司名称</label>
       <div class="col-sm-10 col-md-10">
-         <input type="text" class="form-control" id="company" name="company" placeholder="公司名称" value=${user.company}>
+         <input type="text" class="form-control" id="company" name="company" placeholder="公司名称" maxlength="20" value=${user.company}>
       </div>
    </div>
    <div class="form-group">
@@ -44,7 +44,7 @@
    <div class="form-group">
       <label for="firstname" class="col-sm-2 col-md-2 control-label">密码</label>
       <div class="col-sm-10 col-md-10">
-         <input type="password" class="form-control" id="pwd" name="pwd" placeholder="请输入密码" value=${user.pwd}>
+         <input type="password" class="form-control" id="pwd" name="pwd" placeholder="请输入密码" maxlength="16" value=${user.pwd}>
       </div>
    </div>
 
@@ -52,7 +52,7 @@
       <label for="lastname" class="col-sm-2 col-md-2 control-label">IP策略</label>
       <div class="col-sm-10 col-md-10">
         <input type="checkbox" name="limitIpFlag" value="1" id="limitIpFlag"> 限制IP  <input type="text" class="form-control" id="limitIps" name="limitIps"
-            placeholder="请输入IP" value=${user.limitIps}>
+            placeholder="请输入IP" maxlength="60" value=${user.limitIps}>
       </div>
    </div>
 
@@ -66,7 +66,7 @@
    <div class="form-group">
       <label for="lastname" class="col-sm-2 col-md-2 control-label">每天下载次数</label>
       <div class="col-sm-10 col-md-10">
-        <input type="text" class="form-control" name="maxDownloadTimes" value=${user.maxDownloadTimes}>
+        <input type="text" class="form-control" name="maxDownloadTimes" id="maxDownloadTimes" maxlength="6" value=${user.maxDownloadTimes}>
       </div>
    </div>
     <div class="form-group">
@@ -98,37 +98,63 @@
 <script type="text/javascript">
 $(function(){
 		$("#next-setp-btn").click(function(){
-			$(".step1").hide();
-			$(".step2 ").show();
-		});
-		$("#pre-setp-btn").click(function(){
-			$(".step2").hide();
-			$(".step1").show();
-		});
-
-		if(${user.limitIpFlag}==1){
-            $("#limitIpFlag").attr("checked",'true');
-		}
-		if(${user.accessFlag}==1){
-            $("#accessFlag").attr("checked",'true');
+		if($.trim($("#company").val())==""){
+            alert("请输入公司名称");
+            $("#company").focus();
+            return;
         }
-  $.ajax({
-                        url:'${basePath}/admin/user/auths/${user.userId}',
-                        dataType: 'json',
-                        success: function(json) {
-                        var data = JSON.stringify(json);
-                        var myobj=eval(data);
-                            auths = $('#auths').columns({
-                                data:myobj,
-    							templateFile: '${basePath}/resources/templates/default.mst',
-                                 schema: [
-                                                    {"header":"选择权限", "key":"checkBox"
-                                                     }
-                                         ]
-                            });
+        if($.trim($("#userName").val())==""){
+            alert("请输入用户名");
+            $("#userName").focus();
+            return;
+        }
+        if($.trim($("#pwd").val())==""){
+            alert("请输入密码");
+            $("#pwd").focus();
+            return;
+         }
+         if($.trim($("#maxDownloadTimes").val())==""){
+             alert("请输入每天限制下载次数");
+             $("#maxDownloadTimes").focus();
+             return;
+         }
+         var reg = /^[0-9]*$/;
+         if(!reg.test($.trim($("#maxDownloadTimes").val()) ) ){
+              alert("每天限制下载次数只能为数字");
+              $("#maxDownloadTimes").focus();
+              return;
+          }
+          $(".step1").hide();
+          $(".step2 ").show();
+	});
+    $("#pre-setp-btn").click(function(){
+        $(".step2").hide();
+        $(".step1").show();
+    });
 
-                        }
-                    });
+    if(${user.limitIpFlag}==1){
+        $("#limitIpFlag").attr("checked",'true');
+    }
+    if(${user.accessFlag}==1){
+        $("#accessFlag").attr("checked",'true');
+    }
+  $.ajax({
+        url:'${basePath}/admin/user/auths/${user.userId}',
+        dataType: 'json',
+        success: function(json) {
+        var data = JSON.stringify(json);
+        var myobj=eval(data);
+            auths = $('#auths').columns({
+                data:myobj,
+                templateFile: '${basePath}/resources/templates/default.mst',
+                 schema: [
+                                    {"header":"选择权限", "key":"checkBox"
+                                     }
+                         ]
+            });
+
+        }
+      });
 
 	})
 </script>

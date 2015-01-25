@@ -110,18 +110,12 @@ public class UserController {
         user.setUserType(UserType.NORMAL.getType());//普通用户
         user.setDownloadPerDay(0);
         user.setDownloadTotal(0);
+        userMapper.insert(user);
         List<String> auths  = userAddVO.getAuths();
-        int userId=0;
-        try {
-             userId = userMapper.insert(user);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
         if(!CollectionUtils.isEmpty(auths)){
             for (String auth:auths){
                 UserAuth userAuth = new UserAuth();
-                userAuth.setUserId(userId);
+                userAuth.setUserId(user.getUserId());
                 userAuth.setUpdateTime(new Date());
                 userAuth.setCreateTime(new Date());
                 userAuth.setFilePath(auth);
