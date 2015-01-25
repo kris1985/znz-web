@@ -22,15 +22,17 @@ public class UserAddVO {
     @NotBlank(message = "公司名称不能为空")
     private String company;
 
-    private Integer limitIpFlag;
+    private int limitIpFlag;
 
     private String limitIps;
 
-    private Integer accessFlag;
+    private int accessFlag;
 
-    private Integer maxDownloadTimes;
+    private int maxDownloadTimes;
 
     private String phone;
+
+    private int userId;
 
     @NotEmpty(message = "请选择权限")
     private List<String> auths;

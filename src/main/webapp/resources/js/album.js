@@ -1,6 +1,11 @@
 /**
  * @author Yaohaixiao
  */
+ function back2Normal(){
+ $("#album-image").get(0).style.zoom='normal';		
+ $("#album-image").css({"margin-top":-$("#album-image").height()/2,"margin-left":-$("#album-image").width()/2});
+ $("#album-image").css({"left":"50%","top":"50%"})
+ }
 (function($){
 	var CLS_SELECTED = "album-carousel-thumb-selected", 
 	    CLS_HIDE = "hide", 
@@ -40,9 +45,9 @@
 			// 当前显示图片在缩略图的中索引值
 			curIndex: 0,
 			// 大图片显示区域的最大宽度
-			maxWidth: 1000,
+			maxWidth: 1366,
 			// 大图片显示区域的最高宽度
-			maxHeight: 550
+			maxHeight: 600
 		};
 		
 		// 合并用户配置项和默认配置项
@@ -107,9 +112,11 @@
 				    height = preloader.height,
 					maxWidth = Album.getMaxWidth(),
 					maxHeight = Album.getMaxHeight();
-				
+				//alert(width);
+				//alert(height);
 				// 获得图片的宽/高的比率
 				percent = width / height;
+				//alert(percent);
 				
 				// 根据图片实际大小，等比缩放图片
 				// 图片的宽度大于 maxWidth
@@ -214,7 +221,7 @@
 			}
 			
 			this.select().change();
-			
+			back2Normal();
 			return this;
 		},
 		/**
@@ -241,7 +248,7 @@
 			}
 			
 			this.select().change();
-			
+			back2Normal();
 			return this;
 		},
 		prevGroup: function(){

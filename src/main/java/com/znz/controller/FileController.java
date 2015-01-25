@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * Created by huangtao on 2015/1/23.
@@ -66,5 +67,23 @@ public class FileController {
     @RequestMapping(value = "/list" , method= RequestMethod.GET)
     public String list()  {
         return  "/admin/files";
+    }
+
+    @RequestMapping(value = "/space" , method= RequestMethod.GET)
+    public String getSpace(HttpServletRequest request,Model model)  {
+        String realPath = request.getSession().getServletContext().getRealPath("/");
+        File file = new File(realPath);
+        System.out.println("Free space = " + file.getFreeSpace());
+        System.out.println("used space = " + (file.getTotalSpace()-file.getFreeSpace()));
+        System.out.println("Usable space = " + file.getUsableSpace());
+        double usedSpace = (double)(file.getTotalSpace()/1024/1024/1024-file.getFreeSpace()/1024/1024/1024);
+        double freeSpace = (double)file.getFreeSpace()/1024/1024/1024;
+        BigDecimal   used   =   new BigDecimal(usedSpace);
+        usedSpace = used.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal   free   =   new BigDecimal(freeSpace);
+        freeSpace = free.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+        model.addAttribute("freeSpace",freeSpace);
+        model.addAttribute("usedSpace", usedSpace);
+        return  "/admin/space";
     }
 }

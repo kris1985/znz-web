@@ -47,12 +47,11 @@ cursor:pointer}
 
 .album-image-ft{
 	margin:0 auto;
-	height:50px;
-	line-height:50px;
+	width: 180px;
 	text-align:center;
 	overflow:hidden;
 	position: absolute;
-	left:20px;
+	
 	top:0;color:#fff;font-weight:bold;
 	
 }

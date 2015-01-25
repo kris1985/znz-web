@@ -6,6 +6,36 @@ DATA={
 		code:'m001',
 		icon:'images/home.png'
 	},{
+		menuid:'m002',
+		name:'邮件',
+		code:'m002',
+		icon:'images/email.png'
+	},{
+		menuid:'m003',
+		name:'文件夹',
+		code:'m003',
+		icon:'images/portfolio.png'
+	},{
+		menuid:'m004',
+		name:'音乐',
+		code:'m004',
+		icon:'images/music.png'
+	},{
+		menuid:'m005',
+		name:'视频',
+		code:'m005',
+		icon:'images/video.png'
+	},{
+		menuid:'m006',
+		name:'备忘录',
+		code:'m006',
+		icon:'images/history.png'
+	},{
+		menuid:'m007',
+		name:'日历',
+		code:'m007',
+		icon:'images/calendar.png'
+	},{
 		menuid:'m008',
 		name:'RSS',
 		code:'m008',
@@ -67,25 +97,25 @@ DATA={
 			asc:6
 		},
 		'disk':{
-			appid:'20',
+			appid:'19',
 			icon:'wangdesk.png',
 			name:'磁盘空间',
-			url:'disk.html',
+			url:basePath+'/admin/file/space',
 			width:'1600px',
 			asc:7
 		},
 		'theme':{
-			appid:'21',
+			appid:'20',
 			icon:'icon0.png',
 			name:'设置主题',
 			url:'theme.html',
 			asc:9
 		},
 		'folder':{
-			appid:'514',
+			appid:'21',
 			icon:'folder_o.png',
 			name:'资料管理',
-			url:'files.html',
+			url:basePath+'/admin/file/list',
 			width:'1000',
 			sonMenu:"[]",
 			asc:8

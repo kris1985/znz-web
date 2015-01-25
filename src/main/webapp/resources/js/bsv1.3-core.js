@@ -2,7 +2,7 @@
 * 防WebQQ整合苹果系统导航菜单界面 周宗桥
 * @2012.11.22 
 */
-
+var basePath = getContextPath();
 var thisPage = 1;//初始化当前页面
 var count = 0;
 $(function() {
@@ -155,41 +155,7 @@ Desktop=function(me){
 				func: function() {
 					Windows.closeAllWindow();
 				}
-			}, {
-				text: "锁屏",
-				func: function() {
-								
-				}
-			}],[{
-				text: "系统设置",
-				func: function() {
-						 
-				}
-			},{
-				text: "主题设置",
-				func: function() {Windows.openSys({
-								id :'themSetting',
-								title :'设置主题',
-								width :650,
-								height:500,
-							 	content :document.getElementById("themeSetting_wrap")
-							 });
-							}
-						},
-						{
-							text: "图标设置",
-							data: [[{
-								text: "大图标",
-								func: function() {
-									Deskpanel.desktopsContainer.removeClass("desktopSmallIcon");
-								}
-							}, {
-								text: "小图标",
-								func: function() {
-									Deskpanel.desktopsContainer.addClass("desktopSmallIcon");
-								}
-							}]]
-						}],
+			}],
 						[{
 							text:"注销",
 							func:function(){
@@ -1317,12 +1283,23 @@ Windows = function(me){
 					});
 					
 				}else{
+				var width="80%",height="90%";
+				    if(id==18){
+						width = "60%";
+						height = "86%"
+					}else if(id==19){
+						width = "50%";
+						height = "60%"
+					}else if(id==20){
+						width = "50%";
+						height = "60%"
+					}
 					art.dialog.open(url,/** 弹出ART窗体*/
 						{   
 							"id" :id,
 							title: title,	
-							width:"100%",//设置窗口宽度自动适应width
-							height:"100%",
+							width:width,//设置窗口宽度自动适应width
+							height:height,
 							close:function(){
 								me.closeMinTask(id);
 								$("#sonfile_a"+id).remove();
@@ -1398,7 +1375,7 @@ appIcon_t1 = appIcon_t0.extend({
 		});
 		appIcon.append($("<img>",{
 			alt:this.app.name ,
-			src:'icon/'+this.app.icon,//图片路径-------------------------------------------------------------------------------------------
+			src:basePath+'/resources/icon/'+this.app.icon,//图片路径-------------------------------------------------------------------------------------------
 			"class":"appButton_appIconImg",
 			id:'icon_app_'+this.app.appid+'_'+this.app.asc+'_img'
 		
