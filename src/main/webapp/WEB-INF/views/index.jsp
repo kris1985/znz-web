@@ -30,6 +30,8 @@
         }
         if("9999"=="${param.error}"){
              alert("您的账号在其它地方登陆");
+        }else  if("8888"=="${param.error}"){
+            alert("会话超时请重新登陆");
         }
     })
     </script>

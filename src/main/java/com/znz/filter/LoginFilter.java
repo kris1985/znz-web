@@ -28,7 +28,7 @@ public  class LoginFilter implements Filter {
         HttpSession session = request2.getSession();
         Object obj = session.getAttribute(Constants.USER_SESSION);
         if(obj == null){
-            redirect(request2,response2);
+            redirect(request2,response2,"8888");
         }else{
             UserSession userSession = (UserSession)session.getAttribute(Constants.USER_SESSION);
             if(userSession.getUser().getAccessFlag()==0){
@@ -44,19 +44,17 @@ public  class LoginFilter implements Filter {
                     MySessionLister.removeSession(session.getId());
                     session.removeAttribute(Constants.USER_SESSION);
                     session.invalidate();
-                    redirect2(request2,response2);
+                    redirect(request2,response2,"9999");
                 }
             }
 
         }
     }
 
-    private void redirect(HttpServletRequest request2, HttpServletResponse response2) throws IOException {
-        response2.sendRedirect(request2.getContextPath());
-    }
 
-    private void redirect2(HttpServletRequest request2, HttpServletResponse response2) throws IOException {
-        response2.sendRedirect(request2.getContextPath()+"/?error=9999");
+
+    private void redirect(HttpServletRequest request2, HttpServletResponse response2, String errorCode) throws IOException {
+        response2.sendRedirect(request2.getContextPath()+"/?error="+errorCode);
     }
 
 
