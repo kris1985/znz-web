@@ -1,8 +1,10 @@
 package com.znz.controller;
 
 import com.znz.config.AppConfig;
+import com.znz.util.Constants;
 import com.znz.util.ImageUtil;
 import com.znz.util.MyFileUtil;
+import com.znz.vo.FileTreeVO;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,8 @@ import javax.servlet.jsp.PageContext;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by huangtao on 2015/1/23.
@@ -73,9 +77,9 @@ public class FileController {
     public String getSpace(HttpServletRequest request,Model model)  {
         String realPath = request.getSession().getServletContext().getRealPath("/");
         File file = new File(realPath);
-        System.out.println("Free space = " + file.getFreeSpace());
+      /*  System.out.println("Free space = " + file.getFreeSpace());
         System.out.println("used space = " + (file.getTotalSpace()-file.getFreeSpace()));
-        System.out.println("Usable space = " + file.getUsableSpace());
+        System.out.println("Usable space = " + file.getUsableSpace());*/
         double usedSpace = (double)(file.getTotalSpace()/1024/1024/1024-file.getFreeSpace()/1024/1024/1024);
         double freeSpace = (double)file.getFreeSpace()/1024/1024/1024;
         BigDecimal   used   =   new BigDecimal(usedSpace);
@@ -85,5 +89,27 @@ public class FileController {
         model.addAttribute("freeSpace",freeSpace);
         model.addAttribute("usedSpace", usedSpace);
         return  "/admin/space";
+    }
+
+    @RequestMapping(value = "/tree" , method= RequestMethod.GET)
+    public @ResponseBody List<FileTreeVO> listTree(HttpServletRequest request,Model model)  {
+        String rootPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        File rootFile = new File(rootPath);
+        File files [] = rootFile.listFiles();
+        List<FileTreeVO> list  = new ArrayList<FileTreeVO>();
+        FileTreeVO root = new FileTreeVO();
+        root.setId(rootFile.getAbsolutePath());
+        root.setText(rootFile.getName());
+        root.setParent("#");
+        list.add(root);
+        FileTreeVO fileTreeVO;
+        for(File f :files){
+            fileTreeVO = new FileTreeVO();
+            fileTreeVO.setId(f.getAbsolutePath());
+            fileTreeVO.setText(f.getName());
+            fileTreeVO.setParent(rootFile.getAbsolutePath());
+            list.add(fileTreeVO);
+        }
+        return  list;
     }
 }

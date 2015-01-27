@@ -90,6 +90,11 @@ var bodyMenuData = [
 
 $(function(){
 
+
+ $.get("${basePath}/admin/file/tree", function(result){
+    alert(result):
+  });
+
 		$('#jstree').jstree({
         'plugins': ["wholerow"]
 
