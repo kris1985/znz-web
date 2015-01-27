@@ -6,4 +6,5 @@ package com.znz.util;
 public class Constants {
 
     public static  final String  UPLOAD_ROOT_PATH = "/upload/znz/";
+    public static  final String  USER_SESSION = "user";
 }

@@ -2,6 +2,7 @@ package com.znz.controller;
 
 import com.znz.dao.UserAuthMapper;
 import com.znz.dao.UserMapper;
+import com.znz.listener.MySessionLister;
 import com.znz.model.User;
 import com.znz.model.UserAuth;
 import com.znz.util.Constants;
@@ -9,6 +10,7 @@ import com.znz.util.UserType;
 import com.znz.vo.AuthFileVO;
 import com.znz.vo.UserAddVO;
 import com.znz.vo.UserLoginVO;
+import com.znz.vo.UserSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -42,43 +44,7 @@ public class UserController {
     @Resource
     private UserAuthMapper userAuthMapper;
 
-    @RequestMapping(value = "/login" , method= RequestMethod.POST)
-    public String simple(HttpServletRequest request,@Valid @ModelAttribute("userLoginVO") UserLoginVO userLoginVO,BindingResult br,Model model) {
-        if (br.hasErrors()){
-            model.addAttribute("br",br);
-            return  "/index";
-        }
-        String userName = userLoginVO.getUserName();
-        String pwd = userLoginVO.getPwd();
-        System.out.println(userName+":"+pwd);
-        User user =  userMapper.selectByUser(userName);
-        if(user == null || !pwd.equals(user.getPwd())){
-            model.addAttribute("error", "用户或名密码不正确");
-            return  "/index";
-        }
-        //账号密码验证正确
-        int limitIpFlag = user.getLimitIpFlag();
-        //鉴权IP
-        if(1==limitIpFlag && !StringUtils.isEmpty(user.getLimitIps()) && !user.getLimitIps().contains(request.getRemoteHost())){
-                    model.addAttribute("error", "IP鉴权不通过");
-                    return  "/index";
-        }
-        //鉴权通过
-        if(StringUtils.isEmpty(user.getSessionId())){
-           // request.getSession().
-        }
-        user.setUpdateTime(new Date());
-        user.setLimitIps(request.getRemoteHost());
-        user.setSessionId(request.getSession().getId());
-        userMapper.updateByPrimaryKeySelective(user);
-        request.getSession().setAttribute("user",user);
-        //管理员
-        if(2==user.getUserType()){
-          return  "redirect:/admin/desktop";
-        }
-       return "redirect:/admin/file/list";
 
-    }
 
     @RequestMapping(value = "/list" , method= RequestMethod.GET)
     public @ResponseBody List<User> list(){
