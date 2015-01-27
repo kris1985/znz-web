@@ -2,9 +2,12 @@ package com.znz.controller;
 
 import com.znz.config.AppConfig;
 import com.znz.util.Constants;
+import com.znz.util.FilePathConverter;
 import com.znz.util.ImageUtil;
 import com.znz.util.MyFileUtil;
+import com.znz.vo.FileNodeVO;
 import com.znz.vo.FileTreeVO;
+import com.znz.vo.ListChildVO;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -95,21 +99,50 @@ public class FileController {
     public @ResponseBody List<FileTreeVO> listTree(HttpServletRequest request,Model model)  {
         String rootPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         File rootFile = new File(rootPath);
-        File files [] = rootFile.listFiles();
         List<FileTreeVO> list  = new ArrayList<FileTreeVO>();
         FileTreeVO root = new FileTreeVO();
-        root.setId(rootFile.getAbsolutePath());
+        root.setId(FilePathConverter.encode(rootFile.getAbsolutePath()));
         root.setText(rootFile.getName());
         root.setParent("#");
         list.add(root);
         FileTreeVO fileTreeVO;
-        for(File f :files){
-            fileTreeVO = new FileTreeVO();
-            fileTreeVO.setId(f.getAbsolutePath());
-            fileTreeVO.setText(f.getName());
-            fileTreeVO.setParent(rootFile.getAbsolutePath());
-            list.add(fileTreeVO);
-        }
+        MyFileUtil.listFile(rootFile, list);
         return  list;
     }
+
+    @RequestMapping(value = "/chidren/{filePath}" , method= RequestMethod.GET)
+    public @ResponseBody
+    ListChildVO listChidren(HttpServletRequest request,Model model,@PathVariable String filePath)  {
+        String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        ListChildVO vo = new ListChildVO();
+        File file = new File(FilePathConverter.decode(filePath));
+        List<FileNodeVO> parentNodes = new ArrayList<FileNodeVO>();
+        FileNodeVO currentNode = new FileNodeVO();
+        currentNode.setName(file.getName());
+        currentNode.setPath(FilePathConverter.encode(file.getAbsolutePath()));
+        parentNodes.add(currentNode);
+        MyFileUtil.getParentNode(file,new File(realPath),parentNodes);
+        File files [] = file.listFiles();
+        if(files!=null && files.length>0) {
+            List<FileNodeVO> fileNodes = new ArrayList<FileNodeVO>();
+            FileNodeVO fileNode = new FileNodeVO();
+            for (File f : files) {
+                fileNode.setDirectory(f.isDirectory());
+                fileNode.setName(f.getName());
+                fileNode.setPath(FilePathConverter.encode(f.getAbsolutePath()));
+                if(!f.isDirectory()){
+                    fileNode.setUrl(f.getAbsolutePath().replace(realPath,request.getContextPath()+Constants.UPLOAD_ROOT_PATH));
+                }
+                fileNodes.add(fileNode);
+            }
+            vo.setFileNodes(fileNodes);
+        }
+        Collections.reverse(parentNodes);
+        vo.setParentNodes(parentNodes);
+        return  vo;
+    }
+
+
+
+
 }

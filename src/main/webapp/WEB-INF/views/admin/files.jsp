@@ -90,26 +90,59 @@ var bodyMenuData = [
 
 $(function(){
 
-
  $.get("${basePath}/admin/file/tree", function(result){
-    alert(result):
+    var bar = "<span class=\"item\" id="+result[0].id +">"+result[0].text+"</span>"
+    $("#nav_bar").html(bar);
+    $('#jstree').jstree({
+            'plugins': ["wholerow"],
+             'core': { 'data':result}
+    });
+
   });
 
-		$('#jstree').jstree({
-        'plugins': ["wholerow"]
 
-    });
     // 7 bind to events triggered on the tree
     $('#jstree').on("changed.jstree", function (e, data) {
       console.log(data.selected);
-    });
+      var folderTemplate ="<div id=folderId class=folder_wrap><div class=\"folder_img\"><img src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">folderName</div></div>"
+      var imgTemplate = "<div class='img_wrap'><div class='pic_img'><a href='album.html' target='_blank'><img src='{imgSrc}' width='230' height='220'></a> </div><div class='img_txt'>{imgName}</div></div>"
+      var navBarTemplate ="<span class='item'>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span>";
+      var folderHtml = "";
+      var imgHtml = "";
+      var navBarHtml = "";
+      $.get("${basePath}/admin/file/chidren/"+data.selected[0].replace("_anchor",""), function(result){
+			$.each(result.parentNodes, function (n, value) {
+				 tem =  navBarTemplate.replace("{folderName}",value.name);
+				// tem = tem.replace("folderName",value.name);
+				 navBarHtml += tem;
+		   });
+		   $("#nav_bar").html(navBarHtml);
+		   $(".path_arrow:last").hide();
+		   if(result.fileNodes== null){
+		    	return;
+		   }
+		   $.each(result.fileNodes, function (n, value) {
+				 //alert(n + ' ' + value.directory);
+				 if(value.directory == true){
+					 tem =  folderTemplate.replace("folderId",value.path);
+					 tem = tem.replace("folderName",value.name);
+					 folderHtml += tem;
+				 }else{
+					 tem =  imgTemplate.replace("{imgSrc}",value.url);
+					 tem = tem.replace("{imgName}",value.name);
+					 imgHtml+= tem;
+				 }
+		    });
+            $("#file-content").html(folderHtml+imgHtml);
+        });
+     });
     /** 8 interact with the tree - either way is OK
     $('button').on('click', function () {
       $('#jstree').jstree(true).select_node('child_node_1');
       $('#jstree').jstree('select_node', 'child_node_1');
       $.jstree.reference('#jstree').select_node('child_node_1');
     });**/
-	var sclHeight = 460;
+	var sclHeight = $(document).height()-150;
 
 	//左边滚动条
 	$("#left_container").mCustomScrollbar({
@@ -136,15 +169,12 @@ $(function(){
 		background:	#fff;
 		width:		100%;
 		height:		100%;
-
 		overflow:	auto; /* when page gets too small */
 	}
 	#container {
-		background:url('img/shadow_category.png');
 		height:		100%;
 		margin:		0 auto;
 		width:		100%;
-
 		min-width:	700px;
 		_width:		700px; /* min-width for IE6 */
 	}
@@ -152,90 +182,22 @@ $(function(){
 		display:	none; /* will appear when layout inits */
 	}
 	.jstree-themeicon{width:0px}
+	.nav_bar .item {line-height:24px;}
 	</style>
 
 <div id="container">
 	<div class="pane ui-layout-center" id="file-content">
-		<div class="folder_wrap">
-				<div class="folder_img"><img src="img/folder.png" width="256" height="256"></div>
-				<div class="folder_txt">女凉 14090820VIP 休闲-成行底1111111111111111</div>
-			</div>
-			<div class="folder_wrap">
-				<div class="folder_img"><img src="img/folder.png" width="256" height="256"> </div>
-				<div class="folder_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="folder_wrap">
-				<div class="folder_img"><img src="img/folder.png" width="256" height="256"> </div>
-				<div class="folder_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="folder_wrap">
-				<div class="folder_img"><img src="img/folder.png" width="256" height="256"> </div>
-				<div class="folder_txt">女凉 14090820VIP 休闲-成行底1</div>
-			</div>
-			<div class="folder_wrap">
-				<div class="folder_img"><img src="img/folder.png" width="256" height="256"> </div>
-				<div class="folder_txt">女凉 14090820VIP 休闲-成行底2</div>
-			</div>
 
-			<div class="img_wrap">
-				<div class="pic_img"><a href="album.html" target="_blank"><img src="img/demo/高靴140324200nVIP时装_017.jpg" width="230" height="220"></a> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="img_wrap">
-				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_018.jpg" width="230" height="220"> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="img_wrap">
-				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_019.jpg" width="230" height="220"> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="img_wrap">
-				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_020.jpg" width="230" height="220"> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="img_wrap">
-				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_021.jpg" width="230" height="220"> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="img_wrap">
-				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_022.jpg" width="230" height="220"> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="img_wrap">
-				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_023.jpg" width="230" height="220"> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
-			<div class="img_wrap">
-				<div class="pic_img"><img src="img/demo/高靴140324200nVIP时装_024.jpg" width="230" height="220"> </div>
-				<div class="img_txt">女凉 14090820VIP 休闲-成行底</div>
-			</div>
 	</div>
 	<div class="pane ui-layout-north" style="">
 
-	<!--
-	<div class="input-append input-prepend" style="float:left;">
-						<div class="btn-group">
-						  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button>
-						  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button>
-						  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></button>
-						</div>
-		</div>
-		-->
-
-
-
-
-
 		<div style="width:100%;position:relative;height:40px">
 			<div class="" style="width:105px;height;28px;position:absolute;left:1px;top:-4px">
-							<img src="img/logo2.jpg" height="45">
+							<img src="${basePath}/resources/img/logo2.JPG" height="45">
 			</div>
 			<div style="position:absolute;left:160px;top:0">
-				<div class="nav_bar" style="float:left;width:80%" >
-					<span class="item">指南针鞋讯女鞋</span>
-					<span class="path_arrow"><img src="img/path_arrow.png"></span>
-					<span class="item">国内女鞋vip</span>
-					<span class="path_arrow"><img src="img/path_arrow.png"></span><span class="item">女凉 女拖</span>
+				<div class="nav_bar" style="float:left;width:80%" id="nav_bar">
+
 				 </div>
 				 <div class="" style="float:right;width:19%;">
 					<div class="input-group">
@@ -255,67 +217,7 @@ $(function(){
 
 	<div class="pane ui-layout-west">
 	<div id="left_container" style="border:0px solid #ccc">
-				<div id="jstree">
-
-					<ul>
-					  <li>指南针鞋讯女鞋
-						<ul>
-						  <li id="child_node_1">国内女鞋vip
-							  <ul>
-							  <li id="child_node_1_1">女凉 女拖</li>
-							  <li id="child_node_1_2">女凉 女拖</li>
-							</ul>
-						  </li>
-						  <li >女凉</li>
-						   <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-						   <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-						   <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-						   <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-						   <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-						   <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-							  <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-						   <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-							  <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-							  <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-						   <li >女凉</li>
-						    <li >女凉</li>
-							 <li >女凉</li>
-							 <li >女凉</li>
-							  <li >女凉</li>
-
-
-						</ul>
-					  </li>
-
-					</ul>
-				</div>
+				<div id="jstree"></div>
 
 			</div>
 	</div>
@@ -338,10 +240,6 @@ $(function(){
 		,	south__spacing_open:		0		// no resizer-bar when open (zero height)
 		,	south__spacing_closed:		20
 		});
-
-
-
-
 
 		$(".folder_wrap").hover(function() {
 			$(this).css({border: "2px solid #b8d6fb",background:"#e1effc","font-weight":"bold"})
