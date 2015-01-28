@@ -28,14 +28,18 @@
         }else{
             $(".form-signin").show(1000)
         }
-
+        if("9999"=="${param.error}"){
+             alert("您的账号在其它地方登陆");
+        }else  if("8888"=="${param.error}"){
+            alert("会话超时请重新登陆");
+        }
     })
     </script>
 </head>
 <body>
  <div class="container1">
 
-      <form class="form-signin" role="form" action="${basePath}/admin/user/login"  style="display:none" method="post">
+      <form class="form-signin" role="form" action="${basePath}/login"  style="display:none" method="post">
                <c:if test="${not empty error}">
 					<div id="message" class="success" style="font-size:12px;margin-bottom:6px;">${error}</div>
 		  		</c:if>
