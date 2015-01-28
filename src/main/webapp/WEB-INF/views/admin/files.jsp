@@ -87,33 +87,18 @@ var bodyMenuData = [
     }]
 ];
 
-
-$(function(){
-
- $.get("${basePath}/admin/file/tree", function(result){
-    var bar = "<span class=\"item\" id="+result[0].id +">"+result[0].text+"</span>"
-    $("#nav_bar").html(bar);
-    $('#jstree').jstree({
-            'plugins': ["wholerow"],
-             'core': { 'data':result}
-    });
-
-  });
-
-
-    // 7 bind to events triggered on the tree
-    $('#jstree').on("changed.jstree", function (e, data) {
-      console.log(data.selected);
-      var folderTemplate ="<div id=folderId class=folder_wrap><div class=\"folder_img\"><img src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">folderName</div></div>"
+function show(selectedId){
+	  alert(selectedId);
+      var folderTemplate ="<div id={folderId} class=folder_wrap><div class=\"folder_img\"><img src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"
       var imgTemplate = "<div class='img_wrap'><div class='pic_img'><a href='album.html' target='_blank'><img src='{imgSrc}' width='230' height='220'></a> </div><div class='img_txt'>{imgName}</div></div>"
-      var navBarTemplate ="<span class='item'>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span>";
+      var navBarTemplate ="<span class='item' id={folderId}>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span>";
       var folderHtml = "";
       var imgHtml = "";
       var navBarHtml = "";
-      $.get("${basePath}/admin/file/chidren/"+data.selected[0].replace("_anchor",""), function(result){
+      $.get("${basePath}/admin/file/chidren/"+selectedId, function(result){
 			$.each(result.parentNodes, function (n, value) {
 				 tem =  navBarTemplate.replace("{folderName}",value.name);
-				// tem = tem.replace("folderName",value.name);
+				 tem = tem.replace("{folderId}",value.path);
 				 navBarHtml += tem;
 		   });
 		   $("#nav_bar").html(navBarHtml);
@@ -124,8 +109,8 @@ $(function(){
 		   $.each(result.fileNodes, function (n, value) {
 				 //alert(n + ' ' + value.directory);
 				 if(value.directory == true){
-					 tem =  folderTemplate.replace("folderId",value.path);
-					 tem = tem.replace("folderName",value.name);
+					 tem =  folderTemplate.replace("{folderId}",value.path);
+					 tem = tem.replace("{folderName}",value.name);
 					 folderHtml += tem;
 				 }else{
 					 tem =  imgTemplate.replace("{imgSrc}",value.url);
@@ -135,7 +120,32 @@ $(function(){
 		    });
             $("#file-content").html(folderHtml+imgHtml);
         });
+}
+
+$(function(){
+	 //初始化树
+	 $.get("${basePath}/admin/file/tree", function(result){
+		var bar = "<span class=\"item\" id="+result[0].id +">"+result[0].text+"</span>"
+		$("#nav_bar").html(bar);
+		$('#jstree').jstree({
+				'plugins': ["wholerow"],
+				 'core': { 'data':result}
+		});
+	  });
+
+    // 文件管理器左部文件树点击事件
+    $('#jstree').on("changed.jstree", function (e, data) {
+      //console.log(data.selected);
+		show(data.selected[0].replace("_anchor",""));
      });
+	 //文件管理器上部导航点击
+     $(".itme").click(function(){
+     	show( $(this).attr("id") );
+     });
+     //文件管理器右部文件夹点击
+	  $(".folder_wrap").click(function(){
+		show( $(this).attr("id") );
+	  });
     /** 8 interact with the tree - either way is OK
     $('button').on('click', function () {
       $('#jstree').jstree(true).select_node('child_node_1');
