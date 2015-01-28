@@ -31,9 +31,10 @@ margin-bottom:10px;padding:5px;cursor:pointer;
 }
 .img_wrap{
 border:2px solid #fff;float:left;margin-right:20px;
-margin-bottom:10px;padding:5px;cursor:pointer;width:250px;
+margin-bottom:10px;padding:5px;cursor:pointer;width:270px;height:300px;position: relative;
 }
-.img_wrap .img_txt{font-size:12px;text-align:center;margin-top:10px}
+.thumb{left:50%;top:50%;position: absolute;}
+.img_txt{font-size:12px;text-align:center;margin-top:10px;position: absolute;bottom: 0;}
 .img_wraps:hover, .folder_wraps:hover{
 border:2px solid #b8d6fb;
 border-radius: 3px;
@@ -41,5 +42,27 @@ background: #e1effc;
 filter:alpha(opacity=80); /*IE滤镜，透明度50%*/
 -moz-opacity:0.8; /*Firefox私有，透明度50%*/
 opacity:0.8;}
+
 .folder_wrap .folder_img{width:256px;}
 .folder_wrap .folder_txt{font-size:12px;text-align:center}
+.folder_wrap:hover{border:2px solid #b8d6fb;background:#e1effc;font-weight:bold}
+.folder_wrap_selected{border:2px solid #0186e5;background:#e1effc;font-weight:bold}
+.folder_wrap_un_selected{border:2px solid #fff;background:#fff;font-weight:normal}
+	html, body {
+		background:	#fff;
+		width:		100%;
+		height:		100%;
+		overflow:	auto; /* when page gets too small */
+	}
+	#container {
+		height:		100%;
+		margin:		0 auto;
+		width:		100%;
+		min-width:	700px;
+		_width:		700px; /* min-width for IE6 */
+	}
+	.pane {
+		display:	none; /* will appear when layout inits */
+	}
+	.jstree-themeicon{width:0px}
+	.nav_bar .item {line-height:24px;}

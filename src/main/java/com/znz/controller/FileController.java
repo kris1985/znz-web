@@ -36,12 +36,9 @@ public class FileController {
     @Resource
     private AppConfig appConfig;
 
-    @RequestMapping(value = "/upload" , method= RequestMethod.POST)
-    public  @ResponseBody void processUpload(HttpServletRequest request, @RequestParam MultipartFile [] files, Model model) throws IOException {
-
-        System.out.println("--------------------------------------");
-        String parentDir = "test";
-        String realPath  = request.getSession().getServletContext().getRealPath("/");
+    @RequestMapping(value = "/upload/{parentDir}" , method= RequestMethod.POST)
+    public  @ResponseBody void processUpload(HttpServletRequest request, @RequestParam MultipartFile [] files, Model model,@PathVariable String parentDir) throws IOException {
+        String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         for(MultipartFile file:files){
                 String originalName = file.getOriginalFilename();
                 String extName =originalName.substring(originalName.lastIndexOf(".")+1);
@@ -120,13 +117,15 @@ public class FileController {
         FileNodeVO currentNode = new FileNodeVO();
         currentNode.setName(file.getName());
         currentNode.setPath(FilePathConverter.encode(file.getAbsolutePath()));
+        currentNode.setDirectory(true);
         parentNodes.add(currentNode);
         MyFileUtil.getParentNode(file,new File(realPath),parentNodes);
         File files [] = file.listFiles();
         if(files!=null && files.length>0) {
             List<FileNodeVO> fileNodes = new ArrayList<FileNodeVO>();
-            FileNodeVO fileNode = new FileNodeVO();
+            FileNodeVO fileNode = null;
             for (File f : files) {
+                fileNode = new FileNodeVO();
                 fileNode.setDirectory(f.isDirectory());
                 fileNode.setName(f.getName());
                 fileNode.setPath(FilePathConverter.encode(f.getAbsolutePath()));

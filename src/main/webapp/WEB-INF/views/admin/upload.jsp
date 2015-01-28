@@ -34,7 +34,7 @@
 		window.onload = function() {
 			var settings = {
 				flash_url :"${basePath}/resources/swfupload.swf",
-				upload_url:"${basePath}/admin/file/upload",
+				upload_url:"${basePath}/admin/file/upload/ZNZ",
 				post_params: {"PHPSESSID" : ""},
 				file_size_limit : "100 MB",
 				file_types : "*.*",
@@ -83,7 +83,7 @@
          				'fileObjName':'files',
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',
-         				'uploader' : '${basePath}/admin/file/upload',
+         				'uploader' : '${basePath}/admin/file/upload/ZNZ',
          				'onUploadSuccess' : function(file, data, response) {
          				                var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
          				                $("#result").show();
@@ -151,7 +151,7 @@ ss
 	</form>
 
 	<!--
-	<form id="form1" action="/znz-web/admin/file/update" method="post" enctype="multipart/form-data">
+	<form id="form1"  method="post" enctype="multipart/form-data">
 
 		<div class="fieldset flash" id="fsUploadProgress">
 			<span class="legend">快速上传</span>
