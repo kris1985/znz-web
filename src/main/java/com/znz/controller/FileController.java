@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by huangtao on 2015/1/23.
@@ -44,7 +45,7 @@ public class FileController {
                 String extName =originalName.substring(originalName.lastIndexOf(".")+1);
                 String preName =originalName.substring(0,originalName.lastIndexOf("."));
                 System.out.println(file.getOriginalFilename()+":"+extName);
-                String pathname = realPath + "/upload/" + parentDir + "/" + originalName;
+                String pathname = realPath  +"/"+ parentDir + "/" + originalName;
                 System.out.println("path:"+pathname);
                 File descFile  = new File(pathname);
                 FileUtils.copyInputStreamToFile(file.getInputStream(),descFile);
