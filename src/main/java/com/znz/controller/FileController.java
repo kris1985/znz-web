@@ -8,6 +8,7 @@ import com.znz.util.MyFileUtil;
 import com.znz.vo.FileNodeVO;
 import com.znz.vo.FileTreeVO;
 import com.znz.vo.ListChildVO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,15 +22,13 @@ import javax.servlet.jsp.PageContext;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by huangtao on 2015/1/23.
  */
 
+@Slf4j
 @Controller
 @RequestMapping("/admin/file")
 public class FileController {
@@ -39,13 +38,14 @@ public class FileController {
 
     @RequestMapping(value = "/upload/{parentDir}" , method= RequestMethod.POST)
     public  @ResponseBody void processUpload(HttpServletRequest request, @RequestParam MultipartFile [] files, Model model,@PathVariable String parentDir) throws IOException {
-        String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+       // String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        parentDir = FilePathConverter.decode(parentDir);
         for(MultipartFile file:files){
                 String originalName = file.getOriginalFilename();
                 String extName =originalName.substring(originalName.lastIndexOf(".")+1);
                 String preName =originalName.substring(0,originalName.lastIndexOf("."));
                 System.out.println(file.getOriginalFilename()+":"+extName);
-                String pathname = realPath  +"/"+ parentDir + "/" + originalName;
+                String pathname = parentDir+"/" + originalName;
                 System.out.println("path:"+pathname);
                 File descFile  = new File(pathname);
                 FileUtils.copyInputStreamToFile(file.getInputStream(),descFile);
@@ -60,14 +60,11 @@ public class FileController {
                 ZipUtil.unpack(descFile, new File(tempFilePath));
                 FileUtils.forceDelete(descFile);//删除zip
                 ImageUtil.thumbnailImage(tempFilePath,appConfig.getImgThumbWidth(),appConfig.getImgThumbHeight());//生产缩略图
-                MyFileUtil.moveFiles(new File(tempFilePath),new File(realPath + "/upload/" + parentDir));//移动到指定目录
+                MyFileUtil.moveFiles(new File(tempFilePath),new File( parentDir));//移动到指定目录
                 //删除临时文件
                 FileUtils.deleteDirectory(new File(tempFilePath));
             }
-
         }
-
-
     }
 
     @RequestMapping(value = "/list" , method= RequestMethod.GET)
@@ -128,13 +125,23 @@ public class FileController {
             for (File f : files) {
                 fileNode = new FileNodeVO();
                 fileNode.setDirectory(f.isDirectory());
-                fileNode.setName(f.getName());
+                fileNode.setName(f.getName().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,""));
                 fileNode.setPath(FilePathConverter.encode(f.getAbsolutePath()));
-                if(!f.isDirectory()){
+                fileNode.setLastModified(f.lastModified());
+                if(f.isDirectory()){
+                    fileNodes.add(fileNode);
+                } else if ( f.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)){
                     fileNode.setUrl(f.getAbsolutePath().replace(realPath,request.getContextPath()+Constants.UPLOAD_ROOT_PATH));
+                    fileNode.setThumbUrl(fileNode.getUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,""));
+                    fileNodes.add(fileNode);
                 }
-                fileNodes.add(fileNode);
             }
+            Collections.sort(fileNodes, new Comparator<FileNodeVO>() {
+                @Override
+                public int compare(FileNodeVO o1, FileNodeVO o2) {
+                    return o1.getLastModified() > o2.getLastModified() ? 1 : -1;
+                }
+            });
             vo.setFileNodes(fileNodes);
         }
         Collections.reverse(parentNodes);
@@ -142,6 +149,39 @@ public class FileController {
         return  vo;
     }
 
+
+    @RequestMapping(value = "/delete/{path}" , method= RequestMethod.GET)
+    public @ResponseBody String delete(@PathVariable String path)  {
+        path = FilePathConverter.decode(path);
+        File f = new File(path);
+        if(!f.exists()){
+            return "-1";
+        }
+        try{
+            if(f.isDirectory()){
+                FileUtils.deleteQuietly(f);
+            }else {
+                FileUtils.forceDelete(f);
+            }
+       }catch (IOException e){
+         log.error("删除文件失败",e);
+            return "-2";
+        }
+        return  "0";
+    }
+
+
+    @RequestMapping(value = "/mkdir/{path}" , method= RequestMethod.GET)
+    public @ResponseBody String mkdir(@PathVariable String path)  {
+        path = FilePathConverter.decode(path);
+        File f = new File(path);
+        if(f.exists()){
+            return "1";
+        }else {
+            f.mkdir();
+        }
+        return  "0";
+    }
 
 
 

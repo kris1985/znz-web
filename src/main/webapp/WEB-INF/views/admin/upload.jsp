@@ -83,7 +83,7 @@
          				'fileObjName':'files',
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',
-         				'uploader' : '${basePath}/admin/file/upload/国内女鞋',
+         				'uploader' : '${basePath}/admin/file/upload/${param.parentId}',
          				'onUploadSuccess' : function(file, data, response) {
          				                var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
          				                $("#result").show();

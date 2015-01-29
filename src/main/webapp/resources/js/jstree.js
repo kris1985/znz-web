@@ -5180,12 +5180,15 @@
 					"separator_before"	: false,
 					"separator_after"	: true,
 					"_disabled"			: false, //(this.check("create_node", data.reference, {}, "last")),
-					"label"				: "Create",
+					"label"				: "创建文件夹0000000000000",
 					"action"			: function (data) {
+
 						var inst = $.jstree.reference(data.reference),
 							obj = inst.get_node(data.reference);
+							console.log(obj.id);
+
 						inst.create_node(obj, {}, "last", function (new_node) {
-							setTimeout(function () { inst.edit(new_node); },0);
+							setTimeout(function () { inst.edit(new_node); },1);
 						});
 					}
 				},

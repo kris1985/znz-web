@@ -19,7 +19,9 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-latest.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.layout-latest.js"></script>
-    <script type="text/javascript" src="${basePath}/resources/js/jstree.min.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/artDialog.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/iframeTools.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/jstree.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-smartMenu-min.js"></script>
@@ -149,7 +151,7 @@
     function show(selectedId) {
         //alert(selectedId);
         var folderTemplate = "<div class=folder_wrap><div id={folderId}  class=\"folder_img\"><img  src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"
-        var imgTemplate = "<div class='img_wrap'><img class='thumb' src='{imgSrc}' {imgWidth} {imgHeight} {css}><div class='img_txt'>{imgName}</div></div>"
+        var imgTemplate = "<div class='img_wrap ' ><img class='thumb' src='{thumbUrl}' id='{id}' style='max-width:256px;max-height:256px'><div class='img_txt'>{imgName}</div></div>"
         var navBarTemplate = "<span class='item' id={folderId}>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span>";
         var folderHtml = "";
         var imgHtml = "";
@@ -173,29 +175,30 @@
                     tem = tem.replace("{folderName}", value.name);
                     folderHtml += tem;
                 } else {
-                    tem = imgTemplate.replace("{imgSrc}", value.url);
+                    tem = imgTemplate.replace("{id}", value.url);
                     tem = tem.replace("{imgName}", value.name);
-                    tem = initImg(tem);
+                     tem = tem.replace("{thumbUrl}", value.thumbUrl);
+                    //tem = initImg(tem);
                     imgHtml += tem;
                 }
             });
+            //$(folderHtml).prependTo("#file-content");
+           // $(imgHtml).prependTo("#file-content");
 
-            $(folderHtml).prependTo("#file-content");
-            $(imgHtml).prependTo("#file-content");
-            //$("#file-content").html(folderHtml+imgHtml);
+            $("#file-content").html(folderHtml+imgHtml);
+             $(".thumb").load(function () {
+                initImg($(this));
+             });
         });
     }
 
 
-    maxHeight = 180;
-    maxWidth = 180;
-    function initImg(htm) {
-        preloader = new Image();
-        preloader.src = $(htm).find("img").attr("src");
-        //alert("----------" + preloader.src);
-        alert("----------" + preloader.width);
-        width = preloader.width;
-        height = preloader.height;
+    maxHeight = 256;
+    maxWidth = 256;
+    function initImg(img) {
+
+        width = img.width();
+        height = img.height();
 
         if (width > height) {
             maxWidth = maxHeight * (width / height);
@@ -234,22 +237,18 @@
         }
 
         /**/
-        while (width > 180) {
+        while (width > 256) {
             width = width / 1.1;
             height = height / 1.1
         }
-        while (height > 180) {
+        while (height > 256) {
             height = height / 1.1
             width = width / 1.1;
         }
-        res = htm.replace("{imgWidth}", "width=" + width);
-        res = res.replace("{imgHeight}", "height=" + height);
-        /*  alert(targetImg.width());
-         alert(targetImg.height());*/
-        res = res.replace("{css}", "style='margin-left:" + (-(width / 2)) + "px;margin-top:" + (-(height / 2)) + "px'");
-        return res;
-
-
+        img.width(width);
+        img.height(height);
+        img.css("margin-left",-(width / 2)+"px");
+        img.parent().removeClass("hide");
     }
 
 
@@ -264,25 +263,87 @@
             , south__spacing_closed: 20
         });
 
-        $(document).delegate('.folder_wrap', 'hover', function () {
-            $(this).css({border: "2px solid #b8d6fb", background: "#e1effc", "font-weight": "bold"})
-        }, function () {
-            if (!$(this).hasClass("test")) {
-                $(this).css({border: "2px solid #fff", background: "#fff", "font-weight": "normal"})
-            }
-        });
 
-        $(document).delegate('.folder_wrap', 'click', function () {
+
+        $("#file-content").delegate('.folder_wrap', 'click', function () {
             $(".folder_wrap").removeClass("folder_wrap_selected")
+             $(".img_wrap").removeClass("folder_wrap_selected")
             $(this).addClass("folder_wrap_selected");
         });
+
+
+         $("#file-content").delegate('.img_wrap', 'click', function () {
+                    $(".img_wrap").removeClass("folder_wrap_selected")
+                     $(".folder_wrap").removeClass("folder_wrap_selected")
+                    $(this).addClass("folder_wrap_selected");
+         });
+
+ var items = {
+      upload: {
+     label: "上传",
+     icon: "glyphicon glyphicon glyphicon-open",
+     action: function (data) {
+        var inst = $.jstree.reference(data.reference),
+        obj = inst.get_node(data.reference);
+        console.log(obj);
+        var url = "${basePath}/admin/file/browse?parentId="+obj.id
+        art.dialog.open(url,/** 弹出ART窗体*/
+            {
+                "id" :obj.id,
+                title: "上传文件",
+                width:500,
+                height:400
+            }
+        );
+      }
+    },
+      createDir: {
+     label: "创建文件夹",
+     icon: "glyphicon glyphicon glyphicon glyphicon-plus",
+      action: function (data) {
+            var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference);
+            $.get("${basePath}/admin/file/mkdir/"+obj.id,function(res){
+                if(res!="0"){
+                   alert(res);
+                 }
+            });
+
+        }
+    },
+     delete: {
+         label: "删除",
+         icon: "glyphicon glyphicon glyphicon-floppy-remove",
+           action: function (data) {
+                     if(!confirm("确认要删除吗")){return}
+                     var inst = $.jstree.reference(data.reference),
+                     obj = inst.get_node(data.reference);
+                     $.get("${basePath}/admin/file/delete/"+obj.id,function(res){
+                        if(res!="0"){
+                            alert(res);
+                        }else{
+                        alert( "#"+obj.id);
+                        alert( $("#"+obj.id).html());
+                            $("#"+obj.id).hide();
+                            alert()
+                            $("#file-content").empty();
+                        }
+                     });
+
+                 }
+        }
+
+   };
 
         //初始化树
         $.get("${basePath}/admin/file/tree", function (result) {
             var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
-                'plugins': ["wholerow"],
+                'plugins': ["wholerow","contextmenu"],
+                'contextmenu' : {
+                 'items' : items },
+
                 'core': { 'data': result,
                     "multiple": false,
                     "animation": 0
