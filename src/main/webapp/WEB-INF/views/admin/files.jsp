@@ -176,7 +176,7 @@
                     tem = tem.replace("{folderName}", value.name);
                     folderHtml += tem;
                 } else {
-                    tem = imgTemplate.replace("{id}", value.url);
+                    tem = imgTemplate.replace("{id}", value.path);
                     tem = tem.replace("{imgName}", value.name);
                      tem = tem.replace("{thumbUrl}", value.thumbUrl);
                     //tem = initImg(tem);

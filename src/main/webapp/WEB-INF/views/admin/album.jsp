@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +34,7 @@
         </div>
         <p class="album-image-ft" id="album-image-ft">相册图片-示例图片（1）</p>
         <div class="album-image-md" id="album-image-md" >
-            <div class="album-image-bd" id="album-image-bd" ><img src="img/demo/高靴140324200nVIP时装_019.jpg" class="" id="album-image" alt="相册图片-示例图片（1）" onmousewheel="return bbimg(this)"/></div>
+            <div class="album-image-bd" id="album-image-bd" ><img src="${selectedImg}" class="" id="album-image" alt="相册图片-示例图片（1）" onmousewheel="return bbimg(this)"/></div>
 
             <!--
                         <ul class="album-image-nav hide" id="album-image-nav">
@@ -53,9 +54,16 @@
         <a href="#prev-group" class="album-carousel-btn-prev" id="album-carousel-btn-prev">‹</a>
         <div class="album-carousel-zone" id="album-carousel-zone">
             <ul class="album-carousel-list" id="album-carousel-list">
-
-                <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="img/demo/高靴140324200nVIP时装_019.jpg"><img src="img/demo/高靴140324200nVIP时装_019.jpg" alt="高靴140324200nVIP时装_019.jpg"  /></a></li>
-                <li class="album-carousel-thumb"><a href="img/demo/高靴140324200nVIP时装_020.jpg"><img src="img/demo/高靴140324200nVIP时装_020.jpg" alt="高靴140324200nVIP时装_020.jpg" width="230" height="144" /></a></li>
+                <c:forEach items="imgs" var="img">
+                    <c:choose>
+                        <c:when test="${img.selected}">
+                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${img.url}"><img src="${img.thumbUrl}" alt="${img.name}"  /></a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="album-carousel-thumb"><a href="img/demo/高靴140324200nVIP时装_020.jpg"><img src="img/demo/高靴140324200nVIP时装_020.jpg" alt="高靴140324200nVIP时装_020.jpg" width="230" height="144" /></a></li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
 
             </ul>
         </div>

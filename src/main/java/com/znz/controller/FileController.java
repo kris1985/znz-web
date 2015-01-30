@@ -149,8 +149,8 @@ public class FileController {
                 if(f.isDirectory()){
                     fileNodes.add(fileNode);
                 } else if ( f.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)){
-                    fileNode.setUrl(f.getAbsolutePath().replace(realPath,request.getContextPath()+Constants.UPLOAD_ROOT_PATH));
-                    fileNode.setThumbUrl(fileNode.getUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,""));
+                    fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
+                    fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
                     fileNodes.add(fileNode);
                 }
             }
@@ -176,8 +176,9 @@ public class FileController {
     }
     @RequestMapping(value = "/listImg/{path}" , method= RequestMethod.GET)
     public  String listImg(HttpServletRequest request,@PathVariable String path,@RequestParam String selectedFileName,Model model)  {
+        path = FilePathConverter.decode(path);
         String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
-        File f = new File(FilePathConverter.decode(path)).getParentFile();//获取当前文件的父目录
+        File f = new File(path).getParentFile();//获取当前文件的父目录
         List<FileNodeVO> list = new ArrayList<FileNodeVO>();
         File files [] =f.listFiles();
         FileNodeVO fileNode = null;
@@ -186,14 +187,16 @@ public class FileController {
                 fileNode = new FileNodeVO();
                 fileNode.setLastModified(f.lastModified());
                 fileNode.setName(file.getName());
-                fileNode.setUrl(f.getAbsolutePath().replace(realPath,request.getContextPath()+Constants.UPLOAD_ROOT_PATH));
-                fileNode.setThumbUrl(fileNode.getUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,""));
+                fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
+                fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
                 if(file.getName().equals(selectedFileName)){
                     fileNode.setSelected(true);
                 }
                 list.add(fileNode);
             }
         }
+        String selectedImg = path.replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH);
+        model.addAttribute("selectedImg",selectedImg);
         model.addAttribute("imgs",list);
         return "admin/album";
     }
