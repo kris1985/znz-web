@@ -127,7 +127,7 @@
                 </div>
                 <div class="" style="float:right;width:19%;">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="搜索" style="height:32px">
+                        <input type="text" class="form-control" placeholder="搜索" style="height:32px" id="search">
 
                         <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
                     </div>
@@ -252,7 +252,31 @@
         img.parent().removeClass("hide");
     }
 
-
+function demo_create() {
+							var ref = $('#jstree').jstree(true),
+								sel = ref.get_selected();
+								alert(sel.length);
+							if(!sel.length) { return false; }
+							sel = sel[0];
+							sel = ref.create_node(sel, "新建文件夹");
+							if(sel) {
+								ref.edit(sel);
+								console.log(sel);
+							}
+						};
+						function demo_rename() {
+							var ref = $('#jstree').jstree(true),
+								sel = ref.get_selected();
+							if(!sel.length) { return false; }
+							sel = sel[0];
+							ref.edit(sel);
+						};
+						function demo_delete() {
+							var ref = $('#jstree').jstree(true),
+								sel = ref.get_selected();
+							if(!sel.length) { return false; }
+							ref.delete_node(sel);
+						};
     $(document).ready(function () {
         $('#container').layout({
 
@@ -302,46 +326,57 @@
      label: "创建文件夹",
      icon: "glyphicon glyphicon glyphicon glyphicon-plus",
       action: function (data) {
+           // var inst = $.jstree.reference(data.reference),
+            //obj = inst.get_node(data.reference);
+            //demo_create();
             var inst = $.jstree.reference(data.reference),
-            obj = inst.get_node(data.reference);
-            var dialog = art.dialog({
-              content: '<p>请输入文件夹名称</p><input id="dirInput" style="width:15em; padding:4px" />',
-              okVal: '确认',
-              ok: function () {
-                  var dirName = document.getElementById('dirInput');
-                  $.get("${basePath}/admin/file/mkdir/"+obj.id+"?dirName="+dirName,
-                          function(res){
-                              if(res!="0"){
-                                  alert(res);
-                              }
-                          });
-              },
-              cancel: true
-          });
+							obj = inst.get_node(data.reference);
+							console.log(obj.id);
 
-          dialog.shake && dialog.shake();
-
+						inst.create_node(obj, { 'text' : '新建文件夹' }, 'last', function (new_node) {
+							setTimeout(function () { inst.edit(new_node); console.log(new_node) },1);
+						});
 
         }
     },
+    "rename" : {
+    					"separator_before"	: false,
+    					"separator_after"	: false,
+    					"_disabled"			: false, //(this.check("rename_node", data.reference, this.get_parent(data.reference), "")),
+    					"label"				: "重命名",
+    					/*
+    					"shortcut"			: 113,
+    					"shortcut_label"	: 'F2',
+    					"icon"				: "glyphicon glyphicon-leaf",
+    					*/
+    					"action"			: function (data) {
+    						var inst = $.jstree.reference(data.reference),
+    							obj = inst.get_node(data.reference);
+    						inst.edit(obj);
+    					}
+    				},
      delete: {
          label: "删除",
          icon: "glyphicon glyphicon glyphicon-floppy-remove",
            action: function (data) {
                      if(!confirm("确认要删除吗")){return}
-                     var inst = $.jstree.reference(data.reference),
-                     obj = inst.get_node(data.reference);
-                     $.get("${basePath}/admin/file/delete/"+obj.id,function(res){
-                        if(res!="0"){
-                            alert(res);
-                        }else{
-                        alert( "#"+obj.id);
-                        alert( $("#"+obj.id).html());
-                            $("#"+obj.id).hide();
-                            alert()
-                            $("#file-content").empty();
-                        }
-                     });
+
+                    var inst = $.jstree.reference(data.reference),
+                    							obj = inst.get_node(data.reference);
+                    						if(inst.is_selected(obj)) {
+                    							inst.delete_node(inst.get_selected());
+                    						}
+                    						else {
+                    							inst.delete_node(obj);
+                    						}
+                    						 $.get("${basePath}/admin/file/delete/"+obj.id,function(res){
+                                                                    if(res!="0"){
+                                                                        alert(res);
+                                                                    }else{
+
+                                                                        $("#file-content").empty();
+                                                                    }
+                                                                 });
 
                  }
         }
@@ -353,13 +388,14 @@
             var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
-                'plugins': ["wholerow","contextmenu"],
+                'plugins': ["wholerow","contextmenu","search","sort"],
 
                 'contextmenu' : {
                  'items' : items },
 
                 'core': { 'data': result,
                     'strings':true,
+                    "check_callback" : true,
                     'multiple': false
                 }
             });
@@ -367,8 +403,10 @@
 
         // 文件管理器左部文件树点击事件
         $('#jstree').on("changed.jstree", function (e, data) {
-            //console.log(data.selected);
-            show(data.selected[0].replace("_anchor", ""));
+            console.log(data.selected);
+            if(data.selected.length!=0){
+                show(data.selected[0].replace("_anchor", ""));
+            }
         });
         //文件管理器上部导航点击
         $(document).delegate('.item', 'click', function () {
@@ -416,6 +454,16 @@
       	});**/
 
 
+
+
+var to = false;
+							$('#search').keyup(function () {
+								if(to) { clearTimeout(to); }
+								to = setTimeout(function () {
+									var v = $('#search').val();
+									$('#jstree').jstree(true).search(v);
+								}, 250);
+							});
     });
 </script>
 
