@@ -15,4 +15,5 @@ public class FileNodeVO {
     private String name;
     private long lastModified;
     private boolean directory;
+    private boolean selected;
 }

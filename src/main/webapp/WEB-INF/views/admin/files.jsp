@@ -385,7 +385,11 @@
             show($(this).attr("id"));
             $('#jstree').jstree(true).deselect_all();
             $('#jstree').jstree(true).select_node($(this).attr("id") + "_anchor");
+        });
 
+        //文件管理器右部文件点击
+        $(document).delegate('.thumb', 'dblclick', function () {
+            window.open("${basePath}/admin/file/listImg/"+$(this).attr("id")+"?selectedFileName="+$(this).parent().find("img_txt").text());
         });
         /** 8 interact with the tree - either way is OK
          $('button').on('click', function () {

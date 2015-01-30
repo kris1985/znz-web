@@ -168,6 +168,36 @@ public class FileController {
     }
 
 
+    @RequestMapping(value = "/toListImg" , method= RequestMethod.GET)
+    public String toListImg(HttpServletRequest request,@RequestParam String path,@RequestParam String selectedFileName,Model model)  {
+        model.addAttribute("path",path);
+        model.addAttribute("selectedFileName",selectedFileName);
+        return "admin/album";
+    }
+    @RequestMapping(value = "/listImg/{path}" , method= RequestMethod.GET)
+    public  String listImg(HttpServletRequest request,@PathVariable String path,@RequestParam String selectedFileName,Model model)  {
+        String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        File f = new File(FilePathConverter.decode(path)).getParentFile();//获取当前文件的父目录
+        List<FileNodeVO> list = new ArrayList<FileNodeVO>();
+        File files [] =f.listFiles();
+        FileNodeVO fileNode = null;
+        for(File file :files){
+            if(file.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)){
+                fileNode = new FileNodeVO();
+                fileNode.setLastModified(f.lastModified());
+                fileNode.setName(file.getName());
+                fileNode.setUrl(f.getAbsolutePath().replace(realPath,request.getContextPath()+Constants.UPLOAD_ROOT_PATH));
+                fileNode.setThumbUrl(fileNode.getUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,""));
+                if(file.getName().equals(selectedFileName)){
+                    fileNode.setSelected(true);
+                }
+                list.add(fileNode);
+            }
+        }
+        model.addAttribute("imgs",list);
+        return "admin/album";
+    }
+
     @RequestMapping(value = "/delete/{path}" , method= RequestMethod.GET)
     public @ResponseBody String delete(@PathVariable String path)  {
         path = FilePathConverter.decode(path);
