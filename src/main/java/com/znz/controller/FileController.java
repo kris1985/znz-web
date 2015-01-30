@@ -1,6 +1,7 @@
 package com.znz.controller;
 
 import com.znz.config.AppConfig;
+import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.util.FilePathConverter;
 import com.znz.util.ImageUtil;
@@ -8,10 +9,12 @@ import com.znz.util.MyFileUtil;
 import com.znz.vo.FileNodeVO;
 import com.znz.vo.FileTreeVO;
 import com.znz.vo.ListChildVO;
+import com.znz.vo.UserSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.zeroturnaround.zip.ZipUtil;
@@ -56,7 +59,7 @@ public class FileController {
                 //在临时目录解压并删除zip包
                 File tem = FileUtils.getTempDirectory();
                 String tempFilePath = tem.getPath()+"/"+preName;
-                System.out.println("tempFilePath"+tempFilePath);
+               // System.out.println("tempFilePath"+tempFilePath);
                 ZipUtil.unpack(descFile, new File(tempFilePath));
                 FileUtils.forceDelete(descFile);//删除zip
                 ImageUtil.thumbnailImage(tempFilePath,appConfig.getImgThumbWidth(),appConfig.getImgThumbHeight());//生产缩略图
@@ -100,8 +103,23 @@ public class FileController {
         root.setText(rootFile.getName());
         root.setParent("#");
         list.add(root);
-        FileTreeVO fileTreeVO;
-        MyFileUtil.listFile(rootFile, list);
+        UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if(userSession.getUser().getUserType()==2 || userSession.getUser().getUserType()==3){
+            MyFileUtil.listFile(rootFile, list);
+        }else{
+            List<UserAuth> auths = userSession.getUserAuths();
+            if(!CollectionUtils.isEmpty(auths)){
+                for(UserAuth userAuth:auths){
+                    FileTreeVO secondDir = new FileTreeVO();
+                    secondDir.setId(FilePathConverter.encode(rootPath +File.separator+ userAuth.getFilePath()));
+                    secondDir.setText(userAuth.getFilePath());
+                    secondDir.setParent(root.getId());
+                    list.add(secondDir);
+                    String path =   rootPath + "/"+userAuth.getFilePath();
+                    MyFileUtil.listFile(new File(path), list);
+                }
+            }
+        }
         return  list;
     }
 
@@ -125,7 +143,7 @@ public class FileController {
             for (File f : files) {
                 fileNode = new FileNodeVO();
                 fileNode.setDirectory(f.isDirectory());
-                fileNode.setName(f.getName().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,""));
+                fileNode.setName(f.getName().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
                 fileNode.setPath(FilePathConverter.encode(f.getAbsolutePath()));
                 fileNode.setLastModified(f.lastModified());
                 if(f.isDirectory()){
@@ -155,28 +173,29 @@ public class FileController {
         path = FilePathConverter.decode(path);
         File f = new File(path);
         if(!f.exists()){
-            return "-1";
+            return "文件不存在或已被删除";
         }
         try{
             if(f.isDirectory()){
-                FileUtils.deleteQuietly(f);
+                FileUtils.deleteQuietly(f);//删除缩略图
+                FileUtils.deleteQuietly(new File(f.getAbsolutePath().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,"")));//删除原图
             }else {
                 FileUtils.forceDelete(f);
             }
        }catch (IOException e){
          log.error("删除文件失败",e);
-            return "-2";
+            return "删除文件失败";
         }
         return  "0";
     }
 
 
     @RequestMapping(value = "/mkdir/{path}" , method= RequestMethod.GET)
-    public @ResponseBody String mkdir(@PathVariable String path)  {
+    public @ResponseBody String mkdir(@PathVariable String path,@RequestParam String dirName)  {
         path = FilePathConverter.decode(path);
-        File f = new File(path);
+        File f = new File(path+"/dirName");
         if(f.exists()){
-            return "1";
+            return "文件夹已经存在，请重新输入";
         }else {
             f.mkdir();
         }

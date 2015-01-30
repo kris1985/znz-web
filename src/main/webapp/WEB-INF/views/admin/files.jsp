@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="${basePath}/resources/css/file.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/resources/css/jquery.mCustomScrollbar.css">
     <link rel="stylesheet" href="${basePath}/resources/css/smartMenu.css">
+    <link rel="stylesheet" href="${basePath}/resources/css/skins/black.css"  />
 
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-latest.js"></script>
@@ -303,11 +304,23 @@
       action: function (data) {
             var inst = $.jstree.reference(data.reference),
             obj = inst.get_node(data.reference);
-            $.get("${basePath}/admin/file/mkdir/"+obj.id,function(res){
-                if(res!="0"){
-                   alert(res);
-                 }
-            });
+            var dialog = art.dialog({
+              content: '<p>请输入文件夹名称</p><input id="dirInput" style="width:15em; padding:4px" />',
+              okVal: '确认',
+              ok: function () {
+                  var dirName = document.getElementById('dirInput');
+                  $.get("${basePath}/admin/file/mkdir/"+obj.id+"?dirName="+dirName,
+                          function(res){
+                              if(res!="0"){
+                                  alert(res);
+                              }
+                          });
+              },
+              cancel: true
+          });
+
+          dialog.shake && dialog.shake();
+
 
         }
     },
@@ -341,12 +354,13 @@
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
                 'plugins': ["wholerow","contextmenu"],
+
                 'contextmenu' : {
                  'items' : items },
 
                 'core': { 'data': result,
-                    "multiple": false,
-                    "animation": 0
+                    'strings':true,
+                    'multiple': false
                 }
             });
         });
@@ -361,11 +375,15 @@
             show($(this).attr("id"));
             // $('#jstree').jstree(false).select_node($(this).attr("id")+"_anchor");
             //  $('#jstree').jstree('select_node', $(this).attr("id")+"_anchor");
-            $.jstree.reference('#jstree').select_node($(this).attr("id") + "_anchor");
+            //$.jstree.reference('#jstree').select_node($(this).attr("id") + "_anchor");
+          //  $('#jstree').jstree().deselect_all();
+          //  $.jstree.reference('#jstree').deselect_all();
+            $('#jstree').jstree(true).select_node($(this).attr("id") + "_anchor");
         });
         //文件管理器右部文件夹点击
         $(document).delegate('.folder_img', 'dblclick', function () {
             show($(this).attr("id"));
+            $('#jstree').jstree(true).deselect_all();
             $('#jstree').jstree(true).select_node($(this).attr("id") + "_anchor");
 
         });

@@ -12,7 +12,7 @@
     <title>磁盘空间</title>
      <%@ include file="../common/common.jsp"%>
     <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
-    <link href="/znz-web/resources/css/clean.css" rel="stylesheet" type="text/css" />
+    <link href="${basePath}/resources/css/clean.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/Chart.min.js"></script>
 
