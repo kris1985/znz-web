@@ -6,10 +6,7 @@ import com.znz.util.Constants;
 import com.znz.util.FilePathConverter;
 import com.znz.util.ImageUtil;
 import com.znz.util.MyFileUtil;
-import com.znz.vo.FileNodeVO;
-import com.znz.vo.FileTreeVO;
-import com.znz.vo.ListChildVO;
-import com.znz.vo.UserSession;
+import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
@@ -215,11 +212,14 @@ public class FileController {
     }
 
     @RequestMapping(value = "/delete/{path}" , method= RequestMethod.GET)
-    public @ResponseBody String delete(@PathVariable String path)  {
+    public @ResponseBody ResultVO delete(@PathVariable String path)  {
+        ResultVO result = new ResultVO();
         path = FilePathConverter.decode(path);
         File f = new File(path);
         if(!f.exists()){
-            return "文件不存在或已被删除";
+            result.setCode(-1);
+            result.setMsg("文件不存在或已被删除");
+            return result;
         }
         try{
             if(f.isDirectory()){
@@ -230,16 +230,20 @@ public class FileController {
             }
        }catch (IOException e){
          log.error("删除文件失败",e);
-            return "删除文件失败";
+            result.setCode(-1);
+            result.setMsg("删除文件失败");
+            return result;
         }
-        return  "0";
+        result.setCode(0);
+        result.setMsg("删除成功");
+        return  result;
     }
 
 
     @RequestMapping(value = "/mkdir/{path}" , method= RequestMethod.GET)
-    public @ResponseBody String mkdir(@PathVariable String path,@RequestParam String dirName)  {
+    public @ResponseBody String mkdir(@PathVariable String path)  {
         path = FilePathConverter.decode(path);
-        File f = new File(path+"/dirName");
+        File f = new File(path);
         if(f.exists()){
             return "文件夹已经存在，请重新输入";
         }else {

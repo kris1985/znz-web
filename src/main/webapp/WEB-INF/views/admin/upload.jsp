@@ -136,8 +136,7 @@
 <form>
 		<div id="queue"></div>
 		<input id="file_upload" name="file_upload" type="files" multiple="true">
-<div id="result" class=" alert alert-info" style="display:block">
-ss
+<div id="result" >
 </div>
 <!--
 		<button class="btn btn-primary" onclick="javascript:$('#uploadFile').uploadify('upload','*')" >开始上传

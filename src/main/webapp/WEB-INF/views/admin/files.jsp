@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="${basePath}/resources/js/themes/default/style.min.css"/>
     <link rel="stylesheet" href="${basePath}/resources/css/file.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/resources/css/jquery.mCustomScrollbar.css">
-    <link rel="stylesheet" href="${basePath}/resources/css/smartMenu.css">
+    <link rel="stylesheet" href="${basePath}/resources/css/jquery.contextMenu.css">
     <link rel="stylesheet" href="${basePath}/resources/css/skins/black.css"/>
 
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
@@ -25,83 +25,17 @@
     <script type="text/javascript" src="${basePath}/resources/js/jstree.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script type="text/javascript" src="${basePath}/resources/js/jquery-smartMenu-min.js"></script>
+  <script type="text/javascript" src="${basePath}/resources/js/jquery.contextMenu.js"></script>
 
     <script type="text/javascript">
+
+
         var imageMenuData = [
             [
-                {
-                    text: "图片描边",
-                    data: [
-                        [
-                            {
-                                text: "5像素深蓝",
-                                func: function () {
-                                    $(this).css("border", "5px solid #34538b");
-                                }
-                            },
-                            {
-                                text: "5像素浅蓝",
-                                func: function () {
-                                    $(this).css("border", "5px solid #a0b3d6");
-                                }
-                            },
-                            {
-                                text: "5像素淡蓝",
-                                func: function () {
-                                    $(this).css("border", "5px solid #cad5eb");
-                                }
-                            }
-                        ]
-                    ]
-                },
-                {
-                    text: "图片内间距",
-                    func: function () {
-                        $(this).css("padding", "10px");
-                    }
-                },
-                {
-                    text: "图片背景色",
-                    func: function () {
-                        $(this).css("background-color", "#beceeb");
-                    }
-                }
-            ],
-            [
-                {
-                    text: "查看原图",
-                    func: function () {
-                        var src = $(this).attr("src");
-                        window.open(src.replace("/s512", ""));
-                    }
-                }
-            ]
-        ];
 
-        var bodyMenuData = [
-            [
                 {
-                    text: "上传",
-                    data: [
-                        [
-                            {
-                                text: "上传-覆盖",
-                                func: function () {
-                                    $(this).css("border", "5px solid #34538b");
-                                }
-                            },
-                            {
-                                text: "上传-忽略",
-                                func: function () {
-                                    // $(this).css("border", "5px solid #a0b3d6");
-                                }
-                            }
-                        ]
-                    ]
-                },
-                {
-                    text: "新建文件夹",
+                    text: "删除",
+                    icon: "glyphicon glyphicon glyphicon-floppy-remove",
                     func: function () {
                         //$(this).css("padding", "10px");
                     }
@@ -252,41 +186,7 @@
         img.parent().removeClass("hide");
     }
 
-    function demo_create() {
-        var ref = $('#jstree').jstree(true),
-                sel = ref.get_selected();
-        alert(sel.length);
-        if (!sel.length) {
-            return false;
-        }
-        sel = sel[0];
-        sel = ref.create_node(sel, "新建文件夹");
-        if (sel) {
-            ref.edit(sel);
-            console.log(sel);
 
-        }
-    }
-    ;
-    function demo_rename() {
-        var ref = $('#jstree').jstree(true),
-                sel = ref.get_selected();
-        if (!sel.length) {
-            return false;
-        }
-        sel = sel[0];
-        ref.edit(sel);
-    }
-    ;
-    function demo_delete() {
-        var ref = $('#jstree').jstree(true),
-                sel = ref.get_selected();
-        if (!sel.length) {
-            return false;
-        }
-        ref.delete_node(sel);
-    }
-    ;
     $(document).ready(function () {
         $('#container').layout({
 
@@ -328,7 +228,7 @@
                 action: function (data) {
                     var inst = $.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
-                    console.log(obj);
+                   // console.log(obj);
                     var url = "${basePath}/admin/file/browse?parentId=" + obj.id
                     art.dialog.open(url, /** 弹出ART窗体*/
                             {
@@ -346,35 +246,33 @@
                 action: function (data) {
                     var inst = $.jstree.reference(data.reference),
                     obj = inst.get_node(data.reference);
-                    console.log(obj.id);
                     inst.create_node(obj, {'text': '新建文件夹'}, 'first', function (new_node) {
                         setTimeout(function () {
                             inst.edit(new_node);
-                            console.log(new_node);
+
                         }, 1);
 
                     });
-                    obj = inst.get_node(data.reference);
-                    console.log("----"+obj.id);
+
 
                 }
             },
-            "rename": {
+          /*  "rename": {
                 "separator_before": false,
                 "separator_after": false,
                 "_disabled": false, //(this.check("rename_node", data.reference, this.get_parent(data.reference), "")),
                 "label": "重命名",
-                /*
+                *//*
                  "shortcut"			: 113,
                  "shortcut_label"	: 'F2',
                  "icon"				: "glyphicon glyphicon-leaf",
-                 */
+                 *//*
                 "action": function (data) {
                     var inst = $.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
                     inst.edit(obj);
                 }
-            },
+            },*/
             delete: {
                 label: "删除",
                 icon: "glyphicon glyphicon glyphicon-floppy-remove",
@@ -382,9 +280,8 @@
                     if (!confirm("确认要删除吗")) {
                         return
                     }
-
                     var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference);
+                    obj = inst.get_node(data.reference);
                     if (inst.is_selected(obj)) {
                         inst.delete_node(inst.get_selected());
                     }
@@ -392,8 +289,8 @@
                         inst.delete_node(obj);
                     }
                     $.get("${basePath}/admin/file/delete/" + obj.id, function (res) {
-                        if (res != "0") {
-                            alert(res);
+                        if (res.code != 0) {
+                            alert(res.msg);
                         } else {
 
                             $("#file-content").empty();
@@ -422,6 +319,16 @@
                     "check_callback": true,
                     'multiple': false
                 }
+            }).on("rename_node.jstree", function (e, data) {
+                console.log(data);
+                console.log(data.text);
+                console.log(data.node.parent);
+                data.node.id = data.node.parent+"FILE_SEPARATOR"+data.text;
+                $.get("${basePath}/admin/file/mkdir/"+data.node.id,function(data){
+                    if(data!="0"){
+                        alert(data);
+                    }
+                })
             });
         });
 
@@ -458,12 +365,7 @@
            path =  id.substring(0,id.indexOf('.'));
             window.open("${basePath}/admin/file/listImg/" + path+"?suffix="+suffix );
         });
-        /** 8 interact with the tree - either way is OK
-         $('button').on('click', function () {
-            $('#jstree').jstree(true).select_node('child_node_1');
-            $('#jstree').jstree('select_node', 'child_node_1');
-            $.jstree.reference('#jstree').select_node('child_node_1');
-          });**/
+
         var sclHeight = $(document).height() - 150;
 
         //左边滚动条
@@ -472,15 +374,51 @@
             theme: "inset-2-dark"
         });
 
-        $(".folder_wrap").smartMenu(imageMenuData, {
-            name: "image"
+        $.contextMenu({
+            selector: '.thumb',
+            callback: function(key, options) {
+                path = this.attr("id");
+                if (!confirm("确认要删除吗")) {
+                    return
+                }
+                var delImg = $(this);
+
+                $.get("${basePath}/admin/file/delete/"+path+".json",function(data){
+                   if(data.code!=0){
+                        alert(data.msg);
+                    }else{
+                       delImg.parent().hide(1000);
+                   }
+                });
+
+            },
+            items: {
+                "Delete": {name: "删除", icon: "delete"}
+            }
         });
-        /**$("#file-content").smartMenu(bodyMenuData, {
-      		name: "image1"
-      	});
-         $("#child_node_1_2").smartMenu(imageMenuData, {
-      		name: "image1"
-      	});**/
+
+     /*   $.contextMenu({
+            selector: '.folder_img',
+            callback: function(key, options) {
+                path = this.attr("id");
+                isdelete = false;
+                $.get("${basePath}/admin/file/delete/"+path+".json",function(data){
+                    if(data.code!=0){
+                        alert(data.msg);
+                    }else{
+                        isdelete = true;
+                    }
+                });
+                $(this).parent().hide(1000);
+            },
+            items: {
+                "Delete": {name: "删除", icon: "delete"}
+            }
+        });*/
+
+
+
+
 
 
 
