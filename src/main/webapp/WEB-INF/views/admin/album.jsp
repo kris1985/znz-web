@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%//@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,6 +55,8 @@
         <a href="#prev-group" class="album-carousel-btn-prev" id="album-carousel-btn-prev">‹</a>
         <div class="album-carousel-zone" id="album-carousel-zone">
             <ul class="album-carousel-list" id="album-carousel-list">
+
+                <%/**
                 <c:forEach items="imgs" var="img">
                     <c:choose>
                         <c:when test="${img.selected}">
@@ -64,8 +67,26 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
+                **/
+%>
 
+                <%
+                    java.util.List<com.znz.vo.FileNodeVO> list = (java.util.List<com.znz.vo.FileNodeVO>)request.getAttribute("imgs");
+                    String selectedClass = "";
+                    for(int i=0;i<list.size();i++){
+                        com.znz.vo.FileNodeVO vo = list.get(i);
+                        if (vo.isSelected()){
+                            selectedClass=   "album-carousel-thumb-selected";
+                        }else{
+                            selectedClass="";
+                        }
+
+                %>
+                <li class="album-carousel-thumb <%=selectedClass%>"><a href="<%= vo.getUrl()%>"><img src="<%= vo.getThumbUrl()%>" alt="<%=vo.getName()%>"  /></a></li>
+                <%}%>
             </ul>
+
+
         </div>
         <a href="#next-group" class="album-carousel-btn-next" id="album-carousel-btn-next">›</a>
     </div>
@@ -106,6 +127,7 @@
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/album.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-latest.js"></script>
+<script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
 <script type="text/javascript">
 
 
@@ -116,9 +138,27 @@
         if(zoom>80&&zoom<=500) o.style.zoom=zoom+'%';
         return false;
     }
+    var Album = new jQuery.Album({
+        // 当前显示图片在缩略图的中索引值
+        curIndex: ${currentIndex}
+    });
 
-    var Album = new jQuery.Album();
     $(function(){
+        if($.cookie('albumBackground') !=undefined){
+            $("body").css("background",$.cookie('albumBackground'));
+            $("#album").css("background",$.cookie('albumBackground'));
+            $(".fixedBtns").css("background",$.cookie('albumBackground'));
+            index = $.cookie('albumColorIndex');
+            if(index!=undefined){
+                if(index=="1" || index=="2"){
+                    $("#album-image-ft").css("color","#000000");
+                    $(".fixedBtns li").css("color","#000000");
+                }else{
+                    $("#album-image-ft").css("color","#FFFFFF");
+                    $(".fixedBtns li").css("color","#FFFFFF");
+                }
+            }
+        }
         $("#album-carousel-zone").width($(document).width()-100);
 
         $(".album-image-bd").height($(document).height()-0);
@@ -137,6 +177,8 @@
             $("body").css("background",$(this).css("background"));
             $("#album").css("background",$(this).css("background"));
             $(".fixedBtns").css("background",$(this).css("background"));
+            $.cookie('albumBackground', $(this).css("background"));
+            $.cookie('albumColorIndex', text);
         });
 
         $(".fixedBtns li").hover(function(){

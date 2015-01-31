@@ -43,8 +43,9 @@ public class WebBootstrap {
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/znz-web");
         webapp.setResourceBase("d:/git/znz-web/src/main/webapp/");
-       // webapp.setDescriptor("d:/git/znz-web/src/main/webapp/WEB-INF/web.xml");
+
         server.setHandler(webapp);
         server.start();
+        server.join();
     }
 }

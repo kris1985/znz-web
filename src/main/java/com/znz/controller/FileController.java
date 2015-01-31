@@ -169,35 +169,48 @@ public class FileController {
 
 
     @RequestMapping(value = "/toListImg" , method= RequestMethod.GET)
-    public String toListImg(HttpServletRequest request,@RequestParam String path,@RequestParam String selectedFileName,Model model)  {
+    public String toListImg(HttpServletRequest request,@RequestParam String path,@RequestParam String suffix,Model model)  {
         model.addAttribute("path",path);
-        model.addAttribute("selectedFileName",selectedFileName);
+        model.addAttribute("selectedFileName",suffix);
         return "admin/album";
     }
     @RequestMapping(value = "/listImg/{path}" , method= RequestMethod.GET)
-    public  String listImg(HttpServletRequest request,@PathVariable String path,@RequestParam String selectedFileName,Model model)  {
-        path = FilePathConverter.decode(path);
+    public  String listImg(HttpServletRequest request,@PathVariable String path,@RequestParam String suffix,Model model)  {
+        path = FilePathConverter.decode(path+"."+suffix);
         String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
-        File f = new File(path).getParentFile();//获取当前文件的父目录
+        File f = new File(path);
+        File parent = f.getParentFile();
         List<FileNodeVO> list = new ArrayList<FileNodeVO>();
-        File files [] =f.listFiles();
+        File files [] =parent.listFiles();
         FileNodeVO fileNode = null;
+        FileNodeVO selected = null;
         for(File file :files){
             if(file.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)){
                 fileNode = new FileNodeVO();
-                fileNode.setLastModified(f.lastModified());
+                fileNode.setLastModified(file.lastModified());
                 fileNode.setName(file.getName());
-                fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
+                fileNode.setThumbUrl(file.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
                 fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
-                if(file.getName().equals(selectedFileName)){
+                if(file.getName().equals(f.getName())){
                     fileNode.setSelected(true);
+                    selected = fileNode;
                 }
                 list.add(fileNode);
             }
         }
+        Collections.sort(list, new Comparator<FileNodeVO>() {
+            @Override
+            public int compare(FileNodeVO o1, FileNodeVO o2) {
+                return o1.getLastModified() > o2.getLastModified() ? 1 : -1;
+            }
+        });
+        int currentIndex = list.indexOf(selected);
+
         String selectedImg = path.replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH);
         model.addAttribute("selectedImg",selectedImg);
+
         model.addAttribute("imgs",list);
+        model.addAttribute("currentIndex",currentIndex);
         return "admin/album";
     }
 

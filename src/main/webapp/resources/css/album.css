@@ -52,7 +52,7 @@ cursor:pointer}
 	overflow:hidden;
 	position: absolute;
 	
-	top:0;color:#fff;font-weight:bold;
+	top:10px;color:#fff;font-weight:bold;
 	
 }
 
@@ -140,7 +140,7 @@ cursor:pointer}
 .album-image-loading-overlay{
 	position:absolute;
 	z-index:4;
-	top:0;
+	top:-20px;
 	left:50%;
 	margin:0;
 	margin-left:-50%;
@@ -148,8 +148,9 @@ cursor:pointer}
 	height:100%;
 	background-color:#FFF;
 	opacity: 0.2;
-	filter:alpha(opacity=60);
+	filter:alpha(opacity=20);
 	overflow:hidden;
+	z-index:4;
 }
 
 .album-image-loading-overlay img{
@@ -169,7 +170,7 @@ cursor:pointer}
 	overflow:hidden;
 	position:fixed;left:50%;
 	margin-left:-50%;
-bottom: 50px;z-index:1999;
+bottom: 45px;z-index:1999;
 }
 
 .album-carousel-btn-prev:link,.album-carousel-btn-prev:visited,.album-carousel-btn-prev:hover{
@@ -199,8 +200,8 @@ bottom: 50px;z-index:1999;
 }
 
 .album-carousel-btn-prev:hover,.album-carousel-btn-next:hover{
-	color:#F00;
-	background-color:#F4F4F4;
+	color:#057BDF;
+	
 }
 
 .album-carousel-zone{
@@ -208,9 +209,9 @@ bottom: 50px;z-index:1999;
 	z-index:1;
 	float:left;
 	margin:0;
-	width:94%;
+	width:980px;
 	height:80px;
-	background-color:#FFF;
+	
 	overflow:hidden;
 }
 
@@ -260,8 +261,7 @@ bottom: 50px;z-index:1999;
 	left:-80px;
 	width:230px;
 	height:144px;
-	opacity:0.5;
-	filter:alpha(opacity=50);
+
 }
 
 .album-carousel-thumb-selected a:link img,.album-carousel-thumb-selected a:visited img,.album-carousel-thumb-selected a:hover img,.album-carousel-thumb a:hover img{
@@ -305,6 +305,6 @@ bottom: 50px;z-index:1999;
 
 #album-image{position: absolute;top:50%;left:50%;cursor: pointer;}
 .bs-glyphicons-list{margin-top:-10px}
-.fixedBtns li{float:left;margin-right:30px;text-align:center;cursor:pointer;color:#ffffff}
+.fixedBtns li{float:left;text-align:center;cursor:pointer;color:#ffffff;width: 69px;display: block;}
 .fixedBtns li:hover{font-weight:bold;color:#057BDF}
 ..bs-glyphicons-list{margin:0;margin-top:5px;}
