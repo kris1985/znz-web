@@ -44,9 +44,9 @@ public class FileController {
                 String originalName = file.getOriginalFilename();
                 String extName =originalName.substring(originalName.lastIndexOf(".")+1);
                 String preName =originalName.substring(0,originalName.lastIndexOf("."));
-                System.out.println(file.getOriginalFilename()+":"+extName);
+                //System.out.println(file.getOriginalFilename()+":"+extName);
                 String pathname = parentDir+"/" + originalName;
-                System.out.println("path:"+pathname);
+               // System.out.println("path:"+pathname);
                 File descFile  = new File(pathname);
                 FileUtils.copyInputStreamToFile(file.getInputStream(),descFile);
             if(!extName.equalsIgnoreCase("zip")){
@@ -212,9 +212,15 @@ public class FileController {
     }
 
     @RequestMapping(value = "/delete/{path}" , method= RequestMethod.GET)
-    public @ResponseBody ResultVO delete(@PathVariable String path)  {
+    public @ResponseBody ResultVO delete(HttpServletRequest request,@PathVariable String path)  {
         ResultVO result = new ResultVO();
         path = FilePathConverter.decode(path);
+        String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        if(realPath.equals(path)){
+            result.setCode(-1);
+            result.setMsg("根目录不能删除");
+            return result;
+        }
         File f = new File(path);
         if(!f.exists()){
             result.setCode(-1);
@@ -240,18 +246,40 @@ public class FileController {
     }
 
 
-    @RequestMapping(value = "/mkdir/{path}" , method= RequestMethod.GET)
-    public @ResponseBody String mkdir(@PathVariable String path)  {
+    @RequestMapping(value = "/mkdir/{path}/{old}" , method= RequestMethod.GET)
+    public @ResponseBody String mkdir(@PathVariable("path") String path,@PathVariable("old") String old)  {
         path = FilePathConverter.decode(path);
+        old = FilePathConverter.decode(old);
         File f = new File(path);
+        File oldFile = new File(old);
         if(f.exists()){
             return "文件夹已经存在，请重新输入";
         }else {
-            f.mkdir();
+            if(!oldFile.exists()){
+                f.mkdir();
+            }else{
+                oldFile.renameTo(f);
+            }
+
         }
         return  "0";
     }
 
 
+    @RequestMapping(value = "/uploadIndexBg" , method= RequestMethod.POST)
+    public  @ResponseBody String uploadIndexBg(HttpServletRequest request, @RequestParam MultipartFile  file) throws IOException {
+        String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_BG_ROOT_PATH);
+        String originalName = file.getOriginalFilename();
+        String extName =originalName.substring(originalName.lastIndexOf("."));
+        String pathname = realPath + "/indexBg"+extName;
+        File descFile  = new File(pathname);
+        FileUtils.copyInputStreamToFile(file.getInputStream(),descFile);
+        return pathname;
+    }
+
+    @RequestMapping(value = "/toUpdateIndexBg" , method= RequestMethod.GET)
+    public String toUpdateIndexBg()  {
+        return "admin/updateIndexBg";
+    }
 
 }

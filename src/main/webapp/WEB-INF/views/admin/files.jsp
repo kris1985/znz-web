@@ -257,22 +257,18 @@
 
                 }
             },
-          /*  "rename": {
+          /* */ "rename": {
                 "separator_before": false,
                 "separator_after": false,
+                "icon": "glyphicon glyphicon glyphicon glyphicon-edit",
                 "_disabled": false, //(this.check("rename_node", data.reference, this.get_parent(data.reference), "")),
                 "label": "重命名",
-                *//*
-                 "shortcut"			: 113,
-                 "shortcut_label"	: 'F2',
-                 "icon"				: "glyphicon glyphicon-leaf",
-                 *//*
                 "action": function (data) {
                     var inst = $.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
                     inst.edit(obj);
                 }
-            },*/
+            },
             delete: {
                 label: "删除",
                 icon: "glyphicon glyphicon glyphicon-floppy-remove",
@@ -282,17 +278,16 @@
                     }
                     var inst = $.jstree.reference(data.reference),
                     obj = inst.get_node(data.reference);
-                    if (inst.is_selected(obj)) {
-                        inst.delete_node(inst.get_selected());
-                    }
-                    else {
-                        inst.delete_node(obj);
-                    }
                     $.get("${basePath}/admin/file/delete/" + obj.id, function (res) {
                         if (res.code != 0) {
                             alert(res.msg);
                         } else {
-
+                            if (inst.is_selected(obj)) {
+                                inst.delete_node(inst.get_selected());
+                            }
+                            else {
+                                inst.delete_node(obj);
+                            }
                             $("#file-content").empty();
                         }
                     });
@@ -307,7 +302,7 @@
             var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
-                'plugins': ["wholerow", "contextmenu", "search", "sort"],
+                'plugins': ["wholerow", "contextmenu", "search"],
 
                 'contextmenu': {
                     'items': items
@@ -320,11 +315,8 @@
                     'multiple': false
                 }
             }).on("rename_node.jstree", function (e, data) {
-                console.log(data);
-                console.log(data.text);
-                console.log(data.node.parent);
-                data.node.id = data.node.parent+"FILE_SEPARATOR"+data.text;
-                $.get("${basePath}/admin/file/mkdir/"+data.node.id,function(data){
+                //alert(data.node.id);
+                 $.get("${basePath}/admin/file/mkdir/"+data.node.id.replace("_anchor", ""),function(data){
                     if(data!="0"){
                         alert(data);
                     }
@@ -336,10 +328,22 @@
 
         // 文件管理器左部文件树点击事件
         $('#jstree').on("changed.jstree", function (e, data) {
-            console.log(data.selected);
+            console.log("-----------------------------"+data.selected);
             if (data.selected.length != 0) {
                 show(data.selected[0].replace("_anchor", ""));
             }
+        });
+        $('#jstree').on("rename_node.jstree", function (e, data) {
+            //console.log("---------------rename_node--------------"+data.text);
+            //console.log("---------------rename_node--------------"+data.old);
+            var id = data.node.parent+"FILE_SEPARATOR"+data.text+"_anchor";
+            var old = data.node.parent+"FILE_SEPARATOR"+data.old;
+            $("#jstree").jstree(true).set_id (data.node.id, id);
+            $.get("${basePath}/admin/file/mkdir/"+id.replace("_anchor", "")+"/"+old,function(data){
+                if(data!="0"){
+                    alert(data);
+                }
+            })
         });
         //文件管理器上部导航点击
         $(document).delegate('.item', 'click', function () {
@@ -415,14 +419,7 @@
                 "Delete": {name: "删除", icon: "delete"}
             }
         });*/
-
-
-
-
-
-
-
-
+        /*搜索*/
         var to = false;
         $('#search').keyup(function () {
             if (to) {

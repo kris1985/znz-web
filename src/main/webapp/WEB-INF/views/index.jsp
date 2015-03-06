@@ -14,6 +14,9 @@
     <%@ include file="common/common.jsp"%>
 	<link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
     <link href="${basePath}/resources/css/login.css" rel="stylesheet"  type="text/css" />
+      <style>
+          body{ background: url("${basePath}/upload/bg/indexBg.jpg")}
+      </style>
 	<!--
 		Used for including CSRF token in JSON requests
 		Also see bottom of this file for adding CSRF token to JQuery AJAX requests
