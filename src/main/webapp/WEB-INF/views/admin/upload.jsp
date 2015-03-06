@@ -79,7 +79,7 @@
 
          				},
          			//	'auto':false,
-         				'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;*;*.zip',
+         				'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;*;',
          				'fileObjName':'files',
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',
@@ -87,6 +87,7 @@
          				'onUploadSuccess' : function(file, data, response) {
          				                var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
          				                $("#result").show();
+                           // window.opener.show("${param.parentId}")
          				                $("#result").append("<p>"+htm+'</p>');
          				               //  $("#result").hide(5000)
                                        // alert('The file ' + file.name + ' was successfully uploaded with a response of ' + response + ':' + data);

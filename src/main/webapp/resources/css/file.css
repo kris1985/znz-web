@@ -66,3 +66,5 @@ opacity:0.8;}
 	}
 	.jstree-themeicon{width:0px}
 	.nav_bar .item {line-height:24px;}
+    .file_num_div {margin-top: 10px;}
+.file_num_div span{color: red}

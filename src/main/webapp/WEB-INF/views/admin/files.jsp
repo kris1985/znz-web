@@ -73,7 +73,7 @@
 
 
     </div>
-    <div class="pane ui-layout-south"><p style="text-align:center">指南针鞋讯版权所有</p></div>
+    <div class="pane ui-layout-south"><span style="float: right" id="fileNumResult"></span><p style="text-align:center">指南针鞋讯版权所有</p></div>
 
     <div class="pane ui-layout-west">
         <div id="left_container" style="border:0px solid #ccc">
@@ -103,24 +103,30 @@
                 $("#file-content").html("");
                 return;
             }
+            var foldNum=0;
+            var fileNum=0;
             $.each(result.fileNodes, function (n, value) {
                 //alert(n + ' ' + value.directory);
                 if (value.directory == true) {
                     tem = folderTemplate.replace("{folderId}", value.path);
                     tem = tem.replace("{folderName}", value.name);
                     folderHtml += tem;
+                    foldNum++;
                 } else {
                     tem = imgTemplate.replace("{id}", value.path);
                     tem = tem.replace("{imgName}", value.name);
                     tem = tem.replace("{thumbUrl}", value.thumbUrl);
                     //tem = initImg(tem);
                     imgHtml += tem;
+                    fileNum++;
                 }
             });
             //$(folderHtml).prependTo("#file-content");
             // $(imgHtml).prependTo("#file-content");
 
             $("#file-content").html(folderHtml + imgHtml);
+            $("#fileNumResult").html("<div class='file_num_div' style='clear: both'>文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
+           // $("#file-content").prepend("<div>文件夹:" +foldNum+" 文件："+fileNum+"</div>")
             $(".thumb").load(function () {
                 initImg($(this));
             });
@@ -235,7 +241,10 @@
                                 "id": obj.id,
                                 title: "上传文件",
                                 width: 500,
-                                height: 400
+                                height: 400,
+                                close : function () {
+                                   show(obj.id);
+                                }
                             }
                     );
                 }
@@ -392,6 +401,8 @@
                         alert(data.msg);
                     }else{
                        delImg.parent().hide(1000);
+                       var num = $(".file_num_div").find(".file_num").text();
+                       $(".file_num_div").find(".file_num").text(parseInt(num)-1);
                    }
                 });
 

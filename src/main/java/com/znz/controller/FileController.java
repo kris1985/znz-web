@@ -154,7 +154,7 @@ public class FileController {
             Collections.sort(fileNodes, new Comparator<FileNodeVO>() {
                 @Override
                 public int compare(FileNodeVO o1, FileNodeVO o2) {
-                    return o1.getLastModified() > o2.getLastModified() ? 1 : -1;
+                    return o1.getLastModified() > o2.getLastModified() ? -1 : 1;
                 }
             });
             vo.setFileNodes(fileNodes);
