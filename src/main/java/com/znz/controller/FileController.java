@@ -1,6 +1,7 @@
 package com.znz.controller;
 
 import com.znz.config.AppConfig;
+import com.znz.dao.UserAuthMapper;
 import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.util.FilePathConverter;
@@ -35,6 +36,9 @@ public class FileController {
 
     @Resource
     private AppConfig appConfig;
+
+    @Resource
+    private UserAuthMapper userAuthMapper;
 
     @RequestMapping(value = "/upload/{parentDir}" , method= RequestMethod.POST)
     public  @ResponseBody void processUpload(HttpServletRequest request, @RequestParam MultipartFile [] files, Model model,@PathVariable String parentDir) throws IOException {
@@ -259,6 +263,7 @@ public class FileController {
                 f.mkdir();
             }else{
                 oldFile.renameTo(f);
+                userAuthMapper.updateByFilePath(oldFile.getName(),f.getName());
             }
 
         }

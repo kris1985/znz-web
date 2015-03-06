@@ -2,6 +2,7 @@ package com.znz.dao;
 
 import com.znz.model.UserAuth;
 import com.znz.vo.AuthFileVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface UserAuthMapper {
     List<UserAuth> listByUserId(int userId);
 
     void deleteByUserId(int userId);
+
+    int updateByFilePath(@Param("src")String src, @Param("dest")String dest);
 }
