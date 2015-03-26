@@ -7,10 +7,7 @@ import com.znz.model.User;
 import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.util.UserType;
-import com.znz.vo.AuthFileVO;
-import com.znz.vo.UserAddVO;
-import com.znz.vo.UserLoginVO;
-import com.znz.vo.UserSession;
+import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -53,13 +50,21 @@ public class UserController {
     }
 
     @RequestMapping(value = "/delete/{userId}" , method= RequestMethod.GET)
-    public String  delete(@PathVariable int userId){
+    public String  delete(HttpServletRequest request,@PathVariable int userId){
+        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!checkPermisson(userSession)){
+            throw  new RuntimeException("无权限操作");
+        }
         userMapper.deleteByPrimaryKey(userId);
         return "redirect:/admin/user/users";
     }
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST)
-    public String  add(@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+    public String  add(HttpServletRequest request,@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!checkPermisson(userSession)){
+            throw  new RuntimeException("无权限操作");
+        }
         if (br.hasErrors()){
             model.addAttribute("br",br);
             return  "/admin/userAdd";
@@ -99,7 +104,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update" , method= RequestMethod.POST)
-    public String  update(@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+    public String  update(HttpServletRequest request,@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!checkPermisson(userSession)){
+            throw  new RuntimeException("无权限操作");
+        }
         if (br.hasErrors()){
             model.addAttribute("br",br);
             return  "/admin/userAdd";
@@ -186,5 +195,13 @@ public class UserController {
             }
         }
         return auths;
+    }
+
+
+    private boolean checkPermisson(UserSession userSession) {
+        if( userSession.getUser().getUserType()!=2 && userSession.getUser().getUserType()!=3){
+            return false;
+        }
+        return true;
     }
 }

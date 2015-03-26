@@ -1,6 +1,5 @@
 package com.znz.vo;
 
-import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -13,10 +12,8 @@ public class UserLoginVO {
         return userName;
     }
 
-    @NotBlank
     private  String userName;
 
-    @NotBlank
     private String pwd;
 
     public void setUserName(String userName) {

@@ -19,6 +19,7 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +44,11 @@ public class FileController {
     @RequestMapping(value = "/upload/{parentDir}" , method= RequestMethod.POST)
     public  @ResponseBody void processUpload(HttpServletRequest request, @RequestParam MultipartFile [] files, Model model,@PathVariable String parentDir) throws IOException {
        // String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        ResultVO result = new ResultVO();
+        if (!checkPermisson(userSession, result)){
+           throw new RuntimeException("无权限操作");
+        }
         parentDir = FilePathConverter.decode(parentDir);
         for(MultipartFile file:files){
                 String originalName = file.getOriginalFilename();
@@ -119,6 +125,8 @@ public class FileController {
                     String path =   rootPath + "/"+userAuth.getFilePath();
                     MyFileUtil.listFile(new File(path), list);
                 }
+            }else{
+                list = Collections.emptyList();
             }
         }
         return  list;
@@ -217,7 +225,11 @@ public class FileController {
 
     @RequestMapping(value = "/delete/{path}" , method= RequestMethod.GET)
     public @ResponseBody ResultVO delete(HttpServletRequest request,@PathVariable String path)  {
-        ResultVO result = new ResultVO();
+       UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+       ResultVO result = new ResultVO();
+       if (!checkPermisson(userSession, result)){
+            return result;
+        }
         path = FilePathConverter.decode(path);
         String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         if(realPath.equals(path)){
@@ -232,7 +244,7 @@ public class FileController {
             return result;
         }
         try{
-            if(f.isDirectory()){
+            if(!f.isDirectory()){
                 FileUtils.deleteQuietly(f);//删除缩略图
                 FileUtils.deleteQuietly(new File(f.getAbsolutePath().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX,"")));//删除原图
             }else {
@@ -249,6 +261,15 @@ public class FileController {
         return  result;
     }
 
+    private boolean checkPermisson(UserSession userSession, ResultVO result) {
+        if( userSession.getUser().getUserType()!=2 && userSession.getUser().getUserType()!=3){
+            result.setCode(-1);
+            result.setMsg("无权限操作");
+            return false;
+        }
+        return true;
+    }
+
 
     @RequestMapping(value = "/mkdir/{path}/{old}" , method= RequestMethod.GET)
     public @ResponseBody String mkdir(@PathVariable("path") String path,@PathVariable("old") String old)  {
@@ -260,7 +281,7 @@ public class FileController {
             return "文件夹已经存在，请重新输入";
         }else {
             if(!oldFile.exists()){
-                f.mkdir();
+                f.mkdirs();
             }else{
                 oldFile.renameTo(f);
                 userAuthMapper.updateByFilePath(oldFile.getName(),f.getName());

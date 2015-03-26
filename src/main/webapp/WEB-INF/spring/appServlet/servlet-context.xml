@@ -47,8 +47,10 @@
 	<task:annotation-driven />
     <!-- Json -->
     <beans:bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+
         <beans:property name="messageConverters">
-            <beans:bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+
+            <beans:bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <beans:property name="supportedMediaTypes">
                     <beans:list>
                         <beans:value>text/plain;charset=utf-8</beans:value>
@@ -57,6 +59,9 @@
                         <beans:value>application/json;charset=utf-8</beans:value>
                     </beans:list> </beans:property>
             </beans:bean>
+
         </beans:property>
     </beans:bean>
+
+
 </beans:beans>

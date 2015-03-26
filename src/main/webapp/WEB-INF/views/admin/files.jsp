@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,24 +26,8 @@
     <script type="text/javascript" src="${basePath}/resources/js/jstree.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.mCustomScrollbar.concat.min.js"></script>
-  <script type="text/javascript" src="${basePath}/resources/js/jquery.contextMenu.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/jquery.contextMenu.js"></script>
 
-    <script type="text/javascript">
-
-
-        var imageMenuData = [
-            [
-
-                {
-                    text: "删除",
-                    icon: "glyphicon glyphicon glyphicon-floppy-remove",
-                    func: function () {
-                        //$(this).css("padding", "10px");
-                    }
-                }
-            ]
-        ];
-    </script>
 </head>
 <body>
 <div id="container">
@@ -86,7 +71,7 @@
     function show(selectedId) {
         //alert(selectedId);
         var folderTemplate = "<div class=folder_wrap><div id={folderId}  class=\"folder_img\"><img  src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"
-        var imgTemplate = "<div class='img_wrap ' ><img class='thumb' src='{thumbUrl}' id='{id}' style='max-width:256px;max-height:256px'><div class='img_txt'>{imgName}</div></div>"
+        var imgTemplate = "<div class='img_wrap ' ><img class='thumb' src='{thumbUrl}' id='{id}' style='max-width:256px;max-height:182px'><div class='img_txt'>{imgName}</div></div>"
         var navBarTemplate = "<span class='item' id={folderId}>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span>";
         var folderHtml = "";
         var imgHtml = "";
@@ -114,7 +99,9 @@
                     foldNum++;
                 } else {
                     tem = imgTemplate.replace("{id}", value.path);
-                    tem = tem.replace("{imgName}", value.name);
+                    name = value.name.substring(0,value.name.lastIndexOf("."));
+                   // alert(name);
+                    tem = tem.replace("{imgName}", name);
                     tem = tem.replace("{thumbUrl}", value.thumbUrl);
                     //tem = initImg(tem);
                     imgHtml += tem;
@@ -134,7 +121,7 @@
     }
 
 
-    maxHeight = 256;
+    maxHeight = 182;
     maxWidth = 256;
     function initImg(img) {
 
@@ -182,7 +169,7 @@
             width = width / 1.1;
             height = height / 1.1
         }
-        while (height > 256) {
+        while (height > 182) {
             height = height / 1.1
             width = width / 1.1;
         }
@@ -311,12 +298,17 @@
             var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
-                'plugins': ["wholerow", "contextmenu", "search"],
-
+                <c:choose>
+                <c:when test="${user.user.userType ==2 or user.user.userType ==3 }">
+                'plugins': ["wholerow","search", "contextmenu" ],
                 'contextmenu': {
                     'items': items
                 },
-
+            </c:when>
+                <c:otherwise>
+                'plugins': ["wholerow","search"],
+                </c:otherwise>
+                </c:choose>
                 'core': {
                     'data': result,
                     'strings': true,
@@ -325,9 +317,12 @@
                 }
             }).on("rename_node.jstree", function (e, data) {
                 //alert(data.node.id);
-                 $.get("${basePath}/admin/file/mkdir/"+data.node.id.replace("_anchor", ""),function(data){
-                    if(data!="0"){
-                        alert(data);
+                 $.get("${basePath}/admin/file/mkdir/"+data.node.id.replace("_anchor", ""),function(res){
+                    if(res!="0"){
+                        alert(res);
+                        var inst = $.jstree.reference(data.reference);
+                        inst.delete_node(inst.get_selected());
+
                     }
                 })
             });
@@ -337,7 +332,7 @@
 
         // 文件管理器左部文件树点击事件
         $('#jstree').on("changed.jstree", function (e, data) {
-            console.log("-----------------------------"+data.selected);
+           // console.log("-----------------------------"+data.selected);
             if (data.selected.length != 0) {
                 show(data.selected[0].replace("_anchor", ""));
             }
@@ -356,6 +351,7 @@
         });
         //文件管理器上部导航点击
         $(document).delegate('.item', 'click', function () {
+            $('#jstree').jstree(true).deselect_all();
             show($(this).attr("id"));
             // $('#jstree').jstree(false).select_node($(this).attr("id")+"_anchor");
             //  $('#jstree').jstree('select_node', $(this).attr("id")+"_anchor");
@@ -386,7 +382,7 @@
             setHeight: sclHeight,
             theme: "inset-2-dark"
         });
-
+        <c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
         $.contextMenu({
             selector: '.thumb',
             callback: function(key, options) {
@@ -411,7 +407,7 @@
                 "Delete": {name: "删除", icon: "delete"}
             }
         });
-
+</c:if>
      /*   $.contextMenu({
             selector: '.folder_img',
             callback: function(key, options) {

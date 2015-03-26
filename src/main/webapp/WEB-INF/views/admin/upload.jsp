@@ -9,77 +9,23 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-
-
     <title>指南针</title>
      <%@ include file="../common/common.jsp"%>
-<!--
-<link href="/znz-web/resources/css/swf.css" rel="stylesheet" type="text/css" />
+
 <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
-<script type="text/javascript" src="${basePath}/resources/js/swfupload.js" /></script>
-<script type="text/javascript" src="${basePath}/resources/js/swfupload.queue.js"></script>
-<script type="text/javascript" src="${basePath}/resources/js/fileprogress.js"></script>
-<script type="text/javascript" src="${basePath}/resources/js/handlers.js"></script>
--->
-<link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
-<link href="/znz-web/resources/css/docs-min.css" rel="stylesheet" type="text/css" />
-<link href="/znz-web/resources/css/uploadify.css" rel="stylesheet" type="text/css" />
+<link href="${basePath}/resources/css/uploadify.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.uploadify.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.uploadify.min.js"></script>
 <script type="text/javascript">
-/**
-		var swfu;
 
-		window.onload = function() {
-			var settings = {
-				flash_url :"${basePath}/resources/swfupload.swf",
-				upload_url:"${basePath}/admin/file/upload/ZNZ",
-				post_params: {"PHPSESSID" : ""},
-				file_size_limit : "100 MB",
-				file_types : "*.*",
-				file_types_description : "All Files",
-				file_upload_limit : 10,  //配置上传个数
-				file_queue_limit : 0,
-				file_post_name : 'files',
-				custom_settings : {
-					progressTarget : "fsUploadProgress",
-					cancelButtonId : "btnCancel"
-				},
-				debug: true,
-
-				// Button settings
-				button_image_url: "${basePath}/resources/img/browse.jpg",
-				button_width: "65",
-				button_height: "29",
-				button_placeholder_id: "spanButtonPlaceHolder",
-				button_text: '<span class="theFont">浏览</span>',
-				button_text_style: ".theFont { font-size: 12px;width:200px;color:#fff }",
-				button_text_left_padding: 12,
-				button_text_top_padding: 3,
-
-				file_queued_handler : fileQueued,
-				file_queue_error_handler : fileQueueError,
-				file_dialog_complete_handler : fileDialogComplete,
-				upload_start_handler : uploadStart,
-				upload_progress_handler : uploadProgress,
-				upload_error_handler : uploadError,
-				upload_success_handler : uploadSuccess,
-				upload_complete_handler : uploadComplete,
-				queue_complete_handler : queueComplete
-			};
-
-			swfu = new SWFUpload(settings);
-	     };
-	     **/
 	     $(function() {
          			$('#file_upload').uploadify({
          				'formData'     : {
-         					'timestamp' : '123'
-
+         					'timestamp' : new Date().getTime()
          				},
          			//	'auto':false,
-         				'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;*;',
+         				'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;',
          				'fileObjName':'files',
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',

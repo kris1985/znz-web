@@ -82,7 +82,7 @@
                         }
 
                 %>
-                <li class="album-carousel-thumb <%=selectedClass%>"><a href="<%= vo.getUrl()%>"><img src="<%= vo.getThumbUrl()%>" alt="<%=vo.getName()%>"  /></a></li>
+                <li class="album-carousel-thumb <%=selectedClass%>"><a href="<%= vo.getUrl()%>"><img src="<%= vo.getThumbUrl()%>" alt="<%=vo.getName().substring(6,vo.getName().lastIndexOf("."))%>"  /></a></li>
                 <%}%>
             </ul>
 

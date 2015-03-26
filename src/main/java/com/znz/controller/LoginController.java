@@ -74,7 +74,7 @@ public class LoginController {
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         //管理员
-        if(2==user.getUserType()){
+        if(2==user.getUserType()||3==user.getUserType()){
             return  "redirect:/admin/desktop";
         }
         return "redirect:/admin/file/list";

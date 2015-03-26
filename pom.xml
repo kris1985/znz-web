@@ -295,11 +295,23 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+                <encoding>utf-8</encoding>
+                <source>${java-version}</source>
+                <target>${java-version}</target>
+            </configuration>
+        </plugin></plugins>
+     <!--   <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
+                    <encoding>utf-8</encoding>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
                 </configuration>
@@ -335,10 +347,10 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
-                <!-- Have to use version 1.2 since version 1.3 does not appear to work with ITDs -->
+                &lt;!&ndash; Have to use version 1.2 since version 1.3 does not appear to work with ITDs &ndash;&gt;
                 <version>1.2</version>
                 <dependencies>
-                    <!-- You must use Maven 2.0.9 or above or these are ignored (see MNG-2972) -->
+                    &lt;!&ndash; You must use Maven 2.0.9 or above or these are ignored (see MNG-2972) &ndash;&gt;
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjrt</artifactId>
@@ -379,6 +391,6 @@
                     </webApp>
                 </configuration>
             </plugin>
-        </plugins>
+        </plugins>-->
     </build>
 </project>
