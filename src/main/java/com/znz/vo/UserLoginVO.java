@@ -8,14 +8,13 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class UserLoginVO {
 
-
-
     private  String userName;
 
     private String pwd;
 
     private int remember;// 1 记住密码
 
+    private String randomCode;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -40,5 +39,14 @@ public class UserLoginVO {
     public int getRemember() {
         return remember;
     }
+
+    public void setRandomCode(String randomCode) {
+        this.randomCode = randomCode;
+    }
+
+    public String getRandomCode() {
+        return randomCode;
+    }
+
 
 }

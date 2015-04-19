@@ -61,8 +61,8 @@ public class MySessionLister implements HttpSessionListener {
             if (!isSameSession(newSession, oldSessionId)) {
                 onlineSessionMap.remove(oldSessionId);
                 // 保存刚创建的会话。
-                System.out.println("old:"+oldSessionId);
-                System.out.println("new:"+newSession.getId());
+               /* System.out.println("old:"+oldSessionId);
+                System.out.println("new:"+newSession.getId());*/
                 onlineSessionMap.put(newSession.getId(), newSession);
                 flag = true;
             }

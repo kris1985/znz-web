@@ -13,6 +13,7 @@
     <mvc:view-controller path="/admin/desktop" view-name="admin/desktop"/>
     <mvc:view-controller path="/admin/user/users" view-name="admin/users"/>
     <mvc:view-controller path="/admin/user/toadd" view-name="admin/userAdd"/>
+    <mvc:view-controller path="/genCode" view-name="genCode"/>
 
 	<context:component-scan base-package="org.springframework.samples.mvc" />
 	<context:component-scan base-package="com.znz.controller"/>

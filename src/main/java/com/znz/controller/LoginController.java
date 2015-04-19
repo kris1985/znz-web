@@ -43,6 +43,11 @@ public class LoginController {
             model.addAttribute("br",br);
             return  "/index";
         }
+        String randCode = (String)request.getSession().getAttribute("randCode");
+        if(!userLoginVO.getRandomCode().equals(randCode)){
+            model.addAttribute("error", "验证码错误");
+            return  "/index";
+        }
         String userName = userLoginVO.getUserName();
         String pwd = userLoginVO.getPwd();
         //System.out.println(userName+":"+pwd);
