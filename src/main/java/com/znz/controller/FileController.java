@@ -10,6 +10,7 @@ import com.znz.util.MyFileUtil;
 import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -102,6 +104,7 @@ public class FileController {
 
     @RequestMapping(value = "/tree" , method= RequestMethod.GET)
     public @ResponseBody List<FileTreeVO> listTree(HttpServletRequest request,Model model)  {
+        String rootPath1 = request.getSession().getServletContext().getRealPath("");
         String rootPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         File rootFile = new File(rootPath);
         List<FileTreeVO> list  = new ArrayList<FileTreeVO>();
@@ -272,9 +275,15 @@ public class FileController {
 
 
     @RequestMapping(value = "/mkdir/{path}/{old}" , method= RequestMethod.GET)
-    public @ResponseBody String mkdir(@PathVariable("path") String path,@PathVariable("old") String old)  {
+    public @ResponseBody String mkdir(@PathVariable("path") String path,@PathVariable("old") String old) throws UnsupportedEncodingException {
         path = FilePathConverter.decode(path);
         old = FilePathConverter.decode(old);
+        if(StringUtils.isNoneBlank(path)){
+            path=    path.replaceAll("_anchor", "");
+        }
+        if(StringUtils.isNoneBlank(old)){
+            old = old.replaceAll("_anchor", "");
+        }
         File f = new File(path);
         File oldFile = new File(old);
         if(f.exists()){

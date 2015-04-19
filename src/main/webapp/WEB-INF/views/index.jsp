@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%//@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -36,21 +36,52 @@
         }else  if("8888"=="${param.error}"){
             alert("会话超时请重新登陆");
         }
+        $("#remember").click(function(){
+            if($(this).get(0).checked){
+                $(this).val("1");
+            }else{
+                $(this).val("0");
+            }
+        });
     })
     </script>
 </head>
 <body>
+<%
+    String name="";
+    String passward="";
+    Cookie[] cookies=request.getCookies();
+    if(cookies!=null) {
+        for (int i = 0; i < cookies.length; i++) {
+            if (cookies[i].getName().equals("znzauth")) {
+                if(!"".equals(cookies[i].getValue())){
+                    name = cookies[i].getValue().split("-")[0];
+                    passward = cookies[i].getValue().split("-")[1];
+                    pageContext.setAttribute("userName",name);
+                    pageContext.setAttribute("pwd",passward);
+                    break;
+                 }
+            }
+        }
+    }
+%>
  <div class="container1">
 
       <form class="form-signin" role="form" action="${basePath}/login"  style="display:none" method="post">
                <c:if test="${not empty error}">
 					<div id="message" class="success" style="font-size:12px;margin-bottom:6px;">${error}</div>
 		  		</c:if>
-        <input type="input" class="form-control" placeholder="请输入用户名" required autofocus id="userName" name="userName">
-        <input type="password" class="form-control" placeholder="请输入密码" required id="pwd" name="pwd">
+        <input type="input" class="form-control" placeholder="请输入用户名" required autofocus id="userName" name="userName" value="${userName}">
+        <input type="password" class="form-control" placeholder="请输入密码" required id="pwd" name="pwd" value="${pwd}">
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="remember-me" id="pwdCbox"> 记住密码
+              <c:if test="${not empty userName}">
+                 <input type="checkbox" value="1" id="remember" name="remember" checked="true">
+              </c:if>
+              <c:if test="${ empty userName}">
+                  <input type="checkbox" value="0" id="remember" name="remember">
+              </c:if>
+              记住密码
           </label>
         </div>
         <button class="btn btn-sm btn-primary btn-block" type="submit" id="loginBtn">登陆</button>

@@ -12,7 +12,7 @@
     <title>修改用户</title>
      <%@ include file="../common/common.jsp"%>
      <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
-          <link href="/znz-web/resources/css/clean.css" rel="stylesheet" type="text/css" />
+          <link href="${basePath}/resources/css/clean.css" rel="stylesheet" type="text/css" />
           <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
           <script type="text/javascript" src="${basePath}/resources/js/jquery.columns.min.js"></script>
           <script type="text/javascript" src="${basePath}/resources/js/gotopage.js"></script>
@@ -30,26 +30,26 @@
 	<div class="step1">
 	<div style="color:red">${error}</div>
 	 <div class="form-group">
-      <label for="lastname" class="col-sm-2 col-md-2 control-label">公司名称</label>
+      <label for="company" class="col-sm-2 col-md-2 control-label">公司名称</label>
       <div class="col-sm-10 col-md-10">
          <input type="text" class="form-control" id="company" name="company" placeholder="公司名称" maxlength="20" value=${user.company}>
       </div>
    </div>
    <div class="form-group">
-      <label for="firstname" class="col-sm-2 col-md-2 control-label">用户名</label>
+      <label for="userName" class="col-sm-2 col-md-2 control-label">用户名</label>
       <div class="col-sm-10 col-md-10">
          <input type="text" class="form-control" id="userName" name="userName" readonly placeholder="请输入用户名" value=${user.userName} >
       </div>
    </div>
    <div class="form-group">
-      <label for="firstname" class="col-sm-2 col-md-2 control-label">密码</label>
+      <label for="pwd" class="col-sm-2 col-md-2 control-label">密码</label>
       <div class="col-sm-10 col-md-10">
          <input type="password" class="form-control" id="pwd" name="pwd" placeholder="请输入密码" maxlength="16" value=${user.pwd}>
       </div>
    </div>
 
     <div class="form-group">
-      <label for="lastname" class="col-sm-2 col-md-2 control-label">IP策略</label>
+      <label for="limitIpFlag" class="col-sm-2 col-md-2 control-label">IP策略</label>
       <div class="col-sm-10 col-md-10">
         <input type="checkbox" name="limitIpFlag" value="1" id="limitIpFlag"> 限制IP  <input type="text" class="form-control" id="limitIps" name="limitIps"
             placeholder="请输入IP" maxlength="60" value=${user.limitIps}>
@@ -57,14 +57,14 @@
    </div>
 
    <div class="form-group">
-      <label for="lastname" class="col-sm-2 col-md-2 control-label">访问策略</label>
+      <label for="accessFlag" class="col-sm-2 col-md-2 control-label">访问策略</label>
       <div class="col-sm-10 col-md-10">
         <input type="checkbox" name="accessFlag" value="1" id="accessFlag"> 单台电脑访问
       </div>
    </div>
 
    <div class="form-group">
-      <label for="lastname" class="col-sm-2 col-md-2 control-label">每天下载次数</label>
+      <label for="maxDownloadTimes" class="col-sm-2 col-md-2 control-label">每天下载次数</label>
       <div class="col-sm-10 col-md-10">
         <input type="text" class="form-control" name="maxDownloadTimes" id="maxDownloadTimes" maxlength="6" value=${user.maxDownloadTimes}>
       </div>
@@ -155,7 +155,12 @@ $(function(){
 
         }
       });
-
+       $("#limitIpFlag").click(function(){
+           //alert($(this).get(0).checked);
+           if(!$(this).get(0).checked){
+                $("#limitIps").val("");
+           }
+       });
 	})
 </script>
 

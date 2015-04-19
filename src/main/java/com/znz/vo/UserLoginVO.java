@@ -8,26 +8,37 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class UserLoginVO {
 
-    public String getUserName() {
-        return userName;
-    }
+
 
     private  String userName;
 
     private String pwd;
 
+    private int remember;// 1 记住密码
+
+
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
 
-
-
     public String getPwd() {
         return pwd;
+    }
+
+    public void setRemember(int remember) {
+        this.remember = remember;
+    }
+
+    public int getRemember() {
+        return remember;
     }
 
 }
