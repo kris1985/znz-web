@@ -19,6 +19,8 @@ public class MySessionLister implements HttpSessionListener {
 
     private static Map onlineSessionMap = new HashMap();// 已登录的会话列表
 
+
+
     private static int activeSessions = 0;// 在线人数
 
     public MySessionLister() {
@@ -28,7 +30,7 @@ public class MySessionLister implements HttpSessionListener {
     // 会话创建后执行方法
     public void sessionCreated(HttpSessionEvent hse) {
         // 将在线人数加一
-        activeSessions++;
+        //activeSessions++;
 
     }
 
@@ -95,6 +97,10 @@ public class MySessionLister implements HttpSessionListener {
 
     public static int getActiveSessions() {
         return activeSessions;
+    }
+
+    public static void setActiveSessions(int activeSessions) {
+        MySessionLister.activeSessions = activeSessions;
     }
 
     public static void removeSession(String id) {

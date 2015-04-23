@@ -1,3 +1,4 @@
+<%@ page import="com.znz.listener.MySessionLister" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -58,7 +59,13 @@
 
 
     </div>
-    <div class="pane ui-layout-south"><span style="float: right" id="fileNumResult"></span><p style="text-align:center">指南针鞋讯版权所有</p></div>
+    <div class="pane ui-layout-south">
+        <span style="margin:0 20px;color:red">
+        <c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
+       在线人数： <%=MySessionLister.getActiveSessions()%>
+        </c:if>
+            </span>
+        <span style="float: right" id="fileNumResult"></span><p style="text-align:center">指南针鞋讯版权所有</p></div>
 
     <div class="pane ui-layout-west">
         <div id="left_container" style="border:0px solid #ccc">
@@ -68,6 +75,7 @@
     </div>
 </div>
 <script type="text/javascript">
+
     function show(selectedId) {
         //alert(selectedId);
         var folderTemplate = "<div class=folder_wrap><div id={folderId}  class=\"folder_img\"><img  src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"
@@ -334,7 +342,8 @@
         $('#jstree').on("changed.jstree", function (e, data) {
            // console.log("-----------------------------"+data.selected);
             if (data.selected.length != 0) {
-                show(data.selected[0].replace("_anchor", ""));
+               // var newDirName = id.replace(new RegExp("_anchor","gm"),"");
+                show(data.selected[0].replace(new RegExp("_anchor","gm"),""));
             }
         });
         $('#jstree').on("rename_node.jstree", function (e, data) {
@@ -343,7 +352,8 @@
             var id = data.node.parent+"FILE_SEPARATOR"+data.text+"_anchor";
             var old = data.node.parent+"FILE_SEPARATOR"+data.old;
             $("#jstree").jstree(true).set_id (data.node.id, id);
-            var newDirName = id.replace("_anchor", "");
+            //var newDirName = id.replace(/"\_anchor"/g, "");
+            var newDirName = id.replace(new RegExp("_anchor","gm"),"");
             $.get("${basePath}/admin/file/mkdir/"+newDirName+"/"+old,function(data){
                 if(data!="0"){
                     alert(data);
