@@ -1,6 +1,6 @@
 body{color:black;font-size:12px;}
 .jstree{margin-left: 5px;}
-.jstree-default .jstree-anchor{color:#191919}
+/**.jstree-default .jstree-anchor{color:#191919}**/
 .jstree-themeicon{width:0px}
 .jstree-anchor .jstree-icon {width:0px}
 .jstree-default .jstree-clicked {
@@ -68,3 +68,6 @@ opacity:0.8;}
 	.nav_bar .item {line-height:24px;}
     .file_num_div {margin-top: 10px;}
 .file_num_div span{color: red}
+
+.jstree-search{ background: red;color: #fff}
+.searched-item{ background: red;color: #fff}

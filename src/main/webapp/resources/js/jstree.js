@@ -6344,7 +6344,7 @@
 						var i, j, f, r = this._data.search.res, s = [], o = $();
 						if(r && r.length) {
 							this._data.search.dom = $(this.element[0].querySelectorAll('#' + $.map(r, function (v) { return "0123456789".indexOf(v[0]) !== -1 ? '\\3' + v[0] + ' ' + v.substr(1).replace($.jstree.idregex,'\\$&') : v.replace($.jstree.idregex,'\\$&'); }).join(', #')));
-							this._data.search.dom.children(".jstree-anchor").addClass('jstree-search');
+                            this._data.search.dom.children(".jstree-anchor").addClass('jstree-search');
 							if(this._data.search.som && this._data.search.res.length) {
 								for(i = 0, j = r.length; i < j; i++) {
 									s = s.concat(this.get_node(r[i]).parents);
