@@ -161,8 +161,8 @@ public class FileController {
                 if(f.isDirectory()){
                     fileNodes.add(fileNode);
                 } else if ( f.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)){
-                    fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
-                    fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
+                    fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\","/"));
+                    fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, "").replaceAll("\\\\", "/"));//解决火狐下图片不显示问题
                     fileNodes.add(fileNode);
                 }
             }
@@ -201,8 +201,8 @@ public class FileController {
                 fileNode = new FileNodeVO();
                 fileNode.setLastModified(file.lastModified());
                 fileNode.setName(file.getName());
-                fileNode.setThumbUrl(file.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
-                fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
+                fileNode.setThumbUrl(file.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\","/"));
+                fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, "").replaceAll("\\\\","/"));
                 if(file.getName().equals(f.getName())){
                     fileNode.setSelected(true);
                     selected = fileNode;

@@ -42,7 +42,7 @@
                 <img src="${basePath}/resources/img/logo2.JPG" height="45">
             </div>
             <div style="position:absolute;left:160px;top:0">
-                <div class="nav_bar" style="float:left;width:80%" id="nav_bar">
+                <div class="nav_bar" style="float:left;width:80%;min-width: 800px" id="nav_bar">
 
                 </div>
                 <div class="" style="float:right;width:19%;">
@@ -75,7 +75,28 @@
     </div>
 </div>
 <script type="text/javascript">
-
+    jQuery(function($){
+        // 备份jquery的ajax方法
+        var _ajax=$.ajax;
+        // 重写ajax方法，先判断登录在执行success函数
+        $.ajax=function(opt){
+            var _success = opt && opt.success || function(a, b){};
+            var _opt = $.extend(opt, {
+                success:function(data, textStatus){
+                    // 如果后台将请求重定向到了登录页，则data里面存放的就是登录页的源码，这里需要找到data是登录页的证据(标记)
+                    if((typeof data=='string')&&data.constructor==String){
+                        if(data.indexOf('html') != -1 || data.indexOf('HTML') != -1) {
+                            //window.location.href=  "<%=request.getContextPath()%>/?error=8888";
+                            window.open('<%=request.getContextPath()%>/?error=8888','_top')
+                            return;
+                        }
+                    }
+                    _success(data, textStatus);
+                }
+            });
+            _ajax(_opt);
+        };
+    });
     function show(selectedId) {
         //alert(selectedId);
         var folderTemplate = "<div class=folder_wrap><div id={folderId}  class=\"folder_img\"><img  src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"

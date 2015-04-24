@@ -9,4 +9,5 @@
  function getContextPath(){
     return basePath;
  }
+
 </script>

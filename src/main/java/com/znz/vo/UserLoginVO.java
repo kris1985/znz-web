@@ -48,5 +48,9 @@ public class UserLoginVO {
         return randomCode;
     }
 
+    public static  void main(String args[]){
+        System.out.println("fd\\d".replaceAll("\\\\","/"));
+    }
+
 
 }
