@@ -42,7 +42,7 @@
         select
         <include refid="Base_Column_List" />
         from t_user
-        where user_type = #{userType,jdbcType=INTEGER} order by user_id desc;
+        where user_type != 3 order by user_id desc;
     </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
