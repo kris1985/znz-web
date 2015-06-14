@@ -99,7 +99,7 @@
        用户名： <input type="input" placeholder="请输入用户名" required autofocus id="userName" name="userName" value="${userName}" class="loginInput">
        密码：  <input type="password"  placeholder="请输入密码" required id="pwd" name="pwd" value="${pwd}" class="loginInput">
        验证码： <input type="input"  placeholder="验证码" required id="randomCode" name="randomCode"  class="loginInput" style="width: 60px; margin-right: 2px;">
-          <img id="codeImg" src="/genCode" width="60" height="22" border="0" align="absmiddle"/>
+          <img id="codeImg" src="${basePath}/genCode" width="60" height="22" border="0" align="absmiddle"/>
           <a href="javascript:refreshRandomCode();">看不清点我</a>
 
             <label class="rememberLab">
