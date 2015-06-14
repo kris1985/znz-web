@@ -27,6 +27,7 @@
             $.ajax({
                     url:'${basePath}/admin/user/list',
                     dataType: 'json',
+                    cache:false,
                     success: function(json) {
                     var data = JSON.stringify(json);
                     var myobj=eval(data);
