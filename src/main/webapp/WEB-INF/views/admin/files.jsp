@@ -323,7 +323,7 @@
         };
 
         //初始化树
-       /**/ $.get("${basePath}/admin/file/tree", function (result) {
+       /**/ $.get("${basePath}/admin/file/tree?t="+new Date().getTime(), function (result) {
             var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
