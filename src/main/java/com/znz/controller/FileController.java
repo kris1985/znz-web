@@ -97,15 +97,15 @@ public class FileController {
         usedSpace = used.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
         BigDecimal   free   =   new BigDecimal(freeSpace);
         freeSpace = free.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-        model.addAttribute("freeSpace",freeSpace);
+        model.addAttribute("freeSpace", freeSpace);
         model.addAttribute("usedSpace", usedSpace);
         return  "/admin/space";
     }
 
     @RequestMapping(value = "/tree" , method= RequestMethod.GET)
-    public @ResponseBody List<FileTreeVO> listTree(HttpServletRequest request,Model model)  {
-        String rootPath1 = request.getSession().getServletContext().getRealPath("");
+    public @ResponseBody List<FileTreeVO> listTree(HttpServletRequest request)  {
         String rootPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        log.info("rootPath:"+rootPath);
         File rootFile = new File(rootPath);
         List<FileTreeVO> list  = new ArrayList<FileTreeVO>();
         FileTreeVO root = new FileTreeVO();
@@ -118,6 +118,7 @@ public class FileController {
             MyFileUtil.listFile(rootFile, list);
         }else{
             List<UserAuth> auths = userSession.getUserAuths();
+            log.info("auths:"+auths);
             if(!CollectionUtils.isEmpty(auths)){
                 for(UserAuth userAuth:auths){
                     FileTreeVO secondDir = new FileTreeVO();
@@ -131,13 +132,14 @@ public class FileController {
             }else{
                 list = Collections.emptyList();
             }
+            log.info("list:"+list);
         }
         return  list;
     }
 
     @RequestMapping(value = "/chidren/{filePath}" , method= RequestMethod.GET)
     public @ResponseBody
-    ListChildVO listChidren(HttpServletRequest request,Model model,@PathVariable String filePath)  {
+    ListChildVO listChidren(HttpServletRequest request,@PathVariable String filePath)  {
         String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         ListChildVO vo = new ListChildVO();
         File file = new File(FilePathConverter.decode(filePath));
@@ -152,7 +154,24 @@ public class FileController {
         if(files!=null && files.length>0) {
             List<FileNodeVO> fileNodes = new ArrayList<FileNodeVO>();
             FileNodeVO fileNode = null;
+            List<String> authsFiLeNames = new ArrayList<String>();
+            UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+            if(userSession.getUser().getUserType()!=2 || userSession.getUser().getUserType()!=3){
+                List<UserAuth> auths = userSession.getUserAuths();
+                if(!CollectionUtils.isEmpty(auths)){
+                    if(realPath.equals(file.getAbsolutePath())){
+                        for(UserAuth userAuth:auths){
+                            authsFiLeNames.add(userAuth.getFilePath());
+                        }
+                    }
+                }
+            }
             for (File f : files) {
+                if(realPath.equals(file.getAbsolutePath()) && !CollectionUtils.isEmpty(authsFiLeNames)){
+                    if(!authsFiLeNames.contains(f.getName())){
+                        continue;
+                    }
+                }
                 fileNode = new FileNodeVO();
                 fileNode.setDirectory(f.isDirectory());
                 fileNode.setName(f.getName().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
@@ -219,9 +238,9 @@ public class FileController {
         int currentIndex = list.indexOf(selected);
 
         String selectedImg = path.replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH);
-        model.addAttribute("selectedImg",selectedImg);
+        model.addAttribute("selectedImg", selectedImg);
 
-        model.addAttribute("imgs",list);
+        model.addAttribute("imgs", list);
         model.addAttribute("currentIndex",currentIndex);
         return "admin/album";
     }
@@ -305,7 +324,7 @@ public class FileController {
     public  @ResponseBody String uploadIndexBg(HttpServletRequest request, @RequestParam MultipartFile  file) throws IOException {
         String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_BG_ROOT_PATH);
         String originalName = file.getOriginalFilename();
-        String extName =originalName.substring(originalName.lastIndexOf("."));
+        String extName =originalName.substring(originalName.lastIndexOf(".")).toLowerCase();
         String pathname = realPath + "/indexBg"+extName;
         File descFile  = new File(pathname);
         FileUtils.copyInputStreamToFile(file.getInputStream(),descFile);
