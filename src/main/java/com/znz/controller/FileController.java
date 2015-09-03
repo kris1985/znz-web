@@ -118,15 +118,17 @@ public class FileController {
             MyFileUtil.listFile(rootFile, list);
         }else{
             List<UserAuth> auths = userSession.getUserAuths();
-            log.info("auths:"+auths);
             if(!CollectionUtils.isEmpty(auths)){
                 for(UserAuth userAuth:auths){
                     FileTreeVO secondDir = new FileTreeVO();
-                    secondDir.setId(FilePathConverter.encode(rootPath +File.separator+ userAuth.getFilePath()));
+                    log.info("pa2th--------------------------------" + rootPath + userAuth.getFilePath());
+                    secondDir.setId(FilePathConverter.encode(rootPath + userAuth.getFilePath()));
+                    log.info("pa3th--------------------------------" + secondDir.getId());
                     secondDir.setText(userAuth.getFilePath());
                     secondDir.setParent(root.getId());
                     list.add(secondDir);
-                    String path =   rootPath + "/"+userAuth.getFilePath();
+                    String path =   rootPath + userAuth.getFilePath();
+                    log.info("path--------------------------------"+path);
                     MyFileUtil.listFile(new File(path), list);
                 }
             }else{
@@ -169,7 +171,7 @@ public class FileController {
             for (File f : files) {
                 if(realPath.equals(file.getAbsolutePath()) && !CollectionUtils.isEmpty(authsFiLeNames)){
                     if(!authsFiLeNames.contains(f.getName())){
-                        continue;
+                      //  continue;
                     }
                 }
                 fileNode = new FileNodeVO();
@@ -180,6 +182,9 @@ public class FileController {
                 if(f.isDirectory()){
                     fileNodes.add(fileNode);
                 } else if ( f.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)){
+                    log.info("--1--"+f.getAbsolutePath());
+                    log.info("--2--"+f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
+                    log.info("--33--"+f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\","/"));
                     fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\","/"));
                     fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, "").replaceAll("\\\\", "/"));//解决火狐下图片不显示问题
                     fileNodes.add(fileNode);

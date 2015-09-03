@@ -46,6 +46,9 @@ public class UserController {
     @RequestMapping(value = "/list" , method= RequestMethod.GET)
     public @ResponseBody List<User> list(){
         List<User> users = userMapper.selectAllUser(1);
+        for (User user:users){
+            log.info("user:"+user.getUserName());
+        }
         return  users;
     }
 
@@ -142,6 +145,7 @@ public class UserController {
         if(!CollectionUtils.isEmpty(userAuths)){
             for (UserAuth userAuth:userAuths){
                 AuthFileVO authFileVO = new AuthFileVO();
+                log.info("-1--"+authFileVO.getAuthName());
                 authFileVO.setAuthName(userAuth.getFilePath());
                 authFileVO.setChecked(1);
                 authFileVO.setCheckBox("<input type=\"checkbox\"  name=\"auths\" checked value="+userAuth.getFilePath()+">"+userAuth.getFilePath());
@@ -152,7 +156,8 @@ public class UserController {
         }
         if(!CollectionUtils.isEmpty(allAuths)){
             for (AuthFileVO vo:allAuths){
-                vo.setCheckBox("<input type=\"checkbox\"  name=\"auths\"  value="+vo.getAuthName()+">"+vo.getAuthName());
+                log.info("-2--"+vo.getAuthName());
+                vo.setCheckBox("<input type=\"checkbox\"  name=\"auths\"  value=" + vo.getAuthName() + ">" + vo.getAuthName());
                 vo.setChecked(0);
                 boolean contains = retAuths.contains(vo);
                 if(!contains){
@@ -179,6 +184,9 @@ public class UserController {
     public @ResponseBody List<AuthFileVO> lisAlltAuth(HttpServletRequest request){
         String rootPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         List<AuthFileVO> auths = getAuth(rootPath);
+        for (AuthFileVO authFileVO:auths){
+            log.info("getAuthName"+authFileVO.getAuthName());
+        }
         return  auths;
     }
 
