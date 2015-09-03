@@ -108,4 +108,10 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <update id="updateByFilePath" parameterType="java.lang.String">
+         update t_user_auth
+         set  file_path = #{dest,jdbcType=VARCHAR}
+           where file_path = #{src,jdbcType=INTEGER}
+    </update>
 </mapper>

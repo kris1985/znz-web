@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -37,9 +38,14 @@ public class LoginController {
     private UserAuthMapper userAuthMapper;
 
     @RequestMapping(value = "/login" , method= RequestMethod.POST)
-    public String login(HttpServletRequest request,@Valid @ModelAttribute("userLoginVO") UserLoginVO userLoginVO,BindingResult br,Model model) {
+    public String login(HttpServletRequest request,HttpServletResponse response, @Valid @ModelAttribute("userLoginVO") UserLoginVO userLoginVO,BindingResult br,Model model) {
         if (br.hasErrors()){
             model.addAttribute("br",br);
+            return  "/index";
+        }
+        String randCode = (String)request.getSession().getAttribute("randCode");
+        if(!userLoginVO.getRandomCode().equals(randCode)){
+            model.addAttribute("error", "验证码错误");
             return  "/index";
         }
         String userName = userLoginVO.getUserName();
@@ -73,8 +79,17 @@ public class LoginController {
         userSession.setUserAuths(userAuths);
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
+        if(1==userLoginVO.getRemember()){
+            Cookie cookie = new Cookie("znzauth",user.getUserName()+"-"+user.getPwd());
+            response.addCookie(cookie);
+        }else{
+            Cookie cookie = new Cookie("znzauth","");
+            cookie.setMaxAge(-1);
+            response.addCookie(cookie);
+        }
+        MySessionLister.setActiveSessions(MySessionLister.getActiveSessions()+1);
         //管理员
-        if(2==user.getUserType()){
+        if(2==user.getUserType()||3==user.getUserType()){
             return  "redirect:/admin/desktop";
         }
         return "redirect:/admin/file/list";

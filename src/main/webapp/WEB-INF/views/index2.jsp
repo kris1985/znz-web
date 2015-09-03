@@ -12,7 +12,7 @@
 
     <title>指南针</title>
     <%@ include file="common/common.jsp"%>
-      <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
+	<link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
     <link href="${basePath}/resources/css/login.css" rel="stylesheet"  type="text/css" />
       <style>
           body{ background: url("${basePath}/upload/bg/indexBg.jpg")}
@@ -92,17 +92,15 @@
     <script>alert("${error}")</script>
 </c:if>
 
- <div class="container1" >
-     <div class="loginDivWrap">
-     <div class="loginDiv">
-      <form  action="${basePath}/login"   method="post" id="loginForm">
-       用户名： <input type="input" placeholder="请输入用户名" required autofocus id="userName" name="userName" value="${userName}" class="loginInput">
-       密码：  <input type="password"  placeholder="请输入密码" required id="pwd" name="pwd" value="${pwd}" class="loginInput">
-       验证码： <input type="input"  placeholder="验证码" required id="randomCode" name="randomCode"  class="loginInput" style="width: 60px; margin-right: 2px;">
-          <img id="codeImg" src="${basePath}/genCode" width="60" height="22" border="0" align="absmiddle"/>
+ <div class="container1">
+      <form class="form-signin" role="form" action="${basePath}/login"  style="display:none" method="post" id="loginForm">
+        <input type="input" class="form-control" placeholder="请输入用户名" required autofocus id="userName" name="userName" value="${userName}">
+        <input type="password" class="form-control" placeholder="请输入密码" required id="pwd" name="pwd" value="${pwd}">
+        <input type="input" class="form-control" placeholder="请输入验证码" required id="randomCode" name="randomCode" >
+          <img id="codeImg" src="/genCode" width="60" height="20" border="1" align="absmiddle"/>
           <a href="javascript:refreshRandomCode();">看不清点我</a>
-
-            <label class="rememberLab">
+          <div class="checkbox">
+          <label>
               <c:if test="${not empty userName}">
                  <input type="checkbox" value="1" id="remember" name="remember" checked="true">
               </c:if>
@@ -110,13 +108,11 @@
                   <input type="checkbox" value="0" id="remember" name="remember">
               </c:if>
               记住密码
-              </label>
-
-        <button class="btn btn-sm btn-primary" type="button" id="loginBtn">登陆</button>
-
+          </label>
+        </div>
+        <button class="btn btn-sm btn-primary btn-block" type="button" id="loginBtn">登陆</button>
       </form>
-</div>
-     </div>
+
     </div> <!-- /container -->
 
 </body>

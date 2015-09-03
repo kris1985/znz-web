@@ -1,12 +1,9 @@
 package com.znz;
 
 
-
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
-
-import java.util.Properties;
+/*import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;*/
 
 /**
  * User: Terence
@@ -39,12 +36,13 @@ public class WebBootstrap {
         server.setHandler(context);
         server.start();
         server.join();*/
-        Server server = new Server(8080);
+       /* Server server = new Server(8080);
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/znz-web");
         webapp.setResourceBase("d:/git/znz-web/src/main/webapp/");
-       // webapp.setDescriptor("d:/git/znz-web/src/main/webapp/WEB-INF/web.xml");
+
         server.setHandler(webapp);
         server.start();
+        server.join();*/
     }
 }

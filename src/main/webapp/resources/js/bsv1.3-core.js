@@ -159,8 +159,8 @@ Desktop=function(me){
 						[{
 							text:"注销",
 							func:function(){
-							
-							}
+							    window.location.href=basePath+"/logout"
+                            }
 						}]
 					];
 			return MenuData;
@@ -1022,7 +1022,8 @@ Task = $.Class({
 		var taskItemIcon = $("<div>",{
 			"class":"taskItemIcon"
 		});
-		$("<img src='icon/min/"+op.icon+"'/><div class='taskItemIconState'></div>").appendTo(taskItemIcon);//图片路径---------------------------------
+        //console.log("000000000000-"+op);
+		$("<img src='"+basePath+"/resources/icon/min/"+op.icon+"'/><div class='taskItemIconState'></div>").appendTo(taskItemIcon);//图片路径---------------------------------
 		var taskItemTxt  = $("<div>",{
 			"class":"taskItemTxt",
 			text : op.title
@@ -1293,7 +1294,10 @@ Windows = function(me){
 					}else if(id==20){
 						width = "50%";
 						height = "60%"
-					}
+					}else if(id==21){
+                        width = "100%";
+                        height = "100%"
+                    }
 					art.dialog.open(url,/** 弹出ART窗体*/
 						{   
 							"id" :id,

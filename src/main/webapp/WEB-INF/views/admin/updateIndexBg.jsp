@@ -9,10 +9,20 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
+
+
     <title>指南针</title>
      <%@ include file="../common/common.jsp"%>
-
+<!--
+<link href="/znz-web/resources/css/swf.css" rel="stylesheet" type="text/css" />
 <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
+<script type="text/javascript" src="${basePath}/resources/js/swfupload.js" /></script>
+<script type="text/javascript" src="${basePath}/resources/js/swfupload.queue.js"></script>
+<script type="text/javascript" src="${basePath}/resources/js/fileprogress.js"></script>
+<script type="text/javascript" src="${basePath}/resources/js/handlers.js"></script>
+-->
+<link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
+<link href="${basePath}/resources/css/docs-min.css" rel="stylesheet" type="text/css" />
 <link href="${basePath}/resources/css/uploadify.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.uploadify.js"></script>
@@ -22,19 +32,20 @@
 	     $(function() {
          			$('#file_upload').uploadify({
          				'formData'     : {
-         					'timestamp' : new Date().getTime()
+         					'timestamp' : '123'
+
          				},
          			//	'auto':false,
-         				'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;',
-         				'fileObjName':'files',
+         				'fileTypeExts':'*.jpg',
+         				'fileObjName':'file',//重要
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',
-         				'uploader' : '${basePath}/admin/file/upload/${param.parentId}',
+         				'uploader' : '${basePath}/admin/file/uploadIndexBg',
          				'onUploadSuccess' : function(file, data, response) {
-         				                var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
-         				                $("#result").show();
-                           // window.opener.show("${param.parentId}")
-         				                $("#result").append("<p>"+htm+'</p>');
+                            alert("上传成功");
+         				              //  var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
+         				               // $("#result").show();
+         				               // $("#result").append("<p>"+htm+'</p>');
          				               //  $("#result").hide(5000)
                                        // alert('The file ' + file.name + ' was successfully uploaded with a response of ' + response + ':' + data);
                                             },
@@ -82,7 +93,7 @@
 
 <form>
 		<div id="queue"></div>
-		<input id="file_upload" name="file_upload" type="files" multiple="true">
+		<input id="file_upload" name="file_upload" type="file" multiple="false">
 <div id="result" >
 </div>
 <!--

@@ -108,7 +108,7 @@ DATA={
 			appid:'20',
 			icon:'icon0.png',
 			name:'设置主题',
-			url:'theme.html',
+            url:basePath+'/admin/file/toUpdateIndexBg',
 			asc:9
 		},
 		'folder':{

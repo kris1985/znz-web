@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 public class ImageUtil {
 
 	
-	private static String DEFAULT_THUMB_PREVFIX = "thumb_";
+	public static String DEFAULT_THUMB_PREVFIX = "thumb_";
     private static Boolean DEFAULT_FORCE = false;
 
     

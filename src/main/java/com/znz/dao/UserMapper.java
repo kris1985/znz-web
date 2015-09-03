@@ -1,7 +1,6 @@
 package com.znz.dao;
 
 import com.znz.model.User;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

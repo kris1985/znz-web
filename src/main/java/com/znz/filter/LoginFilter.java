@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 
 /**
@@ -54,7 +55,17 @@ public  class LoginFilter implements Filter {
 
 
     private void redirect(HttpServletRequest request2, HttpServletResponse response2, String errorCode) throws IOException {
-        response2.sendRedirect(request2.getContextPath()+"/?error="+errorCode);
+        String type = request2.getHeader("X-Requested-With");
+       /* if ("XMLHttpRequest".equalsIgnoreCase(type)) {
+           // response2.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            PrintWriter printWriter = response2.getWriter();
+            printWriter.print("{sessionState:timeout}");
+            printWriter.flush();
+            printWriter.close();
+        }else{*/
+            response2.sendRedirect(request2.getContextPath()+"/?error="+errorCode);
+      //  }
+
     }
 
 

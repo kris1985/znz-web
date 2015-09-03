@@ -7,10 +7,7 @@ import com.znz.model.User;
 import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.util.UserType;
-import com.znz.vo.AuthFileVO;
-import com.znz.vo.UserAddVO;
-import com.znz.vo.UserLoginVO;
-import com.znz.vo.UserSession;
+import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -49,17 +46,28 @@ public class UserController {
     @RequestMapping(value = "/list" , method= RequestMethod.GET)
     public @ResponseBody List<User> list(){
         List<User> users = userMapper.selectAllUser(1);
+        for (User user:users){
+            log.info("user:"+user.getUserName());
+        }
         return  users;
     }
 
     @RequestMapping(value = "/delete/{userId}" , method= RequestMethod.GET)
-    public String  delete(@PathVariable int userId){
+    public String  delete(HttpServletRequest request,@PathVariable int userId){
+        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!checkPermisson(userSession)){
+            throw  new RuntimeException("无权限操作");
+        }
         userMapper.deleteByPrimaryKey(userId);
         return "redirect:/admin/user/users";
     }
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST)
-    public String  add(@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+    public String  add(HttpServletRequest request,@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!checkPermisson(userSession)){
+            throw  new RuntimeException("无权限操作");
+        }
         if (br.hasErrors()){
             model.addAttribute("br",br);
             return  "/admin/userAdd";
@@ -99,7 +107,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update" , method= RequestMethod.POST)
-    public String  update(@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+    public String  update(HttpServletRequest request,@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!checkPermisson(userSession)){
+            throw  new RuntimeException("无权限操作");
+        }
         if (br.hasErrors()){
             model.addAttribute("br",br);
             return  "/admin/userAdd";
@@ -133,6 +145,7 @@ public class UserController {
         if(!CollectionUtils.isEmpty(userAuths)){
             for (UserAuth userAuth:userAuths){
                 AuthFileVO authFileVO = new AuthFileVO();
+                log.info("-1--"+authFileVO.getAuthName());
                 authFileVO.setAuthName(userAuth.getFilePath());
                 authFileVO.setChecked(1);
                 authFileVO.setCheckBox("<input type=\"checkbox\"  name=\"auths\" checked value="+userAuth.getFilePath()+">"+userAuth.getFilePath());
@@ -143,7 +156,8 @@ public class UserController {
         }
         if(!CollectionUtils.isEmpty(allAuths)){
             for (AuthFileVO vo:allAuths){
-                vo.setCheckBox("<input type=\"checkbox\"  name=\"auths\"  value="+vo.getAuthName()+">"+vo.getAuthName());
+                log.info("-2--"+vo.getAuthName());
+                vo.setCheckBox("<input type=\"checkbox\"  name=\"auths\"  value=" + vo.getAuthName() + ">" + vo.getAuthName());
                 vo.setChecked(0);
                 boolean contains = retAuths.contains(vo);
                 if(!contains){
@@ -170,6 +184,9 @@ public class UserController {
     public @ResponseBody List<AuthFileVO> lisAlltAuth(HttpServletRequest request){
         String rootPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         List<AuthFileVO> auths = getAuth(rootPath);
+        for (AuthFileVO authFileVO:auths){
+            log.info("getAuthName"+authFileVO.getAuthName());
+        }
         return  auths;
     }
 
@@ -186,5 +203,13 @@ public class UserController {
             }
         }
         return auths;
+    }
+
+
+    private boolean checkPermisson(UserSession userSession) {
+        if( userSession.getUser().getUserType()!=2 && userSession.getUser().getUserType()!=3){
+            return false;
+        }
+        return true;
     }
 }

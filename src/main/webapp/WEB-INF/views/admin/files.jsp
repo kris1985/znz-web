@@ -1,4 +1,6 @@
+<%@ page import="com.znz.listener.MySessionLister" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,98 +16,19 @@
     <link rel="stylesheet" href="${basePath}/resources/js/themes/default/style.min.css"/>
     <link rel="stylesheet" href="${basePath}/resources/css/file.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/resources/css/jquery.mCustomScrollbar.css">
-    <link rel="stylesheet" href="${basePath}/resources/css/smartMenu.css">
+    <link rel="stylesheet" href="${basePath}/resources/css/jquery.contextMenu.css">
+    <link rel="stylesheet" href="${basePath}/resources/css/skins/black.css"/>
 
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-latest.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.layout-latest.js"></script>
-    <script type="text/javascript" src="${basePath}/resources/js/jstree.min.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/artDialog.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/iframeTools.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/jstree.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script type="text/javascript" src="${basePath}/resources/js/jquery-smartMenu-min.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/jquery.contextMenu.js"></script>
 
-    <script type="text/javascript">
-        var imageMenuData = [
-            [
-                {
-                    text: "图片描边",
-                    data: [
-                        [
-                            {
-                                text: "5像素深蓝",
-                                func: function () {
-                                    $(this).css("border", "5px solid #34538b");
-                                }
-                            },
-                            {
-                                text: "5像素浅蓝",
-                                func: function () {
-                                    $(this).css("border", "5px solid #a0b3d6");
-                                }
-                            },
-                            {
-                                text: "5像素淡蓝",
-                                func: function () {
-                                    $(this).css("border", "5px solid #cad5eb");
-                                }
-                            }
-                        ]
-                    ]
-                },
-                {
-                    text: "图片内间距",
-                    func: function () {
-                        $(this).css("padding", "10px");
-                    }
-                },
-                {
-                    text: "图片背景色",
-                    func: function () {
-                        $(this).css("background-color", "#beceeb");
-                    }
-                }
-            ],
-            [
-                {
-                    text: "查看原图",
-                    func: function () {
-                        var src = $(this).attr("src");
-                        window.open(src.replace("/s512", ""));
-                    }
-                }
-            ]
-        ];
-
-        var bodyMenuData = [
-            [
-                {
-                    text: "上传",
-                    data: [
-                        [
-                            {
-                                text: "上传-覆盖",
-                                func: function () {
-                                    $(this).css("border", "5px solid #34538b");
-                                }
-                            },
-                            {
-                                text: "上传-忽略",
-                                func: function () {
-                                    // $(this).css("border", "5px solid #a0b3d6");
-                                }
-                            }
-                        ]
-                    ]
-                },
-                {
-                    text: "新建文件夹",
-                    func: function () {
-                        //$(this).css("padding", "10px");
-                    }
-                }
-            ]
-        ];
-    </script>
 </head>
 <body>
 <div id="container">
@@ -119,12 +42,12 @@
                 <img src="${basePath}/resources/img/logo2.JPG" height="45">
             </div>
             <div style="position:absolute;left:160px;top:0">
-                <div class="nav_bar" style="float:left;width:80%" id="nav_bar">
+                <div class="nav_bar" style="float:left;width:80%;min-width: 800px" id="nav_bar">
 
                 </div>
                 <div class="" style="float:right;width:19%;">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="搜索" style="height:32px">
+                        <input type="text" class="form-control" placeholder="搜索" style="height:32px" id="search">
 
                         <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
                     </div>
@@ -136,7 +59,13 @@
 
 
     </div>
-    <div class="pane ui-layout-south"><p style="text-align:center">指南针鞋讯版权所有</p></div>
+    <div class="pane ui-layout-south">
+        <span style="margin:0 20px;color:red">
+        <c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
+       在线人数： <%=MySessionLister.getActiveSessions()%>
+        </c:if>
+            </span>
+        <span style="float: right" id="fileNumResult"></span><p style="text-align:center">指南针鞋讯版权所有</p></div>
 
     <div class="pane ui-layout-west">
         <div id="left_container" style="border:0px solid #ccc">
@@ -146,15 +75,37 @@
     </div>
 </div>
 <script type="text/javascript">
+    jQuery(function($){
+        // 备份jquery的ajax方法
+        var _ajax=$.ajax;
+        // 重写ajax方法，先判断登录在执行success函数
+        $.ajax=function(opt){
+            var _success = opt && opt.success || function(a, b){};
+            var _opt = $.extend(opt, {
+                success:function(data, textStatus){
+                    // 如果后台将请求重定向到了登录页，则data里面存放的就是登录页的源码，这里需要找到data是登录页的证据(标记)
+                    if((typeof data=='string')&&data.constructor==String){
+                        if(data.indexOf('html') != -1 || data.indexOf('HTML') != -1) {
+                            //window.location.href=  "<%=request.getContextPath()%>/?error=8888";
+                            window.open('<%=request.getContextPath()%>/?error=8888','_top')
+                            return;
+                        }
+                    }
+                    _success(data, textStatus);
+                }
+            });
+            _ajax(_opt);
+        };
+    });
     function show(selectedId) {
         //alert(selectedId);
         var folderTemplate = "<div class=folder_wrap><div id={folderId}  class=\"folder_img\"><img  src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"
-        var imgTemplate = "<div class='img_wrap'><img class='thumb' src='{imgSrc}' {imgWidth} {imgHeight} {css}><div class='img_txt'>{imgName}</div></div>"
+        var imgTemplate = "<div class='img_wrap ' ><img class='thumb' src='{thumbUrl}' id='{id}' style='max-width:256px;max-height:182px'><div class='img_txt'>{imgName}</div></div>"
         var navBarTemplate = "<span class='item' id={folderId}>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span>";
         var folderHtml = "";
         var imgHtml = "";
         var navBarHtml = "";
-        $.get("${basePath}/admin/file/chidren/" + selectedId, function (result) {
+        $.get("${basePath}/admin/file/chidren/" + selectedId,{timestamp:new Date().getTime()}, function (result) {
             $.each(result.parentNodes, function (n, value) {
                 tem = navBarTemplate.replace("{folderName}", value.name);
                 tem = tem.replace("{folderId}", value.path);
@@ -166,36 +117,45 @@
                 $("#file-content").html("");
                 return;
             }
+            var foldNum=0;
+            var fileNum=0;
             $.each(result.fileNodes, function (n, value) {
                 //alert(n + ' ' + value.directory);
                 if (value.directory == true) {
                     tem = folderTemplate.replace("{folderId}", value.path);
                     tem = tem.replace("{folderName}", value.name);
                     folderHtml += tem;
+                    foldNum++;
                 } else {
-                    tem = imgTemplate.replace("{imgSrc}", value.url);
-                    tem = tem.replace("{imgName}", value.name);
-                    tem = initImg(tem);
+                    tem = imgTemplate.replace("{id}", value.path);
+                    name = value.name.substring(0,value.name.lastIndexOf("."));
+                   // alert(name);
+                    tem = tem.replace("{imgName}", name);
+                    tem = tem.replace("{thumbUrl}", value.thumbUrl);
+                    //tem = initImg(tem);
                     imgHtml += tem;
+                    fileNum++;
                 }
             });
+            //$(folderHtml).prependTo("#file-content");
+            // $(imgHtml).prependTo("#file-content");
 
-            $(folderHtml).prependTo("#file-content");
-            $(imgHtml).prependTo("#file-content");
-            //$("#file-content").html(folderHtml+imgHtml);
+            $("#file-content").html(folderHtml + imgHtml);
+            $("#fileNumResult").html("<div class='file_num_div' style='clear: both'>文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
+           // $("#file-content").prepend("<div>文件夹:" +foldNum+" 文件："+fileNum+"</div>")
+            $(".thumb").load(function () {
+                initImg($(this));
+            });
         });
     }
 
 
-    maxHeight = 180;
-    maxWidth = 180;
-    function initImg(htm) {
-        preloader = new Image();
-        preloader.src = $(htm).find("img").attr("src");
-        //alert("----------" + preloader.src);
-        alert("----------" + preloader.width);
-        width = preloader.width;
-        height = preloader.height;
+    maxHeight = 182;
+    maxWidth = 256;
+    function initImg(img) {
+
+        width = img.width();
+        height = img.height();
 
         if (width > height) {
             maxWidth = maxHeight * (width / height);
@@ -234,22 +194,18 @@
         }
 
         /**/
-        while (width > 180) {
+        while (width > 256) {
             width = width / 1.1;
             height = height / 1.1
         }
-        while (height > 180) {
+        while (height > 182) {
             height = height / 1.1
             width = width / 1.1;
         }
-        res = htm.replace("{imgWidth}", "width=" + width);
-        res = res.replace("{imgHeight}", "height=" + height);
-        /*  alert(targetImg.width());
-         alert(targetImg.height());*/
-        res = res.replace("{css}", "style='margin-left:" + (-(width / 2)) + "px;margin-top:" + (-(height / 2)) + "px'");
-        return res;
-
-
+        img.width(width);
+        img.height(height);
+        img.css("margin-left", -(width / 2) + "px");
+        img.parent().removeClass("hide");
     }
 
 
@@ -257,63 +213,202 @@
         $('#container').layout({
 
             north__slidable: false	// OVERRIDE the pane-default of 'slidable=true'
-            , north__togglerLength_closed: '100%'	// toggle-button is full-width of resizer-bar
-            , north__spacing_open: 0		// big resizer-bar when open (zero height)
-            , north__resizable: false, north__closable: false, west__resizable: true, west__closable: false, south__resizable: false	// OVERRIDE the pane-default of 'resizable=true'
-            , south__spacing_open: 0		// no resizer-bar when open (zero height)
-            , south__spacing_closed: 20
+            ,
+            north__togglerLength_closed: '100%'	// toggle-button is full-width of resizer-bar
+            ,
+            north__spacing_open: 0		// big resizer-bar when open (zero height)
+            ,
+            north__resizable: false,
+            north__closable: false,
+            west__resizable: true,
+            west__closable: false,
+            south__resizable: false	// OVERRIDE the pane-default of 'resizable=true'
+            ,
+            south__spacing_open: 0		// no resizer-bar when open (zero height)
+            ,
+            south__spacing_closed: 20
         });
 
-        $(document).delegate('.folder_wrap', 'hover', function () {
-            $(this).css({border: "2px solid #b8d6fb", background: "#e1effc", "font-weight": "bold"})
-        }, function () {
-            if (!$(this).hasClass("test")) {
-                $(this).css({border: "2px solid #fff", background: "#fff", "font-weight": "normal"})
-            }
+
+        $("#file-content").delegate('.folder_wrap', 'click', function () {
+            $(".folder_wrap").removeClass("folder_wrap_selected")
+            $(".img_wrap").removeClass("folder_wrap_selected")
+            $(this).addClass("folder_wrap_selected");
         });
 
-        $(document).delegate('.folder_wrap', 'click', function () {
+
+        $("#file-content").delegate('.img_wrap', 'click', function () {
+            $(".img_wrap").removeClass("folder_wrap_selected")
             $(".folder_wrap").removeClass("folder_wrap_selected")
             $(this).addClass("folder_wrap_selected");
         });
 
+        var items = {
+            upload: {
+                label: "上传",
+                icon: "glyphicon glyphicon glyphicon-open",
+                action: function (data) {
+                    var inst = $.jstree.reference(data.reference),
+                            obj = inst.get_node(data.reference);
+                   // console.log(obj);
+                    var url = "${basePath}/admin/file/browse?parentId=" + obj.id
+                    art.dialog.open(url, /** 弹出ART窗体*/
+                            {
+                                "id": obj.id,
+                                title: "上传文件",
+                                width: 500,
+                                height: 400,
+                                close : function () {
+                                   show(obj.id);
+                                }
+                            }
+                    );
+                }
+            },
+            createDir: {
+                label: "创建文件夹",
+                icon: "glyphicon glyphicon glyphicon glyphicon-plus",
+                action: function (data) {
+                    var inst = $.jstree.reference(data.reference),
+                    obj = inst.get_node(data.reference);
+                    inst.create_node(obj, {'text': '新建文件夹'}, 'first', function (new_node) {
+                        setTimeout(function () {
+                            inst.edit(new_node);
+
+                        }, 1);
+
+                    });
+
+
+                }
+            },
+          /* */ "rename": {
+                "separator_before": false,
+                "separator_after": false,
+                "icon": "glyphicon glyphicon glyphicon glyphicon-edit",
+                "_disabled": false, //(this.check("rename_node", data.reference, this.get_parent(data.reference), "")),
+                "label": "重命名",
+                "action": function (data) {
+                    var inst = $.jstree.reference(data.reference),
+                            obj = inst.get_node(data.reference);
+                    inst.edit(obj);
+                }
+            },
+           "delete": {
+                label: "删除",
+                icon: "glyphicon glyphicon glyphicon-floppy-remove",
+                action: function (data) {
+                    if (!confirm("确认要删除吗")) {
+                        return
+                    }
+                    var inst = $.jstree.reference(data.reference),
+                    obj = inst.get_node(data.reference);
+                    $.get("${basePath}/admin/file/delete/" + obj.id, function (res) {
+                        if (res.code != 0) {
+                            alert(res.msg);
+                        } else {
+                            if (inst.is_selected(obj)) {
+                                inst.delete_node(inst.get_selected());
+                            }
+                            else {
+                                inst.delete_node(obj);
+                            }
+                            $("#file-content").empty();
+                        }
+                    });
+
+                }
+            }
+
+        };
+
         //初始化树
-        $.get("${basePath}/admin/file/tree", function (result) {
+       /**/ $.get("${basePath}/admin/file/tree?t="+new Date().getTime(), function (result) {
             var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
-                'plugins': ["wholerow"],
-                'core': { 'data': result,
-                    "multiple": false,
-                    "animation": 0
+                <c:choose>
+                <c:when test="${user.user.userType ==2 or user.user.userType ==3 }">
+                'plugins': ["wholerow","search", "contextmenu" ],
+                'contextmenu': {
+                    'items': items
+                },
+            </c:when>
+                <c:otherwise>
+                'plugins': ["wholerow","search"],
+                </c:otherwise>
+                </c:choose>
+                'core': {
+                    'data': result,
+                    'strings': true,
+                    "check_callback": true,
+                    'multiple': false
                 }
-            });
+            })/*.on("rename_node.jstree", function (e, data) {
+                //alert(data.node.id);
+                 $.get("${basePath}/admin/file/mkdir/"+data.node.id.replace("_anchor", ""),function(res){
+                    if(res!="0"){
+                        alert(res);
+                        var inst = $.jstree.reference(data.reference);
+                        inst.delete_node(inst.get_selected());
+
+                    }
+                })
+            });*/
         });
+
+
 
         // 文件管理器左部文件树点击事件
         $('#jstree').on("changed.jstree", function (e, data) {
-            //console.log(data.selected);
-            show(data.selected[0].replace("_anchor", ""));
+           // console.log("-----------------------------"+data.selected);
+            if (data.selected.length != 0) {
+               // var newDirName = id.replace(new RegExp("_anchor","gm"),"");
+                show(data.selected[0].replace(new RegExp("_anchor","gm"),""));
+            }
+        });
+        $('#jstree').on("rename_node.jstree", function (e, data) {
+            //console.log("---------------rename_node--------------"+data.text);
+            //console.log("---------------rename_node--------------"+data.old);
+            var id = data.node.parent+"FILE_SEPARATOR"+data.text+"_anchor";
+            var old = data.node.parent+"FILE_SEPARATOR"+data.old;
+            $("#jstree").jstree(true).set_id (data.node.id, id);
+            //var newDirName = id.replace(/"\_anchor"/g, "");
+            var newDirName = id.replace(new RegExp("_anchor","gm"),"");
+            $.get("${basePath}/admin/file/mkdir/"+newDirName+"/"+old,function(data){
+                if(data!="0"){
+                    alert(data);
+                    var inst = $.jstree.reference(data.reference);
+                    inst.delete_node(inst.get_selected());
+                }
+            })
         });
         //文件管理器上部导航点击
         $(document).delegate('.item', 'click', function () {
+            $('#jstree').jstree(true).deselect_all();
             show($(this).attr("id"));
             // $('#jstree').jstree(false).select_node($(this).attr("id")+"_anchor");
             //  $('#jstree').jstree('select_node', $(this).attr("id")+"_anchor");
-            $.jstree.reference('#jstree').select_node($(this).attr("id") + "_anchor");
+            //$.jstree.reference('#jstree').select_node($(this).attr("id") + "_anchor");
+            //  $('#jstree').jstree().deselect_all();
+            //  $.jstree.reference('#jstree').deselect_all();
+            $('#jstree').jstree(true).select_node($(this).attr("id") + "_anchor");
         });
         //文件管理器右部文件夹点击
         $(document).delegate('.folder_img', 'dblclick', function () {
             show($(this).attr("id"));
+            $('#jstree').jstree(true).deselect_all();
             $('#jstree').jstree(true).select_node($(this).attr("id") + "_anchor");
-
         });
-        /** 8 interact with the tree - either way is OK
-         $('button').on('click', function () {
-            $('#jstree').jstree(true).select_node('child_node_1');
-            $('#jstree').jstree('select_node', 'child_node_1');
-            $.jstree.reference('#jstree').select_node('child_node_1');
-          });**/
+
+        //文件管理器右部文件点击
+        $(document).delegate('.thumb', 'dblclick', function () {
+        id = $(this).attr("id");
+           suffix= id.substring(id.indexOf('.')+1);
+           path =  id.substring(0,id.indexOf('.'));
+            window.open("${basePath}/admin/file/listImg/" + path+"?suffix="+suffix );
+        });
+
         var sclHeight = $(document).height() - 150;
 
         //左边滚动条
@@ -321,18 +416,61 @@
             setHeight: sclHeight,
             theme: "inset-2-dark"
         });
+        <c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
+        $.contextMenu({
+            selector: '.thumb',
+            callback: function(key, options) {
+                path = this.attr("id");
+                if (!confirm("确认要删除吗")) {
+                    return
+                }
+                var delImg = $(this);
 
-        $(".folder_wrap").smartMenu(imageMenuData, {
-            name: "image"
+                $.get("${basePath}/admin/file/delete/"+path+".json",function(data){
+                   if(data.code!=0){
+                        alert(data.msg);
+                    }else{
+                       delImg.parent().hide(1000);
+                       var num = $(".file_num_div").find(".file_num").text();
+                       $(".file_num_div").find(".file_num").text(parseInt(num)-1);
+                   }
+                });
+
+            },
+            items: {
+                "Delete": {name: "删除", icon: "delete"}
+            }
         });
-        /**$("#file-content").smartMenu(bodyMenuData, {
-      		name: "image1"
-      	});
-         $("#child_node_1_2").smartMenu(imageMenuData, {
-      		name: "image1"
-      	});**/
-
-
+</c:if>
+     /*   $.contextMenu({
+            selector: '.folder_img',
+            callback: function(key, options) {
+                path = this.attr("id");
+                isdelete = false;
+                $.get("${basePath}/admin/file/delete/"+path+".json",function(data){
+                    if(data.code!=0){
+                        alert(data.msg);
+                    }else{
+                        isdelete = true;
+                    }
+                });
+                $(this).parent().hide(1000);
+            },
+            items: {
+                "Delete": {name: "删除", icon: "delete"}
+            }
+        });*/
+        /*搜索*/
+        var to = false;
+        $('#search').keyup(function () {
+            if (to) {
+                clearTimeout(to);
+            }
+            to = setTimeout(function () {
+                var v = $('#search').val();
+                $('#jstree').jstree(true).search(v);
+            }, 250);
+        });
     });
 </script>
 

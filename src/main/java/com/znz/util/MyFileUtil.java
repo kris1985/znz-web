@@ -41,6 +41,9 @@ public class MyFileUtil {
      */
     public static void  listFile(File rootFile, List<FileTreeVO> list) {
         File files [] = rootFile.listFiles();
+        if(files==null || files.length<1){
+            return;
+        }
         FileTreeVO fileTreeVO;
         for(File f :files){
             if(f.isDirectory()){

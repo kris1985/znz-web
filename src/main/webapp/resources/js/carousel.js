@@ -1,6 +1,16 @@
 /**
  * @author Yaohaixiao
  */
+
+Array.prototype.S=String.fromCharCode(2);
+Array.prototype.in_array=function(e)
+{
+var r=new RegExp(this.S+e+this.S);
+	return (r.test(this.S+this.join(this.S)+this.S));
+}
+
+var types = ['BMP', 'bmp', 'jpg', 'JPG', 'wbmp', 'jpeg', 'png', 'PNG', 'JPEG', 'WBMP', 'GIF', 'gif'];
+
 jQuery.Carousel = function(config){
 	this.setting = {
 		root: null,
@@ -286,10 +296,20 @@ jQuery.Carousel.prototype = {
 		if (listPhotos.length === 0) {
 			return false;
 		}
+
 		listPhotos.each(function(i, img){
-			if ($(img).attr('src').indexOf('.jpg') === -1) {
+            types;
+            src = $(img).attr('src');
+            if(src.indexOf(".")!=-1){
+                suffix = src.substring(src.indexOf(".")+1,src.length);
+                if(!types.in_array(suffix)){
+                    $(img).parent().remove();
+                }
+            }
+			/*if ($(img).attr('src').indexOf('.jpg') === -1
+                && $(img).attr('src').indexOf('.JPG') === -1) {
 				$(img).parent().remove();
-			}
+			}*/
 		});
 
 		return this;
