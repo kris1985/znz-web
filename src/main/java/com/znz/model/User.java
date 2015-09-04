@@ -33,6 +33,8 @@ public class User {
 
     private Integer userType;
 
+    private Date lastLoginTime;
+
     public Integer getUserId() {
         return userId;
     }
@@ -151,5 +153,13 @@ public class User {
 
     public void setUserType(Integer userType) {
         this.userType = userType;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
     }
 }

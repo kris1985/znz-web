@@ -21,4 +21,5 @@ public interface UserMapper {
 
     List<User> selectAllUser(int userType);
 
+    int downloadTimes();
 }

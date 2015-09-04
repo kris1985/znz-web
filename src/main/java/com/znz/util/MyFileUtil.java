@@ -51,6 +51,7 @@ public class MyFileUtil {
                 fileTreeVO.setId(FilePathConverter.encode(f.getAbsolutePath()));
                 fileTreeVO.setText(f.getName());
                 fileTreeVO.setParent(FilePathConverter.encode(rootFile.getAbsolutePath()));
+                fileTreeVO.setLastModified(f.lastModified());
                 list.add(fileTreeVO);
                 listFile(f,list);
             }

@@ -1,10 +1,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-
+http://www.springframework.org/schema/task
+http://www.springframework.org/schema/task/spring-task-3.0.xsd
      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
@@ -28,29 +30,9 @@
 		</constructor-arg>
 	</bean>
 
-	<!--
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass" value="${ds1.jdbcDriver}" />
-		<property name="jdbcUrl" value="${ds1.jdbcUrl}" />
-		<property name="user" value="#{passwordDecrypter.decrypt('${ds1.jdbcUsername}')}" />
-		<property name="password" value="#{passwordDecrypter.decrypt('${ds1.jdbcPassword}')}" />
-		<property name="initialPoolSize" value="${ds1.jdbcInitialPoolSize}" />
-		<property name="minPoolSize" value="${ds1.jdbcMinPoolSize}" />
-		<property name="maxPoolSize" value="${ds1.jdbcMaxPoolSize}" />
-		<property name="idleConnectionTestPeriod" value="360" />
-		<property name="maxIdleTime" value="1800" />
-		<property name="preferredTestQuery" value="SELECT SYSDATE FROM DUAL" />
-		<property name="acquireIncrement" value="5" />
-		<property name="acquireRetryAttempts" value="50" />
-		<property name="acquireRetryDelay" value="1000" />
-		<property name="breakAfterAcquireFailure" value="false" />
-		<property name="autoCommitOnClose" value="false" />
-		<property name="testConnectionOnCheckout" value="true" />
-		<property name="maxStatements" value="100" />
-		<property name="maxStatementsPerConnection" value="5" />
-	</bean>
--->
+
 	<context:component-scan base-package="com.znz.config"/>
+    <context:component-scan base-package="com.znz.timer"/>
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
 		<!-- 基本属性 url、user、password -->
 		<property name="url" value="${jdbc_url}" />
@@ -110,4 +92,5 @@
 		http://localhost:8080/#forms and form.jsp for examples
 	-->
 	<bean id="requestDataValueProcessor" class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor"/>
+    <task:annotation-driven />
 </beans>

@@ -27,22 +27,7 @@
     <script>
     $(function(){
         $("#loginBtn").click(function(){
-            if($.trim($("#userName").val())==""){
-                alert("请求输入用户名");
-                $("#userName").focus();
-                return;
-            }
-            if($.trim($("#pwd").val())==""){
-                alert("请求输入密码");
-                $("#pwd").focus();
-                return;
-            }
-            if($.trim($("#randomCode").val())==""){
-                alert("请求输入验证码");
-                $("#randomCode").focus();
-                return;
-            }
-            $("#loginForm").submit();
+            login();
         });
         if($("#message")){
             $(".form-signin").show();
@@ -61,13 +46,44 @@
                 $(this).val("0");
             }
         });
-    });
+
+
+            });
     function refreshRandomCode(){
         $("#codeImg").attr("src", "/genCode?"+Math.random());
     }
+        function login(){
+            if($.trim($("#userName").val())==""){
+                alert("请求输入用户名");
+                $("#userName").focus();
+                return;
+            }
+            if($.trim($("#pwd").val())==""){
+                alert("请求输入密码");
+                $("#pwd").focus();
+                return;
+            }
+            if($.trim($("#randomCode").val())==""){
+                alert("请求输入验证码");
+                $("#randomCode").focus();
+                return;
+            }
+            $("#loginForm").submit();
+        }
+
 
     </script>
-</head>
+
+      <script>
+          document.onkeydown=function(event){
+              e = event ? event :(window.event ? window.event : null);
+              if(e.keyCode==13){
+                  login();
+              }
+          }
+      </script>
+
+  </head>
 <body>
 <%
     String name="";

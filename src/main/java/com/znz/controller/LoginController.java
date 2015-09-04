@@ -8,6 +8,7 @@ import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.vo.UserLoginVO;
 import com.znz.vo.UserSession;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -77,6 +78,7 @@ public class LoginController {
         UserSession userSession = new UserSession();
         userSession.setUser(user);
         userSession.setUserAuths(userAuths);
+        user.setLastLoginTime(new Date());
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         if(1==userLoginVO.getRemember()){
@@ -103,4 +105,7 @@ public class LoginController {
         request.getSession().invalidate();
         return "redirect:/";
     }
+
+
+
 }

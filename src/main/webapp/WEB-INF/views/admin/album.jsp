@@ -109,7 +109,7 @@
                     <span class="glyphicon glyphicon-minus" ></span><br/>
                     <span class="glyphicon-class">缩小</span>
                 </li>
-                <li>
+                <li id="downloadBtn">
                     <span class="glyphicon glyphicon-download-alt"></span><br/>
                     <span class="glyphicon-class">下载</span>
                 </li>
@@ -209,7 +209,6 @@
             width = $("#album-image").width()+70;
             $("#album-image").width(width);
             height = width / percent;
-
             $("#album-image").height(height);
             margin_left = -(width / 2) + "PX";
             // alert(margin_left);
@@ -221,30 +220,41 @@
             evt.preventDefault();
             evt.stopPropagation();
             back2Normal();
-        })
+        });
         $("#nextBtn").click(function(evt){
-
             Album.next();
             evt.preventDefault();
             evt.stopPropagation();
             back2Normal();
 
-        })
+        });
         $("#thumbBtn").click(function(){
             // height = $("#album-image-md").height();
             if($("#album-carousel").hasClass("hide")){
                 $("#album-carousel").removeClass("hide");
                 //$("#album-image-md").height(height+50)
             }else{
-
                 $("#album-carousel").addClass("hide");
                 //$("#album-image-md").height(height-50)
             }
+        });
+        document.title = $("#album-image-ft").text();
+        $("#downloadBtn").click(function(){
+            var imgpath = $("#album-image").attr("src");
+            imgpath = imgpath.replace(/\//g,"FILE_SEPARATOR").replace(".","$dot$");
+            window.open("${basePath}/admin/file/download/" + imgpath)
+         /*   $.get("${basePath}/admin/file/download/" + imgpath, function (res) {
+                alert("ok");
+            });*/
 
         });
 
-
+        document.oncontextmenu=function(){return false;}
     });
+
+    function setTitle(){
+        document.title = $("#album-image-ft").text();
+    }
 </script>
 
 

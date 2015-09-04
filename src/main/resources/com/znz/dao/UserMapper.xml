@@ -17,10 +17,11 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="session_id" property="sessionId" jdbcType="VARCHAR" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
+     <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, user_name, pwd, company, limit_ip_flag, limit_ips, access_flag, max_download_times, 
-    download_per_day, download_total, phone, create_time, update_time, session_id, user_type
+    download_per_day, download_total, phone, create_time, update_time, session_id, user_type,last_login_time
   </sql>
   <!---->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -210,6 +211,9 @@
       <if test="userType != null" >
         user_type = #{userType,jdbcType=INTEGER},
       </if>
+      <if test="lastLoginTime != null" >
+          last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -231,4 +235,8 @@
       user_type = #{userType,jdbcType=INTEGER}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
+
+    <update id="downloadTimes">
+        UPDATE t_user set download_per_day=0
+    </update>
 </mapper>

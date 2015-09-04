@@ -251,7 +251,8 @@
                     var inst = $.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
                    // console.log(obj);
-                    var url = "${basePath}/admin/file/browse?parentId=" + obj.id
+                    parentId = obj.id.replace("_anchor","")
+                    var url = "${basePath}/admin/file/browse?parentId=" + parentId
                     art.dialog.open(url, /** 弹出ART窗体*/
                             {
                                 "id": obj.id,
@@ -259,7 +260,7 @@
                                 width: 500,
                                 height: 400,
                                 close : function () {
-                                   show(obj.id);
+                                   show(parentId);
                                 }
                             }
                     );

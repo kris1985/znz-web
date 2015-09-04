@@ -35,10 +35,11 @@
                             data:myobj,
 							templateFile: '${basePath}/resources/templates/default.mst',
                              schema: [
-                                                {"header":"公司名称", "key":"company", },
+                                                {"header":"公司名称", "key":"company" },
                                                 {"header":"用戶名", "key":"userName"},
                                                 {"header":"当日下载", "key":"downloadPerDay"},
                                                 {"header":"总下载", "key":"downloadTotal"},
+                                                {"header":"最后登录时间", "key":"lastLoginTimeStr"},
                                                 {"header":"操作",
                                                  "key":"userId",
                                                   "template":'<a href="${basePath}/admin/user/delete/{{userId}}" onclick="return confirm(\'删除后无法恢复,确定要删除吗\')" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;删除</a>&nbsp;&nbsp;<a href="${basePath}/admin/user/update/{{userId}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;修改</a>'}

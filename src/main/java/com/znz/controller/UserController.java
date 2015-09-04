@@ -44,12 +44,20 @@ public class UserController {
 
 
     @RequestMapping(value = "/list" , method= RequestMethod.GET)
-    public @ResponseBody List<User> list(){
+    public @ResponseBody List<UserVO> list(){
         List<User> users = userMapper.selectAllUser(1);
-        for (User user:users){
-            log.info("user:"+user.getUserName());
+        List<UserVO> userVOs = null;
+        UserVO userVO = null;
+        if(!CollectionUtils.isEmpty(users)){
+            userVOs = new ArrayList<UserVO>();
+            for (User user:users){
+                userVO = new UserVO();
+                BeanUtils.copyProperties(user,userVO);
+                userVOs.add(userVO);
+            }
         }
-        return  users;
+
+        return  userVOs;
     }
 
     @RequestMapping(value = "/delete/{userId}" , method= RequestMethod.GET)
@@ -184,9 +192,6 @@ public class UserController {
     public @ResponseBody List<AuthFileVO> lisAlltAuth(HttpServletRequest request){
         String rootPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         List<AuthFileVO> auths = getAuth(rootPath);
-        for (AuthFileVO authFileVO:auths){
-            log.info("getAuthName"+authFileVO.getAuthName());
-        }
         return  auths;
     }
 

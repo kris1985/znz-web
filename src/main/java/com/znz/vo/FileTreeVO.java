@@ -21,6 +21,7 @@ public class FileTreeVO {
     private String id;
     private String text;
     private String parent;
+    private long lastModified;
 
     public void setId(String id) {
         this.id = id;
@@ -32,5 +33,13 @@ public class FileTreeVO {
 
     public void setParent(String parent) {
         this.parent = parent;
+    }
+
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
     }
 }

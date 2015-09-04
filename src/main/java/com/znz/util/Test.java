@@ -1,6 +1,7 @@
 package com.znz.util;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
@@ -16,14 +17,17 @@ public class Test {
         //ZipUtil.unpack(new File("d:/temp/test.zip"), new File("d:/temp/"));
         //ZipUtil.explode(new File("d:/temp/temp.zip"));
         String extName ="11132.txt".substring("11132.txt".lastIndexOf(".")+1);
-        System.out.println(extName);
+        //System.out.println(extName);
        // FileUtils.moveDirectory(new File("d:/temp/test2"),new File("d:/temp/test3"));
         //FileUtils.moveDirectoryToDirectory(new File("d:/temp/test2"),new File("d:/temp/test3"),false);
         //FileUtils.moveToDirectory(new File("d:/temp/test2"),new File("d:/temp/test3"),false);
         //FileUtils.moveFileToDirectory(new File("d:/temp/test2"),new File("d:/temp/test3"),false);
        // FileUtils.moveFile(new File("d:/temp/test2"),new File("d:/temp/test3"));
 
-        moveFiles(new File("d:/temp/test2"),new File("d:/temp/test3"));
+        //moveFiles(new File("d:/temp/test2"),new File("d:/temp/test3"));
+        System.out.println(DateTime.now().toString("yyyyMMDD"));
+
+
 
     }
 
