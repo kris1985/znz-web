@@ -82,7 +82,7 @@
                         }
 
                 %>
-                <li class="album-carousel-thumb <%=selectedClass%>"><a href="<%= vo.getUrl()%>"><img src="<%= vo.getThumbUrl()%>" alt="<%=vo.getName().substring(6,vo.getName().lastIndexOf("."))%>"  /></a></li>
+                <li class="album-carousel-thumb <%=selectedClass%>"><a href="<%= vo.getUrl()%>" title="<%=vo.getName().substring(6,vo.getName().lastIndexOf("."))%>"></a></li>
                 <%}%>
             </ul>
 
@@ -113,10 +113,12 @@
                     <span class="glyphicon glyphicon-download-alt"></span><br/>
                     <span class="glyphicon-class">下载</span>
                 </li>
+				<!--
                 <li id="thumbBtn">
                     <span class="glyphicon glyphicon-picture"></span><br/>
                     <span class="glyphicon-class">缩略图</span>
                 </li>
+				-->
 
             </ul>
 
@@ -144,6 +146,7 @@
     });
 
     $(function(){
+		setTitle();
         if($.cookie('albumBackground') !=undefined){
             $("body").css("background",$.cookie('albumBackground'));
             $("#album").css("background",$.cookie('albumBackground'));
@@ -238,7 +241,7 @@
                 //$("#album-image-md").height(height-50)
             }
         });
-        document.title = $("#album-image-ft").text();
+        
         $("#downloadBtn").click(function(){
             var imgpath = $("#album-image").attr("src");
             imgpath = imgpath.replace(/\//g,"FILE_SEPARATOR").replace(".","$dot$");
@@ -253,7 +256,7 @@
     });
 
     function setTitle(){
-        document.title = $("#album-image-ft").text();
+        document.title = '${parentName}';
     }
 </script>
 

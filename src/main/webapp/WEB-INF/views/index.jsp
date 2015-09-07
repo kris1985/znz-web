@@ -12,10 +12,11 @@
 
     <title>指南针</title>
     <%@ include file="common/common.jsp"%>
+	
       <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
     <link href="${basePath}/resources/css/login.css" rel="stylesheet"  type="text/css" />
       <style>
-          body{ background: url("${basePath}/upload/bg/indexBg.jpg")}
+          body{ background: url("${basePath}/upload/bg/indexBg.jpg") center 0px no-repeat }
       </style>
 	<!--
 		Used for including CSRF token in JSON requests

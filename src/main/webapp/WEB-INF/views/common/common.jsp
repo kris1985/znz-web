@@ -3,6 +3,7 @@
 <%
  pageContext.setAttribute("basePath", request.getContextPath());
 %>
+<link rel="shortcut icon" type="image/x-icon" href="${basePath}/resources/img/favicon.ico" media="screen" /> 
 <script>
  var basePath = '<%= request.getContextPath()%>';
 

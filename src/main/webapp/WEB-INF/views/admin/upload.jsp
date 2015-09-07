@@ -20,6 +20,7 @@
 <script type="text/javascript">
 
 	     $(function() {
+			 setTimeout(function(){
          			$('#file_upload').uploadify({
          				'formData'     : {
          					'timestamp' : new Date().getTime()
@@ -72,6 +73,7 @@
                                                 }
                                            }
          			});
+					},10);
          		});
 	</script>
 </head>

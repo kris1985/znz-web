@@ -1,4 +1,4 @@
-<%@ page import="com.znz.listener.MySessionLister" %>
+﻿<%@ page import="com.znz.listener.MySessionLister" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -59,13 +59,16 @@
 
 
     </div>
+	<!--
     <div class="pane ui-layout-south">
         <span style="margin:0 20px;color:red">
         <c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
        在线人数： <%=MySessionLister.getActiveSessions()%>
         </c:if>
             </span>
-        <span style="float: right" id="fileNumResult"></span><p style="text-align:center">指南针鞋讯版权所有</p></div>
+        <span style="float: right" id="fileNumResult"></span><p style="text-align:center">指南针鞋讯版权所有</p>
+	</div>
+	-->
 
     <div class="pane ui-layout-west">
         <div id="left_container" style="border:0px solid #ccc">
@@ -76,6 +79,7 @@
 </div>
 <script type="text/javascript">
     jQuery(function($){
+
         // 备份jquery的ajax方法
         var _ajax=$.ajax;
         // 重写ajax方法，先判断登录在执行success函数
@@ -105,12 +109,21 @@
         var folderHtml = "";
         var imgHtml = "";
         var navBarHtml = "";
-        $.get("${basePath}/admin/file/chidren/" + selectedId,{timestamp:new Date().getTime()}, function (result) {
+selectedId = encodeURI(selectedId);
+        $.ajax(
+		
+		{ url :"${basePath}/admin/file/chidren/" + selectedId,
+		  data:new Date().getTime(), 
+		  contentType: "application/x-www-form-urlencoded; charset=utf-8",
+		  cache:false,
+		  success:function (result) {
+
             $.each(result.parentNodes, function (n, value) {
                 tem = navBarTemplate.replace("{folderName}", value.name);
                 tem = tem.replace("{folderId}", value.path);
                 navBarHtml += tem;
             });
+			
             $("#nav_bar").html(navBarHtml);
             $(".path_arrow:last").hide();
             if (result.fileNodes == null) {
@@ -120,7 +133,7 @@
             var foldNum=0;
             var fileNum=0;
             $.each(result.fileNodes, function (n, value) {
-                //alert(n + ' ' + value.directory);
+               
                 if (value.directory == true) {
                     tem = folderTemplate.replace("{folderId}", value.path);
                     tem = tem.replace("{folderName}", value.name);
@@ -141,12 +154,15 @@
             // $(imgHtml).prependTo("#file-content");
 
             $("#file-content").html(folderHtml + imgHtml);
-            $("#fileNumResult").html("<div class='file_num_div' style='clear: both'>文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
-           // $("#file-content").prepend("<div>文件夹:" +foldNum+" 文件："+fileNum+"</div>")
+           // $("#fileNumResult").html("<div class='file_num_div' style='clear: both'>文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
+             // $("#file-content").prepend("<div class='file_num_div' style='clear: both'>文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
+
+		   // $("#file-content").prepend("<div>文件夹:" +foldNum+" 文件："+fileNum+"</div>")
             $(".thumb").load(function () {
                 initImg($(this));
             });
-        });
+        }
+	  });
     }
 
 
@@ -324,8 +340,33 @@
         };
 
         //初始化树
-       /**/ $.get("${basePath}/admin/file/tree?t="+new Date().getTime(), function (result) {
+       /* $.get("${basePath}/admin/file/tree?t="+new Date().getTime(), function (result) {
             var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
+            $("#nav_bar").html(bar);
+            $('#jstree').jstree({
+               
+                'plugins': ["wholerow","search", "contextmenu" ],
+                'contextmenu': {
+                    'items': items
+                },
+          
+                'core': {
+                    'data': result,
+                    'strings': true,
+                    "check_callback": true,
+                    'multiple': false
+                }
+            })
+        });
+		*/
+		
+		$.ajax({
+   type: "GET",
+   url: "${basePath}/admin/file/tree?t="+new Date(),
+   contentType: "application/x-www-form-urlencoded; charset=utf-8",
+   cache:false,
+   success: function(result){
+     var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
             $("#nav_bar").html(bar);
             $('#jstree').jstree({
                 <c:choose>
@@ -334,9 +375,9 @@
                 'contextmenu': {
                     'items': items
                 },
-            </c:when>
+           </c:when>
                 <c:otherwise>
-                'plugins': ["wholerow","search"],
+				 'plugins': ["wholerow","search"],
                 </c:otherwise>
                 </c:choose>
                 'core': {
@@ -345,18 +386,9 @@
                     "check_callback": true,
                     'multiple': false
                 }
-            })/*.on("rename_node.jstree", function (e, data) {
-                //alert(data.node.id);
-                 $.get("${basePath}/admin/file/mkdir/"+data.node.id.replace("_anchor", ""),function(res){
-                    if(res!="0"){
-                        alert(res);
-                        var inst = $.jstree.reference(data.reference);
-                        inst.delete_node(inst.get_selected());
-
-                    }
-                })
-            });*/
-        });
+            })
+   }
+});
 
 
 
@@ -399,7 +431,10 @@
         $(document).delegate('.folder_img', 'dblclick', function () {
             show($(this).attr("id"));
             $('#jstree').jstree(true).deselect_all();
+			$('#jstree').jstree(true).open_node($(this).attr("id") + "_anchor");
             $('#jstree').jstree(true).select_node($(this).attr("id") + "_anchor");
+			$('#jstree').jstree(true).open_node($(this).attr("id"));
+            $('#jstree').jstree(true).select_node($(this).attr("id"));
         });
 
         //文件管理器右部文件点击
@@ -473,6 +508,10 @@
             }, 250);
         });
     });
+	
+	
+	
+	
 </script>
 
 </body>

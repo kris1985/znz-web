@@ -115,7 +115,7 @@ public class FileController {
     @ResponseBody
     List<FileTreeVO> listTree(HttpServletRequest request) {
         String rootPath = getRealPath(request);
-        log.info("rootPath:" + rootPath);
+       // log.info("rootPath:" + rootPath);
         File rootFile = new File(rootPath);
         List<FileTreeVO> list = new ArrayList<FileTreeVO>();
         FileTreeVO root = new FileTreeVO();
@@ -138,7 +138,7 @@ public class FileController {
                     secondDir.setParent(root.getId());
                     list.add(secondDir);
                     String path = rootPath + userAuth.getFilePath();
-                    log.info("path--------------------------------" + path);
+                   // log.info("path--------------------------------" + path);
                     MyFileUtil.listFile(new File(path), list);
                 }
             } else {
@@ -148,7 +148,7 @@ public class FileController {
         Collections.sort(list, new Comparator<FileTreeVO>() {
             @Override
             public int compare(FileTreeVO o1, FileTreeVO o2) {
-                return o1.getLastModified() > o2.getLastModified() ? -1 : 1;
+                return o1.getText().compareToIgnoreCase(o2.getText());
             }
         });
         return list;
@@ -156,8 +156,10 @@ public class FileController {
 
     public static String getRealPath(HttpServletRequest request) {
         String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
+        //log.info("real2Path:"+ realPath);
+        //log.info("real3Path:"+ File.separator);
         if (!File.separator.equals(realPath.charAt(realPath.length() - 1))) {
-            realPath += File.separator;
+           // realPath += File.separator;
         }
         return realPath;
     }
@@ -208,7 +210,10 @@ public class FileController {
                 } else if (f.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)) {
                   /*  log.info("--1--"+f.getAbsolutePath());
                     log.info("--2--"+f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
-                    log.info("--33--"+f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\","/"));*/
+                    log.info("--33--"+f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\","/"));
+                    log.info("f.getAbsolutePath():"+f.getAbsolutePath());
+                    log.info("request.getContextPath():"+request.getContextPath());
+                    log.info("realPath:"+ realPath);*/
                     fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\", "/"));
                     fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, "").replaceAll("\\\\", "/"));//解决火狐下图片不显示问题
                     fileNodes.add(fileNode);
@@ -217,7 +222,7 @@ public class FileController {
             Collections.sort(fileNodes, new Comparator<FileNodeVO>() {
                 @Override
                 public int compare(FileNodeVO o1, FileNodeVO o2) {
-                    return o1.getLastModified() > o2.getLastModified() ? -1 : 1;
+                    return o1.getName().compareToIgnoreCase(o2.getName());
                 }
             });
             vo.setFileNodes(fileNodes);
@@ -262,7 +267,7 @@ public class FileController {
         Collections.sort(list, new Comparator<FileNodeVO>() {
             @Override
             public int compare(FileNodeVO o1, FileNodeVO o2) {
-                return o1.getLastModified() > o2.getLastModified() ? 1 : -1;
+                return o2.getName().compareToIgnoreCase(o2.getName());
             }
         });
         int currentIndex = list.indexOf(selected);
@@ -271,6 +276,7 @@ public class FileController {
         model.addAttribute("selectedImg", selectedImg);
         //model.addAttribute("encodeImg",FilePathConverter.encode(path));
         model.addAttribute("imgs", list);
+        model.addAttribute("parentName", parent.getName());
         model.addAttribute("currentIndex", currentIndex);
         return "admin/album";
     }
@@ -374,7 +380,7 @@ public class FileController {
 
     @RequestMapping(value = "/download/{imgPath}", method = RequestMethod.GET)
     public void download(@PathVariable("imgPath") String imgPath, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.info(imgPath);
+       // log.info(imgPath);
         imgPath = FilePathConverter.decode(imgPath).replace("$dot$", ".");
         String realPath = request.getSession().getServletContext().getRealPath("/");
         realPath = realPath + imgPath;

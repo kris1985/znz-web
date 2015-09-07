@@ -30,6 +30,7 @@
 <script type="text/javascript">
 
 	     $(function() {
+			 setTimeout(function(){
          			$('#file_upload').uploadify({
          				'formData'     : {
          					'timestamp' : '123'
@@ -83,6 +84,7 @@
                                                 }
                                            }
          			});
+					 },10);
          		});
 	</script>
 </head>
