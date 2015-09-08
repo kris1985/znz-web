@@ -66,7 +66,7 @@ border:2px solid #b8d6fb;
 	}
 	.jstree-themeicon{width:0px}
 	.nav_bar .item {line-height:24px;}
-    .file_num_div {margin-top: 10px;}
+    .file_num_div {margin-top: 5px;  margin-right: 20px}
 .file_num_div span{color: red}
 
 .jstree-search{ background: red;color: #fff}

@@ -105,7 +105,7 @@
         //alert(selectedId);
         var folderTemplate = "<div class=folder_wrap><div id={folderId}  class=\"folder_img\"><img  src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"
         var imgTemplate = "<div class='img_wrap ' ><img class='thumb' src='{thumbUrl}' id='{id}' style='max-width:256px;max-height:182px'><div class='img_txt'>{imgName}</div></div>"
-        var navBarTemplate = "<span class='item' id={folderId}>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span>";
+        var navBarTemplate = "<span class='item' id={folderId}>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span><span style=\"float: right\" id=\"fileNumResult\"></span>";
         var folderHtml = "";
         var imgHtml = "";
         var navBarHtml = "";
@@ -154,10 +154,10 @@ selectedId = encodeURI(selectedId);
             // $(imgHtml).prependTo("#file-content");
 
             $("#file-content").html(folderHtml + imgHtml);
-           // $("#fileNumResult").html("<div class='file_num_div' style='clear: both'>文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
-             // $("#file-content").prepend("<div class='file_num_div' style='clear: both'>文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
-
-		   // $("#file-content").prepend("<div>文件夹:" +foldNum+" 文件："+fileNum+"</div>")
+			 <c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
+            $("#fileNumResult").html("<div class='file_num_div' style='clear: both'>在线人数： <%=MySessionLister.getActiveSessions()%> &nbsp;&nbsp;文件夹:<span>" +foldNum+" </span>文件：<span class='file_num'>"+fileNum+"</span></div>")
+            </c:if>
+		 
             $(".thumb").load(function () {
                 initImg($(this));
             });
