@@ -113,7 +113,7 @@ public class FileController {
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<FileTreeVO> listTree(HttpServletRequest request) {
+    List<FileTreeVO> listTree(HttpServletRequest request,@RequestParam String filePath) {
         String rootPath = getRealPath(request);
        // log.info("rootPath:" + rootPath);
         File rootFile = new File(rootPath);

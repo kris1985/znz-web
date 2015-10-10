@@ -92,7 +92,7 @@
     </div>
     <div class="fixedBtns" style="height:45px;background-color:black; z-index:999; position:fixed; bottom:0; left:0; width:100%; _position:absolute;">
         <div style="width:414px; margin:0 auto;height:45px;" >
-            <ul class="bs-glyphicons-list" style="height:45px;margin-top:1px">
+            <ul class="bs-glyphicons-list" style="height:40px;margin-top:1px;margin-left:45px">
                 <li id="preBtn">
                     <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span><br/>
                     <span class="glyphicon-class">上一张</span>

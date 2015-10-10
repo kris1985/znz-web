@@ -340,26 +340,7 @@ selectedId = encodeURI(selectedId);
         };
 
         //初始化树
-       /* $.get("${basePath}/admin/file/tree?t="+new Date().getTime(), function (result) {
-            var bar = "<span class=\"item\" id=" + result[0].id + ">" + result[0].text + "</span>"
-            $("#nav_bar").html(bar);
-            $('#jstree').jstree({
-               
-                'plugins': ["wholerow","search", "contextmenu" ],
-                'contextmenu': {
-                    'items': items
-                },
-          
-                'core': {
-                    'data': result,
-                    'strings': true,
-                    "check_callback": true,
-                    'multiple': false
-                }
-            })
-        });
-		*/
-		
+/**
 		$.ajax({
    type: "GET",
    url: "${basePath}/admin/file/tree?t="+new Date(),
@@ -389,9 +370,37 @@ selectedId = encodeURI(selectedId);
             })
    }
 });
-
-
-
+**/
+ $('#jstree').jstree({
+                <c:choose>
+                               <c:when test="${user.user.userType ==2 or user.user.userType ==3 }">
+                               'plugins': ["wholerow","search", "contextmenu" ],
+                               'contextmenu': {
+                                   'items': items
+                               },
+                          </c:when>
+                               <c:otherwise>
+               				 'plugins': ["wholerow","search"],
+                               </c:otherwise>
+                               </c:choose>
+                               'core': {
+                                    'data' : {
+                                        'url' : '${basePath}/admin/file/chidren',
+                                        'data' : function (node) {
+                                        console.log(node);
+                                            var id = node.id;
+                                            if(id=="#"){
+                                                id = "*";
+                                            }
+                                            return { 'filePath' :id };
+                                        }
+                                    },
+                                    'strings': true,
+                                    "check_callback": true,
+                                    'multiple': false
+                                }
+               })
+/**end**/
         // 文件管理器左部文件树点击事件
         $('#jstree').on("changed.jstree", function (e, data) {
            // console.log("-----------------------------"+data.selected);

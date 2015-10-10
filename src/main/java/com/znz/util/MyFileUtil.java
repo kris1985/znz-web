@@ -53,7 +53,7 @@ public class MyFileUtil {
                 fileTreeVO.setParent(FilePathConverter.encode(rootFile.getAbsolutePath()));
                 fileTreeVO.setLastModified(f.lastModified());
                 list.add(fileTreeVO);
-                listFile(f,list);
+               // listFile(f,list);
             }
         }
     }
