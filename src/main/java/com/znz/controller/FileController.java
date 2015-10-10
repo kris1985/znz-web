@@ -148,7 +148,7 @@ public class FileController {
         Collections.sort(list, new Comparator<FileTreeVO>() {
             @Override
             public int compare(FileTreeVO o1, FileTreeVO o2) {
-                return o1.getText().compareToIgnoreCase(o2.getText());
+                return o2.getText().compareToIgnoreCase(o1.getText());
             }
         });
         return list;
@@ -219,12 +219,19 @@ public class FileController {
                     fileNodes.add(fileNode);
                 }
             }
+          /* for (FileNodeVO fileNodeVO:fileNodes){
+               log.info(fileNodeVO.getName() );
+           }
+            log.info(",");*/
             Collections.sort(fileNodes, new Comparator<FileNodeVO>() {
                 @Override
                 public int compare(FileNodeVO o1, FileNodeVO o2) {
                     return o1.getName().compareToIgnoreCase(o2.getName());
                 }
             });
+           /* for (FileNodeVO fileNodeVO:fileNodes){
+                log.info(fileNodeVO.getName());
+            }*/
             vo.setFileNodes(fileNodes);
         }
         Collections.reverse(parentNodes);
