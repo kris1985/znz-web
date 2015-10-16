@@ -120,7 +120,8 @@ public class FileController {
         List<FileTreeVO> list = new ArrayList<FileTreeVO>();
         FileTreeVO root = new FileTreeVO();
         root.setId(FilePathConverter.encode(rootFile.getAbsolutePath()));
-        root.setText(rootFile.getName());
+        //root.setText(rootFile.getName());
+        root.setText("目录");
         root.setParent("#");
         list.add(root);
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
@@ -274,7 +275,7 @@ public class FileController {
         Collections.sort(list, new Comparator<FileNodeVO>() {
             @Override
             public int compare(FileNodeVO o1, FileNodeVO o2) {
-                return o2.getName().compareToIgnoreCase(o2.getName());
+                return o1.getName().compareToIgnoreCase(o2.getName());
             }
         });
         int currentIndex = list.indexOf(selected);
