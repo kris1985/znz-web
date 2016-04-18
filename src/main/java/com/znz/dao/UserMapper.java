@@ -1,6 +1,7 @@
 package com.znz.dao;
 
 import com.znz.model.User;
+import com.znz.vo.UserQueryVO;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface UserMapper {
     List<User> selectAllUser(int userType);
 
     int downloadTimes();
+
+    List<User> selectByPage(UserQueryVO userQueryVO);
 }

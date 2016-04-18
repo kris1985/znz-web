@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.znz.dao.TLinePriceMapper" >
+  <resultMap id="BaseResultMap" type="com.znz.model.TLinePrice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="line_id" property="lineId" jdbcType="INTEGER" />
+    <result column="stay" property="stay" jdbcType="INTEGER" />
+    <result column="hotel_diff" property="hotelDiff" jdbcType="INTEGER" />
+    <result column="pick_up" property="pickUp" jdbcType="INTEGER" />
+    <result column="presented" property="presented" jdbcType="INTEGER" />
+    <result column="spzx_price" property="spzxPrice" jdbcType="INTEGER" />
+    <result column="children_price" property="childrenPrice" jdbcType="INTEGER" />
+    <result column="profit" property="profit" jdbcType="INTEGER" />
+    <result column="royalty" property="royalty" jdbcType="INTEGER" />
+    <result column="final_price" property="finalPrice" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, line_id, stay, hotel_diff, pick_up, presented, spzx_price, children_price, profit, 
+    royalty, final_price, remark, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_line_price
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_line_price
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.znz.model.TLinePrice" >
+    insert into t_line_price (id, line_id, stay, 
+      hotel_diff, pick_up, presented, 
+      spzx_price, children_price, profit, 
+      royalty, final_price, remark, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{lineId,jdbcType=INTEGER}, #{stay,jdbcType=INTEGER}, 
+      #{hotelDiff,jdbcType=INTEGER}, #{pickUp,jdbcType=INTEGER}, #{presented,jdbcType=INTEGER}, 
+      #{spzxPrice,jdbcType=INTEGER}, #{childrenPrice,jdbcType=INTEGER}, #{profit,jdbcType=INTEGER}, 
+      #{royalty,jdbcType=INTEGER}, #{finalPrice,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.znz.model.TLinePrice" >
+    insert into t_line_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lineId != null" >
+        line_id,
+      </if>
+      <if test="stay != null" >
+        stay,
+      </if>
+      <if test="hotelDiff != null" >
+        hotel_diff,
+      </if>
+      <if test="pickUp != null" >
+        pick_up,
+      </if>
+      <if test="presented != null" >
+        presented,
+      </if>
+      <if test="spzxPrice != null" >
+        spzx_price,
+      </if>
+      <if test="childrenPrice != null" >
+        children_price,
+      </if>
+      <if test="profit != null" >
+        profit,
+      </if>
+      <if test="royalty != null" >
+        royalty,
+      </if>
+      <if test="finalPrice != null" >
+        final_price,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lineId != null" >
+        #{lineId,jdbcType=INTEGER},
+      </if>
+      <if test="stay != null" >
+        #{stay,jdbcType=INTEGER},
+      </if>
+      <if test="hotelDiff != null" >
+        #{hotelDiff,jdbcType=INTEGER},
+      </if>
+      <if test="pickUp != null" >
+        #{pickUp,jdbcType=INTEGER},
+      </if>
+      <if test="presented != null" >
+        #{presented,jdbcType=INTEGER},
+      </if>
+      <if test="spzxPrice != null" >
+        #{spzxPrice,jdbcType=INTEGER},
+      </if>
+      <if test="childrenPrice != null" >
+        #{childrenPrice,jdbcType=INTEGER},
+      </if>
+      <if test="profit != null" >
+        #{profit,jdbcType=INTEGER},
+      </if>
+      <if test="royalty != null" >
+        #{royalty,jdbcType=INTEGER},
+      </if>
+      <if test="finalPrice != null" >
+        #{finalPrice,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.TLinePrice" >
+    update t_line_price
+    <set >
+      <if test="lineId != null" >
+        line_id = #{lineId,jdbcType=INTEGER},
+      </if>
+      <if test="stay != null" >
+        stay = #{stay,jdbcType=INTEGER},
+      </if>
+      <if test="hotelDiff != null" >
+        hotel_diff = #{hotelDiff,jdbcType=INTEGER},
+      </if>
+      <if test="pickUp != null" >
+        pick_up = #{pickUp,jdbcType=INTEGER},
+      </if>
+      <if test="presented != null" >
+        presented = #{presented,jdbcType=INTEGER},
+      </if>
+      <if test="spzxPrice != null" >
+        spzx_price = #{spzxPrice,jdbcType=INTEGER},
+      </if>
+      <if test="childrenPrice != null" >
+        children_price = #{childrenPrice,jdbcType=INTEGER},
+      </if>
+      <if test="profit != null" >
+        profit = #{profit,jdbcType=INTEGER},
+      </if>
+      <if test="royalty != null" >
+        royalty = #{royalty,jdbcType=INTEGER},
+      </if>
+      <if test="finalPrice != null" >
+        final_price = #{finalPrice,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.znz.model.TLinePrice" >
+    update t_line_price
+    set line_id = #{lineId,jdbcType=INTEGER},
+      stay = #{stay,jdbcType=INTEGER},
+      hotel_diff = #{hotelDiff,jdbcType=INTEGER},
+      pick_up = #{pickUp,jdbcType=INTEGER},
+      presented = #{presented,jdbcType=INTEGER},
+      spzx_price = #{spzxPrice,jdbcType=INTEGER},
+      children_price = #{childrenPrice,jdbcType=INTEGER},
+      profit = #{profit,jdbcType=INTEGER},
+      royalty = #{royalty,jdbcType=INTEGER},
+      final_price = #{finalPrice,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

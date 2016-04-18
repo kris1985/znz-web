@@ -22,6 +22,6 @@ public class ResultVO {
         return msg;
     }
 
-    private int code;
+    private int code = -1;
     private String msg;
 }

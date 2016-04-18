@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.znz.dao.TTravelLineMapper" >
+  <resultMap id="BaseResultMap" type="com.znz.model.TTravelLine" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="attractions_id" property="attractionsId" jdbcType="INTEGER" />
+    <result column="spzx" property="spzx" jdbcType="VARCHAR" />
+    <result column="days" property="days" jdbcType="VARCHAR" />
+    <result column="jtfs" property="jtfs" jdbcType="VARCHAR" />
+    <result column="hotel" property="hotel" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, attractions_id, spzx, days, jtfs, hotel, remark, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_travel_line
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_travel_line
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.znz.model.TTravelLine" >
+    insert into t_travel_line (id, attractions_id, spzx, 
+      days, jtfs, hotel, 
+      remark, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{attractionsId,jdbcType=INTEGER}, #{spzx,jdbcType=VARCHAR}, 
+      #{days,jdbcType=VARCHAR}, #{jtfs,jdbcType=VARCHAR}, #{hotel,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.znz.model.TTravelLine" >
+    insert into t_travel_line
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="attractionsId != null" >
+        attractions_id,
+      </if>
+      <if test="spzx != null" >
+        spzx,
+      </if>
+      <if test="days != null" >
+        days,
+      </if>
+      <if test="jtfs != null" >
+        jtfs,
+      </if>
+      <if test="hotel != null" >
+        hotel,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="attractionsId != null" >
+        #{attractionsId,jdbcType=INTEGER},
+      </if>
+      <if test="spzx != null" >
+        #{spzx,jdbcType=VARCHAR},
+      </if>
+      <if test="days != null" >
+        #{days,jdbcType=VARCHAR},
+      </if>
+      <if test="jtfs != null" >
+        #{jtfs,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel != null" >
+        #{hotel,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.TTravelLine" >
+    update t_travel_line
+    <set >
+      <if test="attractionsId != null" >
+        attractions_id = #{attractionsId,jdbcType=INTEGER},
+      </if>
+      <if test="spzx != null" >
+        spzx = #{spzx,jdbcType=VARCHAR},
+      </if>
+      <if test="days != null" >
+        days = #{days,jdbcType=VARCHAR},
+      </if>
+      <if test="jtfs != null" >
+        jtfs = #{jtfs,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel != null" >
+        hotel = #{hotel,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.znz.model.TTravelLine" >
+    update t_travel_line
+    set attractions_id = #{attractionsId,jdbcType=INTEGER},
+      spzx = #{spzx,jdbcType=VARCHAR},
+      days = #{days,jdbcType=VARCHAR},
+      jtfs = #{jtfs,jdbcType=VARCHAR},
+      hotel = #{hotel,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

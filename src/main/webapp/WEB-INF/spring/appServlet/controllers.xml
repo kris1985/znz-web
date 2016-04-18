@@ -12,6 +12,7 @@
 	<mvc:view-controller path="/admin/file/browse" view-name="admin/upload"/>
     <mvc:view-controller path="/admin/desktop" view-name="admin/desktop"/>
     <mvc:view-controller path="/admin/user/users" view-name="admin/users"/>
+	<mvc:view-controller path="/admin/user/listUser" view-name="admin/usersList"/>
     <mvc:view-controller path="/admin/user/toadd" view-name="admin/userAdd"/>
     <mvc:view-controller path="/genCode" view-name="genCode"/>
 

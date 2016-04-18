@@ -239,4 +239,17 @@
     <update id="downloadTimes">
         UPDATE t_user set download_per_day=0
     </update>
+
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.UserQueryVO" >
+    select
+    <include refid="Base_Column_List" />
+    from t_user where 1=1
+    <if test="userName != null" >
+     and  user_name = #{userName,jdbcType=VARCHAR},
+    </if>
+    <if test="company != null" >
+      company = #{company,jdbcType=VARCHAR},
+    </if>
+    where user_type != 3 order by user_id desc;
+  </select>
 </mapper>

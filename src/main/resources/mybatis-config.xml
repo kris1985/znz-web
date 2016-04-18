@@ -12,17 +12,13 @@
         <setting name="defaultStatementTimeout" value="25000"/>
     </settings>
 
-    <typeAliases>
-		<typeAlias alias="IdcardLogPO" type="com.bestpay.bcs.model.IdcardLogPO" />
-		<typeAlias alias="PlatPO" type="com.bestpay.bcs.model.PlatPO" />
-        <typeAlias alias="IdcardInfoPO" type="com.bestpay.bcs.model.IdcardInfoPO" />
-	</typeAliases>
+    -->
     <plugins>
-        <plugin interceptor="com.bestpay.bcs.persist.interceptor.QueryPageInterceptor">
+        <plugin interceptor="com.znz.interceptor.QueryPageInterceptor">
             <property name="sqlmapId" value=".*Page$"/>
         </plugin>
     </plugins>
-    -->
+
 	<mappers>
         <!---->
         <mapper resource="com/znz/dao/UserAuthMapper.xml" />

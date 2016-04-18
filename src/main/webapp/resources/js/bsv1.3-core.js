@@ -1022,7 +1022,7 @@ Task = $.Class({
 		var taskItemIcon = $("<div>",{
 			"class":"taskItemIcon"
 		});
-        //console.log("000000000000-"+op);
+        console.log("000000000000-"+op.icon);
 		$("<img src='"+basePath+"/resources/icon/min/"+op.icon+"'/><div class='taskItemIconState'></div>").appendTo(taskItemIcon);//图片路径---------------------------------
 		var taskItemTxt  = $("<div>",{
 			"class":"taskItemTxt",
@@ -1287,7 +1287,7 @@ Windows = function(me){
 				var width="80%",height="90%";
 				    if(id==18){
 						width = "60%";
-						height = "86%"
+						height = "65%"
 					}else if(id==19){
 						width = "50%";
 						height = "60%"
@@ -1430,7 +1430,7 @@ appIcon_t1 = appIcon_t0.extend({
 			var id = _this.attr("appid");
 			var title = $.trim(_this.text());
 			var url =_this.attr("url");
-			var icon =_this.find("img").attr("src").split("/")[1];
+			var icon =_this.find("img").attr("src").split("/")[3];
 			var sonMenu =_this.attr("sonMenu");//获取子菜单
 			if(sonMenu == undefined){
 				sonMenu = "[]"

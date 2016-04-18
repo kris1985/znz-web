@@ -92,7 +92,7 @@ DATA={
 			appid:'18',
 			icon:'friendgroup.png',
 			name:'用户管理',
-			url:basePath+'/admin/user/users',
+			url:basePath+'/admin/user/listUser',
 			sonMenu:"[]",
 			asc:6
 		},
