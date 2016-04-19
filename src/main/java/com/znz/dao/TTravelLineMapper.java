@@ -3,13 +3,13 @@ package com.znz.dao;
 import com.znz.model.TTravelLine;
 
 public interface TTravelLineMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String id);
 
     int insert(TTravelLine record);
 
     int insertSelective(TTravelLine record);
 
-    TTravelLine selectByPrimaryKey(Integer id);
+    TTravelLine selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(TTravelLine record);
 

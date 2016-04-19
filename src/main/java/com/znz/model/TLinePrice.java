@@ -3,9 +3,9 @@ package com.znz.model;
 import java.util.Date;
 
 public class TLinePrice {
-    private Integer id;
+    private String id;
 
-    private Integer lineId;
+    private String lineId;
 
     private Integer stay;
 
@@ -31,19 +31,19 @@ public class TLinePrice {
 
     private Date updateTime;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getLineId() {
+    public String getLineId() {
         return lineId;
     }
 
-    public void setLineId(Integer lineId) {
+    public void setLineId(String lineId) {
         this.lineId = lineId;
     }
 

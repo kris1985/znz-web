@@ -9,6 +9,7 @@ import lombok.Data;
 public class AttractionsQueryVO {
 
     private String prodName;
+    private String sord;
     private String sortName = "id";
     private PageParameter page;
 }

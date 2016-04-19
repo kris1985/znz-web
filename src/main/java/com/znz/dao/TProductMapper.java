@@ -6,13 +6,13 @@ import com.znz.vo.ProductQueryVO;
 import java.util.List;
 
 public interface TProductMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String id);
 
     int insert(TProduct record);
 
     int insertSelective(TProduct record);
 
-    TProduct selectByPrimaryKey(Integer id);
+    TProduct selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(TProduct record);
 

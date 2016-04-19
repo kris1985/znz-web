@@ -8,15 +8,21 @@ import lombok.Data;
 @Data
 public class ProductQueryVO {
 
-    private Integer id;
+    private String prodNo;
+
+    private String prodSort;
+
+    private String prodSale;
 
     private String prodName;
 
-    private String starting;
+    private String start;
 
     private String destination;
 
     private String sortName = "id";
+
+    private String sord;
 
     private PageParameter page;
 }

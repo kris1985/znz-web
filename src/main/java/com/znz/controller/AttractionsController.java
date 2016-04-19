@@ -2,6 +2,7 @@ package com.znz.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -33,20 +34,22 @@ public class AttractionsController {
     private TAttractionsMapper attractionsMapper;
 
     @RequestMapping(value = "/list")
-    public @ResponseBody JqGridData<ProductVO> list2(@RequestParam(value = "page", defaultValue = "1") String page,
+    public @ResponseBody JqGridData<TAttractions> list2(@RequestParam(value = "page", defaultValue = "1") String page,
                                                      @RequestParam(value = "rows", defaultValue = "10") String rows,
                                                      @RequestParam(value = "sidx", required = false) String sidx,
                                                      @RequestParam(value = "sord", required = false) String sord,
                                                      @RequestParam(value = "searchField", required = false) String searchField) {
         AttractionsQueryVO attractionsQueryVO = new AttractionsQueryVO();
+        attractionsQueryVO.setSord(sord);
+        attractionsQueryVO.setSortName(sidx);
         PageParameter pageParameter = new PageParameter(Integer.parseInt(page),
             Integer.parseInt(rows));
         attractionsQueryVO.setPage(pageParameter);
-        List<TAttractions> products = attractionsMapper.selectByPage(attractionsQueryVO);
+        List<TAttractions> attractionses = attractionsMapper.selectByPage(attractionsQueryVO);
         int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();
         JqGridData jqGridData = new JqGridData(total, pageParameter.getCurrentPage(),
-            pageParameter.getPageSize(), products);
+            pageParameter.getTotalCount(), attractionses);
         return jqGridData;
     }
 
@@ -59,7 +62,7 @@ public class AttractionsController {
         } else if ("edit".equals(attractionsVO.getOper())) {
             return update(request, attractionsVO);
         } else if ("del".equals(attractionsVO.getOper())) {
-            return delete(request, Integer.parseInt(request.getParameter("id")));
+            return delete(request, request.getParameter("id"));
         } else {
             return null;
         }
@@ -68,16 +71,15 @@ public class AttractionsController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public @ResponseBody ResultVO add(HttpServletRequest request,
                                       @Valid @ModelAttribute AttractionsVO attractionsVO) {
-        UserSession userSession = (UserSession) request.getSession().getAttribute(
-            Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
         if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
         }
-        TAttractions attractions = attractionsMapper.selectByProdName(attractionsVO.getId());
+        TAttractions attractions = attractionsMapper.selectByProdName(attractionsVO.getProdName());
         if (attractions != null) {
             resultVO.setMsg("景点名称已经存在，请使用新的景点名称");
         } else {
+            attractionsVO.setId(UUID.randomUUID().toString());
             attractionsVO.setCreateTime(new Date());
             attractionsVO.setUpdateTime(new Date());
             attractionsMapper.insert(attractionsVO);
@@ -101,7 +103,7 @@ public class AttractionsController {
     }
 
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.GET)
-    public @ResponseBody ResultVO delete(HttpServletRequest request, @PathVariable int userId) {
+    public @ResponseBody ResultVO delete(HttpServletRequest request, @PathVariable String userId) {
         UserSession userSession = (UserSession) request.getSession().getAttribute(
                 Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();

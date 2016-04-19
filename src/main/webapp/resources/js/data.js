@@ -98,9 +98,9 @@ DATA={
 		},
 		'disk':{
 			appid:'19',
-			icon:'wangdesk.png',
-			name:'磁盘空间',
-			url:basePath+'/admin/file/space',
+			icon:'friend.png',
+			name:'景点门票',
+			url:basePath+'/admin/attractions/listAttractions',
 			width:'1600px',
 			asc:7
 		},
@@ -113,9 +113,9 @@ DATA={
 		},
 		'folder':{
 			appid:'21',
-			icon:'folder_o.png',
-			name:'资料管理',
-			url:basePath+'/admin/file/list',
+			icon:'mangguo.png',
+			name:'产品中心',
+			url:basePath+'/admin/product/listProduct',
 			width:'1000',
 			sonMenu:"[]",
 			asc:8

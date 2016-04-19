@@ -3,9 +3,9 @@ package com.znz.model;
 import java.util.Date;
 
 public class TTravelLine {
-    private Integer id;
+    private String id;
 
-    private Integer attractionsId;
+    private String productId;
 
     private String spzx;
 
@@ -13,7 +13,7 @@ public class TTravelLine {
 
     private String jtfs;
 
-    private Integer hotel;
+    private String hotel;
 
     private String remark;
 
@@ -21,20 +21,12 @@ public class TTravelLine {
 
     private Date updateTime;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public Integer getAttractionsId() {
-        return attractionsId;
-    }
-
-    public void setAttractionsId(Integer attractionsId) {
-        this.attractionsId = attractionsId;
     }
 
     public String getSpzx() {
@@ -61,11 +53,11 @@ public class TTravelLine {
         this.jtfs = jtfs == null ? null : jtfs.trim();
     }
 
-    public Integer getHotel() {
+    public String getHotel() {
         return hotel;
     }
 
-    public void setHotel(Integer hotel) {
+    public void setHotel(String hotel) {
         this.hotel = hotel;
     }
 
@@ -91,5 +83,13 @@ public class TTravelLine {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }

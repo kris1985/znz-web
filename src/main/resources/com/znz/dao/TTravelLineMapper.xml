@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.znz.dao.TTravelLineMapper" >
   <resultMap id="BaseResultMap" type="com.znz.model.TTravelLine" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="attractions_id" property="attractionsId" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
     <result column="spzx" property="spzx" jdbcType="VARCHAR" />
     <result column="days" property="days" jdbcType="VARCHAR" />
     <result column="jtfs" property="jtfs" jdbcType="VARCHAR" />
-    <result column="hotel" property="hotel" jdbcType="INTEGER" />
+    <result column="hotel" property="hotel" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -19,19 +19,19 @@
     select 
     <include refid="Base_Column_List" />
     from t_travel_line
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_travel_line
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.znz.model.TTravelLine" >
     insert into t_travel_line (id, attractions_id, spzx, 
       days, jtfs, hotel, 
       remark, create_time, update_time
       )
-    values (#{id,jdbcType=INTEGER}, #{attractionsId,jdbcType=INTEGER}, #{spzx,jdbcType=VARCHAR}, 
-      #{days,jdbcType=VARCHAR}, #{jtfs,jdbcType=VARCHAR}, #{hotel,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{spzx,jdbcType=VARCHAR},
+      #{days,jdbcType=VARCHAR}, #{jtfs,jdbcType=VARCHAR}, #{hotel,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -68,10 +68,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="attractionsId != null" >
-        #{attractionsId,jdbcType=INTEGER},
+        #{productId,jdbcType=VARCHAR},
       </if>
       <if test="spzx != null" >
         #{spzx,jdbcType=VARCHAR},
@@ -83,7 +83,7 @@
         #{jtfs,jdbcType=VARCHAR},
       </if>
       <if test="hotel != null" >
-        #{hotel,jdbcType=INTEGER},
+        #{hotel,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -100,7 +100,7 @@
     update t_travel_line
     <set >
       <if test="attractionsId != null" >
-        attractions_id = #{attractionsId,jdbcType=INTEGER},
+        product_id = #{productId,jdbcType=VARCHAR},
       </if>
       <if test="spzx != null" >
         spzx = #{spzx,jdbcType=VARCHAR},
@@ -112,7 +112,7 @@
         jtfs = #{jtfs,jdbcType=VARCHAR},
       </if>
       <if test="hotel != null" >
-        hotel = #{hotel,jdbcType=INTEGER},
+        hotel = #{hotel,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -124,18 +124,18 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.znz.model.TTravelLine" >
     update t_travel_line
-    set attractions_id = #{attractionsId,jdbcType=INTEGER},
+    set attractions_id = #{attractionsId,jdbcType=VARCHAR},
       spzx = #{spzx,jdbcType=VARCHAR},
       days = #{days,jdbcType=VARCHAR},
       jtfs = #{jtfs,jdbcType=VARCHAR},
-      hotel = #{hotel,jdbcType=INTEGER},
+      hotel = #{hotel,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

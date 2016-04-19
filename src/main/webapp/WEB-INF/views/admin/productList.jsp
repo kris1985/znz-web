@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>用户列表</title>
+    <title>产品列表</title>
      <%@ include file="../common/common.jsp"%>
     <link href="${basePath}/resources/css/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="${basePath}/resources/jqgrid/css/ui.jqgrid.css" type="text/css" />
@@ -32,16 +32,18 @@
        function pageInit(){
            $("#list2").jqGrid(
                    {
-                       url : '${bathPath}/admin/user/list2',
+                       url : '${bathPath}/admin/product/list',
                        datatype : "json",
-                       colNames : ['userId', '用户名','密码', '公司','手机号',  '最后登录时间'],
+                       colNames : ['产品ID','产品编号', '产品名称','出发地', '目的地','产品排名',  '产品销量','备注'],
                        colModel : [
-                           {name : 'userId',index : 'userId',key:true,hidden:true,editable : true},
-                           {name : 'userName',index : 'userName',editable : true,editrules : {required : true},searchoptions:{sopt:['eq']},editoptions : {maxlength : 20}},
-                           {name : 'pwd',index : 'pwd',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false},
-                           {name : 'company',index : 'company',editable : true,sortable : false,editoptions : {maxlength : 20}},
-                           {name : 'phone',index : 'phone',editable : true,sortable : false,editoptions : {maxlength : 20}},
-                           {name : 'lastLoginTimeStr',index : 'lastLoginTimeStr',sortable : true}
+                           {name : 'id',index : 'id',key:true,editable : true,hidden:true,width:120},
+                           {name : 'prodNo',index : 'prodNo',editable : true,editoptions : {maxlength : 10},editrules : {required : true},width:120,searchoptions:{sopt:['eq']}},
+                           {name : 'prodName',index : 'prodName',editable : true,sortable:false,editoptions : {maxlength : 40},editrules : {required : true},width:300,searchoptions:{sopt:['eq']}},
+                           {name : 'start',index : 'start',editable : true ,sortable:false,width:120,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10}},
+                           {name : 'destination',index : 'destination',editable : true,sortable:false,width:120,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10}},
+                           {name : 'prodSort',index : 'prodSort',editable : true,sortable : true,editrules : {number : true},width:120,search:false,editoptions : {maxlength : 10}},
+                           {name : 'prodSale',index : 'prodSale',editable : true,sortable : true,editrules : {number : true},width:120,search:false,editoptions : {maxlength : 10}},
+                           {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40}}
                        ],
                        rowNum : 10,
                        rowList : [ 10, 20, 30 ],
@@ -51,18 +53,18 @@
                        viewrecords : true,
                        sortorder : "desc",
                        rownumbers: true,
-                       width: 700,
+                       width: 800,
                        height : "100%",
                        // cellEdit:true,
-                       editurl : "${bathPath}/admin/user/edit",
-                       caption : "用户列表"
+                       editurl : "${bathPath}/admin/product/edit",
+                       caption : "产品列表"
                    });
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
-               add : false,
-               del : false
-           });
-           jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
+               del : false,
+               add : false
+           },{},{},{},{multipleSearch:true});
+           jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true},{},{},{},{multipleSearch:true});
          //  jQuery("#list2").jqGrid('inlineNav', "#pager2");
            //设置显示列
          /*  jQuery("#vcol").click(function (){
@@ -77,8 +79,6 @@
 <body>
     <table id="list2" style="margin: 0 auto"></table>
     <div id="pager2"></div>
-</div>
-
 </body>
 
 </html>

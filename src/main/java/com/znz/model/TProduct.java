@@ -3,17 +3,19 @@ package com.znz.model;
 import java.util.Date;
 
 public class TProduct {
-    private Integer id;
+    private String id;
+
+    private String prodNo;
 
     private String prodName;
 
-    private String starting;
+    private String start;
 
     private String destination;
 
-    private Integer prodSort;
+    private String prodSort;
 
-    private Integer prodSale;
+    private String prodSale;
 
     private Date createTime;
 
@@ -21,11 +23,11 @@ public class TProduct {
 
     private String remark;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -37,12 +39,12 @@ public class TProduct {
         this.prodName = prodName == null ? null : prodName.trim();
     }
 
-    public String getStarting() {
-        return starting;
+    public String getStart() {
+        return start;
     }
 
-    public void setStarting(String starting) {
-        this.starting = starting == null ? null : starting.trim();
+    public void setStart(String start) {
+        this.start = start;
     }
 
     public String getDestination() {
@@ -53,19 +55,19 @@ public class TProduct {
         this.destination = destination == null ? null : destination.trim();
     }
 
-    public Integer getProdSort() {
+    public String getProdSort() {
         return prodSort;
     }
 
-    public void setProdSort(Integer prodSort) {
+    public void setProdSort(String prodSort) {
         this.prodSort = prodSort;
     }
 
-    public Integer getProdSale() {
+    public String getProdSale() {
         return prodSale;
     }
 
-    public void setProdSale(Integer prodSale) {
+    public void setProdSale(String prodSale) {
         this.prodSale = prodSale;
     }
 
@@ -91,5 +93,13 @@ public class TProduct {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getProdNo() {
+        return prodNo;
+    }
+
+    public void setProdNo(String prodNo) {
+        this.prodNo = prodNo;
     }
 }

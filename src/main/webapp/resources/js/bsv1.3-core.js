@@ -1295,8 +1295,8 @@ Windows = function(me){
 						width = "50%";
 						height = "60%"
 					}else if(id==21){
-                        width = "100%";
-                        height = "100%"
+						width = "70%";
+						height = "65%"
                     }
 					art.dialog.open(url,/** 弹出ART窗体*/
 						{   

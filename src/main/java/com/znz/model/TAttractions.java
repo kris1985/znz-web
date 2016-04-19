@@ -3,7 +3,7 @@ package com.znz.model;
 import java.util.Date;
 
 public class TAttractions {
-    private Integer id;
+    private String id;
 
     private String prodName;
 
@@ -21,11 +21,11 @@ public class TAttractions {
 
     private Date updateTime;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

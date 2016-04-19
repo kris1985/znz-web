@@ -6,13 +6,13 @@ import com.znz.vo.AttractionsQueryVO;
 import java.util.List;
 
 public interface TAttractionsMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String id);
 
     int insert(TAttractions record);
 
     int insertSelective(TAttractions record);
 
-    TAttractions selectByPrimaryKey(Integer id);
+    TAttractions selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(TAttractions record);
 
@@ -20,5 +20,5 @@ public interface TAttractionsMapper {
 
     List<TAttractions> selectByPage(AttractionsQueryVO attractionsQueryVO);
 
-    TAttractions selectByProdName(Integer id);
+    TAttractions selectByProdName(String productName);
 }

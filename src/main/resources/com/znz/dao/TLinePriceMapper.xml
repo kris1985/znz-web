@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.znz.dao.TLinePriceMapper" >
   <resultMap id="BaseResultMap" type="com.znz.model.TLinePrice" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="line_id" property="lineId" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="line_id" property="lineId" jdbcType="VARCHAR" />
     <result column="stay" property="stay" jdbcType="INTEGER" />
     <result column="hotel_diff" property="hotelDiff" jdbcType="INTEGER" />
     <result column="pick_up" property="pickUp" jdbcType="INTEGER" />
@@ -25,11 +25,11 @@
     select 
     <include refid="Base_Column_List" />
     from t_line_price
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_line_price
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.znz.model.TLinePrice" >
     insert into t_line_price (id, line_id, stay, 
@@ -37,7 +37,7 @@
       spzx_price, children_price, profit, 
       royalty, final_price, remark, 
       create_time, update_time)
-    values (#{id,jdbcType=INTEGER}, #{lineId,jdbcType=INTEGER}, #{stay,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR}, #{lineId,jdbcType=INTEGER}, #{stay,jdbcType=INTEGER},
       #{hotelDiff,jdbcType=INTEGER}, #{pickUp,jdbcType=INTEGER}, #{presented,jdbcType=INTEGER}, 
       #{spzxPrice,jdbcType=INTEGER}, #{childrenPrice,jdbcType=INTEGER}, #{profit,jdbcType=INTEGER}, 
       #{royalty,jdbcType=INTEGER}, #{finalPrice,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
@@ -91,10 +91,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="lineId != null" >
-        #{lineId,jdbcType=INTEGER},
+        #{lineId,jdbcType=VARCHAR},
       </if>
       <if test="stay != null" >
         #{stay,jdbcType=INTEGER},
@@ -138,7 +138,7 @@
     update t_line_price
     <set >
       <if test="lineId != null" >
-        line_id = #{lineId,jdbcType=INTEGER},
+        line_id = #{lineId,jdbcType=VARCHAR},
       </if>
       <if test="stay != null" >
         stay = #{stay,jdbcType=INTEGER},
@@ -177,11 +177,11 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.znz.model.TLinePrice" >
     update t_line_price
-    set line_id = #{lineId,jdbcType=INTEGER},
+    set line_id = #{lineId,jdbcType=VARCHAR},
       stay = #{stay,jdbcType=INTEGER},
       hotel_diff = #{hotelDiff,jdbcType=INTEGER},
       pick_up = #{pickUp,jdbcType=INTEGER},
@@ -194,6 +194,6 @@
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -78,9 +78,8 @@ public class UserController {
         }
         int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();
-        System.out.println("pageParameter:" + pageParameter);
         JqGridData jqGridData = new JqGridData(total, pageParameter
-            .getCurrentPage(),pageParameter.getPageSize(), userlist);
+            .getCurrentPage(),pageParameter.getTotalCount(), userlist);
         return jqGridData;
     }
 
