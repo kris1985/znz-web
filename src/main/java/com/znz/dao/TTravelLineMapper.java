@@ -1,6 +1,9 @@
 package com.znz.dao;
 
 import com.znz.model.TTravelLine;
+import com.znz.vo.TravelLineQueryQueryVO;
+
+import java.util.List;
 
 public interface TTravelLineMapper {
     int deleteByPrimaryKey(String id);
@@ -14,4 +17,6 @@ public interface TTravelLineMapper {
     int updateByPrimaryKeySelective(TTravelLine record);
 
     int updateByPrimaryKey(TTravelLine record);
+
+    List<TTravelLine> selectByPage(TravelLineQueryQueryVO queryQueryVO);
 }

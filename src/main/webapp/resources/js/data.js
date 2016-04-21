@@ -119,6 +119,33 @@ DATA={
 			width:'1000',
 			sonMenu:"[]",
 			asc:8
+		},
+		'tuangou':{
+			appid:'22',
+			icon:'tuanmap.png',
+			name:'跟团游',
+			url:basePath+'/admin/travel/listLine',
+			width:'1000',
+			sonMenu:"[]",
+			asc:10
+		},
+		'zyx':{
+			appid:'23',
+			icon:'3.png',
+			name:'自由行',
+			url:basePath+'/admin/travel/listLine2',
+			width:'1000',
+			sonMenu:"[]",
+			asc:11
+		},
+		'hotel':{
+			appid:'24',
+			icon:'hotel.png',
+			name:'酒店',
+			url:basePath+'/admin/hotel/listHotel',
+			width:'1000',
+			sonMenu:"[]",
+			asc:12
 		}
 	},
 	sApp:{//侧边栏应用
@@ -174,7 +201,7 @@ DATA={
 	}
 };
 ops = {//向桌面添加应用
-	Icon1:['folder','user','disk','theme']
+	Icon1:['folder','user','disk','theme','tuangou','zyx','hotel']
 	/**Icon2:['mangguo','tuanmap','fastsearch','bianqian','wangdesk'],
 	Icon3:['friend','friendnear','friendgroup','kaikai','kxjy'],
 	Icon4:['qidianzhongwen','qqread','xiami','musicbox','vadio','leshi'],

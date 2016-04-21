@@ -1285,7 +1285,7 @@ Windows = function(me){
 					
 				}else{
 				var width="80%",height="90%";
-				    if(id==18){
+				    /*if(id==18){
 						width = "60%";
 						height = "65%"
 					}else if(id==19){
@@ -1297,7 +1297,7 @@ Windows = function(me){
 					}else if(id==21){
 						width = "70%";
 						height = "65%"
-                    }
+                    }*/
 					art.dialog.open(url,/** 弹出ART窗体*/
 						{   
 							"id" :id,

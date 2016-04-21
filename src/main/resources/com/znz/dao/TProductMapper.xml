@@ -169,7 +169,7 @@
     </if>
     order by
     <choose>
-      <when test="sortName == 'prod_no'" >
+      <when test="sortName == 'prodNo'" >
         prod_no
       </when>
       <when test="sortName == 'prodSort'" >

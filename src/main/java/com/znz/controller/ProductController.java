@@ -43,7 +43,6 @@ public class ProductController {
         ProductQueryVO productQueryVO = new ProductQueryVO();
         productQueryVO.setSortName(sidx);
         productQueryVO.setSord(sord);
-        System.out.println("-----------"+filters);
         if(StringUtils.isNotEmpty(filters)){
             SearchFilter searchFilter = JSON.parseObject(filters,SearchFilter.class);
             List<SearchField> rules = searchFilter.getRules();

@@ -16,6 +16,9 @@
     <mvc:view-controller path="/admin/user/toadd" view-name="admin/userAdd"/>
 	<mvc:view-controller path="/admin/attractions/listAttractions" view-name="admin/attractionsList"/>
 	<mvc:view-controller path="/admin/product/listProduct" view-name="admin/productList"/>
+	<mvc:view-controller path="/admin/hotel/listHotel" view-name="admin/hoteltList"/>
+	<mvc:view-controller path="/admin/travel/listLine" view-name="admin/travelList"/>
+	<mvc:view-controller path="/admin/travel/listLine2" view-name="admin/travelList2"/>
 	<mvc:view-controller path="/genCode" view-name="genCode"/>
 
 	<context:component-scan base-package="org.springframework.samples.mvc" />

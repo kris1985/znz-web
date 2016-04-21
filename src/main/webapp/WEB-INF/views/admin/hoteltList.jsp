@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>产品列表</title>
+    <title>酒店列表</title>
      <%@ include file="../common/common.jsp"%>
     <link href="${basePath}/resources/css/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="${basePath}/resources/jqgrid/css/ui.jqgrid.css" type="text/css" />
@@ -32,23 +32,28 @@
        function pageInit(){
            $("#list2").jqGrid(
                    {
-                       url : '${bathPath}/admin/product/list',
+                       url : '${bathPath}/admin/hotel/list',
                        datatype : "json",
-                       colNames : ['产品ID','产品编号', '产品名称','出发地', '目的地','产品排名',  '产品销量','备注'],
+                       colNames : ['产品ID','酒店名称', '地区','星级', '淡季','旺季',  '黄金周','春节','五一','重要政策','采购方式','采购电话','备注'],
                        colModel : [
                            {name : 'id',index : 'id',key:true,editable : true,hidden:true},
-                           {name : 'prodNo',index : 'prodNo',editable : true,editoptions : {maxlength : 10},editrules : {required : true},searchoptions:{sopt:['eq']},width:100,resizable:false},
-                           {name : 'prodName',index : 'prodName',editable : true,sortable:false,editoptions : {maxlength : 40},editrules : {required : true},width:300,searchoptions:{sopt:['eq']}},
-                           {name : 'start',index : 'start',editable : true ,sortable:false,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10}},
-                           {name : 'destination',index : 'destination',editable : true,sortable:false,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10}},
-                           {name : 'prodSort',index : 'prodSort',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
-                           {name : 'prodSale',index : 'prodSale',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
+                           {name : 'hotelName',index : 'hotelName',editable : true,sortable:false,editoptions : {maxlength : 40},editrules : {required : true},searchoptions:{sopt:['eq']},width:300,searchoptions:{sopt:['eq']}},
+                           {name : 'areaName',index : 'areaName',editable : true,sortable:false,editoptions : {maxlength : 10},editrules : {required : true},width:100,searchoptions:{sopt:['eq']}},
+                           {name : 'xj',index : 'xj',editable : true ,sortable:false,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10},searchoptions:{sopt:['eq']}},
+                           {name : 'dj',index : 'dj',editable : true,sortable:false,editrules : {number : true},search:false,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10}},
+                           {name : 'wj',index : 'wj',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
+                           {name : 'hjz',index : 'hjz',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
+                           {name : 'cj',index : 'cj',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
+                           {name : 'wy',index : 'wy',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
+                           {name : 'zyzc',index : 'zyzc',editable : true,sortable : false,search:false,editoptions : {maxlength : 10}},
+                           {name : 'cgfs',index : 'cgfs',editable : true,sortable : false,search:false,editoptions : {maxlength : 10}},
+                           {name : 'cgdh',index : 'cgdh',editable : true,sortable : false,search:false,editoptions : {maxlength : 10}},
                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40}}
                        ],
                        rowNum : 10,
                        rowList : [ 10, 20, 30 ],
                        pager : '#pager2',
-                       sortname : 'id',
+                       sortname : 'create_time',
                        mtype : "post",
                        viewrecords : true,
                        sortorder : "desc",
@@ -56,12 +61,12 @@
                        width: 800,
                        height : "100%",
                        // cellEdit:true,
-                       editurl : "${bathPath}/admin/product/edit",
-                       caption : "产品列表"
+                       editurl : "${bathPath}/admin/hotel/edit",
+                       caption : "酒店列表"
                    });
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
-               del : false,
+
                add : false
            },{},{},{},{multipleSearch:true});
            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true},{},{},{},{multipleSearch:true});

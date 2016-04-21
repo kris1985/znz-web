@@ -5,7 +5,7 @@ import java.util.Date;
 public class TTravelLine {
     private String id;
 
-    private String productId;
+    private String prodNo;
 
     private String spzx;
 
@@ -21,12 +21,28 @@ public class TTravelLine {
 
     private Date updateTime;
 
+    private String ext1;
+
+    private String ext2;
+
+    private String ext3;
+
+    private String ext4;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = id == null ? null : id.trim();
+    }
+
+    public String getProdNo() {
+        return prodNo;
+    }
+
+    public void setProdNo(String prodNo) {
+        this.prodNo = prodNo == null ? null : prodNo.trim();
     }
 
     public String getSpzx() {
@@ -58,7 +74,7 @@ public class TTravelLine {
     }
 
     public void setHotel(String hotel) {
-        this.hotel = hotel;
+        this.hotel = hotel == null ? null : hotel.trim();
     }
 
     public String getRemark() {
@@ -85,11 +101,35 @@ public class TTravelLine {
         this.updateTime = updateTime;
     }
 
-    public String getProductId() {
-        return productId;
+    public String getExt1() {
+        return ext1;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setExt1(String ext1) {
+        this.ext1 = ext1 == null ? null : ext1.trim();
+    }
+
+    public String getExt2() {
+        return ext2;
+    }
+
+    public void setExt2(String ext2) {
+        this.ext2 = ext2 == null ? null : ext2.trim();
+    }
+
+    public String getExt3() {
+        return ext3;
+    }
+
+    public void setExt3(String ext3) {
+        this.ext3 = ext3 == null ? null : ext3.trim();
+    }
+
+    public String getExt4() {
+        return ext4;
+    }
+
+    public void setExt4(String ext4) {
+        this.ext4 = ext4 == null ? null : ext4.trim();
     }
 }
