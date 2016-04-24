@@ -63,7 +63,7 @@ public  class LoginFilter implements Filter {
             printWriter.flush();
             printWriter.close();
         }else{*/
-            response2.sendRedirect(request2.getContextPath()+"/?error="+errorCode);
+            response2.sendRedirect(request2.getContextPath()+"/error?errorCode="+errorCode);
       //  }
 
     }

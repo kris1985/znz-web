@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.znz.dao.TTravelZyxMapper" >
+  <resultMap id="BaseResultMap" type="com.znz.model.TTravelZyx" >
+    <id column="lineid" property="lineid" jdbcType="VARCHAR" />
+    <result column="pch" property="pch" jdbcType="VARCHAR" />
+    <result column="cpid" property="cpid" jdbcType="VARCHAR" />
+    <result column="cfd" property="cfd" jdbcType="VARCHAR" />
+    <result column="mdd" property="mdd" jdbcType="VARCHAR" />
+    <result column="days" property="days" jdbcType="VARCHAR" />
+    <result column="jtfs" property="jtfs" jdbcType="VARCHAR" />
+    <result column="hotel1" property="hotel1" jdbcType="VARCHAR" />
+    <result column="hotel2" property="hotel2" jdbcType="VARCHAR" />
+    <result column="hotel3" property="hotel3" jdbcType="VARCHAR" />
+    <result column="hotel4" property="hotel4" jdbcType="VARCHAR" />
+    <result column="hotel5" property="hotel5" jdbcType="VARCHAR" />
+    <result column="hotel6" property="hotel6" jdbcType="VARCHAR" />
+    <result column="hotel" property="hotel" jdbcType="VARCHAR" />
+    <result column="hoteldiff" property="hoteldiff" jdbcType="VARCHAR" />
+    <result column="mp1" property="mp1" jdbcType="VARCHAR" />
+    <result column="mp2" property="mp2" jdbcType="VARCHAR" />
+    <result column="mp3" property="mp3" jdbcType="VARCHAR" />
+    <result column="mp4" property="mp4" jdbcType="VARCHAR" />
+    <result column="mp5" property="mp5" jdbcType="VARCHAR" />
+    <result column="mp" property="mp" jdbcType="VARCHAR" />
+    <result column="ddjt1" property="ddjt1" jdbcType="VARCHAR" />
+    <result column="ddjt2" property="ddjt2" jdbcType="VARCHAR" />
+    <result column="ddjt3" property="ddjt3" jdbcType="VARCHAR" />
+    <result column="ddjt4" property="ddjt4" jdbcType="VARCHAR" />
+    <result column="ddjt5" property="ddjt5" jdbcType="VARCHAR" />
+    <result column="ddjt" property="ddjt" jdbcType="VARCHAR" />
+    <result column="jsz" property="jsz" jdbcType="VARCHAR" />
+    <result column="qtxm1" property="qtxm1" jdbcType="VARCHAR" />
+    <result column="qtxm2" property="qtxm2" jdbcType="VARCHAR" />
+    <result column="qtxm3" property="qtxm3" jdbcType="VARCHAR" />
+    <result column="qtxm4" property="qtxm4" jdbcType="VARCHAR" />
+    <result column="qtxm5" property="qtxm5" jdbcType="VARCHAR" />
+    <result column="qtxm" property="qtxm" jdbcType="VARCHAR" />
+    <result column="cdj" property="cdj" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="cjsj" property="cjsj" jdbcType="TIMESTAMP" />
+    <result column="xgsj" property="xgsj" jdbcType="TIMESTAMP" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="ext4" property="ext4" jdbcType="VARCHAR" />
+    <result column="ext5" property="ext5" jdbcType="VARCHAR" />
+    <result column="ext6" property="ext6" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    lineid, pch, cpid, cfd, mdd, days, jtfs, hotel1, hotel2, hotel3, hotel4, hotel5, hotel6, 
+    hotel, hoteldiff, mp1, mp2, mp3, mp4, mp5, mp, ddjt1, ddjt2, ddjt3, ddjt4, ddjt5, 
+    ddjt, jsz, qtxm1, qtxm2, qtxm3, qtxm4, qtxm5, qtxm, cdj, remark, cjsj, xgsj, ext1, 
+    ext2, ext3, ext4, ext5, ext6
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_travel_zyx
+    where lineid = #{lineid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_travel_zyx
+    where lineid = #{lineid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.znz.model.TTravelZyx" >
+    insert into t_travel_zyx (lineid, pch, cpid, 
+      cfd, mdd, days, jtfs, 
+      hotel1, hotel2, hotel3, 
+      hotel4, hotel5, hotel6, 
+      hotel, hoteldiff, mp1, 
+      mp2, mp3, mp4, mp5, 
+      mp, ddjt1, ddjt2, ddjt3, 
+      ddjt4, ddjt5, ddjt, 
+      jsz, qtxm1, qtxm2, 
+      qtxm3, qtxm4, qtxm5, 
+      qtxm, cdj, remark, 
+      cjsj, xgsj, ext1, 
+      ext2, ext3, ext4, ext5, 
+      ext6)
+    values (#{lineid,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR}, #{cpid,jdbcType=VARCHAR}, 
+      #{cfd,jdbcType=VARCHAR}, #{mdd,jdbcType=VARCHAR}, #{days,jdbcType=VARCHAR}, #{jtfs,jdbcType=VARCHAR}, 
+      #{hotel1,jdbcType=VARCHAR}, #{hotel2,jdbcType=VARCHAR}, #{hotel3,jdbcType=VARCHAR}, 
+      #{hotel4,jdbcType=VARCHAR}, #{hotel5,jdbcType=VARCHAR}, #{hotel6,jdbcType=VARCHAR}, 
+      #{hotel,jdbcType=VARCHAR}, #{hoteldiff,jdbcType=VARCHAR}, #{mp1,jdbcType=VARCHAR}, 
+      #{mp2,jdbcType=VARCHAR}, #{mp3,jdbcType=VARCHAR}, #{mp4,jdbcType=VARCHAR}, #{mp5,jdbcType=VARCHAR}, 
+      #{mp,jdbcType=VARCHAR}, #{ddjt1,jdbcType=VARCHAR}, #{ddjt2,jdbcType=VARCHAR}, #{ddjt3,jdbcType=VARCHAR}, 
+      #{ddjt4,jdbcType=VARCHAR}, #{ddjt5,jdbcType=VARCHAR}, #{ddjt,jdbcType=VARCHAR}, 
+      #{jsz,jdbcType=VARCHAR}, #{qtxm1,jdbcType=VARCHAR}, #{qtxm2,jdbcType=VARCHAR}, 
+      #{qtxm3,jdbcType=VARCHAR}, #{qtxm4,jdbcType=VARCHAR}, #{qtxm5,jdbcType=VARCHAR}, 
+      #{qtxm,jdbcType=VARCHAR}, #{cdj,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{cjsj,jdbcType=TIMESTAMP}, #{xgsj,jdbcType=TIMESTAMP}, #{ext1,jdbcType=VARCHAR}, 
+      #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{ext4,jdbcType=VARCHAR}, #{ext5,jdbcType=VARCHAR}, 
+      #{ext6,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.znz.model.TTravelZyx" >
+    insert into t_travel_zyx
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lineid != null" >
+        lineid,
+      </if>
+      <if test="pch != null" >
+        pch,
+      </if>
+      <if test="cpid != null" >
+        cpid,
+      </if>
+      <if test="cfd != null" >
+        cfd,
+      </if>
+      <if test="mdd != null" >
+        mdd,
+      </if>
+      <if test="days != null" >
+        days,
+      </if>
+      <if test="jtfs != null" >
+        jtfs,
+      </if>
+      <if test="hotel1 != null" >
+        hotel1,
+      </if>
+      <if test="hotel2 != null" >
+        hotel2,
+      </if>
+      <if test="hotel3 != null" >
+        hotel3,
+      </if>
+      <if test="hotel4 != null" >
+        hotel4,
+      </if>
+      <if test="hotel5 != null" >
+        hotel5,
+      </if>
+      <if test="hotel6 != null" >
+        hotel6,
+      </if>
+      <if test="hotel != null" >
+        hotel,
+      </if>
+      <if test="hoteldiff != null" >
+        hoteldiff,
+      </if>
+      <if test="mp1 != null" >
+        mp1,
+      </if>
+      <if test="mp2 != null" >
+        mp2,
+      </if>
+      <if test="mp3 != null" >
+        mp3,
+      </if>
+      <if test="mp4 != null" >
+        mp4,
+      </if>
+      <if test="mp5 != null" >
+        mp5,
+      </if>
+      <if test="mp != null" >
+        mp,
+      </if>
+      <if test="ddjt1 != null" >
+        ddjt1,
+      </if>
+      <if test="ddjt2 != null" >
+        ddjt2,
+      </if>
+      <if test="ddjt3 != null" >
+        ddjt3,
+      </if>
+      <if test="ddjt4 != null" >
+        ddjt4,
+      </if>
+      <if test="ddjt5 != null" >
+        ddjt5,
+      </if>
+      <if test="ddjt != null" >
+        ddjt,
+      </if>
+      <if test="jsz != null" >
+        jsz,
+      </if>
+      <if test="qtxm1 != null" >
+        qtxm1,
+      </if>
+      <if test="qtxm2 != null" >
+        qtxm2,
+      </if>
+      <if test="qtxm3 != null" >
+        qtxm3,
+      </if>
+      <if test="qtxm4 != null" >
+        qtxm4,
+      </if>
+      <if test="qtxm5 != null" >
+        qtxm5,
+      </if>
+      <if test="qtxm != null" >
+        qtxm,
+      </if>
+      <if test="cdj != null" >
+        cdj,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="cjsj != null" >
+        cjsj,
+      </if>
+      <if test="xgsj != null" >
+        xgsj,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+      <if test="ext4 != null" >
+        ext4,
+      </if>
+      <if test="ext5 != null" >
+        ext5,
+      </if>
+      <if test="ext6 != null" >
+        ext6,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lineid != null" >
+        #{lineid,jdbcType=VARCHAR},
+      </if>
+      <if test="pch != null" >
+        #{pch,jdbcType=VARCHAR},
+      </if>
+      <if test="cpid != null" >
+        #{cpid,jdbcType=VARCHAR},
+      </if>
+      <if test="cfd != null" >
+        #{cfd,jdbcType=VARCHAR},
+      </if>
+      <if test="mdd != null" >
+        #{mdd,jdbcType=VARCHAR},
+      </if>
+      <if test="days != null" >
+        #{days,jdbcType=VARCHAR},
+      </if>
+      <if test="jtfs != null" >
+        #{jtfs,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel1 != null" >
+        #{hotel1,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel2 != null" >
+        #{hotel2,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel3 != null" >
+        #{hotel3,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel4 != null" >
+        #{hotel4,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel5 != null" >
+        #{hotel5,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel6 != null" >
+        #{hotel6,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel != null" >
+        #{hotel,jdbcType=VARCHAR},
+      </if>
+      <if test="hoteldiff != null" >
+        #{hoteldiff,jdbcType=VARCHAR},
+      </if>
+      <if test="mp1 != null" >
+        #{mp1,jdbcType=VARCHAR},
+      </if>
+      <if test="mp2 != null" >
+        #{mp2,jdbcType=VARCHAR},
+      </if>
+      <if test="mp3 != null" >
+        #{mp3,jdbcType=VARCHAR},
+      </if>
+      <if test="mp4 != null" >
+        #{mp4,jdbcType=VARCHAR},
+      </if>
+      <if test="mp5 != null" >
+        #{mp5,jdbcType=VARCHAR},
+      </if>
+      <if test="mp != null" >
+        #{mp,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt1 != null" >
+        #{ddjt1,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt2 != null" >
+        #{ddjt2,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt3 != null" >
+        #{ddjt3,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt4 != null" >
+        #{ddjt4,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt5 != null" >
+        #{ddjt5,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt != null" >
+        #{ddjt,jdbcType=VARCHAR},
+      </if>
+      <if test="jsz != null" >
+        #{jsz,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm1 != null" >
+        #{qtxm1,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm2 != null" >
+        #{qtxm2,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm3 != null" >
+        #{qtxm3,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm4 != null" >
+        #{qtxm4,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm5 != null" >
+        #{qtxm5,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm != null" >
+        #{qtxm,jdbcType=VARCHAR},
+      </if>
+      <if test="cdj != null" >
+        #{cdj,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="cjsj != null" >
+        #{cjsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="xgsj != null" >
+        #{xgsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        #{ext4,jdbcType=VARCHAR},
+      </if>
+      <if test="ext5 != null" >
+        #{ext5,jdbcType=VARCHAR},
+      </if>
+      <if test="ext6 != null" >
+        #{ext6,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.TTravelZyx" >
+    update t_travel_zyx
+    <set >
+      <if test="pch != null" >
+        pch = #{pch,jdbcType=VARCHAR},
+      </if>
+      <if test="cpid != null" >
+        cpid = #{cpid,jdbcType=VARCHAR},
+      </if>
+      <if test="cfd != null" >
+        cfd = #{cfd,jdbcType=VARCHAR},
+      </if>
+      <if test="mdd != null" >
+        mdd = #{mdd,jdbcType=VARCHAR},
+      </if>
+      <if test="days != null" >
+        days = #{days,jdbcType=VARCHAR},
+      </if>
+      <if test="jtfs != null" >
+        jtfs = #{jtfs,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel1 != null" >
+        hotel1 = #{hotel1,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel2 != null" >
+        hotel2 = #{hotel2,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel3 != null" >
+        hotel3 = #{hotel3,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel4 != null" >
+        hotel4 = #{hotel4,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel5 != null" >
+        hotel5 = #{hotel5,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel6 != null" >
+        hotel6 = #{hotel6,jdbcType=VARCHAR},
+      </if>
+      <if test="hotel != null" >
+        hotel = #{hotel,jdbcType=VARCHAR},
+      </if>
+      <if test="hoteldiff != null" >
+        hoteldiff = #{hoteldiff,jdbcType=VARCHAR},
+      </if>
+      <if test="mp1 != null" >
+        mp1 = #{mp1,jdbcType=VARCHAR},
+      </if>
+      <if test="mp2 != null" >
+        mp2 = #{mp2,jdbcType=VARCHAR},
+      </if>
+      <if test="mp3 != null" >
+        mp3 = #{mp3,jdbcType=VARCHAR},
+      </if>
+      <if test="mp4 != null" >
+        mp4 = #{mp4,jdbcType=VARCHAR},
+      </if>
+      <if test="mp5 != null" >
+        mp5 = #{mp5,jdbcType=VARCHAR},
+      </if>
+      <if test="mp != null" >
+        mp = #{mp,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt1 != null" >
+        ddjt1 = #{ddjt1,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt2 != null" >
+        ddjt2 = #{ddjt2,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt3 != null" >
+        ddjt3 = #{ddjt3,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt4 != null" >
+        ddjt4 = #{ddjt4,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt5 != null" >
+        ddjt5 = #{ddjt5,jdbcType=VARCHAR},
+      </if>
+      <if test="ddjt != null" >
+        ddjt = #{ddjt,jdbcType=VARCHAR},
+      </if>
+      <if test="jsz != null" >
+        jsz = #{jsz,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm1 != null" >
+        qtxm1 = #{qtxm1,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm2 != null" >
+        qtxm2 = #{qtxm2,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm3 != null" >
+        qtxm3 = #{qtxm3,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm4 != null" >
+        qtxm4 = #{qtxm4,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm5 != null" >
+        qtxm5 = #{qtxm5,jdbcType=VARCHAR},
+      </if>
+      <if test="qtxm != null" >
+        qtxm = #{qtxm,jdbcType=VARCHAR},
+      </if>
+      <if test="cdj != null" >
+        cdj = #{cdj,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="cjsj != null" >
+        cjsj = #{cjsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="xgsj != null" >
+        xgsj = #{xgsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        ext4 = #{ext4,jdbcType=VARCHAR},
+      </if>
+      <if test="ext5 != null" >
+        ext5 = #{ext5,jdbcType=VARCHAR},
+      </if>
+      <if test="ext6 != null" >
+        ext6 = #{ext6,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where lineid = #{lineid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.znz.model.TTravelZyx" >
+    update t_travel_zyx
+    set pch = #{pch,jdbcType=VARCHAR},
+      cpid = #{cpid,jdbcType=VARCHAR},
+      cfd = #{cfd,jdbcType=VARCHAR},
+      mdd = #{mdd,jdbcType=VARCHAR},
+      days = #{days,jdbcType=VARCHAR},
+      jtfs = #{jtfs,jdbcType=VARCHAR},
+      hotel1 = #{hotel1,jdbcType=VARCHAR},
+      hotel2 = #{hotel2,jdbcType=VARCHAR},
+      hotel3 = #{hotel3,jdbcType=VARCHAR},
+      hotel4 = #{hotel4,jdbcType=VARCHAR},
+      hotel5 = #{hotel5,jdbcType=VARCHAR},
+      hotel6 = #{hotel6,jdbcType=VARCHAR},
+      hotel = #{hotel,jdbcType=VARCHAR},
+      hoteldiff = #{hoteldiff,jdbcType=VARCHAR},
+      mp1 = #{mp1,jdbcType=VARCHAR},
+      mp2 = #{mp2,jdbcType=VARCHAR},
+      mp3 = #{mp3,jdbcType=VARCHAR},
+      mp4 = #{mp4,jdbcType=VARCHAR},
+      mp5 = #{mp5,jdbcType=VARCHAR},
+      mp = #{mp,jdbcType=VARCHAR},
+      ddjt1 = #{ddjt1,jdbcType=VARCHAR},
+      ddjt2 = #{ddjt2,jdbcType=VARCHAR},
+      ddjt3 = #{ddjt3,jdbcType=VARCHAR},
+      ddjt4 = #{ddjt4,jdbcType=VARCHAR},
+      ddjt5 = #{ddjt5,jdbcType=VARCHAR},
+      ddjt = #{ddjt,jdbcType=VARCHAR},
+      jsz = #{jsz,jdbcType=VARCHAR},
+      qtxm1 = #{qtxm1,jdbcType=VARCHAR},
+      qtxm2 = #{qtxm2,jdbcType=VARCHAR},
+      qtxm3 = #{qtxm3,jdbcType=VARCHAR},
+      qtxm4 = #{qtxm4,jdbcType=VARCHAR},
+      qtxm5 = #{qtxm5,jdbcType=VARCHAR},
+      qtxm = #{qtxm,jdbcType=VARCHAR},
+      cdj = #{cdj,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      cjsj = #{cjsj,jdbcType=TIMESTAMP},
+      xgsj = #{xgsj,jdbcType=TIMESTAMP},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      ext4 = #{ext4,jdbcType=VARCHAR},
+      ext5 = #{ext5,jdbcType=VARCHAR},
+      ext6 = #{ext6,jdbcType=VARCHAR}
+    where lineid = #{lineid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByPage" parameterType="com.znz.vo.TravelZyxQueryVO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_travel_zyx where 1=1
+    <if test="pch != null">
+      and  pch like #{pch,jdbcType=VARCHAR}
+    </if>
+    <if test="cpid != null">
+      and  cpid like #{cpid,jdbcType=VARCHAR}
+    </if>
+    <if test="days != null">
+      and  days = #{days,jdbcType=VARCHAR}
+    </if>
+    <if test="jtfs != null">
+      and  jtfs like #{jtfs,jdbcType=VARCHAR}
+    </if>
+    <if test="cfd != null">
+      and  cfd like #{cfd,jdbcType=VARCHAR}
+    </if>
+    <if test="mdd != null">
+      and  mdd like #{mdd,jdbcType=VARCHAR}
+    </if>
+    order by ${sortName} ${sord}
+  </select>
+
+</mapper>

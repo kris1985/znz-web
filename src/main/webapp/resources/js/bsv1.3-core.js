@@ -1285,13 +1285,13 @@ Windows = function(me){
 					
 				}else{
 				var width="80%",height="90%";
-				    /*if(id==18){
-						width = "60%";
-						height = "65%"
-					}else if(id==19){
-						width = "50%";
-						height = "60%"
-					}else if(id==20){
+				    if(id==22){
+						width = "100%";
+						height = "100%"
+					}else if(id==23){
+						width = "100%";
+						height = "100%"
+					}	/*else if(id==20){
 						width = "50%";
 						height = "60%"
 					}else if(id==21){

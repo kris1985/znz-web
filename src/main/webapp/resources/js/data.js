@@ -124,7 +124,7 @@ DATA={
 			appid:'22',
 			icon:'tuanmap.png',
 			name:'跟团游',
-			url:basePath+'/admin/travel/listLine',
+			url:basePath+'/admin/travel/listGty',
 			width:'1000',
 			sonMenu:"[]",
 			asc:10
@@ -133,7 +133,8 @@ DATA={
 			appid:'23',
 			icon:'3.png',
 			name:'自由行',
-			url:basePath+'/admin/travel/listLine2',
+			url:basePath+'/admin/travel/listZyx' +
+			'',
 			width:'1000',
 			sonMenu:"[]",
 			asc:11

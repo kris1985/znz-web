@@ -6,14 +6,15 @@ import lombok.Data;
  * Created by admin on 2016/4/18.
  */
 @Data
-public class TravelLineQueryQueryVO {
+public class TravelZyxQueryVO {
 
-    private String prodNo;
-    private String spzx;
+    private String pch;
     private String days;
+    private String cpid;
+    private String cfd;
+    private String mdd;
     private String jtfs;
-    private String hotel;
-    private String sord;
+    private String sord;// desc or aes
     private String sortName;
     private PageParameter page;
 }

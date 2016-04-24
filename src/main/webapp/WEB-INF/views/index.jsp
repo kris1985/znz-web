@@ -35,11 +35,7 @@
         }else{
             $(".form-signin").show(1000)
         }
-        if("9999"=="${param.error}"){
-             alert("您的账号在其它地方登陆");
-        }else  if("8888"=="${param.error}"){
-            alert("会话超时请重新登陆");
-        }
+
         $("#remember").click(function(){
             if($(this).get(0).checked){
                 $(this).val("1");
