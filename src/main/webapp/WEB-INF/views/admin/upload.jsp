@@ -20,6 +20,10 @@
 <script type="text/javascript">
 
 	     $(function() {
+			 <c:if test="${user.user.userType !=2 and user.user.userType !=3 }">
+			 alert("无权限");
+			 return;
+			 </c:if>
 			 setTimeout(function(){
          			$('#file_upload').uploadify({
          				'formData'     : {

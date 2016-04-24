@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,18 +24,18 @@
 
     <script type="text/javascript">
        $(function(){
+           <c:if test="${user.user.userType !=2 and user.user.userType !=3 }">
+                alert("无权限");
+                return;
+           </c:if>
            pageInit();
-           $(window).bind('resize', function() {
-               $("#list2").setGridWidth($(window).width()*0.75);
-               $("#list2").setGridHeight($(window).height()*0.68);
-           });
        });
        function pageInit(){
            $("#list2").jqGrid(
                    {
                        url : '${bathPath}/admin/user/list2',
                        datatype : "json",
-                       colNames : ['userId', '用户名','密码', '公司','手机号',  '最后登录时间'],
+                       colNames : ['userId', '用户名','密码','类型', '公司','手机号',  '最后登录时间'],
                        colModel : [
                            {name : 'userId',index : 'userId',key:true,hidden:true,editable : true},
                            {name : 'userName',index : 'userName',editable : true,editrules : {required : true},searchoptions:{sopt:['eq']},editoptions : {maxlength : 20}},
@@ -60,7 +61,7 @@
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,
-               del : false
+               del : true
            });
            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
          //  jQuery("#list2").jqGrid('inlineNav', "#pager2");

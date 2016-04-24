@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -196,12 +197,7 @@
                         editurl : "${bathPath}/admin/travelZyx/edit",
                         caption : "线路列表"
                     });
-            jQuery("#list2").jqGrid('navGrid', "#pager2", {
-                edit : false,
 
-                add : false
-            },{},{},{},{multipleSearch:true});
-            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true},{},{},{},{multipleSearch:true});
             $("#list2").jqGrid('setGroupHeaders', {
              useColSpanStyle: true,
              groupHeaders:[
@@ -211,13 +207,22 @@
              {startColumnName:'qtxm1', numberOfColumns: 5, titleText: '其它项目'}
              ]
              })
-            //  jQuery("#list2").jqGrid('inlineNav', "#pager2");
-            //设置显示列
-            /*  jQuery("#vcol").click(function (){
-             jQuery("#setcols").jqGrid('setColumns');
-             });*/
-            //自定义grid大小
-            jQuery("#list2").jqGrid('gridResize',{minWidth:350,maxWidth:1500,minHeight:200, maxHeight:950});
+            <c:if test="${user.user.userType==1 }">
+            jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                edit : false,
+                add : false,
+                del : false
+            },{},{},{},{multipleSearch:true});
+            </c:if>
+            <c:if test="${user.user.userType==2 or user.user.userType==3}">
+            jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                edit : false,
+                add : false,
+                del : true
+            },{},{},{},{multipleSearch:true});
+            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
+            </c:if>
+            jQuery("#list2").jqGrid('gridResize');
 
         }
     </script>

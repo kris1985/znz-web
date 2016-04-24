@@ -310,4 +310,27 @@
       ext6 = #{ext6,jdbcType=VARCHAR}
     where uid = #{uid,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectByPage" parameterType="com.znz.vo.TravelZyxQueryVO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_plan where 1=1
+    <if test="name != null">
+      and  name like #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="pt != null">
+      and  pt like #{pt,jdbcType=VARCHAR}
+    </if>
+
+    <if test="hyrq != null">
+      and  hyrq like #{hyrq,jdbcType=VARCHAR}
+    </if>
+    <if test="mdd != null">
+      and  mdd like #{mdd,jdbcType=VARCHAR}
+    </if>
+    <if test="lx != null">
+      and  lx like #{lx,jdbcType=VARCHAR}
+    </if>
+    order by ${sortName} ${sord}
+  </select>
 </mapper>

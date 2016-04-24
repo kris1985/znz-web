@@ -90,11 +90,7 @@ public class LoginController {
             response.addCookie(cookie);
         }
         MySessionLister.setActiveSessions(MySessionLister.getActiveSessions()+1);
-        //管理员
-        if(2==user.getUserType()||3==user.getUserType()){
-            return  "redirect:/admin/desktop";
-        }
-        return "redirect:/admin/file/list";
+        return  "redirect:/admin/desktop";
     }
 
 

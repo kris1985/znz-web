@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -35,4 +36,8 @@
 			<img id="zoomWallpaper" class="zoomWallpaper" style="position: absolute; top: 0pt; left: 0pt; height: 381px; width: 1440px;" src="${basePath}/resources/images/background.jpg">
 		</div>
 	</body>
+<script>
+
+
+</script>
 </html>

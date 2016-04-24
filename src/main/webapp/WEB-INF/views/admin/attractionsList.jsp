@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,10 +25,7 @@
     <script type="text/javascript">
        $(function(){
            pageInit();
-           $(window).bind('resize', function() {
-               $("#list2").setGridWidth($(window).width()*0.75);
-               $("#list2").setGridHeight($(window).height()*0.68);
-           });
+
        });
        function pageInit(){
            $("#list2").jqGrid(
@@ -37,7 +35,7 @@
                        colNames : ['景点编号', '景点名称','地区', '成人门票','儿童门票',  '优惠门票','备注'],
                        colModel : [
                            {name : 'id',index : 'id',key:true,editable : true,hidden:true},
-                           {name : 'prodName',index : 'prodName',editable : true,editrules : {required : true},editoptions : {maxlength : 40}},
+                           {name : 'prodName',index : 'prodName',editable : true,editrules : {required : true},editoptions : {maxlength : 40},width:400},
                            {name : 'areaName',index : 'areaName',editable : true,editoptions : {maxlength : 10}},
                            {name : 'adultPrice',index : 'adultPrice',editable : true,editrules : {number : true},editoptions : {maxlength : 6}},
                            {name : 'childrenPrice',index : 'childrenPrice',editable : true,sortable : true,editrules : {number : true},editoptions : {maxlength : 6}},
@@ -52,25 +50,28 @@
                        viewrecords : true,
                        sortorder : "desc",
                        rownumbers: true,
-                       width: 700,
+                       width: 1000,
                        height : "100%",
                        // cellEdit:true,
                        editurl : "${bathPath}/admin/attractions/edit",
                        caption : "景点列表"
                    });
+         <c:if test="${user.user.userType==1 }">
+               jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                   edit : false,
+                   add : false,
+                   del : false
+               });
+           </c:if>
+         <c:if test="${user.user.userType==2 or user.user.userType==3}">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,
                del : true
            });
            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
-         //  jQuery("#list2").jqGrid('inlineNav', "#pager2");
-           //设置显示列
-         /*  jQuery("#vcol").click(function (){
-               jQuery("#setcols").jqGrid('setColumns');
-           });*/
-           //自定义grid大小
-         //jQuery("#list2").jqGrid('gridResize',{minWidth:350,maxWidth:800,minHeight:80, maxHeight:850});
+    </c:if>
+           jQuery("#list2").jqGrid('gridResize');
        }
 
     </script>

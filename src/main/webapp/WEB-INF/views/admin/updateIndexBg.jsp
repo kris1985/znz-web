@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,7 +12,7 @@
     <link rel="icon" href="../../favicon.ico">
 
 
-    <title>指南针</title>
+    <title>主题设置</title>
      <%@ include file="../common/common.jsp"%>
 <!--
 <link href="/znz-web/resources/css/swf.css" rel="stylesheet" type="text/css" />
@@ -30,6 +31,10 @@
 <script type="text/javascript">
 
 	     $(function() {
+			 <c:if test="${user.user.userType !=2 and user.user.userType !=3 }">
+			 alert("无权限");
+			 return;
+			 </c:if>
 			 setTimeout(function(){
          			$('#file_upload').uploadify({
          				'formData'     : {
@@ -95,7 +100,9 @@
 
 <form>
 		<div id="queue"></div>
+<c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
 		<input id="file_upload" name="file_upload" type="file" multiple="false">
+	</c:if>
 <div id="result" >
 </div>
 <!--

@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,10 +25,6 @@
     <script type="text/javascript">
        $(function(){
            pageInit();
-           $(window).bind('resize', function() {
-               $("#list2").setGridWidth($(window).width()*0.75);
-               $("#list2").setGridHeight($(window).height()*0.68);
-           });
        });
        function pageInit(){
            $("#list2").jqGrid(
@@ -58,25 +55,31 @@
                        viewrecords : true,
                        sortorder : "desc",
                        rownumbers: true,
-                       width: 800,
+                       width: 1000,
                        height : "100%",
                        // cellEdit:true,
                        editurl : "${bathPath}/admin/hotel/edit",
                        caption : "酒店列表"
                    });
+
+           <c:if test="${user.user.userType==1 }">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
-
-               add : false
+               add : false,
+               del : false
            },{},{},{},{multipleSearch:true});
-           jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true},{},{},{},{multipleSearch:true});
-         //  jQuery("#list2").jqGrid('inlineNav', "#pager2");
-           //设置显示列
-         /*  jQuery("#vcol").click(function (){
-               jQuery("#setcols").jqGrid('setColumns');
-           });*/
-           //自定义grid大小
-         //jQuery("#list2").jqGrid('gridResize',{minWidth:350,maxWidth:800,minHeight:80, maxHeight:850});
+           </c:if>
+           <c:if test="${user.user.userType==2 or user.user.userType==3}">
+           jQuery("#list2").jqGrid('navGrid', "#pager2", {
+               edit : false,
+               add : false,
+               del : true
+           },{},{},{},{multipleSearch:true});
+           jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
+           </c:if>
+           jQuery("#list2").jqGrid('gridResize');
+
+
        }
 
     </script>

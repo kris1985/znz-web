@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.znz.util.PermissionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.BeanUtils;
@@ -57,11 +58,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/list2")
-    public @ResponseBody JqGridData<UserVO> list2(@RequestParam(value = "page", defaultValue = "1") String page,
+    public @ResponseBody JqGridData<UserVO> list2(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") String page,
                                                   @RequestParam(value = "rows", defaultValue = "10") String rows,
                                                   @RequestParam(value = "sidx", required = false) String sidx,
                                                   @RequestParam(value = "sord", required = false) String sord,
                                                   @RequestParam(value = "searchField", required = false) String searchField) {
+        if (!PermissionUtil.checkPermisson(request)) {
+            throw new RuntimeException("无权访问");
+        }
         UserQueryVO userQueryVO = new UserQueryVO();
         PageParameter pageParameter = new PageParameter(Integer.parseInt(page), Integer.parseInt(rows));
         userQueryVO.setPage(pageParameter);

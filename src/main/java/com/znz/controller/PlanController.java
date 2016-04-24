@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import com.znz.dao.TTravelZyxMapper;
-import com.znz.model.TTravelZyx;
+import com.znz.dao.TPlanMapper;
+import com.znz.model.TPlan;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSON;
-import com.znz.dao.TTravelGtyMapper;
-import com.znz.model.TTravelGty;
+import com.znz.dao.TTravelZyxMapper;
+import com.znz.model.TTravelZyx;
 import com.znz.util.PermissionUtil;
 import com.znz.vo.*;
 
@@ -28,19 +28,19 @@ import com.znz.vo.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/travelZyx")
-public class TravelZyxController {
+@RequestMapping("/admin/plan")
+public class PlanController {
 
     @Resource
-    private TTravelZyxMapper travelZyxMapper;
+    private TPlanMapper planMapper;
 
     @RequestMapping(value = "/list")
-    public @ResponseBody JqGridData<TTravelZyx> list2(@RequestParam(value = "page", defaultValue = "1") String page,
+    public @ResponseBody JqGridData<TPlan> list2(@RequestParam(value = "page", defaultValue = "1") String page,
                                                       @RequestParam(value = "rows", defaultValue = "10") String rows,
                                                       @RequestParam(value = "sidx", required = false) String sidx,
                                                       @RequestParam(value = "sord", required = false) String sord,
                                                       @RequestParam(value = "filters", required = false) String filters) {
-        TravelZyxQueryVO queryQueryVO = new TravelZyxQueryVO();
+        PlanQueryVO queryQueryVO = new PlanQueryVO();
         queryQueryVO.setSortName(sidx);
         queryQueryVO.setSord(sord);
         if (StringUtils.isNotEmpty(filters)) {
@@ -50,25 +50,23 @@ public class TravelZyxController {
                 if (StringUtils.isEmpty(field.getData())) {
                     continue;
                 }
-                if (field.getField().equals("pch")) {
-                    queryQueryVO.setPch("%" + field.getData() + "%");
-                } else if (field.getField().equals("cpid")) {
-                    queryQueryVO.setCpid("%" + field.getData() + "%");
-                } else if (field.getField().equals("days")) {
-                    queryQueryVO.setDays( field.getData() );
-                } else if (field.getField().equals("jtfs")) {
-                    queryQueryVO.setJtfs("%" + field.getData() + "%");
-                } else if (field.getField().equals("cfd")) {
-                    queryQueryVO.setCfd("%" + field.getData() + "%");
+                if (field.getField().equals("name")) {
+                    queryQueryVO.setName("%" + field.getData() + "%");
+                } else if (field.getField().equals("pt")) {
+                    queryQueryVO.setPt("%" + field.getData() + "%");
+                } else if (field.getField().equals("hyrq")) {
+                    queryQueryVO.setHyrq("%" + field.getData() + "%");
                 } else if (field.getField().equals("mdd")) {
                     queryQueryVO.setMdd("%" + field.getData() + "%");
+                } else if (field.getField().equals("lx")) {
+                    queryQueryVO.setLx("%" + field.getData() + "%");
                 }
             }
         }
         PageParameter pageParameter = new PageParameter(Integer.parseInt(page),
             Integer.parseInt(rows));
         queryQueryVO.setPage(pageParameter);
-        List<TTravelZyx> travelGties = travelZyxMapper.selectByPage(queryQueryVO);
+        List<TTravelZyx> travelGties = planMapper.selectByPage(queryQueryVO);
         int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();
         JqGridData jqGridData = new JqGridData(total, pageParameter.getCurrentPage(),
@@ -79,15 +77,15 @@ public class TravelZyxController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public @ResponseBody ResultVO edit(@RequestParam(value = "oper", defaultValue = "1") String oper,
                                        HttpServletRequest request,
-                                       @ModelAttribute TTravelZyx travelZyx) {
+                                       @ModelAttribute TPlan plan) {
         ResultVO resultVO = new ResultVO();
         if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
         }
         if ("add".equals(oper)) {
-            return add(request, travelZyx);
+            return add(request, plan);
         } else if ("edit".equals(oper)) {
-            return update(request, travelZyx);
+            return update(request, plan);
         } else if ("del".equals(oper)) {
             return delete(request, request.getParameter("id"));
         } else {
@@ -97,22 +95,22 @@ public class TravelZyxController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public @ResponseBody ResultVO add(HttpServletRequest request,
-                                      @Valid @ModelAttribute TTravelZyx travelZyx) {
+                                      @Valid @ModelAttribute TPlan  plan) {
         ResultVO resultVO = new ResultVO();
-        travelZyx.setLineid(UUID.randomUUID().toString());
-        travelZyx.setCjsj(new Date());
-        travelZyx.setXgsj(new Date());
-        travelZyxMapper.insert(travelZyx);
+        plan.setUid(UUID.randomUUID().toString());
+        plan.setCjsj(new Date());
+        plan.setCgsj(new Date());
+        planMapper.insert(plan);
         resultVO.setCode(0);
         return resultVO;
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody ResultVO update(HttpServletRequest request,
-                                         @Valid @ModelAttribute TTravelZyx travelZyx) {
+                                         @Valid @ModelAttribute TPlan  plan) {
         ResultVO resultVO = new ResultVO();
-        travelZyx.setXgsj(new Date());
-        travelZyxMapper.updateByPrimaryKeySelective(travelZyx);
+        plan.setCgsj(new Date());
+        planMapper.updateByPrimaryKeySelective(plan);
         resultVO.setCode(0);
         return resultVO;
     }
@@ -120,7 +118,7 @@ public class TravelZyxController {
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.GET)
     public @ResponseBody ResultVO delete(HttpServletRequest request, @PathVariable String userId) {
         ResultVO resultVO = new ResultVO();
-        travelZyxMapper.deleteByPrimaryKey(userId);
+        planMapper.deleteByPrimaryKey(userId);
         resultVO.setCode(0);
         return resultVO;
     }

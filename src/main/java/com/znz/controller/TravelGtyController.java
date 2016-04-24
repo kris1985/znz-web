@@ -87,7 +87,7 @@ public class TravelGtyController {
         } else if ("edit".equals(oper)) {
             return update(request, travelGty);
         } else if ("del".equals(oper)) {
-            return delete(request, travelGty.getUid());
+            return delete(request, request.getParameter("id"));
         } else {
             return resultVO;
         }

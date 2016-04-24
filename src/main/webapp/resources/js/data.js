@@ -133,8 +133,7 @@ DATA={
 			appid:'23',
 			icon:'3.png',
 			name:'自由行',
-			url:basePath+'/admin/travel/listZyx' +
-			'',
+			url:basePath+'/admin/travel/listZyx',
 			width:'1000',
 			sonMenu:"[]",
 			asc:11
@@ -147,6 +146,15 @@ DATA={
 			width:'1000',
 			sonMenu:"[]",
 			asc:12
+		},
+		'plan':{
+			appid:'25',
+			icon:'time.png',
+			name:'计划安排',
+			url:basePath+'/admin/plan/listPlan',
+			width:'1000',
+			sonMenu:"[]",
+			asc:13
 		}
 	},
 	sApp:{//侧边栏应用
@@ -202,7 +210,7 @@ DATA={
 	}
 };
 ops = {//向桌面添加应用
-	Icon1:['folder','user','disk','theme','tuangou','zyx','hotel']
+	Icon1:['folder','user','disk','theme','tuangou','zyx','hotel','plan']
 	/**Icon2:['mangguo','tuanmap','fastsearch','bianqian','wangdesk'],
 	Icon3:['friend','friendnear','friendgroup','kaikai','kxjy'],
 	Icon4:['qidianzhongwen','qqread','xiami','musicbox','vadio','leshi'],
