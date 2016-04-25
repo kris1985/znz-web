@@ -57,6 +57,11 @@ public class AttractionsController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public @ResponseBody ResultVO edit(HttpServletRequest request,
                                        @Valid @ModelAttribute AttractionsVO attractionsVO) {
+        ResultVO resultVO = new ResultVO();
+        if (!PermissionUtil.checkPermisson(request)) {
+            resultVO.setMsg("无权限操作");
+            return resultVO;
+        }
         if ("add".equals(attractionsVO.getOper())) {
             return add(request, attractionsVO);
         } else if ("edit".equals(attractionsVO.getOper())) {
@@ -72,19 +77,11 @@ public class AttractionsController {
     public @ResponseBody ResultVO add(HttpServletRequest request,
                                       @Valid @ModelAttribute AttractionsVO attractionsVO) {
         ResultVO resultVO = new ResultVO();
-        if (!PermissionUtil.checkPermisson(request)) {
-            resultVO.setMsg("无权限操作");
-        }
-        TAttractions attractions = attractionsMapper.selectByProdName(attractionsVO.getProdName());
-        if (attractions != null) {
-            resultVO.setMsg("景点名称已经存在，请使用新的景点名称");
-        } else {
-            attractionsVO.setId(UUID.randomUUID().toString());
-            attractionsVO.setCreateTime(new Date());
-            attractionsVO.setUpdateTime(new Date());
-            attractionsMapper.insert(attractionsVO);
-            resultVO.setCode(0);
-        }
+        attractionsVO.setId(UUID.randomUUID().toString());
+        attractionsVO.setCreateTime(new Date());
+        attractionsVO.setUpdateTime(new Date());
+        attractionsMapper.insert(attractionsVO);
+        resultVO.setCode(0);
         return resultVO;
     }
 
@@ -92,27 +89,17 @@ public class AttractionsController {
     public @ResponseBody ResultVO update(HttpServletRequest request,
                                          @Valid @ModelAttribute AttractionsVO attractionsVO) {
         ResultVO resultVO = new ResultVO();
-        if (!PermissionUtil.checkPermisson(request)) {
-            resultVO.setMsg("无权限操作");
-        } else {
-            attractionsVO.setUpdateTime(new Date());
-            attractionsMapper.updateByPrimaryKeySelective(attractionsVO);
-            resultVO.setCode(0);
-        }
+        attractionsVO.setUpdateTime(new Date());
+        attractionsMapper.updateByPrimaryKeySelective(attractionsVO);
+        resultVO.setCode(0);
         return resultVO;
     }
 
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.GET)
     public @ResponseBody ResultVO delete(HttpServletRequest request, @PathVariable String userId) {
-        UserSession userSession = (UserSession) request.getSession().getAttribute(
-                Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
-        if (!PermissionUtil.checkPermisson(request)) {
-            resultVO.setMsg("无权限操作");
-        } else {
-            attractionsMapper.deleteByPrimaryKey(userId);
-            resultVO.setCode(0);
-        }
+        attractionsMapper.deleteByPrimaryKey(userId);
+        resultVO.setCode(0);
         return resultVO;
     }
 }

@@ -79,6 +79,7 @@ public class HotelController {
         ResultVO resultVO = new ResultVO();
         if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
+            return resultVO;
         }
         if ("add".equals(hotelVO.getOper())) {
             return add(request, hotelVO);

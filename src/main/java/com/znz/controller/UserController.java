@@ -125,6 +125,7 @@ public class UserController {
         User temUser = userMapper.selectByUser(userAddVO.getUserName());
         if (temUser != null) {
             resultVO.setMsg("用户名已经存在，请使用新的用户名");
+            throw new RuntimeException("用户名已经存在，请使用新的用户名");
         }else{
             User user = new User();
             BeanUtils.copyProperties(userAddVO, user);

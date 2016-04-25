@@ -34,4 +34,6 @@ public class UserAddVO {
 
     private String oper;
 
+    private String userType;
+
 }

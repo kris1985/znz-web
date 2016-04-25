@@ -35,14 +35,15 @@
                    {
                        url : '${bathPath}/admin/user/list2',
                        datatype : "json",
-                       colNames : ['userId', '用户名','密码','类型', '公司','手机号',  '最后登录时间'],
+                       colNames : ['userId', '用户名','密码','角色', '公司','手机号',  '最后登录时间'],
                        colModel : [
-                           {name : 'userId',index : 'userId',key:true,hidden:true,editable : true},
-                           {name : 'userName',index : 'userName',editable : true,editrules : {required : true},searchoptions:{sopt:['eq']},editoptions : {maxlength : 20}},
+                           {name : 'userId',index : 'userId',key:true,hidden:true,editable : true,sortable : false},
+                           {name : 'userName',index : 'userName',editable : true,editrules : {required : true},searchoptions:{sopt:['eq']},editoptions : {maxlength : 20},sortable : false},
                            {name : 'pwd',index : 'pwd',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false},
+                           {name : 'userType',index : 'userType',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false, formatter:'select',formatoptions:{value:{ '1':'只读用户',2:'管理员'}},edittype:'select', editoptions:{value:{ '1':'只读用户',2:'管理员'}}},
                            {name : 'company',index : 'company',editable : true,sortable : false,editoptions : {maxlength : 20}},
                            {name : 'phone',index : 'phone',editable : true,sortable : false,editoptions : {maxlength : 20}},
-                           {name : 'lastLoginTimeStr',index : 'lastLoginTimeStr',sortable : true}
+                           {name : 'lastLoginTimeStr',index : 'lastLoginTimeStr',sortable : false}
                        ],
                        rowNum : 10,
                        rowList : [ 10, 20, 30 ],
@@ -52,7 +53,7 @@
                        viewrecords : true,
                        sortorder : "desc",
                        rownumbers: true,
-                       width: 700,
+                       width: 800,
                        height : "100%",
                        // cellEdit:true,
                        editurl : "${bathPath}/admin/user/edit",
@@ -70,7 +71,7 @@
                jQuery("#setcols").jqGrid('setColumns');
            });*/
            //自定义grid大小
-         //jQuery("#list2").jqGrid('gridResize',{minWidth:350,maxWidth:800,minHeight:80, maxHeight:850});
+          jQuery("#list2").jqGrid('gridResize');
        }
 
     </script>
