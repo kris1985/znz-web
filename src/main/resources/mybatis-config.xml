@@ -19,11 +19,5 @@
         </plugin>
     </plugins>
 
-	<mappers>
-        <!---->
-        <mapper resource="com/znz/dao/UserAuthMapper.xml" />
-		<mapper resource="com/znz/dao/UserMapper.xml" />
 
-
-	</mappers>
 </configuration>

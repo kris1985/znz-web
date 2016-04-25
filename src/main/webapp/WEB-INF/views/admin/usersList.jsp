@@ -24,7 +24,7 @@
 
     <script type="text/javascript">
        $(function(){
-           <c:if test="${user.user.userType !=2 and user.user.userType !=3 }">
+           <c:if test="${userSession.user.userType !=2 and userSession.user.userType !=3 }">
                 alert("无权限");
                 return;
            </c:if>
@@ -33,7 +33,7 @@
        function pageInit(){
            $("#list2").jqGrid(
                    {
-                       url : '${bathPath}/admin/user/list2',
+                       url : '${basePath}/admin/user/list2',
                        datatype : "json",
                        colNames : ['userId', '用户名','密码','角色', '公司','手机号',  '最后登录时间'],
                        colModel : [
@@ -56,7 +56,7 @@
                        width: 800,
                        height : "100%",
                        // cellEdit:true,
-                       editurl : "${bathPath}/admin/user/edit",
+                       editurl : "${basePath}/admin/user/edit",
                        caption : "用户列表"
                    });
            jQuery("#list2").jqGrid('navGrid', "#pager2", {

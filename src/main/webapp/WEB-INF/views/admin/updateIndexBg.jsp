@@ -31,7 +31,7 @@
 <script type="text/javascript">
 
 	     $(function() {
-			 <c:if test="${user.user.userType !=2 and user.user.userType !=3 }">
+			 <c:if test="${userSession.user.userType !=2 and userSession.user.userType !=3 }">
 			 alert("无权限");
 			 return;
 			 </c:if>
@@ -100,7 +100,7 @@
 
 <form>
 		<div id="queue"></div>
-<c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
+<c:if test="${userSession.user.userType ==2 or userSession.user.userType ==3 }">
 		<input id="file_upload" name="file_upload" type="file" multiple="false">
 	</c:if>
 <div id="result" >

@@ -32,7 +32,7 @@
         function pageInit(){
             $("#list2").jqGrid(
                     {
-                        url : '${bathPath}/admin/plan/list',
+                        url : '${basePath}/admin/plan/list',
                         datatype : "json",
                         colNames : ['ID','计划日期','游客姓名','成人', '小孩','出游日期','目的地','类型','保险','成交额','平台','地接社','是否已发','确认回传','操作员','备注'],
                         colModel : [
@@ -65,17 +65,17 @@
                         width: 1000,
                         //autowidth:true,
                         height : "100%",
-                        editurl : "${bathPath}/admin/plan/edit",
+                        editurl : "${basePath}/admin/plan/edit",
                         caption : "计划安排"
                     });
-            <c:if test="${user.user.userType==1 }">
+            <c:if test="${userSession.user.userType==1 }">
             jQuery("#list2").jqGrid('navGrid', "#pager2", {
                 edit : false,
                 add : false,
                 del : false
             },{},{},{},{multipleSearch:true});
             </c:if>
-            <c:if test="${user.user.userType==2 or user.user.userType==3}">
+            <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
             jQuery("#list2").jqGrid('navGrid', "#pager2", {
                 edit : false,
                 add : false,

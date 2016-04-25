@@ -55,7 +55,7 @@ public  class LoginFilter implements Filter {
 
 
     private void redirect(HttpServletRequest request2, HttpServletResponse response2, String errorCode) throws IOException {
-        String type = request2.getHeader("X-Requested-With");
+        //String type = request2.getHeader("X-Requested-With");
        /* if ("XMLHttpRequest".equalsIgnoreCase(type)) {
            // response2.setStatus(HttpServletResponse.SC_FORBIDDEN);
             PrintWriter printWriter = response2.getWriter();

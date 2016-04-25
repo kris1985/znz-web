@@ -29,7 +29,7 @@
        function pageInit(){
            $("#list2").jqGrid(
                    {
-                       url : '${bathPath}/admin/hotel/list',
+                       url : '${basePath}/admin/hotel/list',
                        datatype : "json",
                        colNames : ['产品ID','酒店名称', '地区','星级', '淡季','旺季',  '黄金周','春节','五一','重要政策','采购方式','采购电话','备注'],
                        colModel : [
@@ -58,18 +58,18 @@
                        width: 1000,
                        height : "100%",
                        // cellEdit:true,
-                       editurl : "${bathPath}/admin/hotel/edit",
+                       editurl : "${basePath}/admin/hotel/edit",
                        caption : "酒店列表"
                    });
 
-           <c:if test="${user.user.userType==1 }">
+           <c:if test="${userSession.user.userType==1 }">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,
                del : false
            },{},{},{},{multipleSearch:true});
            </c:if>
-           <c:if test="${user.user.userType==2 or user.user.userType==3}">
+           <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,

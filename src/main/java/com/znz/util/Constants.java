@@ -13,5 +13,5 @@ public class Constants {
 
     public static  final String  FILE_SEPARATOR = "FILE_SEPARATOR";
     
-    public static  final String  USER_SESSION = "user";
+    public static  final String  USER_SESSION = "userSession";
 }

@@ -141,7 +141,7 @@
         function pageInit(){
             $("#list2").jqGrid(
                     {
-                        url : '${bathPath}/admin/travelZyx/list',
+                        url : '${basePath}/admin/travelZyx/list',
                         datatype : "json",
                         colNames : ['ID','批次号','产品编码','出发地', '目的地','天数','交通方式','1','2','3','4','5','6','住宿合计','房差合计','1','2','3','4','5','门票合计','1','2','3','4','5','接送站','交通合计','1','2','3','4','5','其它合计','纯底价','备注'],
                         colModel : [
@@ -194,7 +194,7 @@
                         width: 1600,
                         //autowidth:true,
                         height : "100%",
-                        editurl : "${bathPath}/admin/travelZyx/edit",
+                        editurl : "${basePath}/admin/travelZyx/edit",
                         caption : "线路列表"
                     });
 
@@ -207,14 +207,14 @@
              {startColumnName:'qtxm1', numberOfColumns: 5, titleText: '其它项目'}
              ]
              })
-            <c:if test="${user.user.userType==1 }">
+            <c:if test="${userSession.user.userType==1 }">
             jQuery("#list2").jqGrid('navGrid', "#pager2", {
                 edit : false,
                 add : false,
                 del : false
             },{},{},{},{multipleSearch:true});
             </c:if>
-            <c:if test="${user.user.userType==2 or user.user.userType==3}">
+            <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
             jQuery("#list2").jqGrid('navGrid', "#pager2", {
                 edit : false,
                 add : false,

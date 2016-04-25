@@ -29,7 +29,7 @@
        function pageInit(){
            $("#list2").jqGrid(
                    {
-                       url : '${bathPath}/admin/product/list',
+                       url : '${basePath}/admin/product/list',
                        datatype : "json",
                        colNames : ['产品ID','产品编号', '产品名称','出发地', '目的地','产品排名',  '产品销量','备注'],
                        colModel : [
@@ -53,7 +53,7 @@
                        width: 1000,
                        height : "100%",
                        // cellEdit:true,
-                       editurl : "${bathPath}/admin/product/edit",
+                       editurl : "${basePath}/admin/product/edit",
                        caption : "产品列表"
                    });
            <c:if test="${user.user.userType==1 }">

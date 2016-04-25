@@ -30,7 +30,7 @@
        function pageInit(){
            $("#list2").jqGrid(
                    {
-                       url : '${bathPath}/admin/attractions/list',
+                       url : '${basePath}/admin/attractions/list',
                        datatype : "json",
                        colNames : ['景点编号', '景点名称','地区', '成人门票','儿童门票',  '优惠门票','备注'],
                        colModel : [
@@ -53,17 +53,17 @@
                        width: 1000,
                        height : "100%",
                        // cellEdit:true,
-                       editurl : "${bathPath}/admin/attractions/edit",
+                       editurl : "${basePath}/admin/attractions/edit",
                        caption : "景点列表"
                    });
-         <c:if test="${user.user.userType==1 }">
+         <c:if test="${userSession.user.userType==1 }">
                jQuery("#list2").jqGrid('navGrid', "#pager2", {
                    edit : false,
                    add : false,
                    del : false
                });
            </c:if>
-         <c:if test="${user.user.userType==2 or user.user.userType==3}">
+         <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,
