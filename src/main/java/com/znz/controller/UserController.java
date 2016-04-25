@@ -14,10 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import com.znz.dao.UserAuthMapper;
 import com.znz.dao.UserMapper;
 import com.znz.model.User;
 import com.znz.model.UserAuth;
@@ -37,8 +35,7 @@ public class UserController {
     @Resource
     private UserMapper     userMapper;
 
-    @Resource
-    private UserAuthMapper userAuthMapper;
+
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public @ResponseBody List<UserVO> list() {
@@ -164,54 +161,6 @@ public class UserController {
         return resultVO;
     }
 
-    @RequestMapping(value = "/auths/{userId}", method = RequestMethod.GET)
-    public @ResponseBody List<AuthFileVO> listAuthByUser(HttpServletRequest request,
-                                                         @PathVariable int userId) {
-        String rootPath = request.getSession().getServletContext()
-            .getRealPath(Constants.UPLOAD_ROOT_PATH);
-        List<AuthFileVO> allAuths = getAuth(rootPath);
-        List<AuthFileVO> retAuths = new ArrayList<AuthFileVO>();
-        List<UserAuth> userAuths = userAuthMapper.listByUserId(userId);
-
-        if (!CollectionUtils.isEmpty(userAuths)) {
-            for (UserAuth userAuth : userAuths) {
-                AuthFileVO authFileVO = new AuthFileVO();
-                log.info("-1--" + authFileVO.getAuthName());
-                authFileVO.setAuthName(userAuth.getFilePath());
-                authFileVO.setChecked(1);
-                authFileVO.setCheckBox("<input type=\"checkbox\"  name=\"auths\" checked value="
-                                       + userAuth.getFilePath() + ">" + userAuth.getFilePath());
-                if (!retAuths.contains(authFileVO)) {
-                    retAuths.add(authFileVO);
-                }
-            }
-        }
-        if (!CollectionUtils.isEmpty(allAuths)) {
-            for (AuthFileVO vo : allAuths) {
-                log.info("-2--" + vo.getAuthName());
-                vo.setCheckBox("<input type=\"checkbox\"  name=\"auths\"  value="
-                        + vo.getAuthName() + ">" + vo.getAuthName());
-                vo.setChecked(0);
-                boolean contains = retAuths.contains(vo);
-                if (!contains) {
-                    retAuths.add(vo);
-                }
-            }
-        }
-            Collections.sort(retAuths, new Comparator<AuthFileVO>() {
-                @Override
-                public int compare(AuthFileVO o1, AuthFileVO o2) {
-                    if (o1.getChecked() == o2.getChecked()) {
-                        return 0;
-                    } else if (o1.getChecked() < o2.getChecked()) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }
-            });
-        return retAuths;
-    }
 
     @RequestMapping(value = "/auths", method = RequestMethod.GET)
     public @ResponseBody List<AuthFileVO> lisAlltAuth(HttpServletRequest request) {

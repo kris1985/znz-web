@@ -27,14 +27,14 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_user
+    from t_user2
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
 
   <select id="selectByUser" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
-    from t_user
+    from t_user2
     where user_name = #{user_name,jdbcType=INTEGER}
   </select>
 
@@ -42,17 +42,17 @@
     <select id="selectAllUser" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select
         <include refid="Base_Column_List" />
-        from t_user
+        from t_user2
         where user_type != 3 order by company desc;
     </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_user
+    delete from t_user2
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
 
   <insert id="insert" parameterType="com.znz.model.User" >
-    insert into t_user ( user_name, pwd,
+    insert into t_user2 ( user_name, pwd,
       company, limit_ip_flag, limit_ips, 
       access_flag, max_download_times, download_per_day, 
       download_total, phone, create_time, 
@@ -70,7 +70,7 @@
       </selectKey>
   </insert>
   <insert id="insertSelective" parameterType="com.znz.model.User" >
-    insert into t_user
+    insert into t_user2
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
@@ -167,7 +167,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.User" >
-    update t_user
+    update t_user2
     <set >
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
@@ -218,7 +218,7 @@
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.znz.model.User" >
-    update t_user
+    update t_user2
     set user_name = #{userName,jdbcType=VARCHAR},
       pwd = #{pwd,jdbcType=VARCHAR},
       company = #{company,jdbcType=VARCHAR},
@@ -237,13 +237,13 @@
   </update>
 
     <update id="downloadTimes">
-        UPDATE t_user set download_per_day=0
+        UPDATE t_user2 set download_per_day=0
     </update>
 
   <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.UserQueryVO" >
     select
     <include refid="Base_Column_List" />
-    from t_user where user_type != 3
+    from t_user2 where user_type != 3
     <if test="userName != null" >
      and  user_name = #{userName,jdbcType=VARCHAR},
     </if>

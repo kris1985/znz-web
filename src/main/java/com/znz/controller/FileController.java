@@ -1,7 +1,6 @@
 package com.znz.controller;
 
 import com.znz.config.AppConfig;
-import com.znz.dao.UserAuthMapper;
 import com.znz.dao.UserMapper;
 import com.znz.model.User;
 import com.znz.model.UserAuth;
@@ -23,7 +22,6 @@ import org.zeroturnaround.zip.ZipUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -42,8 +40,6 @@ public class FileController {
     @Resource
     private AppConfig appConfig;
 
-    @Resource
-    private UserAuthMapper userAuthMapper;
 
     @Resource
     private UserMapper userMapper;
@@ -360,7 +356,7 @@ public class FileController {
                 f.mkdirs();
             } else {
                 oldFile.renameTo(f);
-                userAuthMapper.updateByFilePath(oldFile.getName(), f.getName());
+
             }
 
         }

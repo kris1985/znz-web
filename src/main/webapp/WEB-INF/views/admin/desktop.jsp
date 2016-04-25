@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>指南针鞋城-主桌面</title>
+    <title>中旅总社综合旅游中心-主桌面</title>
     <link rel="icon" href="../../favicon.ico">
      <%@ include file="../common/common.jsp"%>
         <link href="${basePath}/resources/css/jquery-ui-1.8.24.custom.css" rel="stylesheet" type="text/css" />

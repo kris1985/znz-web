@@ -1,6 +1,5 @@
 package com.znz.controller;
 
-import com.znz.dao.UserAuthMapper;
 import com.znz.dao.UserMapper;
 import com.znz.listener.MySessionLister;
 import com.znz.model.User;
@@ -8,7 +7,6 @@ import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.vo.UserLoginVO;
 import com.znz.vo.UserSession;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -35,8 +33,7 @@ public class LoginController {
     @Resource
     private UserMapper userMapper;
 
-    @Resource
-    private UserAuthMapper userAuthMapper;
+
 
     @RequestMapping(value = "/login" , method= RequestMethod.POST)
     public String login(HttpServletRequest request,HttpServletResponse response, @Valid @ModelAttribute("userLoginVO") UserLoginVO userLoginVO,BindingResult br,Model model) {
@@ -74,10 +71,8 @@ public class LoginController {
         if(islogin){
             user.setSessionId(request.getSession().getId());//如果已经登陆，覆盖之前的sessionId
         }
-        List<UserAuth> userAuths = userAuthMapper.listByUserId(user.getUserId());
         UserSession userSession = new UserSession();
         userSession.setUser(user);
-        userSession.setUserAuths(userAuths);
         user.setLastLoginTime(new Date());
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
