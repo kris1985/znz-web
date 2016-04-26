@@ -78,7 +78,7 @@
            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
            </c:if>
            jQuery("#list2").jqGrid('gridResize');
-
+           $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
 
        }
 

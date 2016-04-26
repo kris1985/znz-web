@@ -91,29 +91,29 @@
                         colNames : ['ID','出发地', '目的地','批次','玩法/门票', '产品名称','天数','交通方式','进出港','等级','散拼报价','头尾','接送','其它项','纯底价','利润','提点','去程','返程','售价','供应商','联系方式','产品编码','备注'],
                         colModel : [
                             {name : 'uid',index : 'uid',editable : true,hidden:true,key:true},
-                            {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
-                            {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
-                            {name : 'pc',index : 'pc',align:'center',editable : true ,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
-                            {name : 'wf',index : 'wf',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:230},
-                            {name : 'cpmc',index : 'cpmc',editable : true,sortable:false,search:true,editoptions : {maxlength : 40},searchoptions:{sopt:['eq']},width:280},
+                            {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:45},
+                            {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:45},
+                            {name : 'pc',index : 'pc',align:'center',editable : true ,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:50},
+                            {name : 'wf',index : 'wf',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:180},
+                            {name : 'cpmc',index : 'cpmc',editable : true,sortable:false,search:true,editoptions : {maxlength : 40},searchoptions:{sopt:['eq']},width:230},
                             {name : 'days',index : 'days',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 2},searchoptions:{sopt:['eq']},width:30},
                             {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
-                            {name : 'jcg',index : 'jcg',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
-                            {name : 'dj',index : 'dj',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:40},
-                            {name : 'spzxbj',index : 'spzxbj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50,classes:'price1'},
+                            {name : 'jcg',index : 'jcg',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:45},
+                            {name : 'dj',index : 'dj',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:35},
+                            {name : 'spzxbj',index : 'spzxbj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:40,classes:'price1'},
                             {name : 'tw',index : 'tw',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'js',index : 'js',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'qtx',index : 'qtx',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
-                            {name : 'cdjg',index : 'cdjg',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:45,classes:'price'},
+                            {name : 'cdjg',index : 'cdjg',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:40,classes:'price'},
                             {name : 'lr',index : 'lr',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'td',index : 'td',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'qc',index : 'qc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'hc',index : 'hc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'sj',index : 'sj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6},editrules : {number : true},width:40,classes:'price2'},
                             {name : 'gys',index : 'gys',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:80},
-                            {name : 'phone',index : 'phone',editable : true,sortable:false,search:false,editoptions : {maxlength : 20},width:140},
+                            {name : 'phone',index : 'phone',editable : true,sortable:false,search:false,editoptions : {maxlength : 20},width:120},
                             {name : 'pid',index : 'pid',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 12},width:100},
-                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:200}
+                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:160}
                         ],
                         rowNum : 10,
                         rowList : [ 25, 40, 60 ],
@@ -147,6 +147,7 @@
             jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
             // jQuery("#list2").jqGrid('gridResize');
+            $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
 
         }
 
