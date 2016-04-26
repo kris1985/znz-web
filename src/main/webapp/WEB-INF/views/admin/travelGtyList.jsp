@@ -96,7 +96,7 @@
                             {name : 'pc',index : 'pc',align:'center',editable : true ,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
                             {name : 'wf',index : 'wf',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:230},
                             {name : 'cpmc',index : 'cpmc',editable : true,sortable:false,search:true,editoptions : {maxlength : 40},searchoptions:{sopt:['eq']},width:280},
-                            {name : 'days',index : 'days',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 1},searchoptions:{sopt:['eq']},width:30},
+                            {name : 'days',index : 'days',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 2},searchoptions:{sopt:['eq']},width:30},
                             {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
                             {name : 'jcg',index : 'jcg',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
                             {name : 'dj',index : 'dj',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:40},
@@ -116,7 +116,7 @@
                             {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:200}
                         ],
                         rowNum : 10,
-                        rowList : [ 10, 20, 30 ],
+                        rowList : [ 25, 40, 60 ],
                         pager : '#pager2',
                         forceFit:true,
                         sortname : 'cjsj',
