@@ -146,7 +146,7 @@
                             {name : 'cpid',index : 'cpid',align:'center',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:100},
                             {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
                             {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
-                            {name : 'days',index : 'days',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 1},searchoptions:{sopt:['eq']},width:30},
+                            {name : 'days',index : 'days',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 2},searchoptions:{sopt:['eq']},width:30},
                             {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 20},searchoptions:{sopt:['eq']},width:80},
                             {name : 'hotel1',index : 'hotel1',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'hotel2',index : 'hote2',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
@@ -179,7 +179,7 @@
                             {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:180}
                         ],
                         rowNum : 10,
-                        rowList : [ 10, 20, 30 ],
+                        rowList : [ 25, 40, 60 ],
                         pager : '#pager2',
                         forceFit:true,
                         sortname : 'cjsj',
@@ -218,7 +218,6 @@
             jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
            // jQuery("#list2").jqGrid('gridResize');
-
         }
     </script>
 </head>
