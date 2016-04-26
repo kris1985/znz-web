@@ -34,9 +34,9 @@
                 <li id="skin5" style="background:#000000">5</li>
             </ul>
         </div>
-        <p class="album-image-ft" id="album-image-ft">${fn:substring(selectedImg, 0, 2)}</p>
+        <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
-            <div class="album-image-bd" id="album-image-bd" ><img src="${selectedImg}" class="" id="album-image" alt="相册图片-示例图片（1）" onmousewheel="return bbimg(this)"/></div>
+            <div class="album-image-bd" id="album-image-bd" ><img src="${selectedImg}" class="" id="album-image" onmousewheel="return bbimg(this)"/></div>
 
             <!--
                         <ul class="album-image-nav hide" id="album-image-nav">
@@ -148,6 +148,9 @@
 
     $(function(){
 		setTitle();
+       /* var imgName = '${selectedImg}';
+        imgName = imgName.substring(imgName.lastIndexOf("thumb_")+6,imgName.lastIndexOf("."));
+        $("#album-image-ft").text(imgName);*/
         if($.cookie('albumBackground') !=undefined){
             $("body").css("background",$.cookie('albumBackground'));
             $("#album").css("background",$.cookie('albumBackground'));
