@@ -101,7 +101,7 @@
 
                     </span></li>
                     <li><span class="left">密 码：</span> <span style="left">
-                       <input id="pwd" name="pwd" value="${pwd}"  type="text" class="txt" />
+                       <input id="pwd" name="pwd" value="${pwd}"  type="password" class="txt" />
                     </span></li>
                     <li><span class="left">验证码：</span> <span style="left">
                     <input   id="randomCode" name="randomCode"  type="text" class="txtCode" />
@@ -131,7 +131,7 @@
             <li class="middle_B"></li>
             <li class="middle_C">
             <span class="btn">
-                <img alt="" src="${basePath}/resources/images/btnlogin.gif" id="loginBtn"/>
+                <img alt="" src="${basePath}/resources/images/btnlogin.gif" id="loginBtn" style="cursor: pointer"/>
             </span>
             </li>
             <li class="middle_D"></li>

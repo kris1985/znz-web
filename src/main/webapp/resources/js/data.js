@@ -210,7 +210,7 @@ DATA={
 	}
 };
 ops = {//向桌面添加应用
-	Icon1:['folder','user','disk','theme','tuangou','zyx','hotel','plan']
+	Icon1:['folder','user','disk','tuangou','zyx','hotel','plan']
 	/**Icon2:['mangguo','tuanmap','fastsearch','bianqian','wangdesk'],
 	Icon3:['friend','friendnear','friendgroup','kaikai','kxjy'],
 	Icon4:['qidianzhongwen','qqread','xiami','musicbox','vadio','leshi'],

@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>跟团游</title>
+    <title>自由行1</title>
     <%@ include file="../common/common.jsp"%>
     <link href="${basePath}/resources/css/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="${basePath}/resources/jqgrid/css/ui.jqgrid.css" type="text/css" />
@@ -133,10 +133,6 @@
         }
         $(function(){
             pageInit();
-            /*  $(window).bind('resize', function() {
-             $("#list2").setGridWidth($(window).width()*0.9);
-             });*/
-
         });
         function pageInit(){
             $("#list2").jqGrid(
@@ -145,42 +141,42 @@
                         datatype : "json",
                         colNames : ['ID','批次号','产品编码','出发地', '目的地','天数','交通方式','1','2','3','4','5','6','住宿合计','房差合计','1','2','3','4','5','门票合计','1','2','3','4','5','接送站','交通合计','1','2','3','4','5','其它合计','纯底价','备注'],
                         colModel : [
-                            {name : 'lineid',index : 'lineid',editable : true,hidden:true},
-                            {name : 'pch',index : 'pch',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
-                            {name : 'cpid',index : 'cpid',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
-                            {name : 'cfd',index : 'cfd',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:120},
-                            {name : 'mdd',index : 'mdd',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:120},
-                            {name : 'days',index : 'days',editable : true,sortable:false,search:true,editoptions : {maxlength : 1},searchoptions:{sopt:['eq']},width:90},
-                            {name : 'jtfs',index : 'jtfs',editable : true,sortable:true,search:true,editoptions : {maxlength : 20},searchoptions:{sopt:['eq']},width:180},
-                            {name : 'hotel1',index : 'hotel1',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'hotel2',index : 'hote2',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'hotel3',index : 'hotel3',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'hotel4',index : 'hotel4',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'hotel5',index : 'hotel5',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'hotel6',index : 'hotel6',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'hotel',index : 'hotel',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:140},
-                            {name : 'hoteldiff',index : 'hoteldiff',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:140},
-                            {name : 'mp1',index : 'mp1',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'mp2',index : 'mp2',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'mp3',index : 'mp3',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'mp4',index : 'mp4',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'mp5',index : 'mp5',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'mp',index : 'mp',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:140},
-                            {name : 'ddjt1',index : 'ddjt1',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'ddjt2',index : 'ddjt2',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'ddjt3',index : 'ddjt3',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'ddjt4',index : 'ddjt4',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'ddjt5',index : 'ddjt5',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'jsz',index : 'jsz',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:140},
-                            {name : 'ddjt',index : 'ddjt',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:140},
-                            {name : 'qtxm1',index : 'qtxm1',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'qtxm2',index : 'qtxm2',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'qtxm3',index : 'qtxm3',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'qtxm4',index : 'qtxm4',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'qtxm5',index : 'qtxm5',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:90},
-                            {name : 'qtxm',index : 'qtxm',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:140},
-                            {name : 'cdj',index : 'cdj',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:140},
-                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40}}
+                            {name : 'lineid',index : 'lineid',editable : true,hidden:true,key:true},
+                            {name : 'pch',index : 'pch',align:'center',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
+                            {name : 'cpid',index : 'cpid',align:'center',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:100},
+                            {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
+                            {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
+                            {name : 'days',index : 'days',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 1},searchoptions:{sopt:['eq']},width:30},
+                            {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 20},searchoptions:{sopt:['eq']},width:80},
+                            {name : 'hotel1',index : 'hotel1',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel2',index : 'hote2',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel3',index : 'hotel3',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel4',index : 'hotel4',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel5',index : 'hotel5',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel6',index : 'hotel6',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel',index : 'hotel',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
+                            {name : 'hoteldiff',index : 'hoteldiff',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
+                            {name : 'mp1',index : 'mp1',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'mp2',index : 'mp2',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'mp3',index : 'mp3',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'mp4',index : 'mp4',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'mp5',index : 'mp5',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'mp',index : 'mp',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
+                            {name : 'ddjt1',index : 'ddjt1',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'ddjt2',index : 'ddjt2',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'ddjt3',index : 'ddjt3',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'ddjt4',index : 'ddjt4',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'ddjt5',index : 'ddjt5',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'jsz',index : 'jsz',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'ddjt',index : 'ddjt',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
+                            {name : 'qtxm1',index : 'qtxm1',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'qtxm2',index : 'qtxm2',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'qtxm3',index : 'qtxm3',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'qtxm4',index : 'qtxm4',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'qtxm5',index : 'qtxm5',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'qtxm',index : 'qtxm',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
+                            {name : 'cdj',index : 'cdj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
+                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:180}
                         ],
                         rowNum : 10,
                         rowList : [ 10, 20, 30 ],
@@ -191,11 +187,10 @@
                         viewrecords : true,
                         sortorder : "desc",
                         rownumbers: true,
-                        width: 1600,
                         //autowidth:true,
                         height : "100%",
                         editurl : "${basePath}/admin/travelZyx/edit",
-                        caption : "线路列表"
+                        caption : "自由行"
                     });
 
             $("#list2").jqGrid('setGroupHeaders', {
@@ -222,7 +217,7 @@
             },{},{},{},{multipleSearch:true});
             jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
-            jQuery("#list2").jqGrid('gridResize');
+           // jQuery("#list2").jqGrid('gridResize');
 
         }
     </script>

@@ -90,30 +90,30 @@
                         datatype : "json",
                         colNames : ['ID','出发地', '目的地','批次','玩法/门票', '产品名称','天数','交通方式','进出港','等级','散拼报价','头尾','接送','其它项','纯底价','利润','提点','去程','返程','售价','供应商','联系方式','产品编码','备注'],
                         colModel : [
-                            {name : 'uid',index : 'uid',editable : true,hidden:true},
+                            {name : 'uid',index : 'uid',editable : true,hidden:true,key:true},
                             {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
                             {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
-                            {name : 'pc',index : 'pc',align:'center',editable : true ,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:90},
-                            {name : 'wf',index : 'wf',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:240},
-                            {name : 'cpmc',index : 'cpmc',editable : true,sortable:false,search:true,editoptions : {maxlength : 40},searchoptions:{sopt:['eq']},width:300},
+                            {name : 'pc',index : 'pc',align:'center',editable : true ,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
+                            {name : 'wf',index : 'wf',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:230},
+                            {name : 'cpmc',index : 'cpmc',editable : true,sortable:false,search:true,editoptions : {maxlength : 40},searchoptions:{sopt:['eq']},width:280},
                             {name : 'days',index : 'days',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 1},searchoptions:{sopt:['eq']},width:30},
                             {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
                             {name : 'jcg',index : 'jcg',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
                             {name : 'dj',index : 'dj',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:40},
                             {name : 'spzxbj',index : 'spzxbj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50,classes:'price1'},
-                            {name : 'tw',index : 'tw',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50},
-                            {name : 'js',index : 'js',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50},
-                            {name : 'qtx',index : 'qtx',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50},
-                            {name : 'cdjg',index : 'cdjg',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50,classes:'price2'},
-                            {name : 'lr',index : 'lr',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50},
-                            {name : 'td',index : 'td',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50},
-                            {name : 'qc',index : 'qc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50},
-                            {name : 'hc',index : 'hc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:50},
-                            {name : 'sj',index : 'sj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6},editrules : {number : true},width:60,classes:'price'},
-                            {name : 'gys',index : 'gys',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:80},
-                            {name : 'phone',index : 'phone',editable : true,sortable:false,search:false,editoptions : {maxlength : 20},width:180},
-                            {name : 'pid',index : 'pid',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 12},width:120},
-                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:220}
+                            {name : 'tw',index : 'tw',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'js',index : 'js',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'qtx',index : 'qtx',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'cdjg',index : 'cdjg',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:45,classes:'price'},
+                            {name : 'lr',index : 'lr',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'td',index : 'td',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'qc',index : 'qc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hc',index : 'hc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'sj',index : 'sj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6},editrules : {number : true},width:40,classes:'price2'},
+                            {name : 'gys',index : 'gys',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:80},
+                            {name : 'phone',index : 'phone',editable : true,sortable:false,search:false,editoptions : {maxlength : 20},width:140},
+                            {name : 'pid',index : 'pid',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 12},width:100},
+                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:200}
                         ],
                         rowNum : 10,
                         rowList : [ 10, 20, 30 ],
@@ -129,7 +129,7 @@
 
                         height : "100%",
                         editurl : "${basePath}/admin/travelGty/edit",
-                        caption : "线路列表"
+                        caption : "跟团游"
                     });
             <c:if test="${userSession.user.userType==1 }">
             jQuery("#list2").jqGrid('navGrid', "#pager2", {
