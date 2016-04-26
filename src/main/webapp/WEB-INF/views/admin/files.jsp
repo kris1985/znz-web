@@ -445,7 +445,7 @@ selectedId = encodeURI(selectedId);
             window.open("${basePath}/admin/file/listImg/" + path+"?suffix="+suffix );
         });
 
-        var sclHeight = $(document).height() - 150;
+        var sclHeight = $(document).height() - 80;
 
         //左边滚动条
         $("#left_container").mCustomScrollbar({

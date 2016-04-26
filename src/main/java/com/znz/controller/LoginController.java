@@ -8,6 +8,7 @@ import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.vo.UserLoginVO;
 import com.znz.vo.UserSession;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +33,7 @@ import java.util.List;
  */
 
 @Controller
+@Slf4j
 public class LoginController {
 
     @Resource
@@ -39,7 +43,7 @@ public class LoginController {
     private UserAuthMapper userAuthMapper;
 
     @RequestMapping(value = "/login" , method= RequestMethod.POST)
-    public String login(HttpServletRequest request,HttpServletResponse response, @Valid @ModelAttribute("userLoginVO") UserLoginVO userLoginVO,BindingResult br,Model model) {
+    public String login(HttpServletRequest request,HttpServletResponse response, @Valid @ModelAttribute("userLoginVO") UserLoginVO userLoginVO,BindingResult br,Model model) throws UnsupportedEncodingException {
         if (br.hasErrors()){
             model.addAttribute("br",br);
             return  "/index";
@@ -82,8 +86,15 @@ public class LoginController {
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         if(1==userLoginVO.getRemember()){
-            Cookie cookie = new Cookie("znzauth",user.getUserName()+"-"+user.getPwd());
-            response.addCookie(cookie);
+
+            String uname = URLEncoder.encode(user.getUserName(), "UTF-8");
+            Cookie cookie = new Cookie("znzauth",uname+"-"+user.getPwd());
+            try {
+                response.addCookie(cookie);
+            }catch (Exception e){
+                log.error(e.getMessage(),e);
+            }
+
         }else{
             Cookie cookie = new Cookie("znzauth","");
             cookie.setMaxAge(-1);

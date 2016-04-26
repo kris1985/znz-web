@@ -1,3 +1,4 @@
+<%@ page import="java.net.URLDecoder" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -95,6 +96,7 @@
             if (cookies[i].getName().equals("znzauth")) {
                 if(!"".equals(cookies[i].getValue())){
                     name = cookies[i].getValue().split("-")[0];
+                    name = URLDecoder.decode(name, "UTF-8");
                     passward = cookies[i].getValue().split("-")[1];
                     pageContext.setAttribute("userName",name);
                     pageContext.setAttribute("pwd",passward);
