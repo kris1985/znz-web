@@ -86,9 +86,10 @@ public class UserController {
             return  "/admin/userAdd";
         }
         User user = new User();
-        BeanUtils.copyProperties(userAddVO,user);
+        BeanUtils.copyProperties(userAddVO, user);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
+        user.setLastLoginTime(new Date());
         user.setUserType(UserType.NORMAL.getType());//普通用户
         user.setDownloadPerDay(0);
         user.setDownloadTotal(0);
