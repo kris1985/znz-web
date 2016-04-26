@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%//@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +34,7 @@
                 <li id="skin5" style="background:#000000">5</li>
             </ul>
         </div>
-        <p class="album-image-ft" id="album-image-ft">相册图片-示例图片（1）</p>
+        <p class="album-image-ft" id="album-image-ft">${fn:substring(selectedImg, 0, 2)}</p>
         <div class="album-image-md" id="album-image-md" >
             <div class="album-image-bd" id="album-image-bd" ><img src="${selectedImg}" class="" id="album-image" alt="相册图片-示例图片（1）" onmousewheel="return bbimg(this)"/></div>
 
@@ -223,6 +224,7 @@
             evt.preventDefault();
             evt.stopPropagation();
             back2Normal();
+
         });
         $("#nextBtn").click(function(evt){
             Album.next();
