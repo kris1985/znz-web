@@ -7,9 +7,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.alibaba.fastjson.JSON;
 import com.znz.util.PermissionUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,13 +61,29 @@ public class UserController {
                                                   @RequestParam(value = "rows", defaultValue = "10") String rows,
                                                   @RequestParam(value = "sidx", required = false) String sidx,
                                                   @RequestParam(value = "sord", required = false) String sord,
-                                                  @RequestParam(value = "searchField", required = false) String searchField) {
+                                                  @RequestParam(value = "filters", required = false) String filters) {
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权访问");
         }
         UserQueryVO userQueryVO = new UserQueryVO();
         PageParameter pageParameter = new PageParameter(Integer.parseInt(page), Integer.parseInt(rows));
         userQueryVO.setPage(pageParameter);
+        userQueryVO.setSortName(sidx);
+        userQueryVO.setSord(sord);
+        if(StringUtils.isNotEmpty(filters)){
+            SearchFilter searchFilter = JSON.parseObject(filters, SearchFilter.class);
+            List<SearchField> rules = searchFilter.getRules();
+            for (SearchField field:rules){
+                if(StringUtils.isEmpty(field.getData())){
+                    continue;
+                }
+                if(field.getField().equals("userName")){
+                    userQueryVO.setUserName("%" + field.getData() + "%");
+                }else if(field.getField().equals("company")){
+                    userQueryVO.setCompany("%" + field.getData() + "%");
+                }
+            }
+        }
         List<User> users = userMapper.selectByPage(userQueryVO);
         List<UserVO> userlist = null;
         UserVO userVO;
@@ -129,7 +147,6 @@ public class UserController {
             user.setUserId(null);
             user.setCreateTime(new Date());
             user.setUpdateTime(new Date());
-            user.setLastLoginTime(new Date());
             user.setUserType(userAddVO.getUserType());//普通用户
             user.setDownloadPerDay(0);
             user.setDownloadTotal(0);
@@ -155,9 +172,12 @@ public class UserController {
             resultVO.setMsg("无权限操作");
         } else{
             User user = new User();
+            //System.out.println("userAddVO:"+userAddVO);
             BeanUtils.copyProperties(userAddVO, user);
+            user.setUserId(Integer.parseInt(userAddVO.getUserId()));
             user.setUpdateTime(new Date());
             userMapper.updateByPrimaryKeySelective(user);
+           // System.out.println("user:"+user);
             resultVO.setCode(0);
         }
         return resultVO;

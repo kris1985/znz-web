@@ -42,8 +42,8 @@
                            {name : 'prodSale',index : 'prodSale',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40}}
                        ],
-                       rowNum : 10,
-                       rowList : [ 10, 20, 30 ],
+                       rowNum : 20,
+                       //rowList : [ 10, 20, 30 ],
                        pager : '#pager2',
                        sortname : 'id',
                        mtype : "post",
@@ -56,14 +56,14 @@
                        editurl : "${basePath}/admin/product/edit",
                        caption : "产品列表"
                    });
-           <c:if test="${user.user.userType==1 }">
+           <c:if test="${userSession.user.userType==1 }">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,
                del : false
            },{},{},{},{multipleSearch:true});
            </c:if>
-           <c:if test="${user.user.userType==2 or user.user.userType==3}">
+           <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,
@@ -73,6 +73,7 @@
            </c:if>
            jQuery("#list2").jqGrid('gridResize');
            $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
+
        }
 
     </script>

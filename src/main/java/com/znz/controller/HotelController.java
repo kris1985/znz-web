@@ -55,9 +55,9 @@ public class HotelController {
                 if(field.getField().equals("hotelName")){
                     queryQueryVO.setHotelName("%" + field.getData() + "%");
                 }else if(field.getField().equals("areaName")){
-                    queryQueryVO.setAreaName(field.getData());
+                    queryQueryVO.setAreaName("%" + field.getData() + "%");
                 }else if(field.getField().equals("xj")){
-                    queryQueryVO.setXj(field.getData());
+                    queryQueryVO.setXj("%" + field.getData() + "%");
                 }
             }
         }

@@ -284,10 +284,10 @@
       and  hotel_name like #{hotelName,jdbcType=VARCHAR}
     </if>
     <if test="areaName != null" >
-      and area_name = #{areaName,jdbcType=VARCHAR}
+      and area_name like #{areaName,jdbcType=VARCHAR}
     </if>
     <if test="xj != null" >
-      and xj = #{xj,jdbcType=VARCHAR}
+      and xj like #{xj,jdbcType=VARCHAR}
     </if>
     order by ${sortName}  ${sord}
   </select>

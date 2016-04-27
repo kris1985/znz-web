@@ -245,11 +245,20 @@
     <include refid="Base_Column_List" />
     from t_user2 where user_type != 3
     <if test="userName != null" >
-     and  user_name = #{userName,jdbcType=VARCHAR},
+     and  user_name like #{userName,jdbcType=VARCHAR}
     </if>
     <if test="company != null" >
-      company = #{company,jdbcType=VARCHAR},
+      and  company like #{company,jdbcType=VARCHAR}
     </if>
-     order by user_id desc
+    order by
+    <choose>
+      <when test="sortName == 'lastLoginTimeStr'" >
+        last_login_time
+      </when>
+      <otherwise>
+        user_id
+      </otherwise>
+    </choose>
+    ${sord}
   </select>
 </mapper>

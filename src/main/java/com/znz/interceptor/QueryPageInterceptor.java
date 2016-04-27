@@ -102,7 +102,6 @@ public class QueryPageInterceptor implements Interceptor {
             if (rs.next()) {
                 totalCount = rs.getInt(1);
             }
-            System.out.println("totalCount:"+totalCount);
             page.setTotalCount(totalCount);
             //            long totalPage = totalCount / page.getPageSize() + ((totalCount % page.getPageSize() == 0) ? 0 : 1);
             //page.setTotalPage(totalPage);

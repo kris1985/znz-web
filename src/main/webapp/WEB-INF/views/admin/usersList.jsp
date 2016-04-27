@@ -38,15 +38,14 @@
                        colNames : ['userId', '用户名','密码','角色', '公司','手机号',  '最后登录时间'],
                        colModel : [
                            {name : 'userId',index : 'userId',key:true,hidden:true,editable : true,sortable : false},
-                           {name : 'userName',index : 'userName',editable : true,editrules : {required : true},searchoptions:{sopt:['eq']},editoptions : {maxlength : 20},sortable : false},
-                           {name : 'pwd',index : 'pwd',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false},
-                           {name : 'userType',index : 'userType',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false, formatter:'select',formatoptions:{value:{ '1':'只读用户',2:'管理员'}},edittype:'select', editoptions:{value:{ '1':'只读用户',2:'管理员'}}},
-                           {name : 'company',index : 'company',editable : true,sortable : false,editoptions : {maxlength : 20}},
-                           {name : 'phone',index : 'phone',editable : true,sortable : false,editoptions : {maxlength : 20}},
-                           {name : 'lastLoginTimeStr',index : 'lastLoginTimeStr',sortable : false}
+                           {name : 'userName',index : 'userName',search:true,align:'center',editable : true,editrules : {required : true},searchoptions:{sopt:['eq']},editoptions : {maxlength : 20},sortable : false},
+                           {name : 'pwd',index : 'pwd',search:false,align:'center',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false},
+                           {name : 'userType',index : 'userType',search:false,align:'center',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false, formatter:'select',formatoptions:{value:{ '1':'只读用户',2:'管理员'}},edittype:'select', editoptions:{value:{ '1':'只读用户',2:'管理员'}}},
+                           {name : 'company',index : 'company',search:true,align:'center',editable : true,sortable : false,editoptions : {maxlength : 20}},
+                           {name : 'phone',index : 'phone',search:false,align:'center',editable : true,sortable : false,editoptions : {maxlength : 20}},
+                           {name : 'lastLoginTimeStr',search:false,align:'center',index : 'lastLoginTimeStr',sortable : true}
                        ],
-                       rowNum : 10,
-                       rowList : [ 10, 20, 30 ],
+                       rowNum : 20,
                        pager : '#pager2',
                        sortname : 'id',
                        mtype : "post",
@@ -72,7 +71,7 @@
            });*/
            //自定义grid大小
           jQuery("#list2").jqGrid('gridResize');
-          // $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
+           $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
        }
 
     </script>

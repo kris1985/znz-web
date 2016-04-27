@@ -10,6 +10,7 @@ public class AttractionsQueryVO {
 
     private String prodName;
     private String sord;
+    private String areaName;
     private String sortName = "id";
     private PageParameter page;
 }

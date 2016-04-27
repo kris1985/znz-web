@@ -34,10 +34,10 @@
                        colNames : ['产品ID','酒店名称', '地区','星级', '淡季','旺季',  '黄金周','春节','五一','重要政策','采购方式','采购电话','备注'],
                        colModel : [
                            {name : 'id',index : 'id',key:true,editable : true,hidden:true},
-                           {name : 'hotelName',index : 'hotelName',editable : true,sortable:false,editoptions : {maxlength : 40},editrules : {required : true},searchoptions:{sopt:['eq']},width:300,searchoptions:{sopt:['eq']}},
-                           {name : 'areaName',index : 'areaName',editable : true,sortable:false,editoptions : {maxlength : 10},editrules : {required : true},width:100,searchoptions:{sopt:['eq']}},
-                           {name : 'xj',index : 'xj',editable : true ,sortable:false,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10},searchoptions:{sopt:['eq']}},
-                           {name : 'dj',index : 'dj',editable : true,sortable:false,editrules : {number : true},search:false,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10}},
+                           {name : 'hotelName',index : 'hotelName',editable : true,sortable:false,editoptions : {maxlength : 40},editrules : {required : false},searchoptions:{sopt:['eq']},width:300,searchoptions:{sopt:['eq']}},
+                           {name : 'areaName',index : 'areaName',editable : true,sortable:false,editoptions : {maxlength : 10},editrules : {required : false},width:100,searchoptions:{sopt:['eq']}},
+                           {name : 'xj',index : 'xj',editable : true ,sortable:true,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10},searchoptions:{sopt:['eq']}},
+                           {name : 'dj',index : 'dj',editable : true,sortable:true,editrules : {number : true},search:false,searchoptions:{sopt:['eq']},editoptions : {maxlength : 10}},
                            {name : 'wj',index : 'wj',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
                            {name : 'hjz',index : 'hjz',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
                            {name : 'cj',index : 'cj',editable : true,sortable : true,editrules : {number : true},search:false,editoptions : {maxlength : 10}},
@@ -47,8 +47,8 @@
                            {name : 'cgdh',index : 'cgdh',editable : true,sortable : false,search:false,editoptions : {maxlength : 10}},
                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40}}
                        ],
-                       rowNum : 10,
-                       rowList : [ 10, 20, 30 ],
+                       rowNum : 20,
+                      // rowList : [ 10, 20, 30 ],
                        pager : '#pager2',
                        sortname : 'create_time',
                        mtype : "post",
@@ -63,19 +63,19 @@
                    });
 
            <c:if test="${userSession.user.userType==1 }">
-           jQuery("#list2").jqGrid('navGrid', "#pager2", {
-               edit : false,
-               add : false,
-               del : false
-           },{},{},{},{multipleSearch:true});
+               jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                   edit : false,
+                   add : false,
+                   del : false
+               },{},{},{},{multipleSearch:true});
            </c:if>
            <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
-           jQuery("#list2").jqGrid('navGrid', "#pager2", {
-               edit : false,
-               add : false,
-               del : true
-           },{},{},{},{multipleSearch:true});
-           jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
+               jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                   edit : false,
+                   add : false,
+                   del : true
+               },{},{},{},{multipleSearch:true});
+               jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
            </c:if>
            jQuery("#list2").jqGrid('gridResize');
            $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });

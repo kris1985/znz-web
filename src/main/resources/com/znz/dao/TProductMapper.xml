@@ -156,16 +156,16 @@
     <include refid="Base_Column_List" />
     from t_product where 1=1
     <if test="prodNo != null" >
-      and  prod_no = #{prodNo,jdbcType=VARCHAR}
+      and  prod_no like #{prodNo,jdbcType=VARCHAR}
     </if>
     <if test="prodName != null" >
       and prod_name like #{prodName,jdbcType=VARCHAR}
     </if>
     <if test="start != null" >
-      and start = #{start,jdbcType=VARCHAR}
+      and start like #{start,jdbcType=VARCHAR}
     </if>
     <if test="destination != null" >
-      and destination = #{destination,jdbcType=VARCHAR}
+      and destination like #{destination,jdbcType=VARCHAR}
     </if>
     order by
     <choose>

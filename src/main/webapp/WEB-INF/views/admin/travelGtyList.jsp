@@ -93,13 +93,13 @@
                             {name : 'uid',index : 'uid',editable : true,hidden:true,key:true},
                             {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:45},
                             {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:45},
-                            {name : 'pc',index : 'pc',align:'center',editable : true ,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:50},
+                            {name : 'pc',index : 'pc',align:'center',editable : true ,sortable:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:50},
                             {name : 'wf',index : 'wf',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:180},
                             {name : 'cpmc',index : 'cpmc',editable : true,sortable:false,search:true,editoptions : {maxlength : 40},searchoptions:{sopt:['eq']},width:230},
                             {name : 'days',index : 'days',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 2},searchoptions:{sopt:['eq']},width:30},
-                            {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
+                            {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:60},
                             {name : 'jcg',index : 'jcg',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:45},
-                            {name : 'dj',index : 'dj',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:35},
+                            {name : 'dj',index : 'dj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:35},
                             {name : 'spzxbj',index : 'spzxbj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:40,classes:'price1'},
                             {name : 'tw',index : 'tw',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'js',index : 'js',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
@@ -112,11 +112,11 @@
                             {name : 'sj',index : 'sj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6},editrules : {number : true},width:40,classes:'price2'},
                             {name : 'gys',index : 'gys',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:80},
                             {name : 'phone',index : 'phone',editable : true,sortable:false,search:false,editoptions : {maxlength : 20},width:120},
-                            {name : 'pid',index : 'pid',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 12},width:100},
+                            {name : 'pid',index : 'pid',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 12},searchoptions:{sopt:['eq']},width:100},
                             {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:160}
                         ],
-                        rowNum : 10,
-                        rowList : [ 25, 40, 60 ],
+                        rowNum : 20,
+                       // rowList : [ 25, 40, 60 ],
                         pager : '#pager2',
                         forceFit:true,
                         sortname : 'cjsj',
@@ -132,19 +132,19 @@
                         caption : "跟团游"
                     });
             <c:if test="${userSession.user.userType==1 }">
-            jQuery("#list2").jqGrid('navGrid', "#pager2", {
-                edit : false,
-                add : false,
-                del : false
-            },{},{},{},{multipleSearch:true});
+                jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                    edit : false,
+                    add : false,
+                    del : false
+                },{},{},{},{multipleSearch:true});
             </c:if>
             <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
-            jQuery("#list2").jqGrid('navGrid', "#pager2", {
-                edit : false,
-                add : false,
-                del : true
-            },{},{},{},{multipleSearch:true});
-            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
+                jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                    edit : false,
+                    add : false,
+                    del : true
+                },{},{},{},{multipleSearch:true});
+                jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
             // jQuery("#list2").jqGrid('gridResize');
             $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });

@@ -429,6 +429,9 @@
     <if test="pid != null">
       and  pid like #{pid,jdbcType=VARCHAR}
     </if>
+    <if test="jtfs != null">
+      and  jtfs like #{jtfs,jdbcType=VARCHAR}
+    </if>
     order by ${sortName} ${sord}
   </select>
 </mapper>

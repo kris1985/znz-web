@@ -39,8 +39,8 @@
                             {name : 'uid',index : 'uid',editable : true,hidden:true,key:true},
                             {name : 'jhrq',index : 'jhrq',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:140},
                             {name : 'name',index : 'name',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:140},
-                            {name : 'cr',index : 'cr',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:120},
-                            {name : 'xh',index : 'xh',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:120},
+                            {name : 'cr',index : 'cr',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:120},
+                            {name : 'xh',index : 'xh',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:120},
                             {name : 'hyrq',index : 'hyrq',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:140},
                             {name : 'mdd',index : 'mdd',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
                             {name : 'lx',index : 'lx',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
@@ -48,13 +48,13 @@
                             {name : 'cje',index : 'cje',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:120},
                             {name : 'pt',index : 'pt',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
                             {name : 'djs',index : 'djs',editable : true,sortable:false,search:false,editoptions : {maxlength : 10}},
-                            {name : 'sfyf',index : 'sfyf',editable : true,sortable:true,search:false,editoptions : {maxlength : 10}},
-                            {name : 'qrhc',index : 'qrhc',editable : true,sortable:true,search:false,editoptions : {maxlength : 10}},
+                            {name : 'sfyf',index : 'sfyf',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},formatter:'select',formatoptions:{value:{ '1':'-',2:'√'}},edittype:'select', editoptions:{value:{ '1':'-',2:'√'}}},
+                            {name : 'qrhc',index : 'qrhc',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},formatter:'select',formatoptions:{value:{ '1':'-',2:'√'}},edittype:'select', editoptions:{value:{ '1':'-',2:'√'}}},
                             {name : 'czy',index : 'czy',editable : true,sortable:false,search:false,editoptions : {maxlength : 10}},
                             {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40}}
                         ],
-                        rowNum : 10,
-                        rowList : [ 10, 20, 30 ],
+                        rowNum : 20,
+                       // rowList : [ 10, 20, 30 ],
                         pager : '#pager2',
                         forceFit:true,
                         sortname : 'cjsj',
@@ -69,19 +69,19 @@
                         caption : "计划安排"
                     });
             <c:if test="${userSession.user.userType==1 }">
-            jQuery("#list2").jqGrid('navGrid', "#pager2", {
-                edit : false,
-                add : false,
-                del : false
-            },{},{},{},{multipleSearch:true});
+                jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                    edit : false,
+                    add : false,
+                    del : false
+                },{},{},{},{multipleSearch:true});
             </c:if>
             <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
-            jQuery("#list2").jqGrid('navGrid', "#pager2", {
-                edit : false,
-                add : false,
-                del : true
-            },{},{},{},{multipleSearch:true});
-            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
+                jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                    edit : false,
+                    add : false,
+                    del : true
+                },{},{},{},{multipleSearch:true});
+                jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
             jQuery("#list2").jqGrid('gridResize');
             $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });

@@ -8,10 +8,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.alibaba.fastjson.JSON;
 import com.znz.dao.TAttractionsMapper;
 import com.znz.model.TAttractions;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,13 +40,27 @@ public class AttractionsController {
                                                      @RequestParam(value = "rows", defaultValue = "10") String rows,
                                                      @RequestParam(value = "sidx", required = false) String sidx,
                                                      @RequestParam(value = "sord", required = false) String sord,
-                                                     @RequestParam(value = "searchField", required = false) String searchField) {
+                                                     @RequestParam(value = "filters", required = false) String filters) {
         AttractionsQueryVO attractionsQueryVO = new AttractionsQueryVO();
         attractionsQueryVO.setSord(sord);
         attractionsQueryVO.setSortName(sidx);
         PageParameter pageParameter = new PageParameter(Integer.parseInt(page),
             Integer.parseInt(rows));
         attractionsQueryVO.setPage(pageParameter);
+        if(StringUtils.isNotEmpty(filters)){
+            SearchFilter searchFilter = JSON.parseObject(filters, SearchFilter.class);
+            List<SearchField> rules = searchFilter.getRules();
+            for (SearchField field:rules){
+                if(StringUtils.isEmpty(field.getData())){
+                    continue;
+                }
+                if(field.getField().equals("prodName")){
+                    attractionsQueryVO.setProdName("%" + field.getData() + "%");
+                }else if(field.getField().equals("areaName")){
+                    attractionsQueryVO.setAreaName("%" + field.getData() + "%");
+                }
+            }
+        }
         List<TAttractions> attractionses = attractionsMapper.selectByPage(attractionsQueryVO);
         int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();

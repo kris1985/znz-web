@@ -51,11 +51,11 @@ public class ProductController {
                     continue;
                 }
                 if(field.getField().equals("prodNo")){
-                    productQueryVO.setProdNo(field.getData());
+                    productQueryVO.setProdNo("%"+field.getData()+"%");
                 }else if(field.getField().equals("start")){
-                    productQueryVO.setStart(field.getData());
+                    productQueryVO.setStart("%"+field.getData()+"%");
                 }else if(field.getField().equals("destination")){
-                    productQueryVO.setDestination(field.getData());
+                    productQueryVO.setDestination("%"+field.getData()+"%");
                 }else if(field.getField().equals("prodName")){
                     productQueryVO.setProdName("%"+field.getData()+"%");
                 }

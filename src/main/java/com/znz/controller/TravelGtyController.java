@@ -48,8 +48,8 @@ public class TravelGtyController {
                 if (StringUtils.isEmpty(field.getData())) {
                     continue;
                 }
-                if (field.getField().equals("cpmc")) {
-                    queryQueryVO.setCpmc("%" + field.getData() + "%");
+                if (field.getField().equals("pid")) {
+                    queryQueryVO.setPid("%" + field.getData() + "%");
                 } else if (field.getField().equals("pc")) {
                     queryQueryVO.setPc("%" + field.getData() + "%");
                 } else if (field.getField().equals("days")) {
@@ -60,6 +60,10 @@ public class TravelGtyController {
                     queryQueryVO.setCfd("%" + field.getData() + "%");
                 } else if (field.getField().equals("mdd")) {
                     queryQueryVO.setMdd("%" + field.getData() + "%");
+                }else if (field.getField().equals("jtfs")) {
+                    queryQueryVO.setJtfs("%" + field.getData() + "%");
+                }else if (field.getField().equals("cpmc")) {
+                    queryQueryVO.setCpmc("%" + field.getData() + "%");
                 }
             }
         }

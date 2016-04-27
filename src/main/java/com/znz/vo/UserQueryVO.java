@@ -10,6 +10,7 @@ public class UserQueryVO {
 
     private String userName;
     private String company;
-    private String sortName = "userId";
+    private String sortName = "id";
+    private String sord;
     private PageParameter page;
 }

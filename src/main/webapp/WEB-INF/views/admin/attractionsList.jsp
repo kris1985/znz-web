@@ -37,13 +37,13 @@
                            {name : 'id',index : 'id',key:true,editable : true,hidden:true},
                            {name : 'prodName',index : 'prodName',editable : true,editrules : {required : true},editoptions : {maxlength : 40},width:400},
                            {name : 'areaName',index : 'areaName',editable : true,editoptions : {maxlength : 10}},
-                           {name : 'adultPrice',index : 'adultPrice',editable : true,editrules : {number : true},editoptions : {maxlength : 6}},
-                           {name : 'childrenPrice',index : 'childrenPrice',editable : true,sortable : true,editrules : {number : true},editoptions : {maxlength : 6}},
-                           {name : 'disPrice',index : 'disPrice',editable : true,sortable : true,editrules : {number : true},editoptions : {maxlength : 6}},
-                           {name : 'remark',index : 'remark',editable : true,editoptions : {maxlength : 40}}
+                           {name : 'adultPrice',index : 'adultPrice',editable : true,search:false,sortable : true,editrules : {number : true},editoptions : {maxlength : 6}},
+                           {name : 'childrenPrice',index : 'childrenPrice',editable : true,search:false,sortable : true,editrules : {number : true},editoptions : {maxlength : 6}},
+                           {name : 'disPrice',index : 'disPrice',editable : true,sortable : true,search:false,editrules : {number : true},editoptions : {maxlength : 6}},
+                           {name : 'remark',index : 'remark',editable : true,search:false,editoptions : {maxlength : 40}}
                        ],
-                       rowNum : 10,
-                       rowList : [ 10, 20, 30 ],
+                       rowNum : 20,
+                       //rowList : [ 10, 20, 30 ],
                        pager : '#pager2',
                        sortname : 'id',
                        mtype : "post",
@@ -61,16 +61,16 @@
                    edit : false,
                    add : false,
                    del : false
-               });
+               },{},{},{},{multipleSearch:true});
            </c:if>
          <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
                edit : false,
                add : false,
                del : true
-           });
+           },{},{},{},{multipleSearch:true});
            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
-    </c:if>
+        </c:if>
            jQuery("#list2").jqGrid('gridResize');
            $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
        }

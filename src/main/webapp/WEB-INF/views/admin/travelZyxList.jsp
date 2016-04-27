@@ -40,11 +40,13 @@
             var mp4 = $.trim($('#'+selectedId + "_mp4").val());
             var mp5 = $.trim($('#'+selectedId + "_mp5").val());
 
+
             var ddjt1 = $.trim($('#'+selectedId + "_ddjt1").val());
             var ddjt2 = $.trim($('#'+selectedId + "_ddjt2").val());
             var ddjt3 = $.trim($('#'+selectedId + "_ddjt3").val());
             var ddjt4 = $.trim($('#'+selectedId + "_ddjt4").val());
             var ddjt5 = $.trim($('#'+selectedId + "_ddjt5").val());
+            var jsz = $.trim($('#'+selectedId + "_jsz").val());
 
             var qtxm1 = $.trim($('#'+selectedId + "_qtxm1").val());
             var qtxm2 = $.trim($('#'+selectedId + "_qtxm2").val());
@@ -75,8 +77,7 @@
             if(!isNaN(parseInt(hotel6))){
                 hotel +=parseInt(hotel6);
             }
-            $('#'+selectedId + "_hotel").val(hotel);
-            $('#'+selectedId + "_hoteldiff").val(hotel/2);
+            $('#'+selectedId + "_hotel").val(hotel/2);
 
             if(!isNaN(parseInt(mp1))){
                 mp +=parseInt(mp1);
@@ -110,6 +111,9 @@
             if(!isNaN(parseInt(ddjt5))){
                 ddjt +=parseInt(ddjt5);
             }
+            if(!isNaN(parseInt(jsz))){
+                ddjt +=parseInt(jsz);
+            }
             $('#'+selectedId + "_ddjt").val(ddjt);
 
             if(!isNaN(parseInt(qtxm1))){
@@ -139,23 +143,23 @@
                     {
                         url : '${basePath}/admin/travelZyx/list',
                         datatype : "json",
-                        colNames : ['ID','批次号','产品编码','出发地', '目的地','天数','交通方式','1','2','3','4','5','6','住宿合计','房差合计','1','2','3','4','5','门票合计','1','2','3','4','5','接送站','交通合计','1','2','3','4','5','其它合计','纯底价','备注'],
+                        colNames : ['ID','批次号','产品编码','出发地', '目的地','天数','交通方式','1','2','3','4','5','6','住宿合计','1','2','3','4','5','门票合计','1','2','3','4','5','接送站','交通合计','1','2','3','4','5','其它合计','纯底价','备注'],
                         colModel : [
                             {name : 'lineid',index : 'lineid',editable : true,hidden:true,key:true},
-                            {name : 'pch',index : 'pch',align:'center',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
-                            {name : 'cpid',index : 'cpid',align:'center',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:100},
+                            {name : 'pch',index : 'pch',align:'center',editable : true,sortable:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
+                            {name : 'cpid',index : 'cpid',align:'center',editable : true,sortable:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:100},
                             {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
                             {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:50},
-                            {name : 'days',index : 'days',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 2},searchoptions:{sopt:['eq']},width:30},
+                            {name : 'days',index : 'days',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 2},searchoptions:{sopt:['eq']},width:30},
                             {name : 'jtfs',index : 'jtfs',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 20},searchoptions:{sopt:['eq']},width:80},
-                            {name : 'hotel1',index : 'hotel1',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
-                            {name : 'hotel2',index : 'hote2',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
-                            {name : 'hotel3',index : 'hotel3',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel1',index : 'hotel1',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel2',index : 'hote2',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
+                            {name : 'hotel3',index : 'hotel3',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'hotel4',index : 'hotel4',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'hotel5',index : 'hotel5',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'hotel6',index : 'hotel6',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'hotel',index : 'hotel',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
-                            {name : 'hoteldiff',index : 'hoteldiff',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
+
                             {name : 'mp1',index : 'mp1',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'mp2',index : 'mp2',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'mp3',index : 'mp3',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
@@ -176,10 +180,10 @@
                             {name : 'qtxm5',index : 'qtxm5',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'qtxm',index : 'qtxm',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
                             {name : 'cdj',index : 'cdj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:55},
-                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:180}
+                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:220}
                         ],
-                        rowNum : 10,
-                        rowList : [ 25, 40, 60 ],
+                        rowNum : 20,
+                        //rowList : [ 25, 40, 60 ],
                         pager : '#pager2',
                         forceFit:true,
                         sortname : 'cjsj',
@@ -203,19 +207,19 @@
              ]
              })
             <c:if test="${userSession.user.userType==1 }">
-            jQuery("#list2").jqGrid('navGrid', "#pager2", {
-                edit : false,
-                add : false,
-                del : false
-            },{},{},{},{multipleSearch:true});
+                jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                    edit : false,
+                    add : false,
+                    del : false
+                },{},{},{},{multipleSearch:true});
             </c:if>
             <c:if test="${userSession.user.userType==2 or userSession.user.userType==3}">
-            jQuery("#list2").jqGrid('navGrid', "#pager2", {
-                edit : false,
-                add : false,
-                del : true
-            },{},{},{},{multipleSearch:true});
-            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
+                jQuery("#list2").jqGrid('navGrid', "#pager2", {
+                    edit : false,
+                    add : false,
+                    del : true
+                },{},{},{},{multipleSearch:true});
+                jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
            // jQuery("#list2").jqGrid('gridResize');
             $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });

@@ -15,6 +15,7 @@ public class TravelGtyQueryVO {
     private String cfd;
     private String mdd;
     private String pid;
+    private String jtfs;
     private String sord;// desc or aes
     private String sortName;
     private PageParameter page;

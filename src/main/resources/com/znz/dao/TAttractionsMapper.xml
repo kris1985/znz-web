@@ -145,9 +145,27 @@
     <include refid="Base_Column_List" />
     from t_attractions where 1=1
     <if test="prodName != null" >
-      and prodName = #{prodName,jdbcType=VARCHAR},
+      and prod_name like #{prodName,jdbcType=VARCHAR}
     </if>
-    order by create_time desc
+    <if test="areaName != null" >
+      and area_name like #{areaName,jdbcType=VARCHAR}
+    </if>
+    order by
+    <choose>
+      <when test="sortName == 'adultPrice'" >
+        adult_price
+      </when>
+      <when test="sortName == 'childrenPrice'" >
+        children_price
+      </when>
+      <when test="sortName == 'disPrice'" >
+        dis_price
+      </when>
+      <otherwise>
+        create_time
+      </otherwise>
+    </choose>
+    ${sord}
   </select>
 
   <select id="selectByProdName" resultMap="BaseResultMap" parameterType="java.lang.String" >
