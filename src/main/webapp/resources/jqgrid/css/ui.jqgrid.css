@@ -339,3 +339,8 @@ td.menu_text {
 #column_menu.ui-menu .ui-menu-item {
 	position :static;
 }
+
+/*customer */
+.ui-jqgrid .ui-search-table td.ui-search-clear {
+	width: 15px;
+}

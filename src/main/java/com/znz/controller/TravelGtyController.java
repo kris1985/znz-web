@@ -63,7 +63,7 @@ public class TravelGtyController {
                 }else if (field.getField().equals("jtfs")) {
                     queryQueryVO.setJtfs("%" + field.getData() + "%");
                 }else if (field.getField().equals("cpmc")) {
-                    queryQueryVO.setCpmc("%" + field.getData() + "%");
+                    queryQueryVO.setCpmc(field.getData());
                 }
             }
         }

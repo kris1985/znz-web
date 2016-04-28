@@ -412,7 +412,7 @@
       and  gys like #{gys,jdbcType=VARCHAR}
     </if>
     <if test="cpmc != null">
-      and  cpmc like #{cpmc,jdbcType=VARCHAR}
+      and  cpmc = #{cpmc,jdbcType=VARCHAR}
     </if>
     <if test="days != null">
       and  days = #{days,jdbcType=VARCHAR}

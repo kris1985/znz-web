@@ -7,6 +7,7 @@ import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.vo.UserLoginVO;
 import com.znz.vo.UserSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -28,6 +29,7 @@ import java.util.List;
  */
 
 @Controller
+@Slf4j
 public class LoginController {
 
     @Resource
@@ -78,13 +80,18 @@ public class LoginController {
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         if(1==userLoginVO.getRemember()){
             Cookie cookie = new Cookie("znzauth",user.getUserName()+"-"+user.getPwd());
-            response.addCookie(cookie);
+            try {
+                response.addCookie(cookie);
+            }catch (Exception e){
+                log.error(e.getMessage(),e);
+            }
+
         }else{
             Cookie cookie = new Cookie("znzauth","");
             cookie.setMaxAge(-1);
             response.addCookie(cookie);
         }
-        MySessionLister.setActiveSessions(MySessionLister.getActiveSessions()+1);
+        MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
         return  "redirect:/admin/desktop";
     }
 
