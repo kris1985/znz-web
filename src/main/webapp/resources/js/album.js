@@ -107,7 +107,7 @@ function initMaxWH(){
                 overlay = Album.getOverlay(),
                 btnDownload = Album.getBtnDownload(),
                 src = currentItem.find("a:first").attr("href"),
-                alt = currentItem.find("img:first").attr("alt"),
+                alt = currentItem.find("a:first").attr("title"),
                 percent = 0,
                 preloader = new Image();
 

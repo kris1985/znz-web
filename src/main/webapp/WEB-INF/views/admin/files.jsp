@@ -444,8 +444,13 @@ selectedId = encodeURI(selectedId);
            path =  id.substring(0,id.indexOf('.'));
             window.open("${basePath}/admin/file/listImg/" + path+"?suffix="+suffix );
         });
-
-        var sclHeight = $(document).height() - 80;
+        <c:if test="${user.user.userType ==2 or user.user.userType ==3 }">
+            var sclHeight = 850;
+        </c:if>
+        <c:if test="${user.user.userType ==1 }">
+             var sclHeight = $(document).height() - 80;
+        </c:if>
+        console.log("sclHeight:"+sclHeight);
 
         //左边滚动条
         $("#left_container").mCustomScrollbar({
