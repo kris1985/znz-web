@@ -60,6 +60,8 @@ public class PlanController {
                     queryQueryVO.setMdd("%" + field.getData() + "%");
                 } else if (field.getField().equals("lx")) {
                     queryQueryVO.setLx("%" + field.getData() + "%");
+                }else if (field.getField().equals("jhrq")) {
+                    queryQueryVO.setJhrq("%" + field.getData() + "%");
                 }
             }
         }

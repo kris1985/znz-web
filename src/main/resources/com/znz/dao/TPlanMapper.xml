@@ -331,6 +331,9 @@
     <if test="lx != null">
       and  lx like #{lx,jdbcType=VARCHAR}
     </if>
+    <if test="jhrq != null">
+      and  jhrq like #{jhrq,jdbcType=VARCHAR}
+    </if>
     order by ${sortName} ${sord}
   </select>
 </mapper>

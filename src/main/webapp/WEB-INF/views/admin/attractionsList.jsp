@@ -35,12 +35,12 @@
                        colNames : ['景点编号', '景点名称','地区', '成人门票','儿童门票',  '优惠门票','备注'],
                        colModel : [
                            {name : 'id',index : 'id',key:true,editable : true,hidden:true},
-                           {name : 'prodName',index : 'prodName',editable : true,editrules : {required : true},editoptions : {maxlength : 40},width:400},
-                           {name : 'areaName',index : 'areaName',editable : true,editoptions : {maxlength : 10}},
-                           {name : 'adultPrice',index : 'adultPrice',editable : true,search:false,sortable : true,editrules : {number : true},editoptions : {maxlength : 6}},
-                           {name : 'childrenPrice',index : 'childrenPrice',editable : true,search:false,sortable : true,editrules : {number : true},editoptions : {maxlength : 6}},
-                           {name : 'disPrice',index : 'disPrice',editable : true,sortable : true,search:false,editrules : {number : true},editoptions : {maxlength : 6}},
-                           {name : 'remark',index : 'remark',editable : true,search:false,editoptions : {maxlength : 40}}
+                           {name : 'prodName',index : 'prodName',align:'center',editable : true,editrules : {required : true},editoptions : {maxlength : 40},width:280},
+                           {name : 'areaName',index : 'areaName',align:'center',editable : true,editoptions : {maxlength : 10},width:80},
+                           {name : 'adultPrice',index : 'adultPrice',align:'center',editable : true,search:false,sortable : true,editrules : {number : true},editoptions : {maxlength : 6},width:60},
+                           {name : 'childrenPrice',index : 'childrenPrice',align:'center',editable : true,search:false,sortable : true,editrules : {number : true},editoptions : {maxlength : 6},width:60},
+                           {name : 'disPrice',index : 'disPrice',align:'center',editable : true,sortable : true,search:false,editrules : {number : true},editoptions : {maxlength : 6},width:60},
+                           {name : 'remark',index : 'remark',editable : true,search:false,editoptions : {maxlength : 40},width:400}
                        ],
                        rowNum : 20,
                        //rowList : [ 10, 20, 30 ],
@@ -50,7 +50,6 @@
                        viewrecords : true,
                        sortorder : "desc",
                        rownumbers: true,
-                       width: 1000,
                        height : "100%",
                        // cellEdit:true,
                        editurl : "${basePath}/admin/attractions/edit",

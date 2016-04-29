@@ -13,6 +13,7 @@ public class PlanQueryVO {
     private String mdd;
     private String pt;
     private String lx;
+    private String jhrq;
     private String sord;// desc or aes
     private String sortName;
     private PageParameter page;

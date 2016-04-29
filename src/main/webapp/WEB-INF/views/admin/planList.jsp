@@ -34,24 +34,24 @@
                     {
                         url : '${basePath}/admin/plan/list',
                         datatype : "json",
-                        colNames : ['ID','计划日期','游客姓名','成人', '小孩','出游日期','目的地','类型','保险','成交额','平台','地接社','是否已发','确认回传','操作员','备注'],
+                        colNames : ['ID','发计划日期','游客姓名','成人', '小孩','出游日期','目的地','类型','保险','成交额','平台','地接社','是否已发','确认回传','操作员','备注'],
                         colModel : [
                             {name : 'uid',index : 'uid',editable : true,hidden:true,key:true},
-                            {name : 'jhrq',index : 'jhrq',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:140},
-                            {name : 'name',index : 'name',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:140},
-                            {name : 'cr',index : 'cr',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:120},
-                            {name : 'xh',index : 'xh',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:120},
-                            {name : 'hyrq',index : 'hyrq',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:140},
-                            {name : 'mdd',index : 'mdd',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
-                            {name : 'lx',index : 'lx',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
-                            {name : 'bx',index : 'bx',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:120},
-                            {name : 'cje',index : 'cje',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:120},
-                            {name : 'pt',index : 'pt',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:120},
-                            {name : 'djs',index : 'djs',editable : true,sortable:false,search:false,editoptions : {maxlength : 10}},
-                            {name : 'sfyf',index : 'sfyf',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},formatter:'select',formatoptions:{value:{ '1':'-',2:'√'}},edittype:'select', editoptions:{value:{ '1':'-',2:'√'}}},
-                            {name : 'qrhc',index : 'qrhc',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},formatter:'select',formatoptions:{value:{ '1':'-',2:'√'}},edittype:'select', editoptions:{value:{ '1':'-',2:'√'}}},
-                            {name : 'czy',index : 'czy',editable : true,sortable:false,search:false,editoptions : {maxlength : 10}},
-                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40}}
+                            {name : 'jhrq',index : 'jhrq',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:80},
+                            {name : 'name',index : 'name',align:'center',editable : true,sortable:false,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:80},
+                            {name : 'cr',index : 'cr',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:50},
+                            {name : 'xh',index : 'xh',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:50},
+                            {name : 'hyrq',index : 'hyrq',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:80},
+                            {name : 'mdd',index : 'mdd',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
+                            {name : 'lx',index : 'lx',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:70},
+                            {name : 'bx',index : 'bx',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:50},
+                            {name : 'cje',index : 'cje',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},width:60},
+                            {name : 'pt',index : 'pt',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:50},
+                            {name : 'djs',index : 'djs',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
+                            {name : 'sfyf',index : 'sfyf',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},formatter:'select',formatoptions:{value:{ '1':'-',2:'√'}},edittype:'select', editoptions:{value:{ '1':'-',2:'√'}},width:60},
+                            {name : 'qrhc',index : 'qrhc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 10},formatter:'select',formatoptions:{value:{ '1':'-',2:'√'}},edittype:'select', editoptions:{value:{ '1':'-',2:'√'}},width:60},
+                            {name : 'czy',index : 'czy',align:'center',editable : true,sortable:false,search:false,editoptions : {maxlength : 10},width:60},
+                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:340}
                         ],
                         rowNum : 20,
                        // rowList : [ 10, 20, 30 ],
@@ -62,7 +62,6 @@
                         viewrecords : true,
                         sortorder : "desc",
                         rownumbers: true,
-                        width: 1000,
                         //autowidth:true,
                         height : "100%",
                         editurl : "${basePath}/admin/plan/edit",
@@ -83,7 +82,7 @@
                 },{},{},{},{multipleSearch:true});
                 jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
-            jQuery("#list2").jqGrid('gridResize');
+           // jQuery("#list2").jqGrid('gridResize');
             $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
         }
     </script>

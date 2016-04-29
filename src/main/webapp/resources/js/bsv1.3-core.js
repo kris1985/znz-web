@@ -1284,20 +1284,8 @@ Windows = function(me){
 					});
 					
 				}else{
-				var width="80%",height="90%";
-				    if(id==22){
-						width = "100%";
-						height = "100%"
-					}else if(id==23){
-						width = "100%";
-						height = "100%"
-					}	/*else if(id==20){
-						width = "50%";
-						height = "60%"
-					}else if(id==21){
-						width = "70%";
-						height = "65%"
-                    }*/
+				var width="100%",height="100%";
+
 					art.dialog.open(url,/** 弹出ART窗体*/
 						{   
 							"id" :id,
