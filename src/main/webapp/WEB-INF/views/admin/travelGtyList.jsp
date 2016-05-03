@@ -24,8 +24,12 @@
             background-color: green;
             color: #ffffff;}
         .price2{
-            background-color: #92820A;
+            background-color: #FF8100;
             color: #ffffff;}
+
+        .price3{
+            background-color:rgba(44, 245, 44, 0.2)
+            }
     </style>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js" ></script>
 
@@ -42,8 +46,7 @@
             var qtx =$.trim( $('#'+selectedId + "_qtx").val());
             var lr = $.trim($('#'+selectedId + "_lr").val());
             var td = $.trim($('#'+selectedId + "_td").val());
-            var qc = $.trim($('#'+selectedId + "_qc").val());
-            var hc = $.trim($('#'+selectedId + "_hc").val());
+
             var cdjg = 0 ;
             var sj = 0 ;
             if(!isNaN(parseInt(spzxbj))){
@@ -69,12 +72,6 @@
             if(!isNaN(parseInt(td))){
                 sj +=parseInt(td);
             }
-            if(!isNaN(parseInt(qc))){
-                sj +=parseInt(qc);
-            }
-            if(!isNaN(parseInt(hc))){
-                sj +=parseInt(hc);
-            }
             $('#'+selectedId + "_sj").val(sj);
         }
         $(function(){
@@ -88,7 +85,7 @@
                     {
                         url : '${basePath}/admin/travelGty/list',
                         datatype : "json",
-                        colNames : ['ID','出发地', '目的地','批次','玩法/门票', '产品名称','天数','交通方式','进出港','等级','散拼报价','头尾','接送','其它项','纯底价','利润','提点','去程','返程','售价','供应商','联系方式','产品编码','备注'],
+                        colNames : ['ID','出发地', '目的地','批次','玩法/门票', '产品名称','天数','交通方式','进出港','等级','散拼报价','头尾','接送','其它项','纯底价','房差','儿童价','利润','提点','售价','供应商','联系方式','产品编码','备注'],
                         colModel : [
                             {name : 'uid',index : 'uid',editable : true,hidden:true,key:true},
                             {name : 'cfd',index : 'cfd',align:'center',editable : true,sortable:false,editoptions : {maxlength : 6},searchoptions:{sopt:['eq']},width:45},
@@ -105,15 +102,15 @@
                             {name : 'js',index : 'js',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'qtx',index : 'qtx',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'cdjg',index : 'cdjg',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:40,classes:'price'},
+                            {name : 'ext1',index : 'ext1',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30,classes:'price3'},
+                            {name : 'ext2',index : 'ext2',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30,classes:'price3'},
                             {name : 'lr',index : 'lr',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'td',index : 'td',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
-                            {name : 'qc',index : 'qc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
-                            {name : 'hc',index : 'hc',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6,dataEvents:[{type: 'keyup', fn: function(e) { calPrice(e)}}]},editrules : {number : true},width:30},
                             {name : 'sj',index : 'sj',align:'center',editable : true,sortable:true,search:false,editoptions : {maxlength : 6},editrules : {number : true},width:40,classes:'price2'},
                             {name : 'gys',index : 'gys',align:'center',editable : true,sortable:false,search:true,editoptions : {maxlength : 10},searchoptions:{sopt:['eq']},width:60},
                             {name : 'phone',index : 'phone',editable : true,sortable:false,search:false,editoptions : {maxlength : 20},width:100},
                             {name : 'pid',index : 'pid',align:'center',editable : true,sortable:true,search:true,editoptions : {maxlength : 12},searchoptions:{sopt:['eq']},width:80},
-                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:160}
+                            {name : 'remark',index : 'remark',editable : true,sortable:false,search:false,editoptions : {maxlength : 40},width:300}
                         ],
                         rowNum : 20,
                        // rowList : [ 25, 40, 60 ],
@@ -146,7 +143,7 @@
                 },{},{},{},{multipleSearch:true});
                 jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
             </c:if>
-            // jQuery("#list2").jqGrid('gridResize');
+            jQuery("#list2").jqGrid('gridResize');
             $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
 
         }

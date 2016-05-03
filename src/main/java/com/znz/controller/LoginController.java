@@ -21,6 +21,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -79,7 +81,13 @@ public class LoginController {
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         if(1==userLoginVO.getRemember()){
-            Cookie cookie = new Cookie("znzauth",user.getUserName()+"-"+user.getPwd());
+            String uname = "";
+            try {
+                uname = URLEncoder.encode(user.getUserName(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Cookie cookie = new Cookie("znzauth",uname+"-"+user.getPwd());
             try {
                 response.addCookie(cookie);
             }catch (Exception e){
