@@ -15,6 +15,8 @@
     <mvc:view-controller path="/admin/user/toadd" view-name="admin/userAdd"/>
     <mvc:view-controller path="/genCode" view-name="genCode"/>
 
+	<mvc:view-controller path="/admin/category/categorys" view-name="admin/categorys"/>
+
 	<context:component-scan base-package="org.springframework.samples.mvc" />
 	<context:component-scan base-package="com.znz.controller"/>
 

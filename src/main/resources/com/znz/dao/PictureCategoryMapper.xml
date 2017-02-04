@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.znz.dao.PictureCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.znz.model.PictureCategory" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="picture_id" property="pictureId" jdbcType="BIGINT" />
+    <result column="sub_category_id" property="subCategoryId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, picture_id, sub_category_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_picture_category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_picture_category
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.znz.model.PictureCategory" >
+    insert into t_picture_category (id, picture_id, sub_category_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{pictureId,jdbcType=BIGINT}, #{subCategoryId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.znz.model.PictureCategory" >
+    insert into t_picture_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pictureId != null" >
+        picture_id,
+      </if>
+      <if test="subCategoryId != null" >
+        sub_category_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="pictureId != null" >
+        #{pictureId,jdbcType=BIGINT},
+      </if>
+      <if test="subCategoryId != null" >
+        #{subCategoryId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.PictureCategory" >
+    update t_picture_category
+    <set >
+      <if test="pictureId != null" >
+        picture_id = #{pictureId,jdbcType=BIGINT},
+      </if>
+      <if test="subCategoryId != null" >
+        sub_category_id = #{subCategoryId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.znz.model.PictureCategory" >
+    update t_picture_category
+    set picture_id = #{pictureId,jdbcType=BIGINT},
+      sub_category_id = #{subCategoryId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
