@@ -69,7 +69,7 @@ public class MyFileUtil {
             return;
         }
         File parentFile = file.getParentFile();
-        if(parentFile.exists()){
+        if(parentFile!=null && parentFile.exists()){
             FileNodeVO node = new FileNodeVO();
             node.setPath(FilePathConverter.encode(parentFile.getAbsolutePath()));
             node.setName(parentFile.getName());

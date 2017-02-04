@@ -12,6 +12,9 @@ public class FilePathConverterTest {
     public void testEncode() throws Exception {
       String s =   FilePathConverter.encode(new File("d:\\git\\znz2").getAbsolutePath());
       assertEquals("d:FILE_SEPARATORgitFILE_SEPARATORznz2",s);
+
+        String ss  = FilePathConverter.decode("FILE_SEPARATORrootFILE_SEPARATORtomcatznzFILE_SEPARATORapache-tomcat-8.0.21FILE_SEPARATORwebappsFILE_SEPARATORznz-webFILE_SEPARATORuploadFILE_SEPARATORZNZFILE_SEPARATORdfds");
+        System.out.println(ss);
     }
 
     @org.junit.Test

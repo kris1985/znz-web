@@ -1,11 +1,12 @@
 package com.znz.vo;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * Created by huangtao on 2015/1/27.
  */
-
+@ToString
 public class FileNodeVO {
     private String path; //文件绝对路径
     private String url; //图片显示路径
