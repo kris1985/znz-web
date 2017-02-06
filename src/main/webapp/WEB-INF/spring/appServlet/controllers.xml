@@ -15,7 +15,11 @@
     <mvc:view-controller path="/admin/user/users" view-name="admin/users"/>
 	<mvc:view-controller path="/admin/user/listUser" view-name="admin/usersList"/>
     <mvc:view-controller path="/admin/user/toadd" view-name="admin/userAdd"/>
-	<mvc:view-controller path="/admin/attractions/listAttractions" view-name="admin/attractionsList"/>
+	<mvc:view-controller path="/admin/category/listCategory" view-name="admin/categoryList"/>
+	<mvc:view-controller path="/admin/subCategory/listSubCategory" view-name="admin/subCategoryList"/>
+
+
+
 	<mvc:view-controller path="/admin/product/listProduct" view-name="admin/productList"/>
 	<mvc:view-controller path="/admin/hotel/listHotel" view-name="admin/hoteltList"/>
 	<mvc:view-controller path="/admin/travel/listGty" view-name="admin/travelGtyList"/>

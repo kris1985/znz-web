@@ -184,7 +184,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/auths", method = RequestMethod.GET)
+ /*   @RequestMapping(value = "/auths", method = RequestMethod.GET)
     public @ResponseBody List<AuthFileVO> lisAlltAuth(HttpServletRequest request) {
         String rootPath = request.getSession().getServletContext()
             .getRealPath(Constants.UPLOAD_ROOT_PATH);
@@ -205,7 +205,7 @@ public class UserController {
             }
         }
         return auths;
-    }
+    }*/
 
     private boolean checkPermisson(UserSession userSession) {
         if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3) {

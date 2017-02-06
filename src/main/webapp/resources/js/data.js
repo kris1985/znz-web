@@ -99,23 +99,23 @@ DATA={
 		'disk':{
 			appid:'19',
 			icon:'friend.png',
-			name:'景点门票',
-			url:basePath+'/admin/attractions/listAttractions',
-			width:'1600px',
+			name:'类别管理',
+			url:basePath+'/admin/category/listCategory',
+			width:'600px',
 			asc:7
 		},
 		'theme':{
 			appid:'20',
 			icon:'icon0.png',
-			name:'设置主题',
-            url:basePath+'/admin/file/toUpdateIndexBg',
+			name:'xx',
+            url:basePath+'/admin/subCategory/listSubCategory',
 			asc:9
 		},
 		'folder':{
 			appid:'21',
 			icon:'mangguo.png',
-			name:'产品中心',
-			url:basePath+'/admin/product/listProduct',
+			name:'二级类别',
+			url:basePath+'/admin/subCategory/listSubCategory',
 			width:'1000',
 			sonMenu:"[]",
 			asc:8

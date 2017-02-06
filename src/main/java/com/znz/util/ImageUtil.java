@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 /**
  * 生产缩略图工具类
  */
-@Slf4j
 public class ImageUtil {
 
 	
@@ -23,10 +22,7 @@ public class ImageUtil {
     private static Boolean DEFAULT_FORCE = false;
 
     
-    public static void main(String[] args) {
-    	new ImageUtil().thumbnailImage("d:/git/test", 200, 160);
-    }
-    
+
     /**
      * <p>Title: thumbnailImage</p>
      * <p>Description: 根据图片路径生成缩略图 </p>
@@ -47,7 +43,6 @@ public class ImageUtil {
                     suffix = imgFile.getName().substring(imgFile.getName().lastIndexOf(".") + 1);
                 }// 类型和图片后缀全部小写，然后判断后缀是否合法
                 if(suffix == null || types.toLowerCase().indexOf(suffix.toLowerCase()+",") < 0){
-                    log.error("Sorry, the image suffix is illegal. the standard image suffix is {}.",types);
                     return ;
                 }
                 Image img = ImageIO.read(imgFile);
@@ -58,12 +53,12 @@ public class ImageUtil {
                     if((width*1.0)/w < (height*1.0)/h){
                         if(width > w){
                             h = Integer.parseInt(new java.text.DecimalFormat("0").format(height * w/(width*1.0)));
-                            log.info("change image's height, width:+"+w+" height:"+h);
+                            //log.info("change image's height, width:+"+w+" height:"+h);
                         }
                     } else {
                         if(height > h){
                             w = Integer.parseInt(new java.text.DecimalFormat("0").format(width * h/(height*1.0)));
-                            log.info("change image's width,  width:+"+w+" height:"+h);
+                            //log.info("change image's width,  width:+"+w+" height:"+h);
                         }
                     }
                 }
@@ -78,7 +73,7 @@ public class ImageUtil {
                e.printStackTrace();
             }
         }else{
-            log.warn("the src image is not exist.");
+            //log.warn("the src image is not exist.");
         }
     }
     
