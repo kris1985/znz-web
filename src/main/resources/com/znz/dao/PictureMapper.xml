@@ -23,7 +23,7 @@
     delete from t_picture
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.znz.model.Picture" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.Picture" >
     insert into t_picture (id, name, file_path, 
       click_times, download_times, create_time, 
       create_user)
@@ -114,4 +114,18 @@
       create_user = #{createUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.PictureVO" >
+    select
+    <include refid="Base_Column_List" />
+    from t_picture
+    <where>
+      <if test="name != null" >
+        and name like  CONCAT('%','${name}','%' )
+      </if>
+    </where>
+  </select>
+
 </mapper>

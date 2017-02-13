@@ -17,7 +17,9 @@
     <mvc:view-controller path="/admin/user/toadd" view-name="admin/userAdd"/>
 	<mvc:view-controller path="/admin/category/listCategory" view-name="admin/categoryList"/>
 	<mvc:view-controller path="/admin/subCategory/listSubCategory" view-name="admin/subCategoryList"/>
-
+<!--
+	<mvc:view-controller path="/admin/file/listPicture" view-name="admin/pictureList"/>
+-->
 
 
 	<mvc:view-controller path="/admin/product/listProduct" view-name="admin/productList"/>

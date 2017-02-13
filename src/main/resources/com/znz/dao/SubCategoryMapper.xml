@@ -93,7 +93,7 @@
   </select>
 
   <select id="selectMaxSortId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
-    select max(sort_id) from t_category
+    select max(sort_id) from t_sub_category
     where parent_id =  #{parentId,jdbcType=INTEGER}
   </select>
 

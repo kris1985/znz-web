@@ -35,11 +35,12 @@
                    {
                        url : '${basePath}/admin/subCategory/list',
                        datatype : "json",
-                       colNames : ['id','parentId', '类别','排序'],
+                       colNames : ['id', '类别',"parentId", "父类别",'排序'],
                        colModel : [
                            {name : 'id',index : 'id',search:false,hidden:true},
-                           {name : 'parentId',index :'parentId',search:false,hidden:true},
-                           {name : 'name',index : 'name',search:false,align:'center',editable : true,editrules : {required : true},searchoptions:{sopt:['eq']},editoptions : {maxlength : 20},sortable : false},
+                           {name : 'name',index : 'name',search:false,align:'center',editable : true,editrules : {required : true},editoptions : {maxlength : 20},sortable : false},
+                           {name : 'parentId',index : 'parentId',search:false,hidden:false},
+                           {name : 'parentName',index :'parentName',search:false,hidden:false,editable : true,edittype : "select",editoptions : {dataUrl : "${basePath}/admin/subCategory/listCategory"}},
                            {name : 'sortId',index : 'sortId',search:false,align:'center',editable : true,editrules : {required : true},editoptions : {maxlength : 16},sortable : false},
                        ],
                        rowNum : 20,
@@ -52,12 +53,10 @@
                        height : "100%",
                        // cellEdit:true,
                        editurl : "${basePath}/admin/subCategory/edit",
-                       grouping:true,
-                       groupingView : {
-                            groupField : ['parentId'],
-  groupColumnShow : [false],
-                                           groupText : ['<b>{0} - {1} Item(s)</b>']
-                       },
+                        grouping:true,
+                         groupingView : {
+                         groupField : ['parentName']
+                        },
                        caption : "二级类别列表"
                    });
            jQuery("#list2").jqGrid('navGrid', "#pager2", {
@@ -66,14 +65,10 @@
                del : true
            });
            jQuery("#list2").jqGrid('inlineNav', '#pager2', {edit : true,add : true,del : true});
-         //  jQuery("#list2").jqGrid('inlineNav', "#pager2");
-           //设置显示列
-         /*  jQuery("#vcol").click(function (){
-               jQuery("#setcols").jqGrid('setColumns');
-           });*/
-           //自定义grid大小
+
           jQuery("#list2").jqGrid('gridResize');
-           $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
+          // $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
+            jQuery("#list2").jqGrid('sortableRows');
        }
 
     </script>

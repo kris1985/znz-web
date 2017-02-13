@@ -66,7 +66,7 @@
            });*/
            //自定义grid大小
           jQuery("#list2").jqGrid('gridResize');
-           $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
+         //  $("#list2").filterToolbar({ searchOnEnter: true, stringResult: true, defaultSearch: "cn", groupOp: "AND" });
        }
 
     </script>

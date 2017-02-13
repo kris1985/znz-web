@@ -253,11 +253,8 @@ selectedId = encodeURI(selectedId);
         });
 
 
-        $("#file-content").delegate('.img_wrap', 'click', function () {
-            $(".img_wrap").removeClass("folder_wrap_selected")
-            $(".folder_wrap").removeClass("folder_wrap_selected")
-            $(this).addClass("folder_wrap_selected");
-        });
+                       $(".folder_wrap").removeClass("folder_wrap_selected")
+
 
         var items = {
             upload: {

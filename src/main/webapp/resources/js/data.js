@@ -123,8 +123,8 @@ DATA={
 		'tuangou':{
 			appid:'22',
 			icon:'tuanmap.png',
-			name:'跟团游',
-			url:basePath+'/admin/travel/listGty',
+			name:'图片管理',
+			url:basePath+'/admin/file/listPicture',
 			width:'1000',
 			sonMenu:"[]",
 			asc:10

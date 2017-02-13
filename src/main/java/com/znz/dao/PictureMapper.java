@@ -1,6 +1,9 @@
 package com.znz.dao;
 
 import com.znz.model.Picture;
+import com.znz.vo.FileQueryVO;
+
+import java.util.List;
 
 public interface PictureMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +17,6 @@ public interface PictureMapper {
     int updateByPrimaryKeySelective(Picture record);
 
     int updateByPrimaryKey(Picture record);
+
+    List<Picture> selectByPage(FileQueryVO fileQueryVO);
 }

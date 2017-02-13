@@ -1,15 +1,17 @@
 package com.znz.controller;
 
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.PutObjectRequest;
 import com.znz.config.AppConfig;
-import com.znz.dao.UserMapper;
-import com.znz.model.User;
-import com.znz.model.UserAuth;
+import com.znz.dao.*;
+import com.znz.model.*;
 import com.znz.util.Constants;
 import com.znz.util.FilePathConverter;
 import com.znz.util.ImageUtil;
 import com.znz.util.MyFileUtil;
 import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -44,197 +46,100 @@ public class FileController {
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private PictureMapper pictureMapper;
 
-    @RequestMapping(value = "/upload/{parentDir}", method = RequestMethod.POST)
+
+    @Resource
+    private PictureCategoryMapper pictureCategoryMapper;
+
+    @Resource
+    private SubCategoryMapper subCategoryMapper;
+
+    @Resource
+    private CategoryMapper categoryMapper;
+
+
+    private static String endpoint        = "oss-cn-shanghai.aliyuncs.com";
+    private static String accessKeyId     = "fuRj5S4SBVnHH9el";
+    private static String accessKeySecret = "AcJFEjMEvGGE9XsI9QokqIY8LITjL2";
+    private static String bucketName      = "testznz";
+    private static String key             = "kris1986";
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
-    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, Model model, @PathVariable String parentDir) throws IOException {
+    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, Model model) throws IOException {
         // String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
         if (!checkPermisson(userSession, result)) {
             throw new RuntimeException("无权限操作");
         }
-        parentDir = FilePathConverter.decode(parentDir).replace("_anchor", "");
-        for (MultipartFile file : files) {
-            String originalName = file.getOriginalFilename();
-            String extName = originalName.substring(originalName.lastIndexOf(".") + 1);
-            String preName = originalName.substring(0, originalName.lastIndexOf("."));
-            //System.out.println(file.getOriginalFilename()+":"+extName);
-            String pathname = parentDir + "/" + originalName;
-            // System.out.println("path:"+pathname);
-            File descFile = new File(pathname);
-            FileUtils.copyInputStreamToFile(file.getInputStream(), descFile);
-            if (!extName.equalsIgnoreCase("zip")) {
-                ImageUtil.thumbnailImage(pathname, appConfig.getImgThumbWidth(), appConfig.getImgThumbHeight());
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        try {
+            for (MultipartFile file : files) {
+                String originalName = file.getOriginalFilename();
+                ossClient.putObject(new PutObjectRequest(bucketName, originalName, file.getInputStream()));
+                Picture picture = new Picture();
+                picture.setName(originalName);
+                picture.setFilePath(originalName);
+                picture.setCreateTime(new Date());
+                picture.setCreateUser(userSession.getUser().getUserName());
+                picture.setClickTimes(0);
+                picture.setDownloadTimes(0);
+                pictureMapper.insert(picture);
+
+                PictureCategory pictureCategory = new PictureCategory();
+                pictureCategory.setPictureId(picture.getId());
+                pictureCategory.setSubCategoryId(1);//todo
+                pictureCategoryMapper.insert(pictureCategory);
             }
-            if (extName.equalsIgnoreCase("zip")) {
-                //在临时目录解压并删除zip包
-                File tem = FileUtils.getTempDirectory();
-                String tempFilePath = tem.getPath() + "/" + preName;
-                // System.out.println("tempFilePath"+tempFilePath);
-                ZipUtil.unpack(descFile, new File(tempFilePath));
-                FileUtils.forceDelete(descFile);//删除zip
-                ImageUtil.thumbnailImage(tempFilePath, appConfig.getImgThumbWidth(), appConfig.getImgThumbHeight());//生产缩略图
-                MyFileUtil.moveFiles(new File(tempFilePath), new File(parentDir));//移动到指定目录
-                //删除临时文件
-                FileUtils.deleteDirectory(new File(tempFilePath));
-            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }finally {
+            ossClient.shutdown();
         }
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String list() {
-        return "/admin/files";
-    }
+    @RequestMapping(value = "/listPicture", method = RequestMethod.GET)
+    public   String list(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") String page,
+                                                   @RequestParam(value = "rows", defaultValue = "10") String rows,
+                                                   @RequestParam(value = "sidx", required = false) String sidx,
+                                                   @RequestParam(value = "sord", required = false) String sord,
+                                                   @RequestParam(value = "filters", required = false) String filters, Model model) {
+        PageParameter pageParameter = new PageParameter(Integer.parseInt(page), Integer.parseInt(rows));
+        FileQueryVO fileQueryVO = new FileQueryVO();
+        fileQueryVO.setPage(pageParameter);
+        List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
+        int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
+                / pageParameter.getPageSize();
+        model.addAttribute("pictures",pictures);
 
-    @RequestMapping(value = "/space", method = RequestMethod.GET)
-    public String getSpace(HttpServletRequest request, Model model) {
-        String realPath = request.getSession().getServletContext().getRealPath("/");
-        File file = new File(realPath);
-      /*  System.out.println("Free space = " + file.getFreeSpace());
-        System.out.println("used space = " + (file.getTotalSpace()-file.getFreeSpace()));
-        System.out.println("Usable space = " + file.getUsableSpace());*/
-        double usedSpace = (double) (file.getTotalSpace() / 1024 / 1024 / 1024 - file.getFreeSpace() / 1024 / 1024 / 1024);
-        double freeSpace = (double) file.getFreeSpace() / 1024 / 1024 / 1024;
-        BigDecimal used = new BigDecimal(usedSpace);
-        usedSpace = used.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        BigDecimal free = new BigDecimal(freeSpace);
-        freeSpace = free.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        model.addAttribute("freeSpace", freeSpace);
-        model.addAttribute("usedSpace", usedSpace);
-        return "/admin/space";
-    }
 
-    @RequestMapping(value = "/tree", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    List<FileTreeVO> listTree(HttpServletRequest request) {
-        String rootPath = getRealPath(request);
-       // log.info("rootPath:" + rootPath);
-        File rootFile = new File(rootPath);
-        List<FileTreeVO> list = new ArrayList<FileTreeVO>();
-        FileTreeVO root = new FileTreeVO();
-        root.setId(FilePathConverter.encode(rootFile.getAbsolutePath()));
-        //root.setText(rootFile.getName());
-        root.setText("目录");
-        root.setParent("#");
-        list.add(root);
-        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
-        if (userSession.getUser().getUserType() == 2 || userSession.getUser().getUserType() == 3) {
-            MyFileUtil.listFile(rootFile, list);
-        } else {
-            List<UserAuth> auths = userSession.getUserAuths();
-            if (!CollectionUtils.isEmpty(auths)) {
-                for (UserAuth userAuth : auths) {
-                    FileTreeVO secondDir = new FileTreeVO();
-                    //log.info("pa2th--------------------------------" + rootPath + userAuth.getFilePath());
-                    secondDir.setId(FilePathConverter.encode(rootPath + userAuth.getFilePath()));
-                    //log.info("pa3th--------------------------------" + secondDir.getId());
-                    secondDir.setText(userAuth.getFilePath());
-                    secondDir.setParent(root.getId());
-                    list.add(secondDir);
-                    String path = rootPath + userAuth.getFilePath();
-                   // log.info("path--------------------------------" + path);
-                    MyFileUtil.listFile(new File(path), list);
-                }
-            } else {
-                list = Collections.emptyList();
+        List<SubCategory> subCategories = subCategoryMapper.selectAll();
+        List<Category> categories = categoryMapper.selectAll();
+        List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
+        Map<Integer,String> map = new HashedMap();
+        if(!CollectionUtils.isEmpty(subCategories) && !CollectionUtils.isEmpty(categories)){
+            for(Category category:categories){
+                map.put(category.getId(),category.getName());
+            }
+            for(SubCategory subCategory:subCategories){
+                SubCategoryVO subCategoryVO = new SubCategoryVO();
+                subCategoryVO.setId(String.valueOf(subCategory.getId()));
+                subCategoryVO.setName(subCategory.getName());
+                subCategoryVO.setParentId(subCategory.getParentId());
+                subCategoryVO.setSortId(subCategory.getSortId());
+                subCategoryVO.setParentName(map.get(subCategory.getParentId()));
+                subCategoryVOs.add(subCategoryVO);
             }
         }
-        Collections.sort(list, new Comparator<FileTreeVO>() {
-            @Override
-            public int compare(FileTreeVO o1, FileTreeVO o2) {
-                return o2.getText().compareToIgnoreCase(o1.getText());
-            }
-        });
-        return list;
+        model.addAttribute("subCategoryVOs",subCategoryVOs);
+        return "admin/pictureList";
     }
 
-    public static String getRealPath(HttpServletRequest request) {
-        String realPath = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
-        //log.info("real2Path:"+ realPath);
-        //log.info("real3Path:"+ File.separator);
-        if (!File.separator.equals(realPath.charAt(realPath.length() - 1))) {
-           // realPath += File.separator;
-        }
-        return realPath;
-    }
 
-    @RequestMapping(value = "/chidren/{filePath}", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    ListChildVO listChidren(HttpServletRequest request, @PathVariable String filePath) {
-        String realPath = getRealPath(request);
-        ListChildVO vo = new ListChildVO();
-        File file = new File(FilePathConverter.decode(filePath));
-        List<FileNodeVO> parentNodes = new ArrayList<FileNodeVO>();
-        FileNodeVO currentNode = new FileNodeVO();
-        currentNode.setName(file.getName());
-        currentNode.setPath(FilePathConverter.encode(file.getAbsolutePath()));
-        currentNode.setDirectory(true);
-        parentNodes.add(currentNode);
-        MyFileUtil.getParentNode(file, new File(realPath), parentNodes);
-        File files[] = file.listFiles();
-        if (files != null && files.length > 0) {
-            List<FileNodeVO> fileNodes = new ArrayList<FileNodeVO>();
-            FileNodeVO fileNode = null;
-            List<String> authsFiLeNames = new ArrayList<String>();
-            UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
-            if (userSession.getUser().getUserType() == 1) {
-                List<UserAuth> auths = userSession.getUserAuths();
-                if (!CollectionUtils.isEmpty(auths)) {
-                    if ("ZNZ".equals(file.getName())) {
-                        for (UserAuth userAuth : auths) {
-                            authsFiLeNames.add(userAuth.getFilePath());
-                        }
-                    }
-                }
-            }
-            for (File f : files) {
-                if ("ZNZ".equals(file.getName()) && userSession.getUser().getUserType() == 1) {
-                    if (!authsFiLeNames.contains(f.getName())) {
-                        continue;
-                    }
-                }
-                fileNode = new FileNodeVO();
-                fileNode.setDirectory(f.isDirectory());
-                fileNode.setName(f.getName().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, ""));
-                fileNode.setPath(FilePathConverter.encode(f.getAbsolutePath()));
-                fileNode.setLastModified(f.lastModified());
-                if (f.isDirectory()) {
-                    fileNodes.add(fileNode);
-                } else if (f.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)) {
-                  /*  log.info("--1--"+f.getAbsolutePath());
-                    log.info("--2--"+f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH));
-                    log.info("--33--"+f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\","/"));
-                    log.info("f.getAbsolutePath():"+f.getAbsolutePath());
-                    log.info("request.getContextPath():"+request.getContextPath());
-                    log.info("realPath:"+ realPath);*/
-                    fileNode.setThumbUrl(f.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\", "/"));
-                    fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, "").replaceAll("\\\\", "/"));//解决火狐下图片不显示问题
-                    fileNodes.add(fileNode);
-                }
-            }
-          /* for (FileNodeVO fileNodeVO:fileNodes){
-               log.info(fileNodeVO.getName() );
-           }
-            log.info(",");*/
-            Collections.sort(fileNodes, new Comparator<FileNodeVO>() {
-                @Override
-                public int compare(FileNodeVO o1, FileNodeVO o2) {
-                    return o1.getName().compareToIgnoreCase(o2.getName());
-                }
-            });
-           /* for (FileNodeVO fileNodeVO:fileNodes){
-                log.info(fileNodeVO.getName());
-            }*/
-            vo.setFileNodes(fileNodes);
-        }
-        Collections.reverse(parentNodes);
-        vo.setParentNodes(parentNodes);
-        return vo;
-    }
 
 
     @RequestMapping(value = "/toListImg", method = RequestMethod.GET)
@@ -247,7 +152,7 @@ public class FileController {
     @RequestMapping(value = "/listImg/{path}", method = RequestMethod.GET)
     public String listImg(HttpServletRequest request, @PathVariable String path, @RequestParam String suffix, Model model) {
         path = FilePathConverter.decode(path + "." + suffix);
-        String realPath = getRealPath(request);
+        String realPath ="";
         File f = new File(path);
         File parent = f.getParentFile();
         List<FileNodeVO> list = new ArrayList<FileNodeVO>();
@@ -295,7 +200,7 @@ public class FileController {
             return result;
         }
         path = FilePathConverter.decode(path);
-        String realPath = getRealPath(request);
+        String realPath = "";
         if (realPath.equals(path)) {
             result.setCode(-1);
             result.setMsg("根目录不能删除");
@@ -382,59 +287,6 @@ public class FileController {
         return "admin/updateIndexBg";
     }
 
-    @RequestMapping(value = "/download/{imgPath}", method = RequestMethod.GET)
-    public void download(@PathVariable("imgPath") String imgPath, HttpServletRequest request, HttpServletResponse response) throws Exception {
-       // log.info(imgPath);
-        imgPath = FilePathConverter.decode(imgPath).replace("$dot$", ".");
-        String realPath = request.getSession().getServletContext().getRealPath("/");
-        realPath = realPath + imgPath;
 
-        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
-        User user = userMapper.selectByPrimaryKey(userSession.getUser().getUserId());
-        if(user.getDownloadPerDay()>user.getMaxDownloadTimes()){
-            response.setContentType("text/html;charset=utf-8");
-            response.setCharacterEncoding("utf-8");
-            PrintWriter printWriter = response.getWriter();
-            printWriter.write("<script>alert('超出每天最大下载次数,请明日再下载')</script>");
-            printWriter.flush();
-            printWriter.close();
-        }
-        downLoad(realPath, response, false);
-        user.setDownloadPerDay(user.getDownloadPerDay()+1);
-        user.setDownloadTotal(user.getDownloadTotal()+1);
-        user.setUserId(userSession.getUser().getUserId());
-        userMapper.updateByPrimaryKeySelective(user);
-    }
-
-    public void downLoad(String filePath, HttpServletResponse response, boolean isOnLine) throws Exception {
-        File f = new File(filePath);
-        if (!f.exists()) {
-            response.sendError(404, "File not found!");
-            return;
-        }
-        BufferedInputStream br = new BufferedInputStream(new FileInputStream(f));
-        OutputStream out = response.getOutputStream();
-        byte[] buf = new byte[1024];
-        int len = 0;
-        try {
-            response.reset(); // 非常重要
-            if (isOnLine) { // 在线打开方式
-                URL u = new URL("file:///" + filePath);
-                response.setContentType(u.openConnection().getContentType());
-                response.setHeader("Content-Disposition", "inline; filename=" + f.getName());
-                // 文件名应该编码成UTF-8
-            } else { // 纯下载方式
-                response.setContentType("application/x-msdownload");
-                response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(f.getName(), "UTF-8"));
-            }
-
-            while ((len = br.read(buf)) > 0)
-                out.write(buf, 0, len);
-        } finally {
-            br.close();
-            out.close();
-        }
-
-    }
 
 }

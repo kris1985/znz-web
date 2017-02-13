@@ -20,10 +20,7 @@
 <script type="text/javascript">
 
 	     $(function() {
-			 <c:if test="${user.user.userType !=2 and user.user.userType !=3 }">
-			 alert("无权限");
-			 return;
-			 </c:if>
+
 			 setTimeout(function(){
          			$('#file_upload').uploadify({
          				'formData'     : {
@@ -34,7 +31,7 @@
          				'fileObjName':'files',
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',
-         				'uploader' : '${basePath}/admin/file/upload/${param.parentId}',
+         				'uploader' : '${basePath}/admin/file/upload',
          				'onUploadSuccess' : function(file, data, response) {
          				                var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
          				                $("#result").show();
