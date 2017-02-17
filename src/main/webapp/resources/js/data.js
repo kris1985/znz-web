@@ -115,7 +115,7 @@ DATA={
 			appid:'21',
 			icon:'mangguo.png',
 			name:'二级类别',
-			url:basePath+'/admin/subCategory/listSubCategory',
+			url:basePath+'/admin/subCategory/showCategory',
 			width:'1000',
 			sonMenu:"[]",
 			asc:8

@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,14 +72,14 @@ public class SubCategoryController {
                 }
             }
         }*/
-        List<SubCategory> subCategories = subCategoryMapper.selectAll();
+        List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
         int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();
-        List<Category> categories = categoryMapper.selectAll();
+
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
         Map<Integer,String> map = new HashedMap();
-        if(!CollectionUtils.isEmpty(subCategories) && !CollectionUtils.isEmpty(categories)){
-            for(Category category:categories){
+        if(!CollectionUtils.isEmpty(subCategories)){
+            for(SubCategory category:subCategories){
                 map.put(category.getId(),category.getName());
             }
             for(SubCategory subCategory:subCategories){
@@ -114,7 +116,7 @@ public class SubCategoryController {
 
     @RequestMapping(value = "/getCategory")
     public @ResponseBody List<SubCategoryVO> getALLCategory(HttpServletRequest request, HttpServletResponse response){
-        List<SubCategory> subCategories = subCategoryMapper.selectAll();
+        List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
         List<Category> categories = categoryMapper.selectAll();
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
         Map<Integer,String> map = new HashedMap();
@@ -129,6 +131,60 @@ public class SubCategoryController {
                 subCategoryVO.setParentId(subCategory.getParentId());
                 subCategoryVO.setSortId(subCategory.getSortId());
                 subCategoryVO.setParentName(map.get(subCategory.getParentId()));
+                subCategoryVOs.add(subCategoryVO);
+            }
+        }
+        return subCategoryVOs;
+    }
+
+    @RequestMapping(value = "/showCategory")
+    public String showCategory(String parentId,String firstSelectedId,String secondSelectedId,String thirdSelectedId,String fourthSelectedId, Model model){
+        Integer pid = null;
+        if(StringUtils.isNotEmpty(parentId)){
+            pid =Integer.parseInt(parentId);
+        }
+        List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
+        List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
+        Map<Integer,String> map = new HashedMap();
+        if(!CollectionUtils.isEmpty(subCategories) ){
+            for(SubCategory category:subCategories){
+                map.put(category.getId(),category.getName());
+            }
+            SubCategoryVO subCategoryVO ;
+            for(SubCategory subCategory:subCategories){
+                subCategoryVO = new SubCategoryVO();
+                subCategoryVO.setId(String.valueOf(subCategory.getId()));
+                subCategoryVO.setName(subCategory.getName());
+                subCategoryVO.setParentId(subCategory.getParentId());
+                subCategoryVO.setSortId(subCategory.getSortId());
+                subCategoryVO.setParentName(map.get(subCategory.getParentId()));
+                subCategoryVO.setAllFlag(subCategory.getAllFlag());
+                subCategoryVO.setCategoryLevel(subCategory.getCategoryLevel());
+                subCategoryVO.setChildrens(getchildrens(subCategories,subCategory.getId(),map));
+                subCategoryVOs.add(subCategoryVO);
+            }
+        }
+        model.addAttribute("subCategoryVOs",subCategoryVOs);
+        model.addAttribute("firstSelectedId",firstSelectedId);
+        model.addAttribute("secondSelectedId",secondSelectedId);
+        model.addAttribute("thirdSelectedId",thirdSelectedId);
+        model.addAttribute("fourthSelectedId",fourthSelectedId);
+        return "admin/showCategory";
+    }
+
+    private List<SubCategoryVO> getchildrens(List<SubCategory> subCategories,int parentId,Map<Integer,String> map) {
+        List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
+        SubCategoryVO subCategoryVO ;
+        for(SubCategory subCategory:subCategories){
+            if(subCategory.getParentId() == parentId){
+                subCategoryVO = new SubCategoryVO();
+                subCategoryVO.setId(String.valueOf(subCategory.getId()));
+                subCategoryVO.setName(subCategory.getName());
+                subCategoryVO.setParentId(subCategory.getParentId());
+                subCategoryVO.setSortId(subCategory.getSortId());
+                subCategoryVO.setParentName(map.get(subCategory.getParentId()));
+                subCategoryVO.setAllFlag(subCategory.getAllFlag());
+                subCategoryVO.setCategoryLevel(subCategory.getCategoryLevel());
                 subCategoryVOs.add(subCategoryVO);
             }
         }
@@ -178,14 +234,10 @@ public class SubCategoryController {
             SubCategory subCategory = new SubCategory();
             BeanUtils.copyProperties(subCategoryVO, subCategory);
             subCategory.setId(null);
-            Integer maxSortId = subCategory.getSortId();
-            if(maxSortId==null){
-                maxSortId = subCategoryMapper.selectMaxSortId(Integer.parseInt(subCategoryVO.getParentName()));
-            }
-            subCategory.setSortId(maxSortId);
-            subCategory.setParentId(Integer.parseInt(subCategoryVO.getParentName()));
+            subCategory.setAllFlag("N");
             subCategoryMapper.insert(subCategory);
             resultVO.setCode(0);
+            resultVO.setMsg(String.valueOf(subCategory.getId()));
         }
         return resultVO;
     }
@@ -217,4 +269,21 @@ public class SubCategoryController {
         }
         return true;
     }
+
+    @RequestMapping(value = "/sort", method = RequestMethod.POST)
+    public @ResponseBody ResultVO sort(HttpServletRequest request, String param) {
+        ResultVO resultVO = new ResultVO();
+        String[] array = param.split(";");
+        for (String s : array) {
+            SubCategory subCategory = new SubCategory();
+            String[] subArray = s.split(":");
+            subCategory.setId(Integer.parseInt(subArray[0]));
+            subCategory.setSortId(Integer.parseInt(subArray[1]));
+            subCategoryMapper.updateByPrimaryKeySelective(subCategory);
+        }
+        resultVO.setCode(0);
+        return resultVO;
+    }
+
+
 }

@@ -9,6 +9,10 @@ public class SubCategory {
 
     private Integer parentId;
 
+    private Integer categoryLevel;
+
+    private String allFlag;
+
     public Integer getId() {
         return id;
     }
@@ -39,5 +43,21 @@ public class SubCategory {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public Integer getCategoryLevel() {
+        return categoryLevel;
+    }
+
+    public void setCategoryLevel(Integer categoryLevel) {
+        this.categoryLevel = categoryLevel;
+    }
+
+    public String getAllFlag() {
+        return allFlag;
+    }
+
+    public void setAllFlag(String allFlag) {
+        this.allFlag = allFlag;
     }
 }

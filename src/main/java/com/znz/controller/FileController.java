@@ -117,7 +117,7 @@ public class FileController {
         model.addAttribute("pictures",pictures);
 
 
-        List<SubCategory> subCategories = subCategoryMapper.selectAll();
+        List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
         List<Category> categories = categoryMapper.selectAll();
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
         Map<Integer,String> map = new HashedMap();

@@ -2,6 +2,7 @@ package com.znz.dao;
 
 import com.znz.model.Category;
 import com.znz.model.SubCategory;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,9 +19,10 @@ public interface SubCategoryMapper {
 
     int updateByPrimaryKey(SubCategory record);
 
-    List<SubCategory> selectAll();
+    List<SubCategory> selectAll(@Param("parentId") Integer parentId);
 
     SubCategory selectByName(String name);
 
     Integer selectMaxSortId(Integer parentId);
+
 }

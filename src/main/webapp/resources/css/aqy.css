@@ -1,0 +1,281 @@
+  body,
+  div,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  dl,
+  dt,
+  dd,
+  ul,
+  ol,
+  li,
+  form,
+  th,
+  td,
+  table,
+  label,
+  article,
+  aside,
+  dialog,
+  footer,
+  header,
+  section,
+  footer,
+  nav,
+  figure,
+  hgroup {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+  }
+
+  body,
+  button,
+  input,
+  select,
+  textarea {
+    font: 12px/1.5 Tahoma, Helvetica, Arial, "\5FAE\8F6F\96C5\9ED1", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 100%;
+    font-weight: normal;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+    outline: 0;
+  }
+
+  ul, li {
+    list-style: none;
+}
+
+  .mod_sear_menu {
+    border: 1px solid #e0e0e0;
+    padding: 0 20px;
+  }
+
+  .mb30 {
+    margin-bottom: 30px;
+  }
+
+  .mt20 {
+    margin-top: 20px;
+  }
+
+  .mt20 {
+    margin-top: 20px;
+  }
+
+  .site-main {
+    width: 1180px;
+    margin: 0 auto;
+  }
+
+  .mod_sear_list {
+    border-bottom: 1px dotted #d5d5d5;
+    position: relative;
+    padding: 5px 15px 5px 57px;
+    height: 25px;
+    overflow: hidden;
+  }
+
+  .mod_sear_list h3 {
+    color: #999;
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    top: 10px;
+  }
+
+  .mod_category_item {
+    word-wrap: break-word;
+    width: 100%;
+  }
+
+  .mod_category_item li.selected {}
+
+  .mod_category_item li {
+    white-space: nowrap;
+    float: left;
+    display: inline;
+    margin: 0 20px 6px 0;
+    line-height: 22px;
+    font-size: 12px;
+  }
+
+  .mod_category_item a {
+    display: inline-block;
+    padding: 1px 7px 2px;
+    font-size: 14px;
+  }
+
+  .mod_category_item a:hover {
+    color: green;
+  }
+
+  .mod_category_item .selected a {
+    background: #699f00;
+    padding: 1px 7px 2px;
+    color: #fff;
+    border-radius: 1px;
+  }
+
+  .openBtn {
+    position: absolute;
+    right: 0;
+    top: 6px;
+  }
+
+  .openBtn-txt {
+    width: 45px;
+    display: block;
+  }
+
+  .mod_sear_list_open {
+    height: auto;
+    padding-bottom: 0;
+    margin-right: 0;
+  }
+
+
+
+.mod_sear_result {
+    border: 1px solid #e5e5e5;
+    padding: 2px 3px 2px 5px;
+    display: inline-block;
+    vertical-align: middle;
+    background: #fbfbfb;
+    color: #699f00;
+    margin-right: 6px;
+    font-size: 12px;
+}
+.mod_sear_result em, .sear_delBtn {
+    display: inline-block;
+    vertical-align: middle;
+    _vertical-align: -2px;
+}
+.sear_delBtn {
+    font-family: Helvetica,Arial,sans-serif;
+    color: #aaa;
+    margin-left: 3px;
+    font-size: 20px;
+    _font-size: 14px;
+    line-height: 20px;
+}
+.ad-wrapper {
+    clear: both;
+    font-size: 0;
+    width: 100%;
+    padding: 12px 0;
+}
+.ad-wrapper .divide-green-h {
+    margin: 0;
+}
+
+.divide-green-h {
+    width: 100%;
+    border-top: 1px solid #e7e7e7;
+    line-height: 0;
+    font-size: 0;
+    margin: 12px auto;
+}
+.header{background:black;}
+.nav_bar{height:45px;width:1180px;margin:0 auto;position:relative}
+
+.logo{position:absolute;left:0;top:3px;}
+.nav_warp{position:absolute;left:150px;top:0;}
+
+.navbar-ul li {    float: left;}
+
+.navbar-ul li a{ padding-top: 15px;
+    padding-bottom: 15px;
+	    position: relative;
+    display: block;
+    padding: 10px 15px;line-height: 20px;color:white;font-size:16px;
+	}
+
+	.mod-page {
+    padding: 20px 0;
+    text-align: center;
+    height: 30px;
+    zoom: normal;
+    font-size: 0;
+}
+.mod-page a.a1, .mod-page .noPage {
+    width: 58px;
+}
+
+.mod-page a, .mod-page span {
+    display: inline-block;
+    min-width: 33px;
+    _width: 33px;
+    height: 28px;
+    color: #333;
+    line-height: 27px;
+    font-size: 14px;
+    margin: 0 5px;
+    vertical-align: middle;
+    border-radius: 2px;
+    border: 1px solid #e3e3e3;
+    background: #fff;
+}
+.site-piclist li {
+    float: left;
+    padding-left: 20px;
+  width:220px;margin-bottom:14px;
+}
+
+.footerN1214 {
+    background: url(http://www.qiyipic.com/common/fix/public_images/footerbg1229.png) repeat-x center 20px;
+    color: #666;
+    line-height: 20px;
+    padding: 35px 0 20px 0;
+    text-align: center;
+    font-family: "\5FAE\8F6F\96C5\9ED1","\9ED1\4F53";
+    width: 100%;
+    margin: 0 auto;
+    font-size: 12px;
+}
+.footerN1214 .footmenu {
+    padding: 9px 0 3px;
+}
+.footerN1214 .footmenu a.s1 {
+    background: 0;
+}
+
+.footerN1214 .footmenu a {
+    background: url(http://www.qiyipic.com/common/fix/public_images/footerline1214.png) no-repeat left 3px;
+    padding: 0 8px 0 10px;
+}
+footerN1214 .fEn {
+    color: #999;
+}
+
+.fEn {
+    font-family: Arial;
+}
+div:after, ul:after, dl:after {
+    content: "";
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+
+.delBtn{cursor:pointer;display:none}
+.delBtn:hover{color:red;font-weight:bold}

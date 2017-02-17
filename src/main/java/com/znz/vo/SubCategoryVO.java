@@ -2,6 +2,8 @@ package com.znz.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/2/6.
  */
@@ -20,4 +22,10 @@ public class SubCategoryVO {
     private String parentName;
 
     private String oper;
+
+    private Integer categoryLevel;
+
+    private String allFlag;
+
+    private List<SubCategoryVO> childrens;
 }

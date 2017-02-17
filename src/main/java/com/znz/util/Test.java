@@ -1,6 +1,7 @@
 package com.znz.util;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -16,7 +17,7 @@ public class Test {
     public static  void  main(String args[]) throws IOException {
         //ZipUtil.unpack(new File("d:/temp/test.zip"), new File("d:/temp/"));
         //ZipUtil.explode(new File("d:/temp/temp.zip"));
-        String extName ="11132.txt".substring("11132.txt".lastIndexOf(".")+1);
+       // String extName ="11132.txt".substring("11132.txt".lastIndexOf(".")+1);
         //System.out.println(extName);
        // FileUtils.moveDirectory(new File("d:/temp/test2"),new File("d:/temp/test3"));
         //FileUtils.moveDirectoryToDirectory(new File("d:/temp/test2"),new File("d:/temp/test3"),false);
@@ -25,7 +26,11 @@ public class Test {
        // FileUtils.moveFile(new File("d:/temp/test2"),new File("d:/temp/test3"));
 
         //moveFiles(new File("d:/temp/test2"),new File("d:/temp/test3"));
-        System.out.println(DateTime.now().toString("yyyyMMDD"));
+       // System.out.println(DateTime.now().toString("yyyyMMDD"));
+
+        String s = "5:0;3:1;1:2;4:3;";
+        String [] a = s.split(";");
+        System.out.println(a);
 
 
 
