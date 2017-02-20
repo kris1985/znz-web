@@ -122,9 +122,7 @@ public class FileController {
     public
     @ResponseBody
     List<FileTreeVO> listTree(HttpServletRequest request) {
-        if(!CollectionUtils.isEmpty(treeCache)){
-            return  treeCache;
-        }
+
         String rootPath = getRealPath(request);
        // log.info("rootPath:" + rootPath);
         File rootFile = new File(rootPath);
@@ -137,6 +135,9 @@ public class FileController {
         list.add(root);
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         if (userSession.getUser().getUserType() == 2 || userSession.getUser().getUserType() == 3) {
+            if(!CollectionUtils.isEmpty(treeCache)){
+                return  treeCache;
+            }
             MyFileUtil.listFile(rootFile, list);
             Collections.sort(list, new Comparator<FileTreeVO>() {
                 @Override
