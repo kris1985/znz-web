@@ -133,23 +133,27 @@ selectedId = encodeURI(selectedId);
             var foldNum=0;
             var fileNum=0;
             $.each(result.fileNodes, function (n, value) {
-               
                 if (value.directory == true) {
                     tem = folderTemplate.replace("{folderId}", value.path);
                     tem = tem.replace("{folderName}", value.name);
                     folderHtml += tem;
                     foldNum++;
-                } else {
-                    tem = imgTemplate.replace("{id}", value.path);
-                    name = value.name.substring(0,value.name.lastIndexOf("."));
-                   // alert(name);
-                    tem = tem.replace("{imgName}", name);
-                    tem = tem.replace("{thumbUrl}", value.thumbUrl);
-                    //tem = initImg(tem);
-                    imgHtml += tem;
-                    fileNum++;
                 }
             });
+            result.fileNodes.reverse();
+            $.each(result.fileNodes, function (n, value) {
+                if (value.directory == false) {
+                      tem = imgTemplate.replace("{id}", value.path);
+                      name = value.name.substring(0,value.name.lastIndexOf("."));
+                     // alert(name);
+                      tem = tem.replace("{imgName}", name);
+                      tem = tem.replace("{thumbUrl}", value.thumbUrl);
+                      //tem = initImg(tem);
+                      imgHtml += tem;
+                      fileNum++;
+                }
+          });
+
             //$(folderHtml).prependTo("#file-content");
             // $(imgHtml).prependTo("#file-content");
 

@@ -227,7 +227,7 @@ public class FileController {
             Collections.sort(fileNodes, new Comparator<FileNodeVO>() {
                 @Override
                 public int compare(FileNodeVO o1, FileNodeVO o2) {
-                    return o1.getName().compareToIgnoreCase(o2.getName());
+                    return o2.getName().compareToIgnoreCase(o1.getName());
                 }
             });
            /* for (FileNodeVO fileNodeVO:fileNodes){
