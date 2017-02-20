@@ -11,6 +11,7 @@ import com.znz.util.ImageUtil;
 import com.znz.util.MyFileUtil;
 import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,12 @@ public class FileController {
 
     @Resource
     private UserMapper userMapper;
+
+    public static List<FileTreeVO> treeCache = new ArrayList<FileTreeVO>(1024000);
+
+    public static Map<String ,List<FileTreeVO>>  userFilesCache = new HashedMap(1024000);
+
+    public static Map<String ,ListChildVO> childCache = new  HashedMap(102400);
 
 
     @RequestMapping(value = "/upload/{parentDir}", method = RequestMethod.POST)
@@ -85,6 +92,7 @@ public class FileController {
                 FileUtils.deleteDirectory(new File(tempFilePath));
             }
         }
+        invalidCache();
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -114,6 +122,9 @@ public class FileController {
     public
     @ResponseBody
     List<FileTreeVO> listTree(HttpServletRequest request) {
+        if(!CollectionUtils.isEmpty(treeCache)){
+            return  treeCache;
+        }
         String rootPath = getRealPath(request);
        // log.info("rootPath:" + rootPath);
         File rootFile = new File(rootPath);
@@ -127,7 +138,19 @@ public class FileController {
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         if (userSession.getUser().getUserType() == 2 || userSession.getUser().getUserType() == 3) {
             MyFileUtil.listFile(rootFile, list);
+            Collections.sort(list, new Comparator<FileTreeVO>() {
+                @Override
+                public int compare(FileTreeVO o1, FileTreeVO o2) {
+                    return o2.getText().compareToIgnoreCase(o1.getText());
+                }
+            });
+            treeCache = list;
         } else {
+            String userName = userSession.getUser().getUserName();
+            List<FileTreeVO> fileTreeVOs = userFilesCache.get(userName);
+            if(!CollectionUtils.isEmpty(fileTreeVOs)){
+                return fileTreeVOs;
+            }
             List<UserAuth> auths = userSession.getUserAuths();
             if (!CollectionUtils.isEmpty(auths)) {
                 for (UserAuth userAuth : auths) {
@@ -142,16 +165,17 @@ public class FileController {
                    // log.info("path--------------------------------" + path);
                     MyFileUtil.listFile(new File(path), list);
                 }
+                Collections.sort(list, new Comparator<FileTreeVO>() {
+                    @Override
+                    public int compare(FileTreeVO o1, FileTreeVO o2) {
+                        return o2.getText().compareToIgnoreCase(o1.getText());
+                    }
+                });
+                userFilesCache.put(userSession.getUser().getUserName(),list);
             } else {
                 list = Collections.emptyList();
             }
         }
-        Collections.sort(list, new Comparator<FileTreeVO>() {
-            @Override
-            public int compare(FileTreeVO o1, FileTreeVO o2) {
-                return o2.getText().compareToIgnoreCase(o1.getText());
-            }
-        });
         return list;
     }
 
@@ -169,6 +193,10 @@ public class FileController {
     public
     @ResponseBody
     ListChildVO listChidren(HttpServletRequest request, @PathVariable String filePath) {
+        ListChildVO childVO =  childCache.get(filePath);
+        if(childVO!=null){
+            return childVO;
+        }
         String realPath = getRealPath(request);
         ListChildVO vo = new ListChildVO();
         File file = new File(FilePathConverter.decode(filePath));
@@ -237,7 +265,14 @@ public class FileController {
         }
         Collections.reverse(parentNodes);
         vo.setParentNodes(parentNodes);
+        childCache.put(filePath,vo);
         return vo;
+    }
+
+    public static void invalidCache(){
+        treeCache.clear();
+        userFilesCache.clear();
+        childCache.clear();
     }
 
 
@@ -319,13 +354,13 @@ public class FileController {
                 FileUtils.forceDelete(f);
             }
         } catch (IOException e) {
-            log.error("删除文件失败", e);
             result.setCode(-1);
             result.setMsg("删除文件失败");
             return result;
         }
         result.setCode(0);
         result.setMsg("删除成功");
+        invalidCache();
         return result;
     }
 
@@ -364,6 +399,7 @@ public class FileController {
             }
 
         }
+        invalidCache();
         return "0";
     }
 
