@@ -58,41 +58,10 @@
 
 
 
-        $(".li_item").hover(
-          function () {
-             $(this).find(".delBtn").show();
-          },
-          function () {
-             $(this).find(".delBtn").hide();
-          }
-        );
-
-        $(".delBtn").on("click", function(event){
-           event.stopPropagation();
-                      var statu = confirm("确认要删除吗?");
-                      if(!statu){
-                        return false;
-                      }
-                      var id =  $(this).parent()[0].id.replace("li_","");
-                      $.ajax({
-                             type: "GET",
-                             url: basePath+"/admin/subCategory/delete/"+id,
-                             cache: false,
-                             success: function(msg){
-                                 if(msg.code !=0){
-                                     alert( msg.msg );
-                                 }else{
-                                     $("#li_"+id).hide(500);
-                                 }
-                             },
-                             error:function(msg){
-                                 alert( "服务器出错了" );
-                             }
-                       });
-
 
 
         $("#rootCategoryAddBtn").click(function(){
+
            var rootCategoryAddBtn = $(this);
            console.log( $(this).parent().siblings().length);
             $( "#dialog" ).dialog({
@@ -121,7 +90,8 @@
                                     if(msg.code !=0){
                                         alert( msg.msg );
                                     }else{
-                                        $("#rootCategoryAddBtn").parent().before("<li id='li_'"+msg.msg+"><a href='#'>"+name+"</a></li>");
+                                        $("#rootCategoryAddBtn").parent().before("<li id='li_'"+msg.msg+"><a href='/znz-web/admin/subCategory/showCategory?parentId=null&firstSelectedId="+msg.msg+"'>"+msg.msg+"</a></li>");
+
                                         $("#dialog").dialog( "close" );
                                         $("#categoryName").val("");
                                     }
@@ -135,7 +105,7 @@
                    ]
                });
         })
-      });
+
 
 
       $("#secondCategoryAddBtn").click(function(){
@@ -184,7 +154,7 @@
                          ]
                      });
               })
-            });
+});
       </script>
 
 </head>
@@ -201,10 +171,10 @@
          <ul class="mod_category_item">
      <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
         <c:if test="${item.categoryLevel == 0 && firstSelectedId == item.id  }">
-               <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${item.id}">${item.name}</a> <span class='delBtn'>X</span></li>
+               <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${item.id}">${item.name}</a> </li>
         </c:if>
         <c:if test="${item.categoryLevel == 0 && firstSelectedId != item.id  }">
-               <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${item.id}">${item.name}</a> <span class='delBtn'>X</span></li>
+               <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${item.id}">${item.name}</a> </li>
         </c:if>
        </c:forEach>
            <li>
@@ -218,10 +188,10 @@
              <ul class="mod_category_item">
          <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
             <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
-                   <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> <span class='delBtn'>X</span></li>
+                   <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
             </c:if>
             <c:if test="${item.parentId == firstSelectedId && secondSelectedId != item.id  }">
-                   <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> <span class='delBtn'>X</span></li>
+                   <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
             </c:if>
            </c:forEach>
            <li>
@@ -237,7 +207,7 @@
                     <h3>${item.name}</h3>
                     <ul class="mod_category_item">
                        <c:forEach var="category" items="${item.childrens}" varStatus="status">
-                          <li id="li_${category.id}"  class="li_item"> <a href="#">${category.name} </a> <span class='delBtn'>X</span></li>
+                          <li id="li_${category.id}"  class="li_item"> <a href="#">${category.name} </a> </li>
                         </c:forEach>
                     </ul>
                 </div>
