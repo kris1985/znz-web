@@ -11,150 +11,150 @@
     <link rel="icon" href="../../favicon.ico">
     <title>类别列表</title>
      <%@ include file="../common/common.jsp"%>
-    <link href="${basePath}/resources/css/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="${basePath}/resources/jqgrid/css/ui.jqgrid.css" type="text/css" />
+  <link href="${basePath}/resources/css/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="${basePath}/resources/css/jquery.contextMenu.css">
     <link href="${basePath}/resources/css/aqy.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="${basePath}/resources/css/jquery.contextMenu.css">
     <style>
         #gbox_list2{margin: 0 auto}
     </style>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js" ></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-1.8.24.custom.min.js" ></script>
-    <script type="text/javascript" src="${basePath}/resources/jqgrid/js/i18n/grid.locale-cn.js" ></script>
-    <script type="text/javascript" src="${basePath}/resources/jqgrid/js/jquery.jqGrid.min.js" ></script>
+    <script type="text/javascript" src="http://www.trendskitchens.co.nz/jquery/contextmenu/jquery.contextmenu.r2.js"></script>
 
     <script>
     var basePath = getContextPath();
-      $(function() {
-        //$( ".mod_category_item" ).sortable();
-        $(".mod_category_item").sortable({
-            update: function(event, ui) {
-                var array = $(this).children();
-                var data="";
-                for (var i=0;i<array.length;i++)
-                {
-                   if(""== array[i].id){
-                    continue;
-                   }
-                   //console.log(array[i].id.replace("li_",""));
-                   data+=array[i].id.replace("li_","") +":"+i +";";
-                }
-                console.log(data);
-                $.ajax({
-                   type: "POST",
-                   url: basePath+"/admin/subCategory/sort",
-                   data: "param="+data,
-                   cache: false,
-                   success: function(msg){
-                     //alert( "Data Saved: " + msg );
-                   },
-                   error:function(msg){
-                       alert( "服务器出错了" );
-                   }
-                });
+function openDialog(url){
+              $( "#dialog" ).dialog({
+                   height: 150,
+                   modal: true,
+                   position: { my: "left top", at: "left bottom", of: "#"+t.id },
+                   buttons: [
+                       {
+                         text: "提交",
+                         icons: {
+                           primary: "ui-icon-heart"
+                         },
+                         click: function() {
+                            $("#categoryForm").attr("action",url);
+                            $("#categoryForm").submit();
+                         }
+                      }]
+              });
+        }
+$(function() {
 
-            }
-         });
-        $( ".mod_category_item" ).disableSelection();
-
-
-
-
-
-        $("#rootCategoryAddBtn").click(function(){
-
-           var rootCategoryAddBtn = $(this);
-           console.log( $(this).parent().siblings().length);
-            $( "#dialog" ).dialog({
-                 height: 150,
-                 modal: true,
-                 position: { my: "left top", at: "left bottom", of: "#rootCategoryAddBtn" },
-                 buttons: [
-                     {
-                       text: "提交",
-                       icons: {
-                         primary: "ui-icon-heart"
-                       },
-                       click: function() {
-                         //$( this ).dialog( "close" );
-                         var name = $.trim($("#categoryName").val());
-                         //console.log( rootCategoryAddBtn.parent().parent().html());
-                         var sortId = rootCategoryAddBtn.parent().parent().children().length +1;
-                        console.log("sortId:"+sortId);
-                         var parentId = 0;
-                          $.ajax({
-                                type: "POST",
-                                url: basePath+"/admin/subCategory/add",
-                                data: "name="+name+"&sortId="+sortId+"&parentId="+parentId+"&categoryLevel=0",
-                                cache: false,
-                                success: function(msg){
-                                    if(msg.code !=0){
-                                        alert( msg.msg );
-                                    }else{
-                                        $("#rootCategoryAddBtn").parent().before("<li id='li_'"+msg.msg+"><a href='/znz-web/admin/subCategory/showCategory?parentId=null&firstSelectedId="+msg.msg+"'>"+msg.msg+"</a></li>");
-
-                                        $("#dialog").dialog( "close" );
-                                        $("#categoryName").val("");
-                                    }
-                                },
-                                error:function(msg){
-                                    alert( "服务器出错了" );
-                                }
-                           });
-                       }
-                     }
-                   ]
-               });
-        })
-
-
-
-      $("#secondCategoryAddBtn").click(function(){
-                   var parentId = '${firstSelectedId}';
-                    if(parentId == null || parentId==""){
-                       alert("请选择一级类别");
-                       return false;
-                    }
-                  $( "#dialog" ).dialog({
-                       height: 150,
-                       modal: true,
-                       position: { my: "left top", at: "left bottom", of: "#secondCategoryAddBtn" },
-                       buttons: [
-                           {
-                             text: "提交",
-                             icons: {
-                               primary: "ui-icon-heart"
-                             },
-                             click: function() {
-                               var name = $.trim($("#categoryName").val());
-                               //console.log( rootCategoryAddBtn.parent().parent().html());
-                               var sortId = $("#secondCategoryAddBtn").parent().parent().children().length +1;
-                              console.log("sortId:"+sortId);
-
-
-                                $.ajax({
-                                      type: "POST",
-                                      url: basePath+"/admin/subCategory/add",
-                                      data: "name="+name+"&sortId="+sortId+"&parentId="+parentId+"&categoryLevel=1",
-                                      cache: false,
-                                      success: function(msg){
-                                          if(msg.code !=0){
-                                              alert( msg.msg );
-                                          }else{
-                                              $("#secondCategoryAddBtn").parent().before("<li id='li_'"+msg.msg+"><a href='#'>"+name+"</a></li>");
-                                              $("#dialog").dialog( "close" );
-                                              $("#categoryName").val("");
-                                          }
-                                      },
-                                      error:function(msg){
-                                          alert( "服务器出错了" );
-                                      }
-                                 });
-                             }
+         $(".mod_category_item").sortable({
+                    update: function(event, ui) {
+                        var array = $(this).children();
+                        var data="";
+                        for (var i=0;i<array.length;i++)
+                        {
+                           if(""== array[i].id){
+                            continue;
                            }
-                         ]
-                     });
-              })
-});
+                           //console.log(array[i].id.replace("li_",""));
+                           data+=array[i].id.replace("li_","") +":"+i +";";
+                        }
+                        console.log(data);
+                        $.ajax({
+                           type: "POST",
+                           url: basePath+"/admin/subCategory/sort",
+                           data: "param="+data,
+                           cache: false,
+                           success: function(msg){
+                             //alert( "Data Saved: " + msg );
+                           },
+                           error:function(msg){
+                               alert( "服务器出错了" );
+                           }
+                        });
+
+                    }
+                 });
+                $( ".mod_category_item" ).disableSelection();
+
+
+
+
+        $('.selected').contextMenu('myMenu1', {
+              bindings: {
+                'add': function(t) {
+                        var url = basePath+"/admin/subCategory/add";
+                        var id = $("#"+t.id );
+                        console.log(id);
+                        var sortId = id.parent().children().length +1;
+                        $("#sortId").val(sortId);
+                         $( "#dialog" ).dialog({
+                                           height: 150,
+                                           modal: true,
+                                           position: { my: "left top", at: "left bottom", of: "#"+t.id },
+                                           buttons: [
+                                               {
+                                                 text: "提交",
+                                                 icons: {
+                                                   primary: "ui-icon-heart"
+                                                 },
+                                                 click: function() {
+                                                    $("#categoryForm").attr("action",url);
+                                                    $("#categoryForm").submit();
+                                                 }
+                                              }]
+                         });
+                },
+
+                'addSub': function(t) {
+                   var url = basePath+"/admin/subCategory/add";
+                    var id = $("#"+t.id );
+                                          var parentId = t.id.replace("li_","");
+                                          var sortId = id.parent().children().length +1;
+                                          $("#sortId").val(sortId);
+                                          $("#parentId").val(parentId);
+                                          $("#categoryLevel").val(1);
+                                           $( "#dialog" ).dialog({
+                                                             height: 150,
+                                                             modal: true,
+                                                             position: { my: "left top", at: "left bottom", of: "#"+t.id },
+                                                             buttons: [
+                                                                 {
+                                                                   text: "提交",
+                                                                   icons: {
+                                                                     primary: "ui-icon-heart"
+                                                                   },
+                                                                   click: function() {
+                                                                      $("#categoryForm").attr("action",url);
+                                                                      $("#categoryForm").submit();
+                                                                   }
+                                                                }]
+                                           });
+                },
+
+                'rename': function(t) {
+                  var url = basePath+"/admin/subCategory/update";
+                  $("#id").val(t.id.replace("li_",""));
+                  $( "#dialog" ).dialog({
+                                                             height: 150,
+                                                             modal: true,
+                                                             position: { my: "left top", at: "left bottom", of: "#"+t.id },
+                                                             buttons: [
+                                                                 {
+                                                                   text: "提交",
+                                                                   icons: {
+                                                                     primary: "ui-icon-heart"
+                                                                   },
+                                                                   click: function() {
+                                                                      $("#categoryForm").attr("action",url);
+                                                                      $("#categoryForm").submit();
+                                                                   }
+                                                                }]
+                                           });
+
+                }
+
+              }
+
+            });
+})
       </script>
 
 </head>
@@ -163,8 +163,24 @@
     <div id="container">
 
     <div id="dialog" title="新增类别" style="display:none">
-      类别名称：<input type="text" id="categoryName" name="categoryName">
+    <form id="categoryForm" method="POST">
+      类别名称：<input type="text" id="categoryName" name="name">
+      <input type="hidden" id="sortId" name="sortId">
+      <input type="hidden" id="id" name="id">
+       <input type="hidden" id="categoryLevel" name="categoryLevel" value="0">
+        <input type="hidden" id="parentId" name="parentId" value="0">
+      </form>
     </div>
+
+     <div class="contextMenu" id="myMenu1">
+
+          <ul>
+            <li id="add"><img src="folder.png" /> 新增同类</li>
+            <li id="addSub"><img src="email.png" />新增子类</li>
+            <li id="rename"><img src="disk.png" /> 重命名</li>
+          </ul>
+
+        </div>
 
      <div class="mod_sear_list" >
       <h3>一级类：</h3>
@@ -177,9 +193,7 @@
                <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${item.id}">${item.name}</a> </li>
         </c:if>
        </c:forEach>
-           <li>
-                <button id="rootCategoryAddBtn" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" style="font-size:10px"><span class="ui-button-icon-primary ui-icon ui-icon-plus"></span><span class="ui-button-text"></span></button>
-            </li>
+
         </ul>
     </div>
 
@@ -194,10 +208,6 @@
                    <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
             </c:if>
            </c:forEach>
-           <li>
-            <button id="secondCategoryAddBtn" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" style="font-size:10px"><span class="ui-button-icon-primary ui-icon  ui-icon-plus"></span><span class="ui-button-text"></span></button>
-            <button id="thirdCategoryAddBtn" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" style="font-size:10px"><span class="ui-button-icon-primary ui-icon ui-icon-carat-1-se"></span><span class="ui-button-text"></span></button>
-           </li>
             </ul>
         </div>
 

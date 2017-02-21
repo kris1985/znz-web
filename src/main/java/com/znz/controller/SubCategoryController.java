@@ -206,21 +206,9 @@ public class SubCategoryController {
         return resultVO;
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public @ResponseBody ResultVO edit(HttpServletRequest request, @Valid @ModelAttribute SubCategoryVO subCategoryVO) {
-        if("add".equals(subCategoryVO.getOper())){
-            return add(request,subCategoryVO);
-        } else if("edit".equals(subCategoryVO.getOper())){
-            return update(request, subCategoryVO);
-        }else if("del".equals(subCategoryVO.getOper())){
-            return delete(request, Integer.parseInt(request.getParameter("id")));
-        }else {
-            return null;
-        }
-    }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public @ResponseBody ResultVO add(HttpServletRequest request, @Valid @ModelAttribute SubCategoryVO subCategoryVO) {
+    public String  add(HttpServletRequest request, @Valid @ModelAttribute SubCategoryVO subCategoryVO) {
         UserSession userSession = (UserSession) request.getSession().getAttribute(
             Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
@@ -236,15 +224,13 @@ public class SubCategoryController {
             subCategory.setId(null);
             subCategory.setAllFlag("N");
             subCategoryMapper.insert(subCategory);
-            resultVO.setCode(0);
-            resultVO.setMsg(String.valueOf(subCategory.getId()));
         }
-        return resultVO;
+        return "redirect:/admin/subCategory/showCategory";
     }
 
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public @ResponseBody ResultVO update(HttpServletRequest request, @Valid @ModelAttribute SubCategoryVO subCategoryVO) {
+    public String update(HttpServletRequest request, @Valid @ModelAttribute SubCategoryVO subCategoryVO) {
         UserSession userSession = (UserSession) request.getSession().getAttribute(
             Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
@@ -252,14 +238,11 @@ public class SubCategoryController {
             resultVO.setMsg("无权限操作");
         } else{
             SubCategory subCategory = new SubCategory();
-            subCategory.setSortId(subCategoryVO.getSortId());
             subCategory.setName(subCategoryVO.getName());
             subCategory.setId(Integer.parseInt(subCategoryVO.getId()));
-            subCategory.setParentId(Integer.parseInt(subCategoryVO.getParentName()));//特殊处理
             subCategoryMapper.updateByPrimaryKeySelective(subCategory);
-            resultVO.setCode(0);
         }
-        return resultVO;
+        return "redirect:/admin/subCategory/showCategory";
     }
 
 
