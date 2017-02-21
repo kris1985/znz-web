@@ -51,9 +51,9 @@ public class FileController {
 
     public static List<FileTreeVO> treeCache = new ArrayList<FileTreeVO>(1024000);
 
-    public static Map<String ,List<FileTreeVO>>  userFilesCache = new HashedMap(1024000);
+    public static Map<String ,List<FileTreeVO>>  userFilesCache = new HashMap(102400);
 
-    public static Map<String ,ListChildVO> childCache = new  HashedMap(102400);
+    public static Map<String ,ListChildVO> childCache = new  HashMap(102400);
 
 
     @RequestMapping(value = "/upload/{parentDir}", method = RequestMethod.POST)
