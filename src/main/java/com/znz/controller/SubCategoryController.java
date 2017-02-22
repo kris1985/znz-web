@@ -138,29 +138,28 @@ public class SubCategoryController {
     }
 
     @RequestMapping(value = "/showCategory")
-    public String showCategory(String parentId,String firstSelectedId,String secondSelectedId,String thirdSelectedId,String fourthSelectedId, Model model){
-        Integer pid = null;
-        if(StringUtils.isNotEmpty(parentId)){
-            pid =Integer.parseInt(parentId);
-        }
+    public String showCategory(String firstSelectedId,String secondSelectedId,String thirdSelectedId,String fourthSelectedId, Model model){
         List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
-        Map<Integer,String> map = new HashedMap();
         if(!CollectionUtils.isEmpty(subCategories) ){
-            for(SubCategory category:subCategories){
-                map.put(category.getId(),category.getName());
-            }
             SubCategoryVO subCategoryVO ;
             for(SubCategory subCategory:subCategories){
+                if(firstSelectedId==null && subCategory.getCategoryLevel() == 0){
+                    firstSelectedId = String.valueOf(subCategory.getId());
+                }
+                if(secondSelectedId==null && String.valueOf(subCategory.getParentId()).equals(firstSelectedId) ){
+                    secondSelectedId = String.valueOf(subCategory.getId());
+                }
                 subCategoryVO = new SubCategoryVO();
                 subCategoryVO.setId(String.valueOf(subCategory.getId()));
                 subCategoryVO.setName(subCategory.getName());
                 subCategoryVO.setParentId(subCategory.getParentId());
                 subCategoryVO.setSortId(subCategory.getSortId());
-                subCategoryVO.setParentName(map.get(subCategory.getParentId()));
                 subCategoryVO.setAllFlag(subCategory.getAllFlag());
                 subCategoryVO.setCategoryLevel(subCategory.getCategoryLevel());
-                subCategoryVO.setChildrens(getchildrens(subCategories,subCategory.getId(),map));
+                if(subCategory.getCategoryLevel() == 2){
+                    subCategoryVO.setChildrens(getchildrens(subCategories,subCategory.getId()));
+                }
                 subCategoryVOs.add(subCategoryVO);
             }
         }
@@ -172,7 +171,7 @@ public class SubCategoryController {
         return "admin/showCategory";
     }
 
-    private List<SubCategoryVO> getchildrens(List<SubCategory> subCategories,int parentId,Map<Integer,String> map) {
+    private List<SubCategoryVO> getchildrens(List<SubCategory> subCategories,int parentId) {
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
         SubCategoryVO subCategoryVO ;
         for(SubCategory subCategory:subCategories){
@@ -182,7 +181,6 @@ public class SubCategoryController {
                 subCategoryVO.setName(subCategory.getName());
                 subCategoryVO.setParentId(subCategory.getParentId());
                 subCategoryVO.setSortId(subCategory.getSortId());
-                subCategoryVO.setParentName(map.get(subCategory.getParentId()));
                 subCategoryVO.setAllFlag(subCategory.getAllFlag());
                 subCategoryVO.setCategoryLevel(subCategory.getCategoryLevel());
                 subCategoryVOs.add(subCategoryVO);

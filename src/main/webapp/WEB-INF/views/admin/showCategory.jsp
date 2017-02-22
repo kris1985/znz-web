@@ -82,7 +82,8 @@ $(function() {
                 'add': function(t) {
                         var url = basePath+"/admin/subCategory/add";
                         var id = $("#"+t.id );
-                        console.log(id);
+                       $("#categoryLevel").val(0);
+                       $("#parentId").val(0);
                         var sortId = id.parent().children().length +1;
                         $("#sortId").val(sortId);
                          $( "#dialog" ).dialog({
@@ -154,6 +155,36 @@ $(function() {
               }
 
             });
+
+            $(".leaf_item").click(function(){
+             if($(this).hasClass("selected")){
+               return;
+             }else{
+                    $(this).addClass("selected");
+                    if($(this).hasClass("all_item")){
+                        alert("ss");
+                        $.each( $(this).siblings(), function(i, n){
+                           $(this).removeClass("selected");
+                         });
+                    }else{
+                        $(this).siblings().first().removeClass("selected");
+                    }
+                   if($(this).parent().children().length-1 ==  $(this).parent().find(".selected").length){
+                         $.each( $(this).parent().children(), function(i, n){
+                                  $(this).removeClass("selected");
+                        });
+                        $(this).siblings().first().addClass("selected");
+                   }
+                    $("#leaf_category").find(".selected").each(function(i){
+                        console.log($(this).attr("id"));
+                        id = $(this).attr("id");
+                   });
+                }
+
+
+            });
+
+
 })
       </script>
 
@@ -167,8 +198,12 @@ $(function() {
       类别名称：<input type="text" id="categoryName" name="name">
       <input type="hidden" id="sortId" name="sortId">
       <input type="hidden" id="id" name="id">
-       <input type="hidden" id="categoryLevel" name="categoryLevel" value="0">
-        <input type="hidden" id="parentId" name="parentId" value="0">
+      <input type="hidden" id="categoryLevel" name="categoryLevel" >
+      <input type="hidden" id="parentId" name="parentId" >
+       <input type="hidden" id="firstSelectedId" name="firstSelectedId" value="${firstSelectedId}">
+       <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
+       <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
+       <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
       </form>
     </div>
 
@@ -187,10 +222,10 @@ $(function() {
          <ul class="mod_category_item">
      <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
         <c:if test="${item.categoryLevel == 0 && firstSelectedId == item.id  }">
-               <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${item.id}">${item.name}</a> </li>
+               <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a> </li>
         </c:if>
         <c:if test="${item.categoryLevel == 0 && firstSelectedId != item.id  }">
-               <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${item.id}">${item.name}</a> </li>
+               <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a> </li>
         </c:if>
        </c:forEach>
 
@@ -202,28 +237,31 @@ $(function() {
              <ul class="mod_category_item">
          <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
             <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
-                   <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
+                   <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
             </c:if>
             <c:if test="${item.parentId == firstSelectedId && secondSelectedId != item.id  }">
-                   <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?parentId=${item.id}&firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
+                   <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
             </c:if>
            </c:forEach>
             </ul>
         </div>
 
+    <div id = "leaf_category">
       <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
-            <c:if test="${item.categoryLevel == 2}">
+            <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
                 <div class="mod_sear_list" >
                     <h3>${item.name}</h3>
-                    <ul class="mod_category_item">
+                    <ul class="mod_category_item ">
+                      <li id="all_${item.id}"  class="li_item leaf_item all_item"> <a id="aa" href="javascript:void()" class="">全部</a> </li>
                        <c:forEach var="category" items="${item.childrens}" varStatus="status">
-                          <li id="li_${category.id}"  class="li_item"> <a href="#">${category.name} </a> </li>
+                          <li id="li_${category.id}"  class="li_item leaf_item selected"> <a id="a_${category.id}" href="#" class="">${category.name} </a> </li>
                         </c:forEach>
                     </ul>
                 </div>
              </c:if>
        </c:forEach>
     </div>
+  </div>
 </body>
 
 </html>
