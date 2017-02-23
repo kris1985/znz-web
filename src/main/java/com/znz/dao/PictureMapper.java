@@ -2,6 +2,7 @@ package com.znz.dao;
 
 import com.znz.model.Picture;
 import com.znz.vo.FileQueryVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

@@ -117,15 +117,17 @@
 
 
 
-  <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.PictureVO" >
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
     select
-    <include refid="Base_Column_List" />
-    from t_picture
-    <where>
-      <if test="name != null" >
-        and name like  CONCAT('%','${name}','%' )
-      </if>
-    </where>
+    a.id, name, file_path, click_times, download_times, create_time, create_user
+    from t_picture a,t_picture_category b where a.id = b.picture_id
+    <if test="subCategoryIds!=null and subCategoryIds.size()!=0">
+    and b.sub_category_id in
+    <foreach item="item" index="index" collection="subCategoryIds"       open="(" separator="," close=")">
+      #{item}
+    </foreach>
+</if>
+
   </select>
 
 </mapper>

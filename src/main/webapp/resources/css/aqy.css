@@ -181,7 +181,7 @@
     clear: both;
     font-size: 0;
     width: 100%;
-    padding: 12px 0;
+    padding: 15px 0;
 }
 .ad-wrapper .divide-green-h {
     margin: 0;
@@ -202,12 +202,17 @@
 
 .navbar-ul li {    float: left;}
 
-.navbar-ul li a{ padding-top: 15px;
-    padding-bottom: 15px;
-	    position: relative;
-    display: block;
-    padding: 10px 15px;line-height: 20px;color:white;font-size:16px;
-	}
+.navbar-ul li a {
+padding-top: 15px;
+padding-bottom: 15px;
+position: relative;
+display: block;
+padding: 10px 15px;
+line-height: 26px;
+color: white;
+font-size: 17px;
+font-family: "黑体";
+}
 
 	.mod-page {
     padding: 20px 0;
@@ -237,7 +242,7 @@
 .site-piclist li {
     float: left;
     padding-left: 20px;
-  width:220px;margin-bottom:14px;
+  width:280px;margin-bottom:35px;
 }
 
 .footerN1214 {
@@ -276,6 +281,3 @@ div:after, ul:after, dl:after {
     height: 0;
     visibility: hidden;
 }
-
-.delBtn{cursor:pointer;display:none}
-.delBtn:hover{color:red;font-weight:bold}

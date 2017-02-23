@@ -69,7 +69,7 @@ public class FileController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
-    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, Model model) throws IOException {
+    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files,String category, Model model) throws IOException {
         // String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
@@ -77,6 +77,8 @@ public class FileController {
             throw new RuntimeException("无权限操作");
         }
         OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        List<PictureCategory> pictureCategories = new ArrayList<>();
+        String [] categorys = category.split(",");
         try {
             for (MultipartFile file : files) {
                 String originalName = file.getOriginalFilename();
@@ -90,16 +92,26 @@ public class FileController {
                 picture.setDownloadTimes(0);
                 pictureMapper.insert(picture);
 
-                PictureCategory pictureCategory = new PictureCategory();
-                pictureCategory.setPictureId(picture.getId());
-                pictureCategory.setSubCategoryId(1);//todo
-                pictureCategoryMapper.insert(pictureCategory);
+                for(String c :categorys){
+                    PictureCategory pictureCategory = new PictureCategory();
+                    pictureCategory.setPictureId(picture.getId());
+                    pictureCategory.setSubCategoryId(1);
+                    pictureCategories.add(pictureCategory);
+                }
+                pictureCategoryMapper.batchInsert(pictureCategories);
             }
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }finally {
             ossClient.shutdown();
         }
+    }
+
+
+    @RequestMapping(value = "/toUpload", method = RequestMethod.GET)
+    public String toUpload(String category, Model model) throws IOException {
+        model.addAttribute("category",category);
+        return "admin/upload2";
     }
 
     @RequestMapping(value = "/listPicture", method = RequestMethod.GET)

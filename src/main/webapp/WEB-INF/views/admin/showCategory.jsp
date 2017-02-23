@@ -21,6 +21,8 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js" ></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-1.8.24.custom.min.js" ></script>
     <script type="text/javascript" src="http://www.trendskitchens.co.nz/jquery/contextmenu/jquery.contextmenu.r2.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/artDialog.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/iframeTools.js"></script>
 
     <script>
     var basePath = getContextPath();
@@ -175,14 +177,54 @@ $(function() {
                         });
                         $(this).siblings().first().addClass("selected");
                    }
+                    var temp="";
                     $("#leaf_category").find(".selected").each(function(i){
                         console.log($(this).attr("id"));
                         id = $(this).attr("id");
+                        temp+=id+","
                    });
+                   console.log(temp);
+                   var url = "${basePath}/admin/subCategory/showCategory"
+                   $("#fourthSelectedId").val(temp);
+                  $("#categoryForm").attr("action",url);
+                  $("#categoryForm").submit();
+
                 }
 
 
             });
+
+             $("#uploadBtn").click(function(){
+               var temp="";
+               $("#leaf_category").find(".selected").each(function(i){
+                      id = $(this).attr("id");
+                      if(id.indexOf("all")!=-1){
+                         $.each( $(this).siblings(), function(i, n){
+                               id = $(this).attr("id").replace("li_","");
+                               temp+=id+","
+                         });
+                      }else{
+                             id = id.replace("li_","");
+                             temp+=id+","
+                      }
+
+                 });
+                  console.log(temp);
+                var url = "${basePath}/admin/file/toUpload?category="+temp
+                                art.dialog.open(url,
+                                        {
+                                            "id": "2345",
+                                            title: "上传文件",
+                                            width: 500,
+                                            height: 400,
+                                            close : function () {
+                                              // show(parentId);
+                                            }
+                                        }
+                                );
+
+             })
+
 
 
 })
@@ -191,7 +233,7 @@ $(function() {
 </head>
 
 <body>
-    <div id="container">
+    <div id="container" class="site-main">
 
     <div id="dialog" title="新增类别" style="display:none">
     <form id="categoryForm" method="POST">
@@ -252,9 +294,9 @@ $(function() {
                 <div class="mod_sear_list" >
                     <h3>${item.name}</h3>
                     <ul class="mod_category_item ">
-                      <li id="all_${item.id}"  class="li_item leaf_item all_item"> <a id="aa" href="javascript:void()" class="">全部</a> </li>
+                      <li id="all_${item.id}"  class="li_item leaf_item all_item selected"> <a id="aa" href="javascript:void()" class="">全部</a> </li>
                        <c:forEach var="category" items="${item.childrens}" varStatus="status">
-                          <li id="li_${category.id}"  class="li_item leaf_item selected"> <a id="a_${category.id}" href="#" class="">${category.name} </a> </li>
+                          <li id="li_${category.id}"  class="li_item leaf_item "> <a id="a_${category.id}" href="javascript:void()" class="">${category.name} </a> </li>
                         </c:forEach>
                     </ul>
                 </div>
@@ -262,6 +304,32 @@ $(function() {
        </c:forEach>
     </div>
   </div>
+
+<div id="1000000000046" class="ad-wrapper clearfix">
+    <div class="divide-green-h"></div>
+</div>
+
+  <div>
+    <input type="button" id="uploadBtn" value="上传"></button>
+  </div>
+<div id="1000000000046" class="ad-wrapper clearfix">
+    <div class="divide-green-h"></div>
+</div>
+
+<div class="wrapper-piclist" style="    margin-left: -20px;">
+		<ul class="site-piclist">
+		 <c:forEach var="item" items="${pictures}" varStatus="status">
+				<li>
+                    <div class="site-piclist_pic">
+                        <a alt="${item.name}" title="${item.name}" href="#" class="site-piclist_pic_link" target="_blank">
+                            <img alt="${item.name}" title="${item.name}" src="${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280">
+                        </a>
+                    </div>
+                </li>
+          </c:forEach>
+		</ul>
+</div>
+
 </body>
 
 </html>

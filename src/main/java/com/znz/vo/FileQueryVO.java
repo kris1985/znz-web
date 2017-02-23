@@ -3,6 +3,7 @@ package com.znz.vo;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Administrator on 2017/2/9.
@@ -13,7 +14,7 @@ public class FileQueryVO {
 
     private String name;
 
-    private List<Long> subCategoryIds;
+    private Set<Integer> subCategoryIds;
 
     private PageParameter page;
 

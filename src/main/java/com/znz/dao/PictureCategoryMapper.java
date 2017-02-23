@@ -2,6 +2,8 @@ package com.znz.dao;
 
 import com.znz.model.PictureCategory;
 
+import java.util.List;
+
 public interface PictureCategoryMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +16,6 @@ public interface PictureCategoryMapper {
     int updateByPrimaryKeySelective(PictureCategory record);
 
     int updateByPrimaryKey(PictureCategory record);
+
+    void batchInsert(List<PictureCategory> pictureCategories);
 }

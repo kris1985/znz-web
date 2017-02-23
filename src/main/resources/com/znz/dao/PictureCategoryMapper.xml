@@ -68,4 +68,16 @@
       sub_category_id = #{subCategoryId,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+
+
+  <update id="batchInsert" parameterType="java.util.List">
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+      insert into t_picture_category (id, picture_id, sub_category_id
+      )
+      values (#{item.id,jdbcType=BIGINT}, #{item.pictureId,jdbcType=BIGINT}, #{item.subCategoryId,jdbcType=INTEGER}
+      )
+    </foreach>
+  </update>
 </mapper>
