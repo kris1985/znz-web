@@ -104,7 +104,7 @@
     function show(selectedId) {
         //alert(selectedId);
         var folderTemplate = "<div class=folder_wrap><div id={folderId}  class=\"folder_img\"><img  src=\"${basePath}/resources/img/folder.png\" width=\"256\" height=\"256\"></div><div class=\"folder_txt\">{folderName}</div></div>"
-        var imgTemplate = "<div class='img_wrap ' ><img class='thumb' src='{thumbUrl}' id='{id}' style='max-width:256px;max-height:182px'><div class='img_txt'>{imgName}</div></div>"
+        var imgTemplate = "<div class='img_wrap ' ><img class='thumb' src='{thumbUrl}' id='{id}' style='max-width:256px;max-height:182px'></div>"
         var navBarTemplate = "<span class='item' id={folderId}>{folderName}</span><span class='path_arrow'><img src='${basePath}/resources/img/path_arrow.png'></span><span style=\"float: right\" id=\"fileNumResult\"></span>";
         var folderHtml = "";
         var imgHtml = "";
@@ -146,7 +146,7 @@ selectedId = encodeURI(selectedId);
                       tem = imgTemplate.replace("{id}", value.path);
                       name = value.name.substring(0,value.name.lastIndexOf("."));
                      // alert(name);
-                      tem = tem.replace("{imgName}", name);
+                    //  tem = tem.replace("{imgName}", name);
                       tem = tem.replace("{thumbUrl}", value.thumbUrl);
                       //tem = initImg(tem);
                       imgHtml += tem;
