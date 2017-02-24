@@ -89,7 +89,7 @@ public class SubCategoryController {
             forthCategorys = new HashSet(Arrays.asList(ids));
         }
 
-        if(CollectionUtils.isEmpty(forthCategorys)){
+        if(!CollectionUtils.isEmpty(forthCategorys)){
             PageParameter pageParameter = new PageParameter(1, 40);
             FileQueryVO fileQueryVO = new FileQueryVO();
             if(CollectionUtils.isEmpty(fileQueryVO.getSubCategoryIds()) ){
@@ -109,7 +109,12 @@ public class SubCategoryController {
         model.addAttribute("firstSelectedId",firstSelectedId);
         model.addAttribute("secondSelectedId",secondSelectedId);
         model.addAttribute("thirdSelectedId",thirdSelectedId);
-        model.addAttribute("fourthSelectedId",fourthSelectedId);
+        if(StringUtils.isNotEmpty(fourthSelectedId)){
+            model.addAttribute("fourthSelectedId",fourthSelectedId.split(","));
+        }else{
+            model.addAttribute("fourthSelectedId",new ArrayList<>());
+        }
+
 
         return "admin/showCategory";
     }

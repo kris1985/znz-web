@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,8 +56,8 @@ $(function() {
                            if(""== array[i].id){
                             continue;
                            }
-                           //console.log(array[i].id.replace("li_",""));
-                           data+=array[i].id.replace("li_","") +":"+i +";";
+                           //console.log(array[i].id);
+                           data+=array[i].id +":"+i +";";
                         }
                         console.log(data);
                         $.ajax({
@@ -109,7 +110,7 @@ $(function() {
                 'addSub': function(t) {
                    var url = basePath+"/admin/subCategory/add";
                     var id = $("#"+t.id );
-                                          var parentId = t.id.replace("li_","");
+                                          var parentId = t.id;
                                           var sortId = id.parent().children().length +1;
                                           $("#sortId").val(sortId);
                                           $("#parentId").val(parentId);
@@ -134,7 +135,7 @@ $(function() {
 
                 'rename': function(t) {
                   var url = basePath+"/admin/subCategory/update";
-                  $("#id").val(t.id.replace("li_",""));
+                  $("#id").val(t.id);
                   $( "#dialog" ).dialog({
                                                              height: 150,
                                                              modal: true,
@@ -158,30 +159,26 @@ $(function() {
 
             });
 
+//叶子节点
             $(".leaf_item").click(function(){
              if($(this).hasClass("selected")){
                return;
              }else{
                     $(this).addClass("selected");
-                    if($(this).hasClass("all_item")){
-                        alert("ss");
-                        $.each( $(this).siblings(), function(i, n){
-                           $(this).removeClass("selected");
-                         });
-                    }else{
-                        $(this).siblings().first().removeClass("selected");
-                    }
-                   if($(this).parent().children().length-1 ==  $(this).parent().find(".selected").length){
-                         $.each( $(this).parent().children(), function(i, n){
-                                  $(this).removeClass("selected");
-                        });
-                        $(this).siblings().first().addClass("selected");
-                   }
+
+
                     var temp="";
                     $("#leaf_category").find(".selected").each(function(i){
-                        console.log($(this).attr("id"));
-                        id = $(this).attr("id");
-                        temp+=id+","
+                      id = $(this).attr("id");
+                      if(id.indexOf("all")!=-1){
+                         $.each( $(this).siblings(), function(i, n){
+                               id = $(this).attr("id");
+                               temp+=id+","
+                         });
+                      }else{
+
+                             temp+=id+","
+                      }
                    });
                    console.log(temp);
                    var url = "${basePath}/admin/subCategory/showCategory"
@@ -200,11 +197,11 @@ $(function() {
                       id = $(this).attr("id");
                       if(id.indexOf("all")!=-1){
                          $.each( $(this).siblings(), function(i, n){
-                               id = $(this).attr("id").replace("li_","");
+                               id = $(this).attr("id");
                                temp+=id+","
                          });
                       }else{
-                             id = id.replace("li_","");
+
                              temp+=id+","
                       }
 
@@ -225,7 +222,16 @@ $(function() {
 
              })
 
+               $(".all_item").each(function(i){
+                      console.log($(this).parent().children().length-1+"----------------------"+$(this).parent().find(".selected").length)
+                     if($(this).parent().children().length-1 ==  $(this).parent().find(".selected").length){
+                                        $.each( $(this).parent().children(), function(i, n){
+                                                 $(this).removeClass("selected");
+                                       });
+                                       $(this).siblings().first().addClass("selected");
+                                  }
 
+               })
 
 })
       </script>
@@ -264,10 +270,10 @@ $(function() {
          <ul class="mod_category_item">
      <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
         <c:if test="${item.categoryLevel == 0 && firstSelectedId == item.id  }">
-               <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a> </li>
+               <li id="${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a> </li>
         </c:if>
         <c:if test="${item.categoryLevel == 0 && firstSelectedId != item.id  }">
-               <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a> </li>
+               <li id="${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a> </li>
         </c:if>
        </c:forEach>
 
@@ -279,10 +285,10 @@ $(function() {
              <ul class="mod_category_item">
          <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
             <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
-                   <li id="li_${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
+                   <li id="${item.id}" class="li_item selected"><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
             </c:if>
             <c:if test="${item.parentId == firstSelectedId && secondSelectedId != item.id  }">
-                   <li id="li_${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
+                   <li id="${item.id}" class="li_item "><a href="/znz-web/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a> </li>
             </c:if>
            </c:forEach>
             </ul>
@@ -296,7 +302,12 @@ $(function() {
                     <ul class="mod_category_item ">
                       <li id="all_${item.id}"  class="li_item leaf_item all_item selected"> <a id="aa" href="javascript:void()" class="">全部</a> </li>
                        <c:forEach var="category" items="${item.childrens}" varStatus="status">
-                          <li id="li_${category.id}"  class="li_item leaf_item "> <a id="a_${category.id}" href="javascript:void()" class="">${category.name} </a> </li>
+                          <c:if test="${fn:contains(fourthSelectedId, String.valueOf(category.id))}">
+                              <li id=${category.id}"  class="li_item leaf_item selected"> <a id="a_${category.id}" href="javascript:void()" class="">${category.name} </a> </li>
+                           </c:if>
+                           <c:if test="${!fn:contains(fourthSelectedId,String.valueOf(category.id))}">
+                              <li id=${category.id}"  class="li_item leaf_item "> <a id="a_${category.id}" href="javascript:void()" class="">${category.name} </a> </li>
+                           </c:if>
                         </c:forEach>
                     </ul>
                 </div>
@@ -322,7 +333,7 @@ $(function() {
 				<li>
                     <div class="site-piclist_pic">
                         <a alt="${item.name}" title="${item.name}" href="#" class="site-piclist_pic_link" target="_blank">
-                            <img alt="${item.name}" title="${item.name}" src="${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280">
+                            <img alt="${item.name}" title="${item.name}" src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280">
                         </a>
                     </div>
                 </li>

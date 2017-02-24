@@ -7,6 +7,7 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +30,9 @@ public class Test {
        // System.out.println(DateTime.now().toString("yyyyMMDD"));
 
         String s = "5:0;3:1;1:2;4:3;";
-        String [] a = s.split(";");
-        System.out.println(a);
+        List<String> list = new ArrayList();
+        list.add("1");
+        System.out.println(list.contains(1));
 
 
 

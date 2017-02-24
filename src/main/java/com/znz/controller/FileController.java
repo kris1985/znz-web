@@ -95,7 +95,7 @@ public class FileController {
                 for(String c :categorys){
                     PictureCategory pictureCategory = new PictureCategory();
                     pictureCategory.setPictureId(picture.getId());
-                    pictureCategory.setSubCategoryId(1);
+                    pictureCategory.setSubCategoryId(Integer.parseInt(c));
                     pictureCategories.add(pictureCategory);
                 }
                 pictureCategoryMapper.batchInsert(pictureCategories);
