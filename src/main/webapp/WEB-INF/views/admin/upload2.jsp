@@ -24,7 +24,8 @@
 			 setTimeout(function(){
          			$('#file_upload').uploadify({
          				'formData'     : {
-         					'timestamp' : new Date().getTime()
+         					'timestamp' : new Date().getTime(),
+                             'category': '${category}'
          				},
          			//	'auto':false,
          				'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;',

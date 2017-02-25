@@ -111,7 +111,7 @@
         parent_id = #{parentId,jdbcType=INTEGER}
       </if>
     </where>
-    order by sort_id
+    order by category_level, sort_id
   </select>
 
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >

@@ -80,42 +80,42 @@ public class SubCategoryController {
         }
 
         final String  temp = secondSelectedId;
-        Set<Integer> forthCategorys ;
+        Set<Integer> forthCategorys = new HashSet<>();
+        List<String> categoryConditions = new ArrayList<>();
         if(StringUtils.isEmpty(fourthSelectedId)) {
             Set<Integer> thirdCategorys =    subCategories.stream().filter(s-> String.valueOf(s.getParentId()).equals(temp) ).map(s->s.getId()).collect(Collectors.toSet());//三级类
-            forthCategorys =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
+            //Map<Integer,List<SubCategory>> map = subCategories.stream().filter(s -> thirdCategorys.contains(s.getParentId())).collect(Collectors.groupingBy(SubCategory::getParentId));
+            Set set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
+            String s = "";
+            /*for(List<SubCategory> list :map.values()){
+               s +=  StringUtils.join(list.stream().map(x->x.getId()).collect(Collectors.toList()), ",");
+            }*/
+            categoryConditions.add(StringUtils.join(set,","));
         }else{
-            String[] ids = fourthSelectedId.split(",");
+            String[] ids = fourthSelectedId.split("[,;]");
             forthCategorys = new HashSet(Arrays.asList(ids));
+            //categoryConditions = new ArrayList(fourthSelectedId.split(",") Arr);
+            categoryConditions = Arrays.asList(fourthSelectedId.split(";"));
         }
-
-        if(!CollectionUtils.isEmpty(forthCategorys)){
-            PageParameter pageParameter = new PageParameter(1, 40);
-            FileQueryVO fileQueryVO = new FileQueryVO();
-            if(CollectionUtils.isEmpty(fileQueryVO.getSubCategoryIds()) ){
-                fileQueryVO.setPage(pageParameter);
-                fileQueryVO.setSubCategoryIds(forthCategorys);
-                List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
-                int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
-                        / pageParameter.getPageSize();
-                int currentPage = pageParameter.getCurrentPage();
-                model.addAttribute("currentPage",currentPage);
-                model.addAttribute("totalPage",totalPage);
-                model.addAttribute("totalCount",pageParameter.getTotalCount());
-                model.addAttribute("pictures",pictures);
-            }
+        PageParameter pageParameter = new PageParameter(1, 40);
+        FileQueryVO fileQueryVO = new FileQueryVO();
+        if(!CollectionUtils.isEmpty(categoryConditions) ){
+            fileQueryVO.setPage(pageParameter);
+            fileQueryVO.setCategoryConditions(categoryConditions);
+            List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
+            int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
+                    / pageParameter.getPageSize();
+            int currentPage = pageParameter.getCurrentPage();
+            model.addAttribute("currentPage",currentPage);
+            model.addAttribute("totalPage",totalPage);
+            model.addAttribute("totalCount",pageParameter.getTotalCount());
+            model.addAttribute("pictures",pictures);
         }
         model.addAttribute("subCategoryVOs",subCategoryVOs);
         model.addAttribute("firstSelectedId",firstSelectedId);
         model.addAttribute("secondSelectedId",secondSelectedId);
         model.addAttribute("thirdSelectedId",thirdSelectedId);
-        if(StringUtils.isNotEmpty(fourthSelectedId)){
-            model.addAttribute("fourthSelectedId",fourthSelectedId.split(","));
-        }else{
-            model.addAttribute("fourthSelectedId",new ArrayList<>());
-        }
-
-
+        model.addAttribute("fourthSet",forthCategorys);
         return "admin/showCategory";
     }
 

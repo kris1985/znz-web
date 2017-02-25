@@ -42,9 +42,13 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
+	<logger name="com.znz.dao">
+		<level value="debug" />
+	</logger>
+
 
 	<root>
-		<priority value="info" />
+		<priority value="debug" />
 <!--
 		<appender-ref ref="myFile" />
 -->

@@ -208,7 +208,7 @@ padding-bottom: 15px;
 position: relative;
 display: block;
 padding: 10px 15px;
-line-height: 26px;
+line-height: 25px;
 color: white;
 font-size: 17px;
 font-family: "黑体";
@@ -281,3 +281,4 @@ div:after, ul:after, dl:after {
     height: 0;
     visibility: hidden;
 }
+  .navbar-ul .selected a{padding: 10px 15px;}
