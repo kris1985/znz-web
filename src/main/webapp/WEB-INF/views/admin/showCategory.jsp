@@ -42,7 +42,28 @@
                     }]
             });
         }
+
+        /*获取所有类别除掉全选，格式1,2,3;4,5,6  不同类别用；分开*/
+        function getAllSelected() {
+            var selected = "";
+            $(".all_item").each(function (i) {
+                //console.log("all_item:"+i)
+                if(!$(this).hasClass("selected")){ //如果非全选，获取所有兄弟节点的id
+                    $.each($(this).parent().children().filter(".selected"), function (i, n) {
+                        id = $(this).attr("id");
+                        selected += id + ","
+                    });
+                    if(selected!=""){
+                        selected = selected.substring(0,selected.length-1)+";";
+                    }
+                }
+            });
+            //console.log("selected："+selected);
+            return selected;
+        }
+
         $(function () {
+            //栏目排序
             $(".mod_category_item").sortable({
                 update: function (event, ui) {
                     var array = $(this).children();
@@ -72,6 +93,8 @@
             });
             $(".mod_category_item").disableSelection();
 
+
+
             $('.noLeaf').contextMenu('myMenu1', {
                 bindings: {
                     'add': function (t) {
@@ -95,6 +118,9 @@
                                         primary: "ui-icon-heart"
                                     },
                                     click: function () {
+                                        if(!isValid($("#categoryName").val())){
+                                            return;
+                                        }
                                         $("#categoryForm").attr("action", url);
                                         $("#categoryForm").submit();
                                     }
@@ -113,6 +139,7 @@
                         $("#dialog").dialog({
                             height: 150,
                             modal: true,
+                            title:"新增子类别",
                             position: {my: "left top", at: "left bottom", of: "#" + t.id},
                             buttons: [
                                 {
@@ -121,6 +148,9 @@
                                         primary: "ui-icon-heart"
                                     },
                                     click: function () {
+                                        if(!isValid($("#categoryName").val())){
+                                            return;
+                                        }
                                         $("#categoryForm").attr("action", url);
                                         $("#categoryForm").submit();
                                     }
@@ -130,10 +160,13 @@
 
                     'rename': function (t) {
                         var url = basePath + "/admin/subCategory/update";
+                        var name = $.trim($("#" + t.id) .text());
                         $("#id").val(t.id);
+                        $("#categoryName").val(name);
                         $("#dialog").dialog({
                             height: 150,
                             modal: true,
+                            title:"重命名",
                             position: {my: "left top", at: "left bottom", of: "#" + t.id},
                             buttons: [
                                 {
@@ -142,6 +175,9 @@
                                         primary: "ui-icon-heart"
                                     },
                                     click: function () {
+                                        if(!isValid($("#categoryName").val())){
+                                            return;
+                                        }
                                         $("#categoryForm").attr("action", url);
                                         $("#categoryForm").submit();
                                     }
@@ -177,6 +213,9 @@
                                         primary: "ui-icon-heart"
                                     },
                                     click: function () {
+                                        if(!isValid($("#categoryName").val())){
+                                            return;
+                                        }
                                         $("#categoryForm").attr("action", url);
                                         $("#categoryForm").submit();
                                     }
@@ -185,7 +224,9 @@
                     },
                     'rename1': function (t) {
                         var url = basePath + "/admin/subCategory/update";
+                        var name = $.trim($("#" + t.id) .text());
                         $("#id").val(t.id);
+                        $("#categoryName").val(name);
                         $("#dialog").dialog({
                             height: 150,
                             modal: true,
@@ -197,6 +238,9 @@
                                         primary: "ui-icon-heart"
                                     },
                                     click: function () {
+                                        if(!isValid($("#categoryName").val())){
+                                            return;
+                                        }
                                         $("#categoryForm").attr("action", url);
                                         $("#categoryForm").submit();
                                     }
@@ -213,7 +257,7 @@
                 if ($(this).hasClass("selected")) {
                     $(this).removeClass("selected");
                     if($(this).parent().children().length  == $(this).parent().children().not(".selected").length){
-                        $(this).parent().children().first().addClass("selected");//全新选中
+                        $(this).parent().children().first().addClass("selected");//都没选中，全选选中
                     }
                 } else {
                     $(this).addClass("selected");
@@ -221,24 +265,10 @@
                     if($(this).attr("id").indexOf("all") == -1){
                         $(this).parent().children().first().removeClass("selected") //如果选择了非全选，全选去掉选中
                     }
-                    var temp = "";
-                    $(".all_item").each(function (i) {
-                        console.log("all_item:"+i)
-                        if(!$(this).hasClass("selected")){ //如果全选，获取所有兄弟节点的id
-                            console.log($(this).siblings())
-                            $.each($(this).parent().children().filter(".selected"), function (i, n) {
-                                id = $(this).attr("id");
-                                temp += id + ","
-                                console.log("-2-"+temp)
-                            });
-                            if(temp!=""){
-                                temp = temp.substring(0,temp.length-1)+";";
-                            }
-                        }
-                    });
-                    console.log("temp:"+temp)
+                    var selected = getAllSelected();
+                    //console.log("temp:"+temp)
                     var url = "${basePath}/admin/subCategory/showCategory"
-                    $("#fourthSelectedId").val(temp);
+                    $("#fourthSelectedId").val(selected);
                     $("#categoryForm").attr("action", url);
                     $("#categoryForm").submit();
 
@@ -264,7 +294,7 @@
                 if(temp.indexOf(",") !=-1){
                     temp = temp.substring(0,temp.length-1);
                 }
-                console.log(temp);
+                //console.log(temp);
                 var url = "${basePath}/admin/file/toUpload?category=" + temp
                 art.dialog.open(url,
                     {
@@ -273,23 +303,51 @@
                         width: 500,
                         height: 400,
                         close: function () {
-                            // show(parentId);
+                            var selected = getAllSelected();
+                            var path = "${basePath}/admin/subCategory/showCategory"
+                            $("#fourthSelectedId").val(selected);
+                            $("#categoryForm").attr("action", path);
+                            $("#categoryForm").submit();
                         }
                     }
                 );
 
             })
-
+                $(".mod_sear_list").last().css("border-bottom","0")
            /**/ $(".all_item").each(function (i) {
                // console.log($(this).parent().children().length -1+ "----------------------" + $(this).parent().children().filter(".selected").length)
              //   console.log($(this).parent().children());
               //  console.log($(this).parent().children().filter(".selected"));
                 if ($(this).parent().children().length  == $(this).parent().children().not(".selected").length) {
-                    $(this).addClass("selected");
+                    $(this).addClass("selected");//如果都没选中，全选 选中
                 }
             })
 
         })
+
+
+        function isValid(name){
+            var valid = false;
+            $.ajax({
+                type: "POST",
+                url: basePath + "/admin/subCategory/validName",
+                data: "name=" + name,
+                cache: false,
+                async:false,
+                success: function (ret) {
+                    if(ret.code ==0){
+                        valid = true;
+                    }else{
+                        alert(ret.msg);
+                    }
+                },
+                error: function (msg) {
+                    alert("服务器出错了");
+                }
+            });
+            return valid;
+        }
+
     </script>
 
 </head>
@@ -320,8 +378,11 @@
         </div>
     </div>
 </div>
-<div id="container" class="site-main">
 
+<div id="container" class="site-main">
+    <div  class="ad-wrapper clearfix">
+        <div class="divide-green-h"></div>
+    </div>
     <div id="dialog" title="新增类别" style="display:none">
         <form id="categoryForm" method="POST">
             类别名称：<input type="text" id="categoryName" name="name">
@@ -352,9 +413,9 @@
     </div>
 
 
-
-    <div class="mod_sear_list">
-        <h3>季节：</h3>
+    <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
+         <div class="mod_sear_list">
+        <h3>选择：</h3>
         <ul class="mod_category_item">
             <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
                 <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
@@ -371,11 +432,11 @@
         </ul>
     </div>
 
-    <div id="leaf_category">
+         <div id="leaf_category">
         <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
             <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
                 <div class="mod_sear_list">
-                    <h3>${item.name}</h3>
+                    <h3 id="${item.id}">${item.name}：</h3>
                     <ul class="mod_category_item ">
                         <li id="all_${item.id}" class="li_item leaf_item all_item " categoryLevel="${item.categoryLevel +1}" parentId="${item.id}"><a id="aa"
                                                                                                href="javascript:void()"
@@ -405,13 +466,13 @@
             </c:if>
         </c:forEach>
     </div>
-
+    </div>
 
 
     <div>
         <input type="button" id="uploadBtn" value="上传"></button>
     </div>
-    <div id="1000000000046" class="ad-wrapper clearfix">
+    <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
     </div>
 

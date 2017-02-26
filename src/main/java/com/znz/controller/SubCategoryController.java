@@ -160,16 +160,11 @@ public class SubCategoryController {
         if (!checkPermisson(userSession)) {
             resultVO.setMsg("无权限操作");
         }
-        SubCategory temp = subCategoryMapper.selectByName(subCategoryVO.getName());
-        if (temp != null) {
-            resultVO.setMsg("类别名称已经存在，请使用新的类别名称");
-        } else {
-            SubCategory subCategory = new SubCategory();
-            BeanUtils.copyProperties(subCategoryVO, subCategory);
-            subCategory.setId(null);
-            subCategory.setAllFlag("N");
-            subCategoryMapper.insert(subCategory);
-        }
+        SubCategory subCategory = new SubCategory();
+        BeanUtils.copyProperties(subCategoryVO, subCategory);
+        subCategory.setId(null);
+        subCategory.setAllFlag("N");
+        subCategoryMapper.insert(subCategory);
         return "redirect:/admin/subCategory/showCategory";
     }
 
@@ -209,6 +204,18 @@ public class SubCategoryController {
             subCategoryMapper.updateByPrimaryKeySelective(subCategory);
         }
         resultVO.setCode(0);
+        return resultVO;
+    }
+
+    @RequestMapping(value = "/validName", method = RequestMethod.POST)
+    public @ResponseBody ResultVO validName(String name){
+        ResultVO resultVO = new ResultVO();
+        SubCategory temp = subCategoryMapper.selectByName(name);
+        if (temp != null) {
+            resultVO.setMsg("类别名称已经存在，请使用其它类别名称");
+        } else {
+            resultVO.setCode(0);
+        }
         return resultVO;
     }
 
