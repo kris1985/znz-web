@@ -1,7 +1,10 @@
 package com.znz.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.PutObjectResult;
 import com.znz.config.AppConfig;
 import com.znz.dao.*;
 import com.znz.model.*;
@@ -14,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -24,11 +28,13 @@ import org.zeroturnaround.zip.ZipUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by huangtao on 2015/1/23.
@@ -60,49 +66,96 @@ public class FileController {
     private CategoryMapper categoryMapper;
 
 
-    private static String endpoint        = "oss-cn-shanghai.aliyuncs.com";
-    private static String accessKeyId     = "fuRj5S4SBVnHH9el";
-    private static String accessKeySecret = "AcJFEjMEvGGE9XsI9QokqIY8LITjL2";
-    private static String bucketName      = "testznz";
-    private static String key             = "kris1986";
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
-    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files,String category, Model model) throws IOException {
+    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, String category, Model model) throws IOException {
         // String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
         if (!checkPermisson(userSession, result)) {
             throw new RuntimeException("无权限操作");
         }
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
         List<PictureCategory> pictureCategories = new ArrayList<>();
-        String [] categorys = category.split(",");
+        String[] categorys = category.split(",");
         try {
             for (MultipartFile file : files) {
                 String originalName = file.getOriginalFilename();
-                ossClient.putObject(new PutObjectRequest(bucketName, originalName, file.getInputStream()));
-                Picture picture = new Picture();
-                picture.setName(originalName);
-                picture.setFilePath(originalName);
-                picture.setCreateTime(new Date());
-                picture.setCreateUser(userSession.getUser().getUserName());
-                picture.setClickTimes(0);
-                picture.setDownloadTimes(0);
-                pictureMapper.insert(picture);
+                String path = UUID.randomUUID().toString() + getSuffix(originalName);
+                boolean b = upload(ossClient, file, path);
+                if(b){
+                    Picture picture = new Picture();
+                    picture.setName(originalName);
+                    picture.setFilePath(path);
+                    picture.setCreateTime(new Date());
+                    picture.setCreateUser(userSession.getUser().getUserName());
+                    picture.setClickTimes(0);
+                    picture.setDownloadTimes(0);
+                    pictureMapper.insert(picture);
 
-                for(String c :categorys){
-                    PictureCategory pictureCategory = new PictureCategory();
-                    pictureCategory.setPictureId(picture.getId());
-                    pictureCategory.setSubCategoryId(Integer.parseInt(c));
-                    pictureCategories.add(pictureCategory);
+                    for (String c : categorys) {
+                        PictureCategory pictureCategory = new PictureCategory();
+                        pictureCategory.setPictureId(picture.getId());
+                        pictureCategory.setSubCategoryId(Integer.parseInt(c));
+                        pictureCategories.add(pictureCategory);
+                    }
+                    pictureCategoryMapper.batchInsert(pictureCategories);
                 }
-                pictureCategoryMapper.batchInsert(pictureCategories);
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            ossClient.shutdown();
+        }
+    }
+
+    public String getSuffix(String originalName) {
+        return originalName.substring(originalName.indexOf("."),originalName.length());
+    }
+
+    public boolean upload(OSSClient ossClient, MultipartFile file, String originalName)  {
+        try{
+            ossClient.putObject(new PutObjectRequest(appConfig.getBucketName(), originalName, file.getInputStream()));
+            return true;
         }catch (Exception e){
-            log.error(e.getMessage(),e);
-        }finally {
+            log.error(e.getMessage(), e);
+            return  false;
+        }
+
+    }
+
+
+    @RequestMapping(value = "/uploadChild", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    void uploadChild(HttpServletRequest request, @RequestParam MultipartFile[] files, Long pictrueId) throws IOException {
+        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
+        ResultVO result = new ResultVO();
+        if (!checkPermisson(userSession, result)) {
+            throw new RuntimeException("无权限操作");
+        }
+        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
+        try {
+            List<String> attachs = new ArrayList<>();
+            String childPath ;
+            for (MultipartFile file : files) {
+                childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());;
+                boolean b = upload(ossClient, file, childPath);
+                if(b){
+                    attachs.add(childPath);
+                }
+            }
+            if(!CollectionUtils.isEmpty(attachs)){
+                Picture picture = new Picture();
+                picture.setId(pictrueId);
+                picture.setAttach(JSON.toJSONString(attachs));
+                pictureMapper.updateByPrimaryKeySelective(picture);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
             ossClient.shutdown();
         }
     }
@@ -110,34 +163,34 @@ public class FileController {
 
     @RequestMapping(value = "/toUpload", method = RequestMethod.GET)
     public String toUpload(String category, Model model) throws IOException {
-        model.addAttribute("category",category);
+        model.addAttribute("category", category);
         return "admin/upload2";
     }
 
     @RequestMapping(value = "/listPicture", method = RequestMethod.GET)
-    public   String list(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") String page,
-                                                   @RequestParam(value = "rows", defaultValue = "10") String rows,
-                                                   @RequestParam(value = "sidx", required = false) String sidx,
-                                                   @RequestParam(value = "sord", required = false) String sord,
-                                                   @RequestParam(value = "filters", required = false) String filters, Model model) {
+    public String list(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") String page,
+                       @RequestParam(value = "rows", defaultValue = "10") String rows,
+                       @RequestParam(value = "sidx", required = false) String sidx,
+                       @RequestParam(value = "sord", required = false) String sord,
+                       @RequestParam(value = "filters", required = false) String filters, Model model) {
         PageParameter pageParameter = new PageParameter(Integer.parseInt(page), Integer.parseInt(rows));
         FileQueryVO fileQueryVO = new FileQueryVO();
         fileQueryVO.setPage(pageParameter);
-        List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
+        List<Picture> pictures = pictureMapper.selectByPage(fileQueryVO);
         int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                 / pageParameter.getPageSize();
-        model.addAttribute("pictures",pictures);
+        model.addAttribute("pictures", pictures);
 
 
         List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
         List<Category> categories = categoryMapper.selectAll();
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
-        Map<Integer,String> map = new HashedMap();
-        if(!CollectionUtils.isEmpty(subCategories) && !CollectionUtils.isEmpty(categories)){
-            for(Category category:categories){
-                map.put(category.getId(),category.getName());
+        Map<Integer, String> map = new HashedMap();
+        if (!CollectionUtils.isEmpty(subCategories) && !CollectionUtils.isEmpty(categories)) {
+            for (Category category : categories) {
+                map.put(category.getId(), category.getName());
             }
-            for(SubCategory subCategory:subCategories){
+            for (SubCategory subCategory : subCategories) {
                 SubCategoryVO subCategoryVO = new SubCategoryVO();
                 subCategoryVO.setId(String.valueOf(subCategory.getId()));
                 subCategoryVO.setName(subCategory.getName());
@@ -147,11 +200,9 @@ public class FileController {
                 subCategoryVOs.add(subCategoryVO);
             }
         }
-        model.addAttribute("subCategoryVOs",subCategoryVOs);
+        model.addAttribute("subCategoryVOs", subCategoryVOs);
         return "admin/pictureList";
     }
-
-
 
 
     @RequestMapping(value = "/toListImg", method = RequestMethod.GET)
@@ -161,84 +212,44 @@ public class FileController {
         return "admin/album";
     }
 
-    @RequestMapping(value = "/listImg/{path}", method = RequestMethod.GET)
-    public String listImg(HttpServletRequest request, @PathVariable String path, @RequestParam String suffix, Model model) {
-        path = FilePathConverter.decode(path + "." + suffix);
-        String realPath ="";
-        File f = new File(path);
-        File parent = f.getParentFile();
-        List<FileNodeVO> list = new ArrayList<FileNodeVO>();
-        File files[] = parent.listFiles();
-        FileNodeVO fileNode = null;
-        FileNodeVO selected = null;
-        for (File file : files) {
-            if (file.getName().startsWith(ImageUtil.DEFAULT_THUMB_PREVFIX)) {
-                fileNode = new FileNodeVO();
-                fileNode.setLastModified(file.lastModified());
-                fileNode.setName(file.getName());
-                fileNode.setThumbUrl(file.getAbsolutePath().replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH).replaceAll("\\\\", "/"));
-                fileNode.setUrl(fileNode.getThumbUrl().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, "").replaceAll("\\\\", "/"));
-                if (file.getName().equals(f.getName())) {
-                    fileNode.setSelected(true);
-                    selected = fileNode;
-                }
-                list.add(fileNode);
-            }
-        }
-        Collections.sort(list, new Comparator<FileNodeVO>() {
-            @Override
-            public int compare(FileNodeVO o1, FileNodeVO o2) {
-                return o1.getName().compareToIgnoreCase(o2.getName());
-            }
-        });
-        int currentIndex = list.indexOf(selected);
-
-        String selectedImg = path.replace(realPath, request.getContextPath() + Constants.UPLOAD_ROOT_PATH);
-        model.addAttribute("selectedImg", selectedImg);
-        //model.addAttribute("encodeImg",FilePathConverter.encode(path));
-        model.addAttribute("imgs", list);
-        model.addAttribute("parentName", parent.getName());
-        model.addAttribute("currentIndex", currentIndex);
+    @RequestMapping(value = "/listImg/{id}", method = RequestMethod.GET)
+    public String listImg(HttpServletRequest request, @PathVariable Long id,String ids,String filePaths, Model model) {
+        Picture picture = pictureMapper.selectByPrimaryKey(id);
+        model.addAttribute("selectedImg", picture.getFilePath());
+        model.addAttribute("imgs", Arrays.asList(filePaths.split(",")));
+        model.addAttribute("parentName", picture.getName());
+        List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s-> Long.parseLong(s)).collect(Collectors.toList());
+        model.addAttribute("currentIndex", Collections.binarySearch(listIds,id));
         return "admin/album";
     }
 
-    @RequestMapping(value = "/delete/{path}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResultVO delete(HttpServletRequest request, @PathVariable String path) {
+    ResultVO delete(HttpServletRequest request,  List<Long> pictureIds, List<String> filePaths) {
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
         if (!checkPermisson(userSession, result)) {
             return result;
         }
-        path = FilePathConverter.decode(path);
-        String realPath = "";
-        if (realPath.equals(path)) {
-            result.setCode(-1);
-            result.setMsg("根目录不能删除");
-            return result;
-        }
-        File f = new File(path);
-        if (!f.exists()) {
-            result.setCode(-1);
-            result.setMsg("文件不存在或已被删除");
-            return result;
-        }
         try {
-            if (!f.isDirectory()) {
-                FileUtils.deleteQuietly(f);//删除缩略图
-                FileUtils.deleteQuietly(new File(f.getAbsolutePath().replaceFirst(ImageUtil.DEFAULT_THUMB_PREVFIX, "")));//删除原图
-            } else {
-                FileUtils.forceDelete(f);
+            if(!CollectionUtils.isEmpty(pictureIds)){
+                pictureMapper.deleteByPrimaryKeys(pictureIds);
+                pictureCategoryMapper.deleteByPrimaryKeys(pictureIds);
             }
-        } catch (IOException e) {
+            if(!CollectionUtils.isEmpty(filePaths)){
+                OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
+                DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
+                deleteObjectsRequest.setKeys(filePaths);
+                ossClient.deleteObjects(deleteObjectsRequest);
+            }
+        } catch (Exception e) {
             log.error("删除文件失败", e);
             result.setCode(-1);
             result.setMsg("删除文件失败");
             return result;
         }
         result.setCode(0);
-        result.setMsg("删除成功");
         return result;
     }
 
@@ -252,33 +263,6 @@ public class FileController {
     }
 
 
-    @RequestMapping(value = "/mkdir/{path}/{old}", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    String mkdir(@PathVariable("path") String path, @PathVariable("old") String old) throws UnsupportedEncodingException {
-        path = FilePathConverter.decode(path);
-        old = FilePathConverter.decode(old);
-        if (StringUtils.isNoneBlank(path)) {
-            path = path.replaceAll("_anchor", "");
-        }
-        if (StringUtils.isNoneBlank(old)) {
-            old = old.replaceAll("_anchor", "");
-        }
-        File f = new File(path);
-        File oldFile = new File(old);
-        if (f.exists()) {
-            return "文件夹已经存在，请重新输入";
-        } else {
-            if (!oldFile.exists()) {
-                f.mkdirs();
-            } else {
-                oldFile.renameTo(f);
-
-            }
-
-        }
-        return "0";
-    }
 
 
     @RequestMapping(value = "/uploadIndexBg", method = RequestMethod.POST)
@@ -298,7 +282,6 @@ public class FileController {
     public String toUpdateIndexBg() {
         return "admin/updateIndexBg";
     }
-
 
 
 }

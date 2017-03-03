@@ -79,4 +79,12 @@
      ( #{item.pictureId,jdbcType=BIGINT}, #{item.subCategoryId,jdbcType=INTEGER})
     </foreach>
   </insert>
+
+  <delete id="deleteByPrimaryKeys"  >
+    delete from t_picture_category
+    where pictureId in
+    <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
 </mapper>

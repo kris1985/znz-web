@@ -20,4 +20,6 @@ public interface PictureMapper {
     int updateByPrimaryKey(Picture record);
 
     List<Picture> selectByPage(FileQueryVO fileQueryVO);
+
+    void deleteByPrimaryKeys(List<Long> pictureIds);
 }

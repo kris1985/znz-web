@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%//@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,34 +56,19 @@
         <div class="album-carousel-zone" id="album-carousel-zone">
             <ul class="album-carousel-list" id="album-carousel-list">
 
-                <%/**
-                <c:forEach items="imgs" var="img">
+
+                <c:forEach items="${imgs}" var="img">
                     <c:choose>
-                        <c:when test="${img.selected}">
-                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${img.url}"><img src="${img.thumbUrl}" alt="${img.name}"  /></a></li>
+                        <c:when test="${img eq selectedImg}">
+                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}"></a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="album-carousel-thumb"><a href="img/demo/高靴140324200nVIP时装_020.jpg"><img src="img/demo/高靴140324200nVIP时装_020.jpg" alt="高靴140324200nVIP时装_020.jpg" width="230" height="144" /></a></li>
+                            <li class="album-carousel-thumb"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}"></a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                **/
-%>
 
-                <%
-                    java.util.List<com.znz.vo.FileNodeVO> list = (java.util.List<com.znz.vo.FileNodeVO>)request.getAttribute("imgs");
-                    String selectedClass = "";
-                    for(int i=0;i<list.size();i++){
-                        com.znz.vo.FileNodeVO vo = list.get(i);
-                        if (vo.isSelected()){
-                            selectedClass=   "album-carousel-thumb-selected";
-                        }else{
-                            selectedClass="";
-                        }
 
-                %>
-                <li class="album-carousel-thumb <%=selectedClass%>"><a href="<%= vo.getUrl()%>" title="<%=vo.getName().substring(6,vo.getName().lastIndexOf("."))%>"></a></li>
-                <%}%>
             </ul>
 
 
@@ -146,7 +131,7 @@
     });
 
     $(function(){
-		setTitle();
+		//setTitle();
         if($.cookie('albumBackground') !=undefined){
             $("body").css("background",$.cookie('albumBackground'));
             $("#album").css("background",$.cookie('albumBackground'));
@@ -244,15 +229,15 @@
         
         $("#downloadBtn").click(function(){
             var imgpath = $("#album-image").attr("src");
-            imgpath = imgpath.replace(/\//g,"FILE_SEPARATOR").replace(".","$dot$");
-            window.open("${basePath}/admin/file/download/" + imgpath)
+            //imgpath = imgpath.replace(/\//g,"FILE_SEPARATOR").replace(".","$dot$");
+            window.open( imgpath)
          /*   $.get("${basePath}/admin/file/download/" + imgpath, function (res) {
                 alert("ok");
             });*/
 
         });
 
-        document.oncontextmenu=function(){return false;}
+     //   document.oncontextmenu=function(){return false;}
     });
 
     function setTitle(){

@@ -16,4 +16,20 @@ public class AppConfig {
 
     @Value("${img.thumb.height}")
     private int imgThumbHeight;
+
+    @Value("${oss.endpoint}")
+    private String endpoint;
+
+    @Value("${oss.accessKeyId}")
+    private String accessKeyId;
+
+    @Value("${oss.accessKeySecret}")
+    private String accessKeySecret;
+
+    @Value("${oss.bucketName}")
+    private String bucketName;
+
+    @Value("${oss.path}")
+    private String ossPath;
+
 }

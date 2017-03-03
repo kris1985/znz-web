@@ -239,6 +239,12 @@ font-family: "黑体";
     border: 1px solid #e3e3e3;
     background: #fff;
 }
+  .mod-page .active a {
+      background: #699e00;
+      border: 1px solid #5f9000;
+      color: #fff;
+      cursor: default;
+  }
 .site-piclist li {
     float: left;
     padding-left: 20px;
@@ -246,15 +252,16 @@ font-family: "黑体";
 }
 
 .footerN1214 {
-    background: url(http://www.qiyipic.com/common/fix/public_images/footerbg1229.png) repeat-x center 20px;
     color: #666;
     line-height: 20px;
-    padding: 35px 0 20px 0;
+    padding: 10px 0 20px 0;
     text-align: center;
     font-family: "\5FAE\8F6F\96C5\9ED1","\9ED1\4F53";
     width: 100%;
     margin: 0 auto;
     font-size: 12px;
+    margin-top: 20px;
+    border: 1px solid #e7e7e7 ;
 }
 .footerN1214 .footmenu {
     padding: 9px 0 3px;

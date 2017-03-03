@@ -1,6 +1,7 @@
 package com.znz.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Picture {
     private Long id;
@@ -16,6 +17,8 @@ public class Picture {
     private Date createTime;
 
     private String createUser;
+
+    private String attach;
 
     public Long getId() {
         return id;
@@ -71,5 +74,13 @@ public class Picture {
 
     public void setCreateUser(String createUser) {
         this.createUser = createUser == null ? null : createUser.trim();
+    }
+
+    public void setAttach(String attach) {
+        this.attach = attach;
+    }
+
+    public String getAttach() {
+        return attach;
     }
 }

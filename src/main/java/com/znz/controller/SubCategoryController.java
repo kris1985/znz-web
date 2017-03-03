@@ -119,7 +119,7 @@ public class SubCategoryController {
         FileQueryVO fileQueryVO = new FileQueryVO();
         model.addAttribute("currentPage",currentPage);
         model.addAttribute("totalPage",0);
-        if(!CollectionUtils.isEmpty(categoryConditions) ){
+        if(!CollectionUtils.isEmpty(categoryConditions) && categoryConditions.stream().allMatch(s->s.size()>0)){
             fileQueryVO.setPage(pageParameter);
             fileQueryVO.setCategoryConditions(categoryConditions);
             List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);

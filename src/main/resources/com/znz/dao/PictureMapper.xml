@@ -9,9 +9,10 @@
     <result column="download_times" property="downloadTimes" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="attach" property="attach" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, file_path, click_times, download_times, create_time, create_user
+    id, name, file_path, click_times, download_times, create_time, create_user,attach
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -101,6 +102,9 @@
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=VARCHAR},
       </if>
+      <if test="attach != null" >
+        attach = #{attach,jdbcType=VARCHAR}
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -111,7 +115,8 @@
       click_times = #{clickTimes,jdbcType=INTEGER},
       download_times = #{downloadTimes,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR}
+      create_user = #{createUser,jdbcType=VARCHAR},
+      attach = #{attach,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -124,7 +129,9 @@
     <if test="categoryConditions!=null and categoryConditions.size()!=0">
       <foreach item="item" index="index" collection="categoryConditions" >
         and id in(
-        SELECT picture_id  FROM `t_picture_category` where sub_category_id  in
+        SELECT picture_id  FROM `t_picture_category`
+
+        where sub_category_id  in
           <foreach item="subItem" index="subIndex" collection="item"  open="(" separator="," close=")">
             #{subItem}
           </foreach>
@@ -133,5 +140,13 @@
     </if>
 
   </select>
+
+  <delete id="deleteByPrimaryKeys"  >
+    delete from t_picture
+    where id in
+    <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
 
 </mapper>

@@ -329,11 +329,11 @@
             $.jqPaginator('#pagination1', {
                     totalPages: ${totalPage},
                     visiblePages: 10,
-                   first: '<li class="first"><a href="javascript:void(0);">首页<\/a><\/li>',
-                              prev: '<li class="prev"><a href="javascript:void(0);"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
-                              next: '<li class="next"><a href="javascript:void(0);">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
-                              last: '<li class="last"><a href="javascript:void(0);">末页<\/a><\/li>',
-                              page: '<li class="page"><a href="javascript:void(0);">{{page}}<\/a><\/li>',
+                   first: '<li class="first"><a href="javascript:void(0);" style="width:40px">首页<\/a><\/li>',
+                              prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
+                              next: '<li class="next"><a href="javascript:void(0);" style="width:58px">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
+                              last: '<li class="last"><a href="javascript:void(0);" style="width:40px">末页<\/a><\/li>',
+                              page: '<li class="page"><a href="javascript:void(0);" style="width:40px">{{page}}<\/a><\/li>',
 
                     currentPage: ${currentPage},
                     onPageChange: function (num, type) {
@@ -347,6 +347,17 @@
                             }
                     }
                 });
+
+           $(".site-piclist_pic a").click(function () {
+               var selectedImg = $(this).attr("id");
+               var ids="";
+               var filePaths="";
+               $(".site-piclist_pic a").each(function (i) {
+                   ids=ids+$(this).attr("id")+",";
+                   filePaths=filePaths+$(this).attr("path")+",";
+               })
+               window.location.href = "${basePath}/admin/file/listImg/"+selectedImg+"?ids="+ids+"&filePaths="+filePaths
+           })
 
         })
 
@@ -381,7 +392,7 @@
 <div class="header">
     <div class="nav_bar">
         <div class="logo">
-            <a href="/"><img src="http://testznz.oss-cn-shanghai.aliyuncs.com/logo.png" width="118"> </a>
+            <a href="/"><img src="http://testznz.oss-cn-shanghai.aliyuncs.com/logo.png" width="118" height="38"> </a>
         </div>
         <div class="nav_warp">
             <ul class="navbar-ul mod_category_item">
@@ -426,9 +437,9 @@
 
     <div class="contextMenu" id="myMenu1">
         <ul>
-            <li id="add"><img src="${basePath}/resources/img/logo2.JPG"/> 新增同类</li>
-            <li id="addSub"><img src="${basePath}/resources/img/logo2.JPG"/>新增子类</li>
-            <li id="rename"><img src="${basePath}/resources/img/logo2.JPG"/> 重命名</li>
+            <li id="add"><img src="http://cdn-img.easyicon.net/png/10737/1073773.gif" width="16"/> 新增同类</li>
+            <li id="addSub"><img src="http://cdn-img.easyicon.net/png/10737/1073755.gif"  width="16"/> 新增子类</li>
+            <li id="rename"><img src="http://cdn-img.easyicon.net/png/10736/1073682.gif"  width="16"/> 重命名</li>
         </ul>
     </div>
 
@@ -497,7 +508,8 @@
 
 
     <div>
-        <input type="button" id="uploadBtn" value="上传"></button>
+        <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
+        <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理"></button>
     </div>
     <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
@@ -508,8 +520,9 @@
             <c:forEach var="item" items="${pictures}" varStatus="status">
                 <li>
                     <div class="site-piclist_pic">
-                        <a alt="${item.name}" title="${item.name}" href="#" class="site-piclist_pic_link" target="_blank">
-                            <img alt="${item.name}" title="${item.name}"
+                        <a id="${item.id}" path="${item.filePath}" alt="${item.name}" title="${item.name}"
+                           href="javascript:void(0)" class="site-piclist_pic_link" target="_blank">
+                            <img alt="${item.name}" title="${item.name}" style="border: 0"
                                  src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280">
                         </a>
                     </div>
@@ -522,8 +535,23 @@
   <div class="mod-page">
     <ul class="pagination" id="pagination1"></ul>
   </div>
+  <div id="1000000000046" class="ad-wrapper clearfix">
+        <div class="divide-green-h"></div>
+   </div>
 </div>
 
+
+<div class="footerN1214">
+    <p class="footmenu">
+        <a href="#" class="s1">APP专区</a><a href="#">公司介绍</a>
+        <a href="#">新闻动态</a><a href="#">联系方式</a>
+        <a href="#">招聘英才</a><a href="http://open.iqiyi.com">开放平台</a><a href="#">帮助与反馈</a><a href="#">About Us</a>
+    </p>
+    <p class="fEn">
+        <a href="http://tyulan.com/" class="link0"></a>&nbsp;&nbsp;
+        2017 TYULAN.COM
+    </p>
+</div>
 
 </body>
 

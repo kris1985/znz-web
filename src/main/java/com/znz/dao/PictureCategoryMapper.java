@@ -18,4 +18,6 @@ public interface PictureCategoryMapper {
     int updateByPrimaryKey(PictureCategory record);
 
     void batchInsert(List<PictureCategory> pictureCategories);
+
+    void deleteByPrimaryKeys(List<Long> pictureIds);
 }

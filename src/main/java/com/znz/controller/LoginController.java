@@ -102,7 +102,7 @@ public class LoginController {
         MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
         //管理员
         if(2==user.getUserType()||3==user.getUserType()){
-            return  "redirect:/admin/desktop";
+            return  "redirect:/admin/subCategory/showCategory";
         }
         return "redirect:/admin/file/list";
     }
