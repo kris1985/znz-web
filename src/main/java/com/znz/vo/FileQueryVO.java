@@ -14,7 +14,7 @@ public class FileQueryVO {
 
     private String name;
 
-    private List<String> categoryConditions;
+    private List<Set<Integer>> categoryConditions;
 
     private PageParameter page;
 

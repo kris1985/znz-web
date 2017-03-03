@@ -12,6 +12,7 @@
     <link rel="icon" href="../../favicon.ico">
     <title>类别列表</title>
     <%@ include file="../common/common.jsp" %>
+
     <link href="${basePath}/resources/css/jquery-ui-1.8.24.custom.css" rel="stylesheet"  />
     <link href="${basePath}/resources/css/jquery.contextMenu.css" rel="stylesheet">
     <link href="${basePath}/resources/css/aqy.css" rel="stylesheet" type="text/css"/>
@@ -21,6 +22,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-1.8.24.custom.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.contextmenu.r2.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/iframeTools.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/jqPaginator.js"></script>
 
     <script>
         var basePath = getContextPath();
@@ -323,6 +325,29 @@
                 }
             })
 
+
+            $.jqPaginator('#pagination1', {
+                    totalPages: ${totalPage},
+                    visiblePages: 10,
+                   first: '<li class="first"><a href="javascript:void(0);">首页<\/a><\/li>',
+                              prev: '<li class="prev"><a href="javascript:void(0);"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
+                              next: '<li class="next"><a href="javascript:void(0);">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
+                              last: '<li class="last"><a href="javascript:void(0);">末页<\/a><\/li>',
+                              page: '<li class="page"><a href="javascript:void(0);">{{page}}<\/a><\/li>',
+
+                    currentPage: ${currentPage},
+                    onPageChange: function (num, type) {
+                            if(type!="init"){
+                               var selected = getAllSelected();
+                               var url = "${basePath}/admin/subCategory/showCategory"
+                               $("#fourthSelectedId").val(selected);
+                               $("#currentPage").val(num);
+                               $("#categoryForm").attr("action", url);
+                               $("#categoryForm").submit();
+                            }
+                    }
+                });
+
         })
 
 
@@ -394,6 +419,8 @@
             <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
             <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
+            <input type="hidden" id="currentPage" name = "currentPage" value="1">
+             <input type="hidden" id="pageSize" name = "pageSize" value="4">
         </form>
     </div>
 
@@ -491,6 +518,10 @@
         </ul>
     </div>
 
+
+  <div class="mod-page">
+    <ul class="pagination" id="pagination1"></ul>
+  </div>
 </div>
 
 

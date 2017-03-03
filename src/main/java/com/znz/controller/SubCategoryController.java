@@ -53,7 +53,13 @@ public class SubCategoryController {
     private PictureCategoryMapper pictureCategoryMapper;
 
     @RequestMapping(value = "/showCategory")
-    public String showCategory(String firstSelectedId,String secondSelectedId,String thirdSelectedId,String fourthSelectedId, Model model){
+    public String showCategory(String firstSelectedId,String secondSelectedId,String thirdSelectedId,String fourthSelectedId,Integer currentPage,Integer pageSize, Model model){
+        if(currentPage == null){
+            currentPage = 1;
+        }
+        if(pageSize == null){
+            pageSize = 40;
+        }
         List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
         if(!CollectionUtils.isEmpty(subCategories) ){
@@ -81,32 +87,44 @@ public class SubCategoryController {
 
         final String  temp = secondSelectedId;
         Set<Integer> forthCategorys = new HashSet<>();
-        List<String> categoryConditions = new ArrayList<>();
+        List<Set<Integer>> categoryConditions = new ArrayList<>();
         if(StringUtils.isEmpty(fourthSelectedId)) {
             Set<Integer> thirdCategorys =    subCategories.stream().filter(s-> String.valueOf(s.getParentId()).equals(temp) ).map(s->s.getId()).collect(Collectors.toSet());//三级类
-            //Map<Integer,List<SubCategory>> map = subCategories.stream().filter(s -> thirdCategorys.contains(s.getParentId())).collect(Collectors.groupingBy(SubCategory::getParentId));
-            Set set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
-            String s = "";
+            Set<Integer> set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
             /*for(List<SubCategory> list :map.values()){
                s +=  StringUtils.join(list.stream().map(x->x.getId()).collect(Collectors.toList()), ",");
             }*/
-            categoryConditions.add(StringUtils.join(set,","));
+            categoryConditions.add(set);
         }else{
-            String[] ids = fourthSelectedId.split("[,;]");
-            forthCategorys = new HashSet(Arrays.asList(ids));
-            //categoryConditions = new ArrayList(fourthSelectedId.split(",") Arr);
-            categoryConditions = Arrays.asList(fourthSelectedId.split(";"));
+            forthCategorys = new HashSet(Arrays.asList( fourthSelectedId.split("[,;]")));
+
+            String[] ids = fourthSelectedId.split("[;]");
+            Set<Integer> set ;
+            for(String x:ids){
+                set = new HashSet<>();
+                String[] arr = x.split(",");
+                for(String item:arr){
+                    if(StringUtils.isNumeric(item)){
+                        set.add(Integer.parseInt(item));
+                    }
+                }
+                if(!CollectionUtils.isEmpty(set)){
+                    categoryConditions.add(set);
+                }
+
+            }
+
         }
-        PageParameter pageParameter = new PageParameter(1, 40);
+        PageParameter pageParameter = new PageParameter(currentPage, pageSize);
         FileQueryVO fileQueryVO = new FileQueryVO();
+        model.addAttribute("currentPage",currentPage);
+        model.addAttribute("totalPage",0);
         if(!CollectionUtils.isEmpty(categoryConditions) ){
             fileQueryVO.setPage(pageParameter);
             fileQueryVO.setCategoryConditions(categoryConditions);
             List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
             int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();
-            int currentPage = pageParameter.getCurrentPage();
-            model.addAttribute("currentPage",currentPage);
             model.addAttribute("totalPage",totalPage);
             model.addAttribute("totalCount",pageParameter.getTotalCount());
             model.addAttribute("pictures",pictures);

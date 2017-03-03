@@ -124,7 +124,10 @@
     <if test="categoryConditions!=null and categoryConditions.size()!=0">
       <foreach item="item" index="index" collection="categoryConditions" >
         and id in(
-        SELECT picture_id  FROM `t_picture_category` where sub_category_id  in( #{item})
+        SELECT picture_id  FROM `t_picture_category` where sub_category_id  in
+          <foreach item="subItem" index="subIndex" collection="item"  open="(" separator="," close=")">
+            #{subItem}
+          </foreach>
         )
       </foreach>
     </if>
