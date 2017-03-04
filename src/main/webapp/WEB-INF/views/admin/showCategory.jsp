@@ -16,6 +16,7 @@
     <link href="${basePath}/resources/css/jquery-ui-1.8.24.custom.css" rel="stylesheet"  />
     <link href="${basePath}/resources/css/jquery.contextMenu.css" rel="stylesheet">
     <link href="${basePath}/resources/css/aqy.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="${basePath}/resources/css/skins/black.css"/>
 
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/artDialog.js"></script>
@@ -23,7 +24,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery.contextmenu.r2.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/iframeTools.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jqPaginator.js"></script>
-
+    <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
     <script>
         var basePath = getContextPath();
         function openDialog(url) {
@@ -63,7 +64,7 @@
             //console.log("selected："+selected);
             return selected;
         }
-
+        var isSelected = false;
         $(function () {
             //栏目排序
             $(".mod_category_item").sortable({
@@ -95,7 +96,10 @@
             });
             $(".mod_category_item").disableSelection();
 
-
+            //图片懒加载
+            $("img.lazy").lazyload({
+                threshold : 100
+            });
 
             $('.noLeaf').contextMenu('myMenu1', {
                 bindings: {
@@ -105,10 +109,10 @@
 
                         $("#categoryLevel").val(id.attr("categoryLevel"));
                         $("#parentId").val(id.attr("parentId"));
-                        console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
+                        //console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
                         var sortId = id.parent().children().length + 1;
                         $("#sortId").val(sortId);
-                        console.log( $("#dialog"));
+                        //console.log( $("#dialog"));
                         $("#dialog").dialog({
                             height: 150,
                             modal: true,
@@ -269,10 +273,12 @@
                     }
                     var selected = getAllSelected();
                     //console.log("temp:"+temp)
-                    var url = "${basePath}/admin/subCategory/showCategory"
+                    var url = "${basePath}/admin/subCategory/showCategory";
                     $("#fourthSelectedId").val(selected);
-                    $("#categoryForm").attr("action", url);
-                    $("#categoryForm").submit();
+                    url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
+                    window.location.href= url;
+                    //$("#categoryForm").attr("action", url);
+                    //$("#categoryForm").submit();
 
 
             });
@@ -292,7 +298,7 @@
 
 
                 });
-                console.log(temp);
+                //console.log(temp);
                 if(temp.indexOf(",") !=-1){
                     temp = temp.substring(0,temp.length-1);
                 }
@@ -313,13 +319,9 @@
                         }
                     }
                 );
-
             })
                 $(".mod_sear_list").last().css("border-bottom","0")
-           /**/ $(".all_item").each(function (i) {
-               // console.log($(this).parent().children().length -1+ "----------------------" + $(this).parent().children().filter(".selected").length)
-             //   console.log($(this).parent().children());
-              //  console.log($(this).parent().children().filter(".selected"));
+                $(".all_item").each(function (i) {
                 if ($(this).parent().children().length  == $(this).parent().children().not(".selected").length) {
                     $(this).addClass("selected");//如果都没选中，全选 选中
                 }
@@ -327,15 +329,15 @@
 
 
             $.jqPaginator('#pagination1', {
-                    totalPages: ${totalPage},
-                    visiblePages: 10,
-                   first: '<li class="first"><a href="javascript:void(0);" style="width:40px">首页<\/a><\/li>',
-                              prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
-                              next: '<li class="next"><a href="javascript:void(0);" style="width:58px">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
-                              last: '<li class="last"><a href="javascript:void(0);" style="width:40px">末页<\/a><\/li>',
-                              page: '<li class="page"><a href="javascript:void(0);" style="width:40px">{{page}}<\/a><\/li>',
+                  totalPages: ${totalPage},
+                  visiblePages: 10,
+                  first: '<li class="first"><a href="javascript:void(0);" style="width:40px">首页<\/a><\/li>',
+                  prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
+                  next: '<li class="next"><a href="javascript:void(0);" style="width:58px">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
+                  last: '<li class="last"><a href="javascript:void(0);" style="width:40px">末页<\/a><\/li>',
+                  page: '<li class="page"><a href="javascript:void(0);" style="width:40px">{{page}}<\/a><\/li>',
+                  currentPage: ${currentPage},
 
-                    currentPage: ${currentPage},
                     onPageChange: function (num, type) {
                             if(type!="init"){
                                var selected = getAllSelected();
@@ -348,6 +350,7 @@
                     }
                 });
 
+            //点击图片看大图
            $(".site-piclist_pic a").click(function () {
                var selectedImg = $(this).attr("id");
                var ids="";
@@ -356,8 +359,56 @@
                    ids=ids+$(this).attr("id")+",";
                    filePaths=filePaths+$(this).attr("path")+",";
                })
-               window.location.href = "${basePath}/admin/file/listImg/"+selectedImg+"?ids="+ids+"&filePaths="+filePaths
+               window.open("${basePath}/admin/file/listImg/"+selectedImg+"?ids="+ids+"&filePaths="+filePaths);
            })
+
+            //上传附图 删除
+            $('.site-piclist li').contextMenu('menuPic', {
+                bindings: {
+                    'addAttach': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/file/toUploadAttach?id="+id;
+                        art.dialog.open(url,
+                            {
+                                "id": "2345",
+                                title: "上传文件",
+                                width: 500,
+                                height: 400,
+                                close: function () {
+
+                                }
+                            }
+                        );
+                    },
+                    'delete': function (t) {
+                        if(!confirm("确认要删除吗？")){
+                            return;
+                        }
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/file/delete?pictureId="+id;
+                        $.get(url,function (data) {
+                            if(data.code ==0 ){
+                                $(t).hide();
+                            }else{
+                                alert(data.msg)
+                            }
+                        })
+
+                    }
+                }
+            });
+
+
+           $("#selectBtn").click(function () {
+               if($(this).val() =="选择"){
+                   $(this).val("取消选择");
+                   isSelected = true;
+               }else{
+                   $(this).val("选择");
+                   isSelected = false;
+               }
+           })
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalCount}条</a></li>')
 
         })
 
@@ -437,16 +488,23 @@
 
     <div class="contextMenu" id="myMenu1">
         <ul>
-            <li id="add"><img src="http://cdn-img.easyicon.net/png/10737/1073773.gif" width="16"/> 新增同类</li>
-            <li id="addSub"><img src="http://cdn-img.easyicon.net/png/10737/1073755.gif"  width="16"/> 新增子类</li>
-            <li id="rename"><img src="http://cdn-img.easyicon.net/png/10736/1073682.gif"  width="16"/> 重命名</li>
+            <li id="add"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16" width="16"/> 新增同类</li>
+            <li id="addSub"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154118&size=16"  width="16"/> 新增子类</li>
+            <li id="rename"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"  width="16"/> 重命名</li>
         </ul>
     </div>
 
     <div class="contextMenu" id="myMenu2">
         <ul>
-            <li id="add1"><img src="${basePath}/resources/img/logo2.JPG"/> 新增同类</li>
-            <li id="rename1"><img src="${basePath}/resources/img/logo2.JPG"/> 重命名</li>
+            <li id="add1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
+            <li id="rename1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
+        </ul>
+    </div>
+
+    <div class="contextMenu" id="menuPic">
+        <ul>
+            <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
+            <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
         </ul>
     </div>
 
@@ -510,6 +568,8 @@
     <div>
         <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
         <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理"></button>
+        <input type="button" id="selectBtn" class="ui-state-default ui-corner-all ui-button" value="选择"></button>
+
     </div>
     <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
@@ -518,12 +578,12 @@
     <div class="wrapper-piclist" style="    margin-left: -20px;">
         <ul class="site-piclist">
             <c:forEach var="item" items="${pictures}" varStatus="status">
-                <li>
+                <li item="${item.id}">
                     <div class="site-piclist_pic">
                         <a id="${item.id}" path="${item.filePath}" alt="${item.name}" title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" target="_blank">
-                            <img alt="${item.name}" title="${item.name}" style="border: 0"
-                                 src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280">
+                            <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"
+                                 src="${basePath}/resources/img/grey.gif" width="280" height="199"   data-original="http://testznz.oss-cn-shanghai.aliyuncs.com/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280">
                         </a>
                     </div>
                 </li>

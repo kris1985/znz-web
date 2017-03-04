@@ -33,20 +33,24 @@
                 <li id="skin5" style="background:#000000">5</li>
             </ul>
         </div>
-        <p class="album-image-ft" id="album-image-ft">相册图片-示例图片（1）</p>
+        <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
-            <div class="album-image-bd" id="album-image-bd" ><img src="${selectedImg}" class="" id="album-image" alt="相册图片-示例图片（1）" onmousewheel="return bbimg(this)"/></div>
-
-            <!--
-                        <ul class="album-image-nav hide" id="album-image-nav">
-                            <li class="album-image-nav-left-block" id="album-image-nav-left-block"><a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a></li>
-                            <li class="album-image-nav-right-block" id="album-image-nav-right-block"><a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a></li>
-
-                        </ul>
-                        -->
+            <div class="album-image-bd" id="album-image-bd" ><img src="http://testznz.oss-cn-shanghai.aliyuncs.com/${selectedImg}" class="" id="album-image" alt="" onmousewheel="return bbimg(this)"/></div>
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
+            <div class="attachs" style="position: absolute; right: 50px;position: absolute;
+right: 150px;
+border: 1px solid #ccc;
+width: 100px;
+top: 50px;background: transparent;z-index: 9999">
+
+                    <c:forEach var="item" items="${attachs}">
+                       <img src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item}?x-oss-process=image/resize,m_pad,h_80,w_100"
+                            origin_src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item}" style="display: block;width: 100px;height: 71px;border: 0px solid #ccc;margin-bottom: 10px;">
+                    </c:forEach>
+
+            </div>
         </div>
 
     </div>
@@ -131,6 +135,9 @@
     });
 
     $(function(){
+        $(".attachs img").click(function () {
+          $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
+        })
 		//setTitle();
         if($.cookie('albumBackground') !=undefined){
             $("body").css("background",$.cookie('albumBackground'));
@@ -238,6 +245,7 @@
         });
 
      //   document.oncontextmenu=function(){return false;}
+
     });
 
     function setTitle(){

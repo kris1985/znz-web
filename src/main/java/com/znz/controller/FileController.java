@@ -66,7 +66,6 @@ public class FileController {
     private CategoryMapper categoryMapper;
 
 
-
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -85,7 +84,7 @@ public class FileController {
                 String originalName = file.getOriginalFilename();
                 String path = UUID.randomUUID().toString() + getSuffix(originalName);
                 boolean b = upload(ossClient, file, path);
-                if(b){
+                if (b) {
                     Picture picture = new Picture();
                     picture.setName(originalName);
                     picture.setFilePath(path);
@@ -112,16 +111,16 @@ public class FileController {
     }
 
     public String getSuffix(String originalName) {
-        return originalName.substring(originalName.indexOf("."),originalName.length());
+        return originalName.substring(originalName.indexOf("."), originalName.length());
     }
 
-    public boolean upload(OSSClient ossClient, MultipartFile file, String originalName)  {
-        try{
+    public boolean upload(OSSClient ossClient, MultipartFile file, String originalName) {
+        try {
             ossClient.putObject(new PutObjectRequest(appConfig.getBucketName(), originalName, file.getInputStream()));
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return  false;
+            return false;
         }
 
     }
@@ -130,7 +129,7 @@ public class FileController {
     @RequestMapping(value = "/uploadChild", method = RequestMethod.POST)
     public
     @ResponseBody
-    void uploadChild(HttpServletRequest request, @RequestParam MultipartFile[] files, Long pictrueId) throws IOException {
+    void uploadChild(HttpServletRequest request, @RequestParam MultipartFile[] files, Long pictureId) throws IOException {
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
         if (!checkPermisson(userSession, result)) {
@@ -139,17 +138,17 @@ public class FileController {
         OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
         try {
             List<String> attachs = new ArrayList<>();
-            String childPath ;
+            String childPath;
             for (MultipartFile file : files) {
-                childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());;
+                childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
                 boolean b = upload(ossClient, file, childPath);
-                if(b){
+                if (b) {
                     attachs.add(childPath);
                 }
             }
-            if(!CollectionUtils.isEmpty(attachs)){
+            if (!CollectionUtils.isEmpty(attachs)) {
                 Picture picture = new Picture();
-                picture.setId(pictrueId);
+                picture.setId(pictureId);
                 picture.setAttach(JSON.toJSONString(attachs));
                 pictureMapper.updateByPrimaryKeySelective(picture);
             }
@@ -213,45 +212,73 @@ public class FileController {
     }
 
     @RequestMapping(value = "/listImg/{id}", method = RequestMethod.GET)
-    public String listImg(HttpServletRequest request, @PathVariable Long id,String ids,String filePaths, Model model) {
+    public String listImg(HttpServletRequest request, @PathVariable Long id, String ids, String filePaths, Model model) {
         Picture picture = pictureMapper.selectByPrimaryKey(id);
         model.addAttribute("selectedImg", picture.getFilePath());
         model.addAttribute("imgs", Arrays.asList(filePaths.split(",")));
         model.addAttribute("parentName", picture.getName());
-        List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s-> Long.parseLong(s)).collect(Collectors.toList());
-        model.addAttribute("currentIndex", Collections.binarySearch(listIds,id));
+        List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
+        if(StringUtils.isNoneBlank(picture.getAttach())){
+            try{
+                model.addAttribute("attachs", JSON.parseArray(picture.getAttach(),String.class));
+            }catch (Exception e){
+                log.error(e.getLocalizedMessage(),e);
+            }
+        }
+        model.addAttribute("currentIndex", Collections.binarySearch(listIds, id));
         return "admin/album";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResultVO delete(HttpServletRequest request,  List<Long> pictureIds, List<String> filePaths) {
+    ResultVO delete(HttpServletRequest request, Long pictureId) {
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
         if (!checkPermisson(userSession, result)) {
             return result;
         }
+        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
+        List<String> keys = new ArrayList<>();
         try {
-            if(!CollectionUtils.isEmpty(pictureIds)){
-                pictureMapper.deleteByPrimaryKeys(pictureIds);
-                pictureCategoryMapper.deleteByPrimaryKeys(pictureIds);
-            }
-            if(!CollectionUtils.isEmpty(filePaths)){
-                OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
-                DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
-                deleteObjectsRequest.setKeys(filePaths);
-                ossClient.deleteObjects(deleteObjectsRequest);
-            }
+            Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
+            int i =  pictureMapper.deleteByPrimaryKey(pictureId);
+            deleteFile(pictureId, ossClient, keys, picture, i);
+            result.setCode(0);
         } catch (Exception e) {
             log.error("删除文件失败", e);
             result.setCode(-1);
             result.setMsg("删除文件失败");
             return result;
+        } finally {
+            ossClient.shutdown();
         }
-        result.setCode(0);
         return result;
     }
+
+    public void deleteFile(Long pictureId, OSSClient ossClient, List<String> keys, Picture picture, int i) {
+        if (picture != null & i>0) {
+            pictureCategoryMapper.deleteByPrimaryKey(pictureId);
+            keys.add(picture.getFilePath());
+            String attach = picture.getAttach();
+            if (StringUtils.isNoneBlank(attach)) {
+                List<String> attachs = JSON.parseArray(attach, String.class);
+                if (!CollectionUtils.isEmpty(attachs)) {
+                    keys.addAll(attachs);
+                }
+            }
+            deleteFile(pictureId, ossClient, keys);
+        }
+    }
+
+    public void deleteFile(Long pictureId, OSSClient ossClient, List<String> keys) {
+        if (!CollectionUtils.isEmpty(keys)) {
+            DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
+            deleteObjectsRequest.setKeys(keys);
+            ossClient.deleteObjects(deleteObjectsRequest);
+        }
+    }
+
 
     private boolean checkPermisson(UserSession userSession, ResultVO result) {
         if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3) {
@@ -261,8 +288,6 @@ public class FileController {
         }
         return true;
     }
-
-
 
 
     @RequestMapping(value = "/uploadIndexBg", method = RequestMethod.POST)

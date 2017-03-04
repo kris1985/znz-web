@@ -91,13 +91,9 @@ public class SubCategoryController {
         if(StringUtils.isEmpty(fourthSelectedId)) {
             Set<Integer> thirdCategorys =    subCategories.stream().filter(s-> String.valueOf(s.getParentId()).equals(temp) ).map(s->s.getId()).collect(Collectors.toSet());//三级类
             Set<Integer> set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
-            /*for(List<SubCategory> list :map.values()){
-               s +=  StringUtils.join(list.stream().map(x->x.getId()).collect(Collectors.toList()), ",");
-            }*/
             categoryConditions.add(set);
         }else{
             forthCategorys = new HashSet(Arrays.asList( fourthSelectedId.split("[,;]")));
-
             String[] ids = fourthSelectedId.split("[;]");
             Set<Integer> set ;
             for(String x:ids){
@@ -152,6 +148,7 @@ public class SubCategoryController {
                 subCategoryVOs.add(subCategoryVO);
             }
         }
+        subCategoryVOs.stream().sorted(Comparator.comparing(SubCategoryVO::getSortId));
         return subCategoryVOs;
     }
 
