@@ -80,6 +80,7 @@ public class LoginController {
         user.setLastLoginTime(new Date());
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
+        request.getSession().setAttribute(Constants.ADMIN_FLAG,(userSession.getUser().getUserType() == 2 || userSession.getUser().getUserType() == 3));
         if(1==userLoginVO.getRemember()){
             String uname = "";
             try {
@@ -100,11 +101,8 @@ public class LoginController {
             response.addCookie(cookie);
         }
         MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
-        //管理员
-        if(2==user.getUserType()||3==user.getUserType()){
-            return  "redirect:/admin/subCategory/showCategory";
-        }
-        return "redirect:/admin/file/list";
+        return  "redirect:/admin/subCategory/showCategory";
+
     }
 
 

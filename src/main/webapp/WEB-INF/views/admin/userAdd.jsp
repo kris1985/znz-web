@@ -146,8 +146,9 @@ $(function(){
                                 data:myobj,
     							templateFile: '${basePath}/resources/templates/default.mst',
                                  schema: [
+                                     {"header":"ID", "key":"authId" },
                                                     {"header":"选择权限", "key":"authName",
-                                                     "template":'<input type="checkbox" name="auths" value={{authName}}> {{authName}}'
+                                                     "template":'<input type="checkbox" name="auths" value={{authId}}> {{authName}}'
                                                      }
                                          ]
                             });

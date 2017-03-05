@@ -27,24 +27,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
     <script>
         var basePath = getContextPath();
-        function openDialog(url) {
-            $("#dialog").dialog({
-                height: 150,
-                modal: true,
-                position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                buttons: [
-                    {
-                        text: "提交",
-                        icons: {
-                            primary: "ui-icon-heart"
-                        },
-                        click: function () {
-                            $("#categoryForm").attr("action", url);
-                            $("#categoryForm").submit();
-                        }
-                    }]
-            });
-        }
+
 
         /*获取所有类别除掉全选，格式1,2,3;4,5,6  不同类别用；分开*/
         function getAllSelected() {
@@ -64,270 +47,356 @@
             //console.log("selected："+selected);
             return selected;
         }
-        var isSelected = false;
-        $(function () {
-            //栏目排序
-            $(".mod_category_item").sortable({
-                update: function (event, ui) {
-                    var array = $(this).children();
-                    var data = "";
-                    for (var i = 0; i < array.length; i++) {
-                        if ("" == array[i].id || array[i].id.indexOf("all")!=-1) {
-                            continue;
+
+        <c:if test="${isAdmin }">
+            function isValid(name) {
+                var valid = false;
+                $.ajax({
+                    type: "POST",
+                    url: basePath + "/admin/subCategory/validName",
+                    data: "name=" + name,
+                    cache: false,
+                    async: false,
+                    success: function (ret) {
+                        if (ret.code == 0) {
+                            valid = true;
+                        } else {
+                            alert(ret.msg);
                         }
-                        //console.log(array[i].id);
-                        data += array[i].id + ":" + i + ";";
+                    },
+                    error: function (msg) {
+                        alert("服务器出错了");
                     }
-                   // console.log(data);
-                    $.ajax({
-                        type: "POST",
-                        url: basePath + "/admin/subCategory/sort",
-                        data: "param=" + data,
-                        cache: false,
-                        success: function (msg) {
-                            //alert( "Data Saved: " + msg );
+                });
+                return valid;
+            }
+        </c:if>
+
+        $(function () {
+            <c:if test="${isAdmin }">
+                //栏目排序 左右
+                $(".mod_category_item").sortable({
+                    update: function (event, ui) {
+                        var array = $(this).children();
+                        var data = "";
+                        for (var i = 0; i < array.length; i++) {
+                            if ("" == array[i].id || array[i].id.indexOf("all")!=-1) {
+                                continue;
+                            }
+                            //console.log(array[i].id);
+                            data += array[i].id + ":" + i + ";";
+                        }
+                        // console.log(data);
+                        $.ajax({
+                            type: "POST",
+                            url: basePath + "/admin/subCategory/sort",
+                            data: "param=" + data,
+                            cache: false,
+                            success: function (msg) {
+                                //alert( "Data Saved: " + msg );
+                            },
+                            error: function (msg) {
+                                alert("服务器出错了");
+                            }
+                        });
+
+                    }
+                });
+                $(".mod_category_item").disableSelection();
+
+
+                $('.noLeaf').contextMenu('myMenu1', {
+                    bindings: {
+                        'add': function (t) {
+                            var url = basePath + "/admin/subCategory/add";
+                            var id = $("#" + t.id);
+
+                            $("#categoryLevel").val(id.attr("categoryLevel"));
+                            $("#parentId").val(id.attr("parentId"));
+                            //console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
+                            var sortId = id.parent().children().length + 1;
+                            $("#sortId").val(sortId);
+                            //console.log( $("#dialog"));
+                            $("#dialog").dialog({
+                                height: 150,
+                                modal: true,
+                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                                buttons: [
+                                    {
+                                        text: "提交",
+                                        icons: {
+                                            primary: "ui-icon-heart"
+                                        },
+                                        click: function () {
+                                            if(!isValid($("#categoryName").val())){
+                                                return;
+                                            }
+                                            $("#categoryForm").attr("action", url);
+                                            $("#categoryForm").submit();
+                                        }
+                                    }]
+                            });
                         },
-                        error: function (msg) {
-                            alert("服务器出错了");
+
+                        'addSub': function (t) {
+                            var url = basePath + "/admin/subCategory/add";
+                            var id = $("#" + t.id);
+                            var parentId = t.id;
+                            var sortId = id.parent().children().length + 1;
+                            $("#sortId").val(sortId);
+                            $("#parentId").val(parentId);
+                            $("#categoryLevel").val(parseInt(id.attr("categoryLevel"))+1);
+                            $("#dialog").dialog({
+                                height: 150,
+                                modal: true,
+                                title:"新增子类别",
+                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                                buttons: [
+                                    {
+                                        text: "提交",
+                                        icons: {
+                                            primary: "ui-icon-heart"
+                                        },
+                                        click: function () {
+                                            if(!isValid($("#categoryName").val())){
+                                                return;
+                                            }
+                                            $("#categoryForm").attr("action", url);
+                                            $("#categoryForm").submit();
+                                        }
+                                    }]
+                            });
+                        },
+
+                        'rename': function (t) {
+                            var url = basePath + "/admin/subCategory/update";
+                            var name = $.trim($("#" + t.id) .text());
+                            $("#id").val(t.id);
+                            $("#categoryName").val(name);
+                            $("#dialog").dialog({
+                                height: 150,
+                                modal: true,
+                                title:"重命名",
+                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                                buttons: [
+                                    {
+                                        text: "提交",
+                                        icons: {
+                                            primary: "ui-icon-heart"
+                                        },
+                                        click: function () {
+                                            if(!isValid($("#categoryName").val())){
+                                                return;
+                                            }
+                                            $("#categoryForm").attr("action", url);
+                                            $("#categoryForm").submit();
+                                        }
+                                    }]
+                            });
+
+                        }
+
+                    }
+
+                });
+
+                $('.leaf_item').contextMenu('myMenu2', {
+                    bindings: {
+                        'add1': function (t) {
+                            var url = basePath + "/admin/subCategory/add";
+                            var id = $("#" + t.id);
+
+                            $("#categoryLevel").val(id.attr("categoryLevel"));
+                            $("#parentId").val(id.attr("parentId"));
+                            // console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
+                            var sortId = id.parent().children().length + 1;
+                            $("#sortId").val(sortId);
+                            console.log( $("#dialog"));
+                            $("#dialog").dialog({
+                                height: 150,
+                                modal: true,
+                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                                buttons: [
+                                    {
+                                        text: "提交",
+                                        icons: {
+                                            primary: "ui-icon-heart"
+                                        },
+                                        click: function () {
+                                            if(!isValid($("#categoryName").val())){
+                                                return;
+                                            }
+                                            $("#categoryForm").attr("action", url);
+                                            $("#categoryForm").submit();
+                                        }
+                                    }]
+                            });
+                        },
+                        'rename1': function (t) {
+                            var url = basePath + "/admin/subCategory/update";
+                            var name = $.trim($("#" + t.id) .text());
+                            $("#id").val(t.id);
+                            $("#categoryName").val(name);
+                            $("#dialog").dialog({
+                                height: 150,
+                                modal: true,
+                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                                buttons: [
+                                    {
+                                        text: "提交",
+                                        icons: {
+                                            primary: "ui-icon-heart"
+                                        },
+                                        click: function () {
+                                            if(!isValid($("#categoryName").val())){
+                                                return;
+                                            }
+                                            $("#categoryForm").attr("action", url);
+                                            $("#categoryForm").submit();
+                                        }
+                                    }]
+                            });
+
+                        }
+
+                    }
+                });
+
+                $("#uploadBtn").click(function () {
+                    var temp = "";
+                    $("#leaf_category").find(".selected").each(function (i) {
+                        id = $(this).attr("id");
+                        if (id.indexOf("all") != -1) {
+                            $.each($(this).siblings(), function (i, n) {
+                                id = $(this).attr("id");
+                                temp += id + ","
+                            });
+                        } else {
+                            temp += id + ","
                         }
                     });
+                    //console.log(temp);
+                    if(temp.indexOf(",") !=-1){
+                        temp = temp.substring(0,temp.length-1);
+                    }
+                    //console.log(temp);
+                    var url = "${basePath}/admin/file/toUpload?category=" + temp
+                    art.dialog.open(url,
+                        {
+                            "id": "2345",
+                            title: "上传文件",
+                            width: 500,
+                            height: 400,
+                            close: function () {
+                                var selected = getAllSelected();
+                                var path = "${basePath}/admin/subCategory/showCategory"
+                                $("#fourthSelectedId").val(selected);
+                                $("#categoryForm").attr("action", path);
+                                $("#categoryForm").submit();
+                            }
+                        }
+                    );
+                })
 
-                }
-            });
-            $(".mod_category_item").disableSelection();
+                //用户管理
+                $("#userManagerBtn").click(function () {
+                    var url = "${basePath}/admin/user/users";
+                    art.dialog.open(url,
+                        {
+                            "id": "2347",
+                            title: "上传文件",
+                            width: 800,
+                            height: 500
+                        }
+                    );
+                })
+
+                //上传附图 删除
+                $('.site-piclist li').contextMenu('menuPic', {
+                    bindings: {
+                        'addAttach': function (t) {
+                            var id = $(t).attr("item");
+                            var url = "${basePath}/admin/file/toUploadAttach?id="+id;
+                            art.dialog.open(url,
+                                {
+                                    "id": "2345",
+                                    title: "上传文件",
+                                    width: 500,
+                                    height: 400,
+                                    close: function () {
+
+                                    }
+                                }
+                            );
+                        },
+                        'delete': function (t) {
+                            if(!confirm("确认要删除吗？")){
+                                return;
+                            }
+                            var id = $(t).attr("item");
+                            var url = "${basePath}/admin/file/delete?pictureId="+id;
+                            $.get(url,function (data) {
+                                if(data.code ==0 ){
+                                    $(t).hide();
+                                }else{
+                                    alert(data.msg)
+                                }
+                            })
+
+                        }
+                    }
+                });
+            </c:if>
+
 
             //图片懒加载
             $("img.lazy").lazyload({
                 threshold : 100
             });
 
-            $('.noLeaf').contextMenu('myMenu1', {
-                bindings: {
-                    'add': function (t) {
-                        var url = basePath + "/admin/subCategory/add";
-                        var id = $("#" + t.id);
-
-                        $("#categoryLevel").val(id.attr("categoryLevel"));
-                        $("#parentId").val(id.attr("parentId"));
-                        //console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
-                        var sortId = id.parent().children().length + 1;
-                        $("#sortId").val(sortId);
-                        //console.log( $("#dialog"));
-                        $("#dialog").dialog({
-                            height: 150,
-                            modal: true,
-                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                            buttons: [
-                                {
-                                    text: "提交",
-                                    icons: {
-                                        primary: "ui-icon-heart"
-                                    },
-                                    click: function () {
-                                        if(!isValid($("#categoryName").val())){
-                                            return;
-                                        }
-                                        $("#categoryForm").attr("action", url);
-                                        $("#categoryForm").submit();
-                                    }
-                                }]
-                        });
-                    },
-
-                    'addSub': function (t) {
-                        var url = basePath + "/admin/subCategory/add";
-                        var id = $("#" + t.id);
-                        var parentId = t.id;
-                        var sortId = id.parent().children().length + 1;
-                        $("#sortId").val(sortId);
-                        $("#parentId").val(parentId);
-                        $("#categoryLevel").val(parseInt(id.attr("categoryLevel"))+1);
-                        $("#dialog").dialog({
-                            height: 150,
-                            modal: true,
-                            title:"新增子类别",
-                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                            buttons: [
-                                {
-                                    text: "提交",
-                                    icons: {
-                                        primary: "ui-icon-heart"
-                                    },
-                                    click: function () {
-                                        if(!isValid($("#categoryName").val())){
-                                            return;
-                                        }
-                                        $("#categoryForm").attr("action", url);
-                                        $("#categoryForm").submit();
-                                    }
-                                }]
-                        });
-                    },
-
-                    'rename': function (t) {
-                        var url = basePath + "/admin/subCategory/update";
-                        var name = $.trim($("#" + t.id) .text());
-                        $("#id").val(t.id);
-                        $("#categoryName").val(name);
-                        $("#dialog").dialog({
-                            height: 150,
-                            modal: true,
-                            title:"重命名",
-                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                            buttons: [
-                                {
-                                    text: "提交",
-                                    icons: {
-                                        primary: "ui-icon-heart"
-                                    },
-                                    click: function () {
-                                        if(!isValid($("#categoryName").val())){
-                                            return;
-                                        }
-                                        $("#categoryForm").attr("action", url);
-                                        $("#categoryForm").submit();
-                                    }
-                                }]
-                        });
-
-                    }
-
-                }
-
-            });
-
-            $('.leaf_item').contextMenu('myMenu2', {
-                bindings: {
-                    'add1': function (t) {
-                        var url = basePath + "/admin/subCategory/add";
-                        var id = $("#" + t.id);
-
-                        $("#categoryLevel").val(id.attr("categoryLevel"));
-                        $("#parentId").val(id.attr("parentId"));
-                        console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
-                        var sortId = id.parent().children().length + 1;
-                        $("#sortId").val(sortId);
-                        console.log( $("#dialog"));
-                        $("#dialog").dialog({
-                            height: 150,
-                            modal: true,
-                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                            buttons: [
-                                {
-                                    text: "提交",
-                                    icons: {
-                                        primary: "ui-icon-heart"
-                                    },
-                                    click: function () {
-                                        if(!isValid($("#categoryName").val())){
-                                            return;
-                                        }
-                                        $("#categoryForm").attr("action", url);
-                                        $("#categoryForm").submit();
-                                    }
-                                }]
-                        });
-                    },
-                    'rename1': function (t) {
-                        var url = basePath + "/admin/subCategory/update";
-                        var name = $.trim($("#" + t.id) .text());
-                        $("#id").val(t.id);
-                        $("#categoryName").val(name);
-                        $("#dialog").dialog({
-                            height: 150,
-                            modal: true,
-                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                            buttons: [
-                                {
-                                    text: "提交",
-                                    icons: {
-                                        primary: "ui-icon-heart"
-                                    },
-                                    click: function () {
-                                        if(!isValid($("#categoryName").val())){
-                                            return;
-                                        }
-                                        $("#categoryForm").attr("action", url);
-                                        $("#categoryForm").submit();
-                                    }
-                                }]
-                        });
-
-                    }
-
-                }
-            });
-
-//叶子节点
+            //叶子节点,点击类别
             $(".leaf_item").click(function () {
-                if ($(this).hasClass("selected")) {
-                    $(this).removeClass("selected");
-                    if($(this).parent().children().length  == $(this).parent().children().not(".selected").length){
-                        $(this).parent().children().first().addClass("selected");//都没选中，全选选中
-                    }
-                } else {
-                    $(this).addClass("selected");
+                <c:choose>
+                    <c:when test="${isAdmin}">
+                        if ($(this).hasClass("selected")) {
+                            $(this).removeClass("selected");
+                            if($(this).parent().children().length  == $(this).parent().children().not(".selected").length){
+                                $(this).parent().children().first().addClass("selected");//都没选中，全选选中
+                            }
+                        } else {
+                            $(this).addClass("selected");
+                        }
+                    </c:when>
+                    <c:otherwise>
+                         if ($(this).hasClass("selected")) {
+                             return;
+                         }else {
+                             $(this).addClass("selected");
+                             $(this).siblings().removeClass("selected");
+                         }
+                     </c:otherwise>
+                </c:choose>
+
+
+                if($(this).attr("id").indexOf("all") == -1){
+                    $(this).parent().children().first().removeClass("selected") //如果选择了非全选，全选去掉选中
                 }
-                    if($(this).attr("id").indexOf("all") == -1){
-                        $(this).parent().children().first().removeClass("selected") //如果选择了非全选，全选去掉选中
-                    }
-                    var selected = getAllSelected();
-                    //console.log("temp:"+temp)
-                    var url = "${basePath}/admin/subCategory/showCategory";
-                    $("#fourthSelectedId").val(selected);
-                    url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
-                    window.location.href= url;
-                    //$("#categoryForm").attr("action", url);
-                    //$("#categoryForm").submit();
-
-
+                var selected = getAllSelected();
+                //console.log("temp:"+temp)
+                var url = "${basePath}/admin/subCategory/showCategory";
+                $("#fourthSelectedId").val(selected);
+                url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
+                window.location.href= url;
             });
 
-            $("#uploadBtn").click(function () {
-                var temp = "";
-                $("#leaf_category").find(".selected").each(function (i) {
-                    id = $(this).attr("id");
-                    if (id.indexOf("all") != -1) {
-                        $.each($(this).siblings(), function (i, n) {
-                            id = $(this).attr("id");
-                            temp += id + ","
-                        });
-                    } else {
-                        temp += id + ","
-                    }
-
-
-                });
-                //console.log(temp);
-                if(temp.indexOf(",") !=-1){
-                    temp = temp.substring(0,temp.length-1);
-                }
-                //console.log(temp);
-                var url = "${basePath}/admin/file/toUpload?category=" + temp
-                art.dialog.open(url,
-                    {
-                        "id": "2345",
-                        title: "上传文件",
-                        width: 500,
-                        height: 400,
-                        close: function () {
-                            var selected = getAllSelected();
-                            var path = "${basePath}/admin/subCategory/showCategory"
-                            $("#fourthSelectedId").val(selected);
-                            $("#categoryForm").attr("action", path);
-                            $("#categoryForm").submit();
-                        }
-                    }
-                );
-            })
-                $(".mod_sear_list").last().css("border-bottom","0")
-                $(".all_item").each(function (i) {
+            $(".mod_sear_list").last().css("border-bottom","0")
+            $(".all_item").each(function (i) {
                 if ($(this).parent().children().length  == $(this).parent().children().not(".selected").length) {
                     $(this).addClass("selected");//如果都没选中，全选 选中
                 }
             })
 
-
+            //分页
             $.jqPaginator('#pagination1', {
                   totalPages: ${totalPage},
                   visiblePages: 10,
@@ -349,6 +418,8 @@
                             }
                     }
                 });
+            //共多少页面
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalCount}条</a></li>')
 
             //点击图片看大图
            $(".site-piclist_pic a").click(function () {
@@ -361,79 +432,9 @@
                })
                window.open("${basePath}/admin/file/listImg/"+selectedImg+"?ids="+ids+"&filePaths="+filePaths);
            })
-
-            //上传附图 删除
-            $('.site-piclist li').contextMenu('menuPic', {
-                bindings: {
-                    'addAttach': function (t) {
-                        var id = $(t).attr("item");
-                        var url = "${basePath}/admin/file/toUploadAttach?id="+id;
-                        art.dialog.open(url,
-                            {
-                                "id": "2345",
-                                title: "上传文件",
-                                width: 500,
-                                height: 400,
-                                close: function () {
-
-                                }
-                            }
-                        );
-                    },
-                    'delete': function (t) {
-                        if(!confirm("确认要删除吗？")){
-                            return;
-                        }
-                        var id = $(t).attr("item");
-                        var url = "${basePath}/admin/file/delete?pictureId="+id;
-                        $.get(url,function (data) {
-                            if(data.code ==0 ){
-                                $(t).hide();
-                            }else{
-                                alert(data.msg)
-                            }
-                        })
-
-                    }
-                }
-            });
-
-
-           $("#selectBtn").click(function () {
-               if($(this).val() =="选择"){
-                   $(this).val("取消选择");
-                   isSelected = true;
-               }else{
-                   $(this).val("选择");
-                   isSelected = false;
-               }
-           })
-            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalCount}条</a></li>')
-
         })
 
 
-        function isValid(name){
-            var valid = false;
-            $.ajax({
-                type: "POST",
-                url: basePath + "/admin/subCategory/validName",
-                data: "name=" + name,
-                cache: false,
-                async:false,
-                success: function (ret) {
-                    if(ret.code ==0){
-                        valid = true;
-                    }else{
-                        alert(ret.msg);
-                    }
-                },
-                error: function (msg) {
-                    alert("服务器出错了");
-                }
-            });
-            return valid;
-        }
 
     </script>
 
@@ -482,32 +483,35 @@
             <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="1">
-             <input type="hidden" id="pageSize" name = "pageSize" value="4">
+             <input type="hidden" id="pageSize" name = "pageSize" value="40">
         </form>
     </div>
 
-    <div class="contextMenu" id="myMenu1">
-        <ul>
-            <li id="add"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16" width="16"/> 新增同类</li>
-            <li id="addSub"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154118&size=16"  width="16"/> 新增子类</li>
-            <li id="rename"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"  width="16"/> 重命名</li>
-        </ul>
-    </div>
+    <c:if test="${isAdmin }">
+        <div class="contextMenu" id="myMenu1">
+            <ul>
+                <li id="add"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16" width="16"/> 新增同类</li>
+                <li id="addSub"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154118&size=16"  width="16"/> 新增子类</li>
+                <li id="rename"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"  width="16"/> 重命名</li>
+            </ul>
+        </div>
 
-    <div class="contextMenu" id="myMenu2">
-        <ul>
-            <li id="add1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
-            <li id="rename1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
-        </ul>
-    </div>
+        <div class="contextMenu" id="myMenu2">
+            <ul>
+                <li id="add1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
+                <li id="rename1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
+            </ul>
+        </div>
 
-    <div class="contextMenu" id="menuPic">
-        <ul>
-            <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
-            <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
-        </ul>
-    </div>
-
+        <div class="contextMenu" id="menuPic">
+            <ul>
+                <!--
+                <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
+                -->
+                <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+            </ul>
+        </div>
+  </c:if>
 
     <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
          <div class="mod_sear_list">
@@ -566,10 +570,10 @@
 
 
     <div>
-        <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
-        <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理"></button>
-        <input type="button" id="selectBtn" class="ui-state-default ui-corner-all ui-button" value="选择"></button>
-
+        <c:if test="${isAdmin }">
+             <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
+             <input type="button" id="userManagerBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理"></button>
+        </c:if>
     </div>
     <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>

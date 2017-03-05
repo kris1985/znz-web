@@ -14,4 +14,6 @@ public class Constants {
     public static  final String  FILE_SEPARATOR = "FILE_SEPARATOR";
     
     public static  final String  USER_SESSION = "userSession";
+
+    public static  final String  ADMIN_FLAG = "isAdmin";
 }

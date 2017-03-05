@@ -39,18 +39,18 @@
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
+            <!--
             <div class="attachs" style="position: absolute; right: 50px;position: absolute;
 right: 150px;
 border: 1px solid #ccc;
 width: 100px;
 top: 50px;background: transparent;z-index: 9999">
-
                     <c:forEach var="item" items="${attachs}">
                        <img src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item}?x-oss-process=image/resize,m_pad,h_80,w_100"
                             origin_src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item}" style="display: block;width: 100px;height: 71px;border: 0px solid #ccc;margin-bottom: 10px;">
                     </c:forEach>
-
             </div>
+            -->
         </div>
 
     </div>

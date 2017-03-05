@@ -28,12 +28,10 @@ public class UserAddVO {
 
     private String phone;
 
-    private String userId;
+    private int userId;
 
     private List<String> auths;
 
-    private String oper;
 
-    private int userType;
 
 }
