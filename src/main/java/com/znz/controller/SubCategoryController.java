@@ -25,7 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.znz.dao.CategoryMapper;
 import com.znz.model.Category;
 import com.znz.util.Constants;
 import com.znz.util.PermissionUtil;
@@ -45,8 +44,6 @@ public class SubCategoryController {
     @Resource
     private SubCategoryMapper     subCategoryMapper;
 
-    @Resource
-    private CategoryMapper        categoryMapper;
 
     @Resource
     private PictureMapper         pictureMapper;

@@ -1,35 +1,59 @@
 <%@ page import="java.net.URLDecoder" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title>中旅总社综合旅游中心</title>
-    <%@ include file="common/common.jsp"%>
-    <link href="${basePath}/resources/css/login.css" rel="stylesheet"  type="text/css" />
-    <script src="${basePath}/resources/js/jquery-1.11.2.min.js"> </script>
-    <script>
-        $(function(){
-            $("#loginBtn").click(function(){
-                login();
-            });
-            if($("#message")){
-                $(".form-signin").show();
-            }else{
-                $(".form-signin").show(1000)
-            }
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-            $("#remember").click(function(){
-                if($(this).get(0).checked){
-                    $(this).val("1");
-                }else{
-                    $(this).val("0");
-                }
-            });
+    <title>指南针</title>
+    <%@ include file="common/common.jsp"%>
+
+      <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
+    <link href="${basePath}/resources/css/login.css" rel="stylesheet"  type="text/css" />
+      <style>
+          body{ background: url("${basePath}/upload/bg/indexBg.jpg") center 0px no-repeat }
+      </style>
+	<!--
+		Used for including CSRF token in JSON requests
+		Also see bottom of this file for adding CSRF token to JQuery AJAX requests
+	-->
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
+	<script src="${basePath}/resources/js/jquery-1.11.2.min.js"> </script>
+    <script>
+    $(function(){
+        $("#loginBtn").click(function(){
+            login();
         });
-        function refreshRandomCode(){
-            $("#codeImg").attr("src", "/genCode?"+Math.random());
+        if($("#message")){
+            $(".form-signin").show();
+        }else{
+            $(".form-signin").show(1000)
         }
+        if("9999"=="${param.error}"){
+             alert("您的账号在其它地方登陆");
+        }else  if("8888"=="${param.error}"){
+            alert("会话超时请重新登陆");
+        }
+        $("#remember").click(function(){
+            if($(this).get(0).checked){
+                $(this).val("1");
+            }else{
+                $(this).val("0");
+            }
+        });
+
+
+            });
+    function refreshRandomCode(){
+        $("#codeImg").attr("src", "/genCode?"+Math.random());
+    }
         function login(){
             if($.trim($("#userName").val())==""){
                 alert("请求输入用户名");
@@ -49,18 +73,19 @@
             $("#loginForm").submit();
         }
 
+
     </script>
 
-    <script>
-        document.onkeydown=function(event){
-            e = event ? event :(window.event ? window.event : null);
-            if(e.keyCode==13){
-                login();
-            }
-        }
-    </script>
+      <script>
+          document.onkeydown=function(event){
+              e = event ? event :(window.event ? window.event : null);
+              if(e.keyCode==13){
+                  login();
+              }
+          }
+      </script>
 
-</head>
+  </head>
 <body>
 <%
     String name="";
@@ -76,71 +101,42 @@
                     pageContext.setAttribute("userName",name);
                     pageContext.setAttribute("pwd",passward);
                     break;
-                }
+                 }
             }
         }
     }
 %>
+
 <c:if test="${not empty error}">
     <script>alert("${error}")</script>
 </c:if>
 
-<form id="loginForm" action="${basePath}/login" method="post">
-    <div class="Main">
-        <ul>
-            <li class="top"></li>
-            <li class="top2"></li>
-            <li class="topA"></li>
-            <li class="topB"><span>
-                <img src="${basePath}/resources/images/lock.png" style=" margin-left: 70px"/>
+ <div class="container1" >
+     <div class="loginDivWrap">
+     <div class="loginDiv">
+      <form  action="${basePath}/login"   method="post" id="loginForm">
+       用户名： <input type="input" placeholder="请输入用户名" required autofocus id="userName" name="userName" value="${userName}" class="loginInput">
+       密码：  <input type="password"  placeholder="请输入密码" required id="pwd" name="pwd" value="${pwd}" class="loginInput">
+       验证码： <input type="input"  placeholder="验证码" required id="randomCode" name="randomCode"  class="loginInput" style="width: 60px; margin-right: 2px;">
+          <img id="codeImg" src="${basePath}/genCode" width="60" height="22" border="0" align="absmiddle"/>
+          <a href="javascript:refreshRandomCode();">看不清点我</a>
 
-            </span></li>
-            <li class="topC"></li>
-            <li class="topD">
-                <ul class="login">
-                    <li><span class="left">用户名：</span> <span style="left">
-                        <input  id="userName" name="userName" type="text" class="txt" value="${userName}" />
+            <label class="rememberLab">
+              <c:if test="${not empty userName}">
+                 <input type="checkbox" value="1" id="remember" name="remember" checked="true">
+              </c:if>
+              <c:if test="${ empty userName}">
+                  <input type="checkbox" value="0" id="remember" name="remember">
+              </c:if>
+              记住密码
+              </label>
 
-                    </span></li>
-                    <li><span class="left">密 码：</span> <span style="left">
-                       <input id="pwd" name="pwd" value="${pwd}"  type="password" class="txt" />
-                    </span></li>
-                    <li><span class="left">验证码：</span> <span style="left">
-                    <input   id="randomCode" name="randomCode"  type="text" class="txtCode" />
-                    </span>
-                        <img id="codeImg" src="${basePath}/genCode" width="60" height="22" border="0" align="absmiddle"/>
-                        <a href="javascript:refreshRandomCode();">看不清点我</a>
+        <button class="btn btn-sm btn-primary" type="button" id="loginBtn">登陆</button>
 
+      </form>
+</div>
+     </div>
+    </div> <!-- /container -->
 
-                    </li>
-
-                    <li>
-                        <span class="left">记住我：</span>
-
-                        <c:if test="${not empty userName}">
-                            <input type="checkbox" value="1" id="remember" name="remember" checked="true">
-                        </c:if>
-                        <c:if test="${ empty userName}">
-                            <input type="checkbox" value="0" id="remember" name="remember">
-                        </c:if>
-
-                    </li>
-
-                </ul>
-            </li>
-            <li class="topE"></li>
-            <li class="middle_A"></li>
-            <li class="middle_B"></li>
-            <li class="middle_C">
-            <span class="btn">
-                <img alt="" src="${basePath}/resources/images/btnlogin.gif" id="loginBtn" style="cursor: pointer"/>
-            </span>
-            </li>
-            <li class="middle_D"></li>
-            <li class="bottom_A"></li>
-
-        </ul>
-    </div>
-</form>
 </body>
 </html>

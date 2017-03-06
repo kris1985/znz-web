@@ -62,8 +62,6 @@ public class FileController {
     @Resource
     private SubCategoryMapper subCategoryMapper;
 
-    @Resource
-    private CategoryMapper categoryMapper;
 
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -166,42 +164,6 @@ public class FileController {
         return "admin/upload2";
     }
 
-    @RequestMapping(value = "/listPicture", method = RequestMethod.GET)
-    public String list(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") String page,
-                       @RequestParam(value = "rows", defaultValue = "10") String rows,
-                       @RequestParam(value = "sidx", required = false) String sidx,
-                       @RequestParam(value = "sord", required = false) String sord,
-                       @RequestParam(value = "filters", required = false) String filters, Model model) {
-        PageParameter pageParameter = new PageParameter(Integer.parseInt(page), Integer.parseInt(rows));
-        FileQueryVO fileQueryVO = new FileQueryVO();
-        fileQueryVO.setPage(pageParameter);
-        List<Picture> pictures = pictureMapper.selectByPage(fileQueryVO);
-        int total = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
-                / pageParameter.getPageSize();
-        model.addAttribute("pictures", pictures);
-
-
-        List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
-        List<Category> categories = categoryMapper.selectAll();
-        List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
-        Map<Integer, String> map = new HashedMap();
-        if (!CollectionUtils.isEmpty(subCategories) && !CollectionUtils.isEmpty(categories)) {
-            for (Category category : categories) {
-                map.put(category.getId(), category.getName());
-            }
-            for (SubCategory subCategory : subCategories) {
-                SubCategoryVO subCategoryVO = new SubCategoryVO();
-                subCategoryVO.setId(String.valueOf(subCategory.getId()));
-                subCategoryVO.setName(subCategory.getName());
-                subCategoryVO.setParentId(subCategory.getParentId());
-                subCategoryVO.setSortId(subCategory.getSortId());
-                subCategoryVO.setParentName(map.get(subCategory.getParentId()));
-                subCategoryVOs.add(subCategoryVO);
-            }
-        }
-        model.addAttribute("subCategoryVOs", subCategoryVOs);
-        return "admin/pictureList";
-    }
 
 
     @RequestMapping(value = "/toListImg", method = RequestMethod.GET)

@@ -36,12 +36,12 @@ http://www.springframework.org/schema/task/spring-task-3.0.xsd
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
 		<!-- 基本属性 url、user、password -->
 		<property name="url" value="${jdbc_url}" />
-		<property name="username" value="root" />
-		<property name="password" value="123456" />
+		<property name="username" value="${jdbc_user}" />
+		<property name="password" value="${jdbc_password}" />
 
 		<!-- 配置初始化大小、最小、最大 -->
-		<property name="initialSize" value="1" />
-		<property name="minIdle" value="1" />
+		<property name="initialSize" value="2" />
+		<property name="minIdle" value="2" />
 		<property name="maxActive" value="100" />
 
 		<!-- 配置获取连接等待超时的时间 -->
