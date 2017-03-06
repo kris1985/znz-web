@@ -34,6 +34,8 @@
                     'swf'      : '${basePath}/resources/uploadify.swf',
                     'uploader' : '${basePath}/admin/file/uploadChild',
                     'formData'      : {'category' : "${category}" },
+                    'simUploadLimit':10,
+                    'queueSizeLimit':10,
                     'onUploadSuccess' : function(file, data, response) {
                         var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
                         $("#result").show();

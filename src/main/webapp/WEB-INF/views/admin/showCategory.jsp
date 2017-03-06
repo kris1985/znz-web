@@ -430,7 +430,27 @@
                    ids=ids+$(this).attr("id")+",";
                    filePaths=filePaths+$(this).attr("path")+",";
                })
-               window.open("${basePath}/admin/file/listImg/"+selectedImg+"?ids="+ids+"&filePaths="+filePaths);
+               window.open ("${basePath}/admin/file/listImg/"+selectedImg+"?ids="+ids+"&filePaths="+filePaths,'newwindow','height=100,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no')
+           })
+
+           //添加更多
+           $(".mod_category_item").each(function (i) {
+            if($(this).children().length >10){
+                $(this).parent().css("height","50px");
+                $(this).append("<li class='more_item'>更多</li>")
+            }
+           })
+
+           $(".more_item").click(function(){
+                if( $(this).text()=="更多"){
+                     $(this).parent().parent().css("height","50px");
+                     $(this).text("收起")
+                }else{
+                     $(this).parent().parent().css("height","25px");
+                     $(this).text("更多")
+                }
+
+
            })
         })
 
@@ -444,7 +464,7 @@
 <div class="header">
     <div class="nav_bar">
         <div class="logo">
-            <a href="/"><img src="http://testznz.oss-cn-shanghai.aliyuncs.com/logo.png" width="118" height="38"> </a>
+            <a href="/"><img src="http://testznz.oss-cn-shanghai.aliyuncs.com/logo.png" height="38"> </a>
         </div>
         <div class="nav_warp">
             <ul class="navbar-ul mod_category_item">

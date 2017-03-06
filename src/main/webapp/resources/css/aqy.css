@@ -197,7 +197,7 @@
 .header{background:black;}
 .nav_bar{height:45px;width:1180px;margin:0 auto;position:relative}
 
-.logo{position:absolute;left:0;top:3px;}
+.logo{position:absolute;left:2px;top:3px;}
 .nav_warp{position:absolute;left:150px;top:0;}
 
 .navbar-ul li {    float: left;}
