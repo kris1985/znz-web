@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.alibaba.fastjson.JSON;
@@ -15,6 +16,7 @@ import com.znz.dao.PictureMapper;
 import com.znz.dao.SubCategoryMapper;
 import com.znz.model.Picture;
 import com.znz.model.SubCategory;
+import com.znz.model.UserAuth;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -53,23 +55,36 @@ public class SubCategoryController {
     private PictureCategoryMapper pictureCategoryMapper;
 
     @RequestMapping(value = "/showCategory")
-    public String showCategory(String firstSelectedId,String secondSelectedId,String thirdSelectedId,String fourthSelectedId,Integer currentPage,Integer pageSize, Model model){
-        if(currentPage == null){
-            currentPage = 1;
+    public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model){
+        if(queryParam.getCurrentPage() == null){
+            queryParam.setCurrentPage(1);
         }
-        if(pageSize == null){
-            pageSize = 40;
+        if(queryParam.getPageSize() == null){
+            queryParam.setPageSize(40);
         }
+        HttpSession session = request.getSession();
         List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
+        if(! (Boolean) session.getAttribute(Constants.ADMIN_FLAG)){  //不是admin
+            UserSession userSession = (UserSession)session.getAttribute(Constants.USER_SESSION);
+           if(CollectionUtils.isEmpty(userSession.getUserAuths())){
+               userSession.setUserAuths(new ArrayList<>());
+            }
+            List<Integer> auths =userSession.getUserAuths().stream().map(s->Integer.parseInt(s.getAuthId())).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(auths)){
+                subCategories = subCategories.stream().filter(s-> s.getCategoryLevel()!=0 || auths.contains(s.getId())).collect(Collectors.toList());
+            }else {
+                subCategories = new ArrayList<>();
+            }
+        }
         List<SubCategoryVO> subCategoryVOs = new ArrayList<>();
         if(!CollectionUtils.isEmpty(subCategories) ){
             SubCategoryVO subCategoryVO ;
             for(SubCategory subCategory:subCategories){
-                if(firstSelectedId==null && subCategory.getCategoryLevel() == 0){
-                    firstSelectedId = String.valueOf(subCategory.getId());
+                if(queryParam.getFirstSelectedId()==null && subCategory.getCategoryLevel() == 0){
+                    queryParam.setFirstSelectedId(String.valueOf(subCategory.getId()));
                 }
-                if(secondSelectedId==null && String.valueOf(subCategory.getParentId()).equals(firstSelectedId) ){
-                    secondSelectedId = String.valueOf(subCategory.getId());
+                if(queryParam.getSecondSelectedId()==null && String.valueOf(subCategory.getParentId()).equals(queryParam.getFirstSelectedId()) ){
+                    queryParam.setSecondSelectedId(String.valueOf(subCategory.getId()));
                 }
                 subCategoryVO = new SubCategoryVO();
                 subCategoryVO.setId(String.valueOf(subCategory.getId()));
@@ -85,16 +100,16 @@ public class SubCategoryController {
             }
         }
 
-        final String  temp = secondSelectedId;
+        final String  temp = queryParam.getSecondSelectedId();
         Set<Integer> forthCategorys = new HashSet<>();
         List<Set<Integer>> categoryConditions = new ArrayList<>();
-        if(StringUtils.isEmpty(fourthSelectedId)) {
+        if(StringUtils.isEmpty(queryParam.getFourthSelectedId())) {
             Set<Integer> thirdCategorys =    subCategories.stream().filter(s-> String.valueOf(s.getParentId()).equals(temp) ).map(s->s.getId()).collect(Collectors.toSet());//三级类
             Set<Integer> set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
             categoryConditions.add(set);
         }else{
-            forthCategorys = new HashSet(Arrays.asList( fourthSelectedId.split("[,;]")));
-            String[] ids = fourthSelectedId.split("[;]");
+            forthCategorys = new HashSet(Arrays.asList( queryParam.getFourthSelectedId().split("[,;]")));
+            String[] ids = queryParam.getFourthSelectedId().split("[;]");
             Set<Integer> set ;
             for(String x:ids){
                 set = new HashSet<>();
@@ -111,9 +126,9 @@ public class SubCategoryController {
             }
 
         }
-        PageParameter pageParameter = new PageParameter(currentPage, pageSize);
+        PageParameter pageParameter = new PageParameter(queryParam.getCurrentPage(), queryParam.getPageSize());
         FileQueryVO fileQueryVO = new FileQueryVO();
-        model.addAttribute("currentPage",currentPage);
+        model.addAttribute("currentPage",queryParam.getCurrentPage());
         model.addAttribute("totalPage",0);
         if(!CollectionUtils.isEmpty(categoryConditions) && categoryConditions.stream().allMatch(s->s.size()>0)){
             fileQueryVO.setPage(pageParameter);
@@ -126,9 +141,9 @@ public class SubCategoryController {
             model.addAttribute("pictures",pictures);
         }
         model.addAttribute("subCategoryVOs",subCategoryVOs);
-        model.addAttribute("firstSelectedId",firstSelectedId);
-        model.addAttribute("secondSelectedId",secondSelectedId);
-        model.addAttribute("thirdSelectedId",thirdSelectedId);
+        model.addAttribute("firstSelectedId",queryParam.getFirstSelectedId());
+        model.addAttribute("secondSelectedId",queryParam.getSecondSelectedId());
+        model.addAttribute("thirdSelectedId",queryParam.getThirdSelectedId());
         model.addAttribute("fourthSet",forthCategorys);
         return "admin/showCategory";
     }

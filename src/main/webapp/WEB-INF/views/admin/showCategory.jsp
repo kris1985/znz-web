@@ -458,7 +458,8 @@
                 </c:if>
                 <c:if test="${item.categoryLevel == 0 && firstSelectedId != item.id  }">
                     <li id="${item.id}" class="li_item noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
-                            href="${bathPath}/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a>
+                            href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a>
+
                     </li>
                 </c:if>
             </c:forEach>
@@ -520,12 +521,12 @@
             <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
                 <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
                     <li id="${item.id}" class="li_item selected noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
-                          href="${bathPath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
+                          href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
                     </li>
                 </c:if>
                 <c:if test="${item.parentId == firstSelectedId && secondSelectedId != item.id  }">
                     <li id="${item.id}" class="li_item noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
-                            href="${bathPath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
+                            href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
                     </li>
                 </c:if>
             </c:forEach>
