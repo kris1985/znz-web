@@ -16,4 +16,6 @@ public class Constants {
     public static  final String  USER_SESSION = "userSession";
 
     public static  final String  ADMIN_FLAG = "isAdmin";
+
+    public static  final String  WATERMARK_PARAM = "watermarkParam";
 }

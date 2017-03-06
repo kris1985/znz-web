@@ -10,13 +10,9 @@ public interface UserMapper {
 
     int insert(User record);
 
-    int insertSelective(User record);
-
     User selectByPrimaryKey(Integer userId);
 
     int updateByPrimaryKeySelective(User record);
-
-    int updateByPrimaryKey(User record);
 
     User selectByUser(  String userName);
 
@@ -24,5 +20,4 @@ public interface UserMapper {
 
     int downloadTimes();
 
-    List<User> selectByPage(UserQueryVO userQueryVO);
 }

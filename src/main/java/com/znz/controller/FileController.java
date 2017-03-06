@@ -108,6 +108,35 @@ public class FileController {
         }
     }
 
+
+    @RequestMapping(value = "/uploadWatermark", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    ResultVO uploadWatermark(HttpServletRequest request, @RequestParam MultipartFile file, Model model) {
+        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
+        ResultVO result = new ResultVO();
+        if (!checkPermisson(userSession, result)) {
+            throw new RuntimeException("无权限操作");
+        }
+        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
+        try {
+            String originalName = file.getOriginalFilename();
+            String path = "watermark_"+originalName;
+            boolean b = upload(ossClient, file, path);
+            if (b) {
+                result.setCode(0);
+                result.setMsg(path);
+            }
+            return result;
+        } catch (Exception e) {
+            result.setCode(0);
+            log.error(e.getMessage(), e);
+            return result;
+        } finally {
+            ossClient.shutdown();
+        }
+    }
+
     public String getSuffix(String originalName) {
         return originalName.substring(originalName.indexOf("."), originalName.length());
     }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.alibaba.fastjson.JSON;
+import com.aliyun.oss.OSSClient;
 import com.znz.dao.SubCategoryMapper;
 import com.znz.dao.UserAuthMapper;
 import com.znz.model.SubCategory;
@@ -28,6 +29,7 @@ import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.util.UserType;
 import com.znz.vo.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by huangtao on 2015/1/22.
@@ -106,6 +108,12 @@ public class UserController {
         user.setUserType(UserType.NORMAL.getType());//普通用户
         user.setDownloadPerDay(0);
         user.setDownloadTotal(0);
+        if(userAddVO.getRecommendFlag()==null){
+            user.setRecommendFlag(0);
+        }
+        if(userAddVO.getWatermarkVO()!=null){
+            user.setWatermark(JSON.toJSONString(userAddVO.getWatermarkVO()));
+        }
         userMapper.insert(user);
         List<String> auths  = userAddVO.getAuths();
         if(!CollectionUtils.isEmpty(auths)){
@@ -124,6 +132,10 @@ public class UserController {
     public String modify(@PathVariable int userId, Model model) {
         User user = userMapper.selectByPrimaryKey(userId);
         model.addAttribute("user", user);
+        if(user.getWatermark()!=null){
+            WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
+            model.addAttribute("watermarkVO", watermarkVO);
+        }
         return "/admin/userUpdate";
     }
 
@@ -140,6 +152,12 @@ public class UserController {
         User user = new User();
         BeanUtils.copyProperties(userAddVO, user);
         user.setUpdateTime(new Date());
+        if(userAddVO.getRecommendFlag()==null){
+            user.setRecommendFlag(0);
+        }
+        if(userAddVO.getWatermarkVO()!=null){
+            user.setWatermark(JSON.toJSONString(userAddVO.getWatermarkVO()));
+        }
         List<String> auths  = userAddVO.getAuths();
         userMapper.updateByPrimaryKeySelective(user);
         if(!CollectionUtils.isEmpty(auths)){
@@ -219,6 +237,8 @@ public class UserController {
         }
         return auths;
     }
+
+
 
     private boolean checkPermisson(UserSession userSession) {
         if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3) {

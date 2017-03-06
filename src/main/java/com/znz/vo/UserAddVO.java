@@ -32,6 +32,9 @@ public class UserAddVO {
 
     private List<String> auths;
 
+    private Integer recommendFlag;
 
+    private String device;
 
+    private WatermarkVO watermarkVO;
 }

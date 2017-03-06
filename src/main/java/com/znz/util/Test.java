@@ -4,10 +4,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.zeroturnaround.zip.ZipUtil;
+import sun.misc.BASE64Encoder;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -29,13 +31,19 @@ public class Test {
         //moveFiles(new File("d:/temp/test2"),new File("d:/temp/test3"));
        // System.out.println(DateTime.now().toString("yyyyMMDD"));
 
-        String s = "5:0;3:1;1:2;4:3;";
-        List<String> list = new ArrayList();
-        list.add("1");
-        System.out.println(list.contains(1));
+        System.out.println(safeUrlBase64Encode ("watermark_浅口女单140623200nVIP时装_013.JPG?x-oss-process=image/resize,P_10".getBytes("utf-8")));
 
 
 
+
+    }
+
+    public static String safeUrlBase64Encode(byte[] data){
+        String encodeBase64 = new BASE64Encoder().encode(data);
+        String safeBase64Str = encodeBase64.replace('+', '-');
+        safeBase64Str = safeBase64Str.replace('/', '_');
+        safeBase64Str = safeBase64Str.replaceAll("=", "");
+        return safeBase64Str;
     }
 
     public static void moveFiles(File srcfile,File destFile) throws IOException {

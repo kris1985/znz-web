@@ -306,7 +306,7 @@
                             "id": "2347",
                             title: "上传文件",
                             width: 800,
-                            height: 500
+                            height: 800
                         }
                     );
                 })
@@ -434,12 +434,12 @@
            })
 
            //添加更多
-           $(".mod_category_item").each(function (i) {
+          /* $(".mod_category_item").each(function (i) {
             if($(this).children().length >10){
                 $(this).parent().css("height","50px");
                 $(this).append("<li class='more_item'>更多</li>")
             }
-           })
+           })*/
 
            $(".more_item").click(function(){
                 if( $(this).text()=="更多"){
@@ -549,12 +549,13 @@
                             href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
                     </li>
                 </c:if>
+
             </c:forEach>
         </ul>
     </div>
 
          <div id="leaf_category">
-        <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
+        <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
             <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
                 <div class="mod_sear_list">
                     <h3 id="${item.id}">${item.name}：</h3>
@@ -563,7 +564,7 @@
                                                                                                href="javascript:void()"
                                                                                                class="">全部</a></li>
 
-                        <c:forEach var="category" items="${item.childrens}" varStatus="status">
+                        <c:forEach var="category" items="${item.childrens}" varStatus="status2">
                             <c:set var="iscontain" value="false" />
                             <c:forEach items="${fourthSet}" var="c">
                                 <c:if test="${c == category.id}">
@@ -581,6 +582,7 @@
                                 "  categoryLevel="${category.categoryLevel}" parentId="${category.parentId}"> <a id="a_${category.id}" href="javascript:void()"
                                       class="">${category.name} </a> </li>
                             </c:if>
+
                         </c:forEach>
                     </ul>
                 </div>
@@ -608,7 +610,7 @@
                         <a id="${item.id}" path="${item.filePath}" alt="${item.name}" title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" target="_blank">
                             <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"
-                                 src="${basePath}/resources/img/grey.gif" width="280" height="199"   data-original="http://testznz.oss-cn-shanghai.aliyuncs.com/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280">
+                                 src="${basePath}/resources/img/grey.gif" width="280" height="199"   data-original="http://testznz.oss-cn-shanghai.aliyuncs.com/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280${watermarkParam}">
                         </a>
                     </div>
                 </li>

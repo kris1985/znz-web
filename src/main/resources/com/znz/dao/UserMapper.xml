@@ -17,11 +17,14 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="session_id" property="sessionId" jdbcType="VARCHAR" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
-     <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="watermark" property="watermark" jdbcType="VARCHAR" />
+    <result column="recommend_flag" property="recommendFlag" jdbcType="INTEGER" />
+    <result column="device" property="device" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, user_name, pwd, company, limit_ip_flag, limit_ips, access_flag, max_download_times, 
-    download_per_day, download_total, phone, create_time, update_time, session_id, user_type,last_login_time
+    download_per_day, download_total, phone, create_time, update_time, session_id, user_type,last_login_time,watermark,recommend_flag,device
   </sql>
   <!---->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -56,116 +59,21 @@
       company, limit_ip_flag, limit_ips, 
       access_flag, max_download_times, download_per_day, 
       download_total, phone, create_time, 
-      update_time, session_id, user_type
+      update_time, session_id, user_type,watermark,recommend_flag,device
       )
     values (#{userName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{limitIpFlag,jdbcType=INTEGER}, #{limitIps,jdbcType=VARCHAR}, 
       #{accessFlag,jdbcType=INTEGER}, #{maxDownloadTimes,jdbcType=INTEGER}, #{downloadPerDay,jdbcType=INTEGER}, 
       #{downloadTotal,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}
+      #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER},
+      #{watermark,jdbcType=VARCHAR}, #{recommendFlag,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR}
       )
 
       <selectKey keyProperty="userId" resultType="int" order="AFTER">
           select LAST_INSERT_ID()
       </selectKey>
   </insert>
-  <insert id="insertSelective" parameterType="com.znz.model.User" >
-    insert into t_user2
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="userName != null" >
-        user_name,
-      </if>
-      <if test="pwd != null" >
-        pwd,
-      </if>
-      <if test="company != null" >
-        company,
-      </if>
-      <if test="limitIpFlag != null" >
-        limit_ip_flag,
-      </if>
-      <if test="limitIps != null" >
-        limit_ips,
-      </if>
-      <if test="accessFlag != null" >
-        access_flag,
-      </if>
-      <if test="maxDownloadTimes != null" >
-        max_download_times,
-      </if>
-      <if test="downloadPerDay != null" >
-        download_per_day,
-      </if>
-      <if test="downloadTotal != null" >
-        download_total,
-      </if>
-      <if test="phone != null" >
-        phone,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="sessionId != null" >
-        session_id,
-      </if>
-      <if test="userType != null" >
-        user_type,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="userName != null" >
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="pwd != null" >
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="company != null" >
-        #{company,jdbcType=VARCHAR},
-      </if>
-      <if test="limitIpFlag != null" >
-        #{limitIpFlag,jdbcType=INTEGER},
-      </if>
-      <if test="limitIps != null" >
-        #{limitIps,jdbcType=VARCHAR},
-      </if>
-      <if test="accessFlag != null" >
-        #{accessFlag,jdbcType=INTEGER},
-      </if>
-      <if test="maxDownloadTimes != null" >
-        #{maxDownloadTimes,jdbcType=INTEGER},
-      </if>
-      <if test="downloadPerDay != null" >
-        #{downloadPerDay,jdbcType=INTEGER},
-      </if>
-      <if test="downloadTotal != null" >
-        #{downloadTotal,jdbcType=INTEGER},
-      </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="sessionId != null" >
-        #{sessionId,jdbcType=VARCHAR},
-      </if>
-      <if test="userType != null" >
-        #{userType,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.User" >
     update t_user2
     <set >
@@ -214,27 +122,19 @@
       <if test="lastLoginTime != null" >
           last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="watermark != null" >
+        watermark = #{watermark,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendFlag != null" >
+        recommend_flag = #{recommendFlag,jdbcType=INTEGER},
+      </if>
+      <if test="device != null" >
+        device = #{device,jdbcType=VARCHAR},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.znz.model.User" >
-    update t_user2
-    set user_name = #{userName,jdbcType=VARCHAR},
-      pwd = #{pwd,jdbcType=VARCHAR},
-      company = #{company,jdbcType=VARCHAR},
-      limit_ip_flag = #{limitIpFlag,jdbcType=INTEGER},
-      limit_ips = #{limitIps,jdbcType=VARCHAR},
-      access_flag = #{accessFlag,jdbcType=INTEGER},
-      max_download_times = #{maxDownloadTimes,jdbcType=INTEGER},
-      download_per_day = #{downloadPerDay,jdbcType=INTEGER},
-      download_total = #{downloadTotal,jdbcType=INTEGER},
-      phone = #{phone,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      session_id = #{sessionId,jdbcType=VARCHAR},
-      user_type = #{userType,jdbcType=INTEGER}
-    where user_id = #{userId,jdbcType=INTEGER}
-  </update>
+
 
     <update id="downloadTimes">
         UPDATE t_user2 set download_per_day=0
