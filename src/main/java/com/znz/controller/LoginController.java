@@ -96,19 +96,20 @@ public class LoginController {
                     }else {
                         watermarkParam+="/watermark,image_"+safeUrlBase64Encode(watermarkVO.getImage().getBytes());
                     }
+                    if(!watermarkParam.equals("") && watermarkVO.getT()!=null){
+                        watermarkParam+=",t_"+watermarkVO.getT();
+                    }
+                    if(!watermarkParam.equals("") && watermarkVO.getG()!=null){
+                        watermarkParam+=",g_"+watermarkVO.getG();
+                    }
+                    if(!watermarkParam.equals("") && watermarkVO.getX()!=null){
+                        watermarkParam+=",x_"+watermarkVO.getX();
+                    }
+                    if(!watermarkParam.equals("") && watermarkVO.getY()!=null){
+                        watermarkParam+=",y_"+watermarkVO.getY();
+                    }
                 }
-                if(!watermarkParam.equals("") && watermarkVO.getT()!=null){
-                    watermarkParam+=",t_"+watermarkVO.getT();
-                }
-                if(!watermarkParam.equals("") && watermarkVO.getG()!=null){
-                    watermarkParam+=",g_"+watermarkVO.getG();
-                }
-                if(!watermarkParam.equals("") && watermarkVO.getX()!=null){
-                    watermarkParam+=",x_"+watermarkVO.getX();
-                }
-                if(!watermarkParam.equals("") && watermarkVO.getY()!=null){
-                    watermarkParam+=",y_"+watermarkVO.getY();
-                }
+
                 request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
             }catch (Exception e){
                 log.error(e.getLocalizedMessage(),e);

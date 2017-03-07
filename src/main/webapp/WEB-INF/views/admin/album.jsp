@@ -35,7 +35,7 @@
         </div>
         <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
-            <div class="album-image-bd" id="album-image-bd" ><img src="http://testznz.oss-cn-shanghai.aliyuncs.com/${selectedImg}" class="" id="album-image" alt="" onmousewheel="return bbimg(this)"/></div>
+            <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}?x-oss-process=image${watermarkParam}" class="" id="album-image" alt="" onmousewheel="return bbimg(this)"/></div>
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
@@ -46,8 +46,8 @@ border: 1px solid #ccc;
 width: 100px;
 top: 50px;background: transparent;z-index: 9999">
                     <c:forEach var="item" items="${attachs}">
-                       <img src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item}?x-oss-process=image/resize,m_pad,h_80,w_100"
-                            origin_src="http://testznz.oss-cn-shanghai.aliyuncs.com/${item}" style="display: block;width: 100px;height: 71px;border: 0px solid #ccc;margin-bottom: 10px;">
+                       <img src="${ossPath}/${item}?x-oss-process=image/resize,m_pad,h_80,w_100"
+                            origin_src="${ossPath}/${item}" style="display: block;width: 100px;height: 71px;border: 0px solid #ccc;margin-bottom: 10px;">
                     </c:forEach>
             </div>
             -->
@@ -64,10 +64,10 @@ top: 50px;background: transparent;z-index: 9999">
                 <c:forEach items="${imgs}" var="img">
                     <c:choose>
                         <c:when test="${img eq selectedImg}">
-                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}?x-oss-process=image${watermarkParam}"></a></li>
+                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${ossPath}/${img}?x-oss-process=image${watermarkParam}"></a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="album-carousel-thumb"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}?x-oss-process=image${watermarkParam}"></a></li>
+                            <li class="album-carousel-thumb"><a href="${ossPath}/${img}?x-oss-process=image${watermarkParam}"></a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
@@ -236,12 +236,7 @@ top: 50px;background: transparent;z-index: 9999">
         
         $("#downloadBtn").click(function(){
             var imgpath = $("#album-image").attr("src");
-            //imgpath = imgpath.replace(/\//g,"FILE_SEPARATOR").replace(".","$dot$");
-            window.open( imgpath)
-         /*   $.get("${basePath}/admin/file/download/" + imgpath, function (res) {
-                alert("ok");
-            });*/
-
+            window.open("${basePath}/admin/file/download?imgPath=" + imgpath+"&fileName=是浪费大家.jpg")
         });
 
      //   document.oncontextmenu=function(){return false;}

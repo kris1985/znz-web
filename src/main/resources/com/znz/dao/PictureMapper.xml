@@ -139,6 +139,8 @@
       </foreach>
     </if>
 
+    order by id desc
+
   </select>
 
   <delete id="deleteByPrimaryKeys"  >

@@ -48,29 +48,7 @@
             return selected;
         }
 
-        <c:if test="${isAdmin }">
-            function isValid(name) {
-                var valid = false;
-                $.ajax({
-                    type: "POST",
-                    url: basePath + "/admin/subCategory/validName",
-                    data: "name=" + name,
-                    cache: false,
-                    async: false,
-                    success: function (ret) {
-                        if (ret.code == 0) {
-                            valid = true;
-                        } else {
-                            alert(ret.msg);
-                        }
-                    },
-                    error: function (msg) {
-                        alert("服务器出错了");
-                    }
-                });
-                return valid;
-            }
-        </c:if>
+
 
         $(function () {
             <c:if test="${isAdmin }">
@@ -99,11 +77,37 @@
                                 alert("服务器出错了");
                             }
                         });
-
                     }
                 });
                 $(".mod_category_item").disableSelection();
 
+            $( "#leaf_category" ).sortable({
+                update: function (event, ui) {
+                    var array = $(this).find("h3");
+                    var data = "";
+                    for (var i = 0; i < array.length; i++) {
+                        if ("" == array[i].id ) {
+                            continue;
+                        }
+                        //console.log(array[i].id);
+                        data += array[i].id + ":" + i + ";";
+                    }
+                    console.log(data);
+                    $.ajax({
+                        type: "POST",
+                        url: basePath + "/admin/subCategory/sort",
+                        data: "param=" + data,
+                        cache: false,
+                        success: function (msg) {
+                            //alert( "Data Saved: " + msg );
+                        },
+                        error: function (msg) {
+                            alert("服务器出错了");
+                        }
+                    });
+                }
+            });
+            $( "#leaf_category" ).disableSelection();
 
                 $('.noLeaf').contextMenu('myMenu1', {
                     bindings: {
@@ -128,9 +132,6 @@
                                             primary: "ui-icon-heart"
                                         },
                                         click: function () {
-                                            if(!isValid($("#categoryName").val())){
-                                                return;
-                                            }
                                             $("#categoryForm").attr("action", url);
                                             $("#categoryForm").submit();
                                         }
@@ -158,9 +159,6 @@
                                             primary: "ui-icon-heart"
                                         },
                                         click: function () {
-                                            if(!isValid($("#categoryName").val())){
-                                                return;
-                                            }
                                             $("#categoryForm").attr("action", url);
                                             $("#categoryForm").submit();
                                         }
@@ -172,12 +170,11 @@
                             var url = basePath + "/admin/subCategory/update";
                             var id = t.id;
                             var oldName = $.trim($("#" + t.id) .text());
-                            $("#id").val(t.id);
                             $("#categoryName").val(oldName);
                             $("#dialog").dialog({
                                 height: 150,
                                 modal: true,
-                                title:"重命名",
+                                title:"重命名q",
                                 position: {my: "left top", at: "left bottom", of: "#" + t.id},
                                 buttons: [
                                     {
@@ -191,23 +188,24 @@
                                              return;
                                            }
                                             $.ajax({
-                                                               type: "POST",
-                                                               url: basePath + "/admin/subCategory/update",
-                                                                data: { name: name, id: id ,oldName:oldName},
-                                                               cache: false,
-                                                               async: false,
-                                                               success: function (ret) {
-                                                                   if (ret.code == 0) {
-                                                                       $("#" + t.id) .text(name);
-                                                                       $("#dialog").dialog("close");
-                                                                   } else {
-                                                                       alert(ret.msg);
-                                                                   }
-                                                               },
-                                                               error: function (msg) {
-                                                                   alert("服务器出错了");
-                                                               }
-                                                           });
+                                                   type: "POST",
+                                                   url: basePath + "/admin/subCategory/update",
+                                                    data: { name: name, id: id ,oldName:oldName},
+                                                   cache: false,
+                                                   async: false,
+                                                   success: function (ret) {
+                                                       if (ret.code == 0) {
+                                                           console.log($("ssssss:"+$("#" + t.id).find("a").text()));
+                                                           $("#" + t.id).find("a").text(name);
+                                                           $("#dialog").dialog("close");
+                                                       } else {
+                                                           alert(ret.msg);
+                                                       }
+                                                   },
+                                                   error: function (msg) {
+                                                       alert("服务器出错了");
+                                                   }
+                                             });
                                         }
                                     }]
                             });
@@ -220,7 +218,7 @@
 
                 $('.leaf_item').contextMenu('myMenu2', {
                     bindings: {
-                        'add1': function (t) {
+                        'add2': function (t) {
                             var url = basePath + "/admin/subCategory/add";
                             var id = $("#" + t.id);
 
@@ -241,22 +239,19 @@
                                             primary: "ui-icon-heart"
                                         },
                                         click: function () {
-                                            if(!isValid($("#categoryName").val())){
-                                                return;
-                                            }
                                             $("#categoryForm").attr("action", url);
                                             $("#categoryForm").submit();
                                         }
                                     }]
                             });
                         },
-                        'rename1': function (t) {
-                            var url = basePath + "/admin/subCategory/update";
-                            var name = $.trim($("#" + t.id) .text());
-                            $("#id").val(t.id);
-                            $("#categoryName").val(name);
+                        'rename2': function (t) {
+                            var oldName = $.trim($("#" + t.id) .text());
+                            var id = t.id;
+                            $("#categoryName").val(oldName);
                             $("#dialog").dialog({
                                 height: 150,
+                                title:"重命名21",
                                 modal: true,
                                 position: {my: "left top", at: "left bottom", of: "#" + t.id},
                                 buttons: [
@@ -266,11 +261,28 @@
                                             primary: "ui-icon-heart"
                                         },
                                         click: function () {
-                                            if(!isValid($("#categoryName").val())){
+                                            var name =  $.trim($("#categoryName").val());
+                                            if(oldName == name){
                                                 return;
                                             }
-                                            $("#categoryForm").attr("action", url);
-                                            $("#categoryForm").submit();
+                                            $.ajax({
+                                                type: "POST",
+                                                url: basePath + "/admin/subCategory/update",
+                                                data: { name: name, id: id ,oldName:oldName},
+                                                cache: false,
+                                                async: false,
+                                                success: function (ret) {
+                                                    if (ret.code == 0) {
+                                                        $("#" + t.id).find("a").text(name);
+                                                        $("#dialog").dialog("close");
+                                                    } else {
+                                                        alert(ret.msg);
+                                                    }
+                                                },
+                                                error: function (msg) {
+                                                    alert("服务器出错了");
+                                                }
+                                            });
                                         }
                                     }]
                             });
@@ -279,6 +291,53 @@
 
                     }
                 });
+
+            $('.choice_item').contextMenu('myMenu3', {
+                bindings: {
+                    'rename3': function (t) {
+                        var oldName = $.trim($("#" + t.id).find("span") .text());
+                        var id = t.id;
+                        $("#categoryName").val(oldName);
+                        $("#dialog").dialog({
+                            height: 150,
+                            title:"重命名21",
+                            modal: true,
+                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                            buttons: [
+                                {
+                                    text: "提交",
+                                    icons: {
+                                        primary: "ui-icon-heart"
+                                    },
+                                    click: function () {
+                                        var name =  $.trim($("#categoryName").val());
+                                        if(oldName == name){
+                                            return;
+                                        }
+                                        $.ajax({
+                                            type: "POST",
+                                            url: basePath + "/admin/subCategory/update",
+                                            data: { name: name, id: id ,oldName:oldName},
+                                            cache: false,
+                                            async: false,
+                                            success: function (ret) {
+                                                if (ret.code == 0) {
+                                                    $("#" + t.id).find("span").text(name);
+                                                    $("#dialog").dialog("close");
+                                                } else {
+                                                    alert(ret.msg);
+                                                }
+                                            },
+                                            error: function (msg) {
+                                                alert("服务器出错了");
+                                            }
+                                        });
+                                    }
+                                }]
+                        });
+                    }
+                }
+            });
 
                 $("#uploadBtn").click(function () {
                     var temp = "";
@@ -485,7 +544,7 @@
 <div class="header">
     <div class="nav_bar">
         <div class="logo">
-            <a href="/"><img src="http://testznz.oss-cn-shanghai.aliyuncs.com/logo.png" height="38"> </a>
+            <a href="/"><img src="${ossPath}/logo.png" height="38"> </a>
         </div>
         <div class="nav_warp">
             <ul class="navbar-ul mod_category_item">
@@ -540,10 +599,18 @@
 
         <div class="contextMenu" id="myMenu2">
             <ul>
-                <li id="add1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
-                <li id="rename1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
+                <li id="add2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
+                <li id="rename2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
             </ul>
         </div>
+
+        <div class="contextMenu" id="myMenu3">
+            <ul>
+                <li id="rename3"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
+            </ul>
+        </div>
+
+
 
         <div class="contextMenu" id="menuPic">
             <ul>
@@ -579,7 +646,7 @@
         <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
             <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
                 <div class="mod_sear_list">
-                    <h3 id="${item.id}"><span class="choice_item">${item.name}</span>：</h3>
+                    <h3 id="${item.id}" class="choice_item"><span>${item.name}</span>：</h3>
                     <ul class="mod_category_item ">
                         <li id="all_${item.id}" class="li_item leaf_item all_item " categoryLevel="${item.categoryLevel +1}" parentId="${item.id}"><a id="aa"
                                                                                                href="javascript:void()"
@@ -631,7 +698,7 @@
                         <a id="${item.id}" path="${item.filePath}" alt="${item.name}" title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" target="_blank">
                             <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"
-                                 src="${basePath}/resources/img/grey.gif" width="280" height="199"   data-original="http://testznz.oss-cn-shanghai.aliyuncs.com/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280${watermarkParam}">
+                                 src="${basePath}/resources/img/grey.gif" width="280" height="199"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280${watermarkParam}">
                         </a>
                     </div>
                 </li>

@@ -113,7 +113,7 @@
 
         <c:if test="${watermarkVO.image !=null}">
             <div id="watermark" style="margin-left: 50px">
-                <img src='http://testznz.oss-cn-shanghai.aliyuncs.com/${watermarkVO.image}' />
+                <img src='${ossPath}/${watermarkVO.image}' />
             </div>
         </c:if>
         <c:if test="${watermarkVO.image ==null}">
@@ -241,7 +241,7 @@ $(function(){
                 // var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data;
                 var src = "watermark_"+file.name;
                 $("#watermark").show();
-                $("#watermark").html("<img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+src + "' />");
+                $("#watermark").html("<img src='${ossPath}/"+src + "' />");
                 $("#watermarkImg").val(src);
 
             },

@@ -3,6 +3,7 @@ package com.znz.controller;
 import com.alibaba.fastjson.JSON;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.DeleteObjectsRequest;
+import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.znz.config.AppConfig;
@@ -32,6 +33,7 @@ import javax.validation.Valid;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -299,5 +301,52 @@ public class FileController {
         return "admin/updateIndexBg";
     }
 
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
+    public void download( String imgPath,String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
+        User user = userMapper.selectByPrimaryKey(userSession.getUser().getUserId());
+        if(user.getDownloadPerDay()>user.getMaxDownloadTimes()){
+            response.setContentType("text/html;charset=utf-8");
+            response.setCharacterEncoding("utf-8");
+            PrintWriter printWriter = response.getWriter();
+            printWriter.write("<script>alert('超出每天最大下载次数,请明日再下载')</script>");
+            printWriter.flush();
+            printWriter.close();
+        }
+        downLoad(imgPath, fileName, response);
+        user.setDownloadPerDay(user.getDownloadPerDay()+1);
+        user.setDownloadTotal(user.getDownloadTotal()+1);
+        user.setUserId(userSession.getUser().getUserId());
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    public void downLoad(String filePath,String fileName, HttpServletResponse response) throws Exception {
+        byte[] buf = new byte[1024];
+        int len = 0;
+        BufferedInputStream reader = null;
+        OutputStream out = null;
+       // OSSClient ossClient = null;
+        try {
+            /*ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
+            OSSObject ossObject = ossClient.getObject(appConfig.getBucketName(), filePath);*/
+            URL url = new URL(filePath);
+            URLConnection con = url.openConnection();
+            reader = new BufferedInputStream(con.getInputStream());
+            out = response.getOutputStream();
+            response.reset(); // 非常重要
+            response.setContentType("application/x-msdownload");
+            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            while ((len = reader.read(buf)) > 0)
+                out.write(buf, 0, len);
+        } finally {
+            if(out!=null){
+                out.close();
+            }
+            if(reader!=null){
+                reader.close();
+            }
+        }
+
+    }
 
 }

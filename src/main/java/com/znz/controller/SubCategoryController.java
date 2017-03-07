@@ -204,17 +204,11 @@ public class SubCategoryController {
             resultVO.setMsg("无权限操作");
             resultVO.setCode(1);
         } else {
-            SubCategory temp = subCategoryMapper.selectByName(name);
-            if (temp != null) {
-                resultVO.setCode(2);
-                resultVO.setMsg("类别名称已经存在，请使用其它类别名称");
-            }else{
-                SubCategory subCategory = new SubCategory();
-                subCategory.setName(name);
-                subCategory.setId(id);
-                subCategoryMapper.updateByPrimaryKeySelective(subCategory);
-                resultVO.setCode(0);
-            }
+            SubCategory subCategory = new SubCategory();
+            subCategory.setName(name);
+            subCategory.setId(id);
+            subCategoryMapper.updateByPrimaryKeySelective(subCategory);
+            resultVO.setCode(0);
         }
         return resultVO;
     }
