@@ -196,20 +196,29 @@ public class SubCategoryController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String update(HttpServletRequest request,
-                         @Valid @ModelAttribute SubCategoryVO subCategoryVO) {
+    public @ResponseBody ResultVO update(HttpServletRequest request ,Integer id,String oldName,String name) {
         UserSession userSession = (UserSession) request.getSession()
             .getAttribute(Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
         if (!checkPermisson(userSession)) {
             resultVO.setMsg("无权限操作");
+            resultVO.setCode(1);
         } else {
-            SubCategory subCategory = new SubCategory();
-            subCategory.setName(subCategoryVO.getName());
-            subCategory.setId(Integer.parseInt(subCategoryVO.getId()));
-            subCategoryMapper.updateByPrimaryKeySelective(subCategory);
+            SubCategory temp = subCategoryMapper.selectByName(oldName);
+            if (temp != null) {
+                resultVO.setCode(2);
+                resultVO.setMsg("类别名称已经存在，请使用其它类别名称");
+            }else{
+                SubCategory subCategory = new SubCategory();
+                subCategory.setName(name);
+                subCategory.setId(id);
+                subCategoryMapper.updateByPrimaryKeySelective(subCategory);
+                resultVO.setCode(0);
+            }
+            return resultVO;
+
         }
-        return "redirect:/admin/subCategory/showCategory";
+
     }
 
     private boolean checkPermisson(UserSession userSession) {

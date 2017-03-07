@@ -170,9 +170,10 @@
 
                         'rename': function (t) {
                             var url = basePath + "/admin/subCategory/update";
-                            var name = $.trim($("#" + t.id) .text());
+                            var id = t.id;
+                            var oldName = $.trim($("#" + t.id) .text());
                             $("#id").val(t.id);
-                            $("#categoryName").val(name);
+                            $("#categoryName").val(oldName);
                             $("#dialog").dialog({
                                 height: 150,
                                 modal: true,
@@ -185,11 +186,24 @@
                                             primary: "ui-icon-heart"
                                         },
                                         click: function () {
-                                            if(!isValid($("#categoryName").val())){
-                                                return;
-                                            }
-                                            $("#categoryForm").attr("action", url);
-                                            $("#categoryForm").submit();
+                                           var name =  $("#categoryName").val();
+                                            $.ajax({
+                                                               type: "POST",
+                                                               url: basePath + "/admin/subCategory/update",
+                                                                data: { name: name, id: id ,oldName:oldName},
+                                                               cache: false,
+                                                               async: false,
+                                                               success: function (ret) {
+                                                                   if (ret.code == 0) {
+                                                                       valid = true;
+                                                                   } else {
+                                                                       alert(ret.msg);
+                                                                   }
+                                                               },
+                                                               error: function (msg) {
+                                                                   alert("服务器出错了");
+                                                               }
+                                                           });
                                         }
                                     }]
                             });
