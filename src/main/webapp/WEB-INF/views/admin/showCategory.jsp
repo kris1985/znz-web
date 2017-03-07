@@ -186,7 +186,10 @@
                                             primary: "ui-icon-heart"
                                         },
                                         click: function () {
-                                           var name =  $("#categoryName").val();
+                                           var name =  $.trim($("#categoryName").val());
+                                           if(oldName == name){
+                                             return;
+                                           }
                                             $.ajax({
                                                                type: "POST",
                                                                url: basePath + "/admin/subCategory/update",
@@ -195,7 +198,8 @@
                                                                async: false,
                                                                success: function (ret) {
                                                                    if (ret.code == 0) {
-                                                                       valid = true;
+                                                                       $("#" + t.id) .text(name);
+                                                                       $("#dialog").dialog("close");
                                                                    } else {
                                                                        alert(ret.msg);
                                                                    }
@@ -575,7 +579,7 @@
         <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
             <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
                 <div class="mod_sear_list">
-                    <h3 id="${item.id}">${item.name}：</h3>
+                    <h3 id="${item.id}"><span class="choice_item">${item.name}</span>：</h3>
                     <ul class="mod_category_item ">
                         <li id="all_${item.id}" class="li_item leaf_item all_item " categoryLevel="${item.categoryLevel +1}" parentId="${item.id}"><a id="aa"
                                                                                                href="javascript:void()"

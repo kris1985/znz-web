@@ -204,7 +204,7 @@ public class SubCategoryController {
             resultVO.setMsg("无权限操作");
             resultVO.setCode(1);
         } else {
-            SubCategory temp = subCategoryMapper.selectByName(oldName);
+            SubCategory temp = subCategoryMapper.selectByName(name);
             if (temp != null) {
                 resultVO.setCode(2);
                 resultVO.setMsg("类别名称已经存在，请使用其它类别名称");
@@ -215,10 +215,8 @@ public class SubCategoryController {
                 subCategoryMapper.updateByPrimaryKeySelective(subCategory);
                 resultVO.setCode(0);
             }
-            return resultVO;
-
         }
-
+        return resultVO;
     }
 
     private boolean checkPermisson(UserSession userSession) {
