@@ -136,7 +136,7 @@ public class UserController {
             WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
             model.addAttribute("watermarkVO", watermarkVO);
         }
-        return "/admin/userUpdate";
+        return "/admin/userUpdate2";
     }
 
     @RequestMapping(value = "/update" , method= RequestMethod.POST)

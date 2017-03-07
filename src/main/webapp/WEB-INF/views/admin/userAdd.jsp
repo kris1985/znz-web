@@ -210,7 +210,7 @@ $(function(){
                    // var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data;
                     var src = "watermark_"+file.name;
                     $("#watermark").show();
-                    $("#watermark").append("<img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+src + "' width='60' height='40'/>");
+                    $("#watermark").html("<img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+src + "' />");
                     $("#watermarkImg").val(src);
 
                 },

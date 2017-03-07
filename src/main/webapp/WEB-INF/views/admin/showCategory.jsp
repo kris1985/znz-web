@@ -429,8 +429,11 @@
                $(".site-piclist_pic a").each(function (i) {
                    ids=ids+$(this).attr("id")+",";
                    filePaths=filePaths+$(this).attr("path")+",";
-               })
-               window.open ("${basePath}/admin/file/listImg/"+selectedImg+"?ids="+ids+"&filePaths="+filePaths,'newwindow','height=100,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no')
+               });
+               $("#selectedId").val(selectedImg);
+               $("#picIds").val(ids);
+               $("#filePaths").val(filePaths);
+               $("#picForm").submit();
            })
 
            //添加更多
@@ -618,7 +621,11 @@
         </ul>
     </div>
 
-
+     <form id="picForm" method="POST" target="_blank" action="${basePath}/admin/file/listImg">
+         <input type="hidden" name="id" id="selectedId">
+         <input type="hidden" name="ids"id="picIds">
+         <input type="hidden" name="filePaths" id="filePaths">
+     </form>
   <div class="mod-page">
     <ul class="pagination" id="pagination1"></ul>
   </div>

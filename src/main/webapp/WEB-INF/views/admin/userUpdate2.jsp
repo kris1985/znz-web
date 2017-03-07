@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>修改用户</title>
+    <title>修改用户1</title>
      <%@ include file="../common/common.jsp"%>
      <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
           <link href="${basePath}/resources/css/clean.css" rel="stylesheet" type="text/css" />
@@ -113,7 +113,7 @@
 
         <c:if test="${watermarkVO.image !=null}">
             <div id="watermark" style="margin-left: 50px">
-                <img src='http://testznz.oss-cn-shanghai.aliyuncs.com/${watermarkVO.image}' width='60' height='40'/>
+                <img src='http://testznz.oss-cn-shanghai.aliyuncs.com/${watermarkVO.image}' />
             </div>
         </c:if>
         <c:if test="${watermarkVO.image ==null}">
@@ -241,7 +241,7 @@ $(function(){
                 // var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data;
                 var src = "watermark_"+file.name;
                 $("#watermark").show();
-                $("#watermark").append("<img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+src + "' width='60' height='40'/>");
+                $("#watermark").html("<img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+src + "' />");
                 $("#watermarkImg").val(src);
 
             },

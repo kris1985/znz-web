@@ -202,8 +202,8 @@ public class FileController {
         return "admin/album";
     }
 
-    @RequestMapping(value = "/listImg/{id}", method = RequestMethod.GET)
-    public String listImg(HttpServletRequest request, @PathVariable Long id, String ids, String filePaths, Model model) {
+    @RequestMapping(value = "/listImg", method = RequestMethod.POST)
+    public String listImg(HttpServletRequest request, Long id, String ids, String filePaths, Model model) {
         Picture picture = pictureMapper.selectByPrimaryKey(id);
         model.addAttribute("selectedImg", picture.getFilePath());
         model.addAttribute("imgs", Arrays.asList(filePaths.split(",")));

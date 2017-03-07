@@ -64,10 +64,10 @@ top: 50px;background: transparent;z-index: 9999">
                 <c:forEach items="${imgs}" var="img">
                     <c:choose>
                         <c:when test="${img eq selectedImg}">
-                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}"></a></li>
+                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}?x-oss-process=image${watermarkParam}"></a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="album-carousel-thumb"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}"></a></li>
+                            <li class="album-carousel-thumb"><a href="http://testznz.oss-cn-shanghai.aliyuncs.com/${img}?x-oss-process=image${watermarkParam}"></a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
