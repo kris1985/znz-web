@@ -218,7 +218,7 @@ public class FileController {
                 log.error(e.getLocalizedMessage(),e);
             }
         }
-        model.addAttribute("currentIndex", Collections.binarySearch(listIds, id));
+        model.addAttribute("currentIndex", listIds.indexOf(id));
         return "admin/album";
     }
 
