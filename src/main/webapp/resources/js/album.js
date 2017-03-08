@@ -12,18 +12,20 @@ function initMaxWH(){
     maxWidth = $(document).width();
     w = $("#album-image").width();
     h = $("#album-image").height();
+    console.log("$(#album-image):"+$("#album-image").attr("src"));
+    console.log(w+"-"+h+"-"+maxWidth+"-"+maxHeight);
     if(w>h){
         maxWidth = maxHeight*(w/h);
     }else{
         maxWidth = maxHeight*(h/w);
     }
-    //alert(w+"-"+h+"-"+maxWidth+"-"+maxHeight);
+    console.log(w+"-"+h+"-"+maxWidth+"-"+maxHeight);
 }
 (function($){
     var CLS_SELECTED = "album-carousel-thumb-selected",
         CLS_HIDE = "hide",
         PX = "px";
-    initMaxWH();
+    //initMaxWH();
     jQuery.Album = function(config){
         this.setting = {
             // 大图片显示区域

@@ -125,11 +125,11 @@
   }
 
   .mod_category_item a:hover {
-    color: green;
+    color: #01bd0c;
   }
 
   .mod_category_item .selected a {
-    background: #699f00;
+    background: #00c40c;
     padding: 1px 7px 2px;
     color: #fff;
     border-radius: 1px;
@@ -240,8 +240,8 @@ font-family: "黑体";
     background: #fff;
 }
   .mod-page .active a {
-      background: #699e00;
-      border: 1px solid #5f9000;
+      background: #00c40c;
+      border: 1px solid #01bd0c;
       color: #fff;
       cursor: default;
   }

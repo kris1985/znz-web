@@ -129,12 +129,36 @@ top: 50px;background: transparent;z-index: 9999">
         if(zoom>80&&zoom<=500) o.style.zoom=zoom+'%';
         return false;
     }
-    var Album = new jQuery.Album({
-        // 当前显示图片在缩略图的中索引值
-        curIndex: ${currentIndex}
-    });
+
+    var Album;
 
     $(function(){
+        var image = new Image();
+        image.src = $("#album-image").attr("src");
+        image.onload = function () {
+            var width = image.width;
+            var height = image.height;
+            maxHeight = $(document).height() - 90;
+            maxWidth = $(document).width();
+            w = $("#album-image").width();
+            h = $("#album-image").height();
+            console.log("$(#album-image):" + $("#album-image").attr("src"));
+            console.log(w + "-" + h + "-" + maxWidth + "-" + maxHeight);
+            if (w > h) {
+                maxWidth = maxHeight * (w / h);
+            } else {
+                maxWidth = maxHeight * (h / w);
+            }
+            Album = new jQuery.Album({
+                // 当前显示图片在缩略图的中索引值
+                curIndex: ${currentIndex},
+                // 大图片显示区域的最大宽度
+                maxWidth: maxWidth,
+                // 大图片显示区域的最高宽度
+                maxHeight: maxHeight
+            });
+        };
+
         $(".attachs img").click(function () {
           $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
         })
@@ -154,6 +178,7 @@ top: 50px;background: transparent;z-index: 9999">
                 }
             }
         }
+        //alert($(document).width()+"-"+$(document).height());
         $("#album-carousel-zone").width($(document).width()-100);
 
         $(".album-image-bd").height($(document).height()-0);
