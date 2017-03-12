@@ -29,7 +29,7 @@
                     },
                     //	'auto':false,
                     'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;',
-                    'fileObjName':'files',
+                    'fileObjName':'file',
                     'buttonText' : '选择文件',
                     'swf'      : '${basePath}/resources/uploadify.swf',
                     'uploader' : '${basePath}/admin/file/uploadChild',

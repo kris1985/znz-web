@@ -143,6 +143,19 @@
 
   </select>
 
+
+  <select id="selectByIds" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
+    select
+    <include refid="Base_Column_List" />
+    from t_picture where id in
+        <foreach item="subItem" index="subIndex" collection="list"  open="(" separator="," close=")">
+          #{subItem}
+        </foreach>
+    order by id desc
+  </select>
+
+
+
   <delete id="deleteByPrimaryKeys"  >
     delete from t_picture
     where id in

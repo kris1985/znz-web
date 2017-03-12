@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>相册</title>
+    <title>指南针鞋讯-大图</title>
      <%@ include file="../common/common.jsp"%>
     <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/docs-min.css" rel="stylesheet" type="text/css" media="all" />
@@ -19,6 +19,30 @@
     <link href="${basePath}/resources/css/grids.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/album.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/base.css" rel="stylesheet" type="text/css" media="all" />
+    <style>
+        .attachs{
+            position: absolute;
+            right: 150px;
+            border: 0px solid #24F055;
+            width: 70px;
+            top: 40px;
+            background: #FAFAFA;
+            z-index: 9999;
+        }
+
+        .attachs img{
+            cursor: pointer;
+        }
+
+        #album-image-ft{display: none}
+        .attach_item{
+            border: 2px solid #FFFFFF;
+            margin: 5px;
+            width: 64px;
+            margin: 3px auto;
+        }
+
+    </style>
 </head>
 <body class="trs-tags" style="background:black;overflow-x:hidden;overflow-y:hidden" sroll="no">
 <div class="content1">
@@ -35,22 +59,18 @@
         </div>
         <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
-            <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}?x-oss-process=image${watermarkParam}" class="" id="album-image" alt="" onmousewheel="return bbimg(this)"/></div>
+            <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}?x-oss-process=image${watermarkParam}" id="album-image" alt="${selectedName}" onmousewheel="return bbimg(this)"/></div>
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
-            <!--
-            <div class="attachs" style="position: absolute; right: 50px;position: absolute;
-right: 150px;
-border: 1px solid #ccc;
-width: 100px;
-top: 50px;background: transparent;z-index: 9999">
+            <div class="attachs" id="attachs" >
+                    <img src="${ossPath}/${selectedImg}?x-oss-process=image/resize,m_pad,h_43,w_60" origin_src="${ossPath}/${selectedImg}" >
                     <c:forEach var="item" items="${attachs}">
-                       <img src="${ossPath}/${item}?x-oss-process=image/resize,m_pad,h_80,w_100"
-                            origin_src="${ossPath}/${item}" style="display: block;width: 100px;height: 71px;border: 0px solid #ccc;margin-bottom: 10px;">
+                        <div class="attach_item">
+                            <img src="${ossPath}/${item}?x-oss-process=image/resize,m_pad,h_43,w_60" origin_src="${ossPath}/${item}">
+                        </div>
                     </c:forEach>
             </div>
-            -->
         </div>
 
     </div>
@@ -61,13 +81,14 @@ top: 50px;background: transparent;z-index: 9999">
             <ul class="album-carousel-list" id="album-carousel-list">
 
 
-                <c:forEach items="${imgs}" var="img">
+                <c:forEach items="${pictures}" var="img">
                     <c:choose>
-                        <c:when test="${img eq selectedImg}">
-                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${ossPath}/${img}?x-oss-process=image${watermarkParam}"></a></li>
+                        <c:when test="${img.filePath eq selectedImg}">
+                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${ossPath}/${img.filePath}?x-oss-process=image${watermarkParam}"
+                                                                                              title="${img.name}" attachs="${img.attach}"></a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="album-carousel-thumb"><a href="${ossPath}/${img}?x-oss-process=image${watermarkParam}"></a></li>
+                            <li class="album-carousel-thumb"><a href="${ossPath}/${img.filePath}?x-oss-process=image${watermarkParam}" title="${img.name}" attachs="${img.attach}"></a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
@@ -159,9 +180,16 @@ top: 50px;background: transparent;z-index: 9999">
             });
         };
 
-        $(".attachs img").click(function () {
+
+     /*   $(".attachs img").click(function () {
           $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
-        })
+        })*/
+
+        $(".attachs img").live("click",function(){
+            $(".attach_item").css("border"," 2px solid white");
+            $(this).parent().css("border"," 2px solid #00c40c");
+            $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
+        });
 		//setTitle();
         if($.cookie('albumBackground') !=undefined){
             $("body").css("background",$.cookie('albumBackground'));
@@ -202,7 +230,7 @@ top: 50px;background: transparent;z-index: 9999">
         });
 
         $(".fixedBtns li").hover(function(){
-            $(this).css("color","#057BDF");
+            $(this).css("color","#00c40c");
         },function(){
             $(this).css("color",$("#album-image-ft").css("color"));
         });
@@ -261,7 +289,8 @@ top: 50px;background: transparent;z-index: 9999">
         
         $("#downloadBtn").click(function(){
             var imgpath = $("#album-image").attr("src");
-            window.open("${basePath}/admin/file/download?imgPath=" + imgpath+"&fileName=是浪费大家.jpg")
+            var alt = $("#album-image").attr("alt");
+            window.open("${basePath}/admin/file/download?imgPath=" + imgpath+"&fileName="+alt)
         });
 
      //   document.oncontextmenu=function(){return false;}

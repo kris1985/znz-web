@@ -133,7 +133,7 @@ cursor:pointer}
 }
 
 .album-image-btn-prev:hover,.album-image-btn-next:hover{
-	color:#057BDF;
+	color:#01bd0c;
 	
 }
 
@@ -200,7 +200,7 @@ bottom: 45px;z-index:1999;
 }
 
 .album-carousel-btn-prev:hover,.album-carousel-btn-next:hover{
-	color:#057BDF;
+	color:#01bd0c;
 	
 }
 
@@ -306,5 +306,5 @@ bottom: 45px;z-index:1999;
 #album-image{position: absolute;top:50%;left:50%;cursor: pointer;}
 .bs-glyphicons-list{margin-top:-10px}
 .fixedBtns li{float:left;text-align:center;cursor:pointer;color:#ffffff;width: 69px;display: block;}
-.fixedBtns li:hover{font-weight:bold;color:#057BDF}
+.fixedBtns li:hover{font-weight:bold;color:#01bd0c}
 ..bs-glyphicons-list{margin:0;margin-top:5px;}

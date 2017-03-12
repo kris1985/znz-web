@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>指南针</title>
+    <title>指南针鞋讯-目录</title>
     <%@ include file="../common/common.jsp" %>
 
     <link href="${basePath}/resources/css/jquery-ui-1.8.24.custom.css" rel="stylesheet"  />
@@ -27,7 +27,6 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
     <script>
         var basePath = getContextPath();
-
 
         /*获取所有类别除掉全选，格式1,2,3;4,5,6  不同类别用；分开*/
         function getAllSelected() {
@@ -51,7 +50,7 @@
 
 
         $(function () {
-            <c:if test="${isAdmin }">
+             <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
                 //栏目排序 左右
                 $(".mod_category_item").sortable({
                     update: function (event, ui) {
@@ -339,41 +338,7 @@
                 }
             });
 
-                $("#uploadBtn").click(function () {
-                    var temp = "";
-                    $("#leaf_category").find(".selected").each(function (i) {
-                        id = $(this).attr("id");
-                        if (id.indexOf("all") != -1) {
-                            $.each($(this).siblings(), function (i, n) {
-                                id = $(this).attr("id");
-                                temp += id + ","
-                            });
-                        } else {
-                            temp += id + ","
-                        }
-                    });
-                    //console.log(temp);
-                    if(temp.indexOf(",") !=-1){
-                        temp = temp.substring(0,temp.length-1);
-                    }
-                    //console.log(temp);
-                    var url = "${basePath}/admin/file/toUpload?category=" + temp
-                    art.dialog.open(url,
-                        {
-                            "id": "2345",
-                            title: "上传文件",
-                            width: 500,
-                            height: 400,
-                            close: function () {
-                                var selected = getAllSelected();
-                                var path = "${basePath}/admin/subCategory/showCategory"
-                                $("#fourthSelectedId").val(selected);
-                                $("#categoryForm").attr("action", path);
-                                $("#categoryForm").submit();
-                            }
-                        }
-                    );
-                })
+
 
                 //用户管理
                 $("#userManagerBtn").click(function () {
@@ -388,41 +353,82 @@
                     );
                 })
 
-                //上传附图 删除
-                $('.site-piclist li').contextMenu('menuPic', {
-                    bindings: {
-                        'addAttach': function (t) {
-                            var id = $(t).attr("item");
-                            var url = "${basePath}/admin/file/toUploadAttach?id="+id;
-                            art.dialog.open(url,
-                                {
-                                    "id": "2345",
-                                    title: "上传文件",
-                                    width: 500,
-                                    height: 400,
-                                    close: function () {
 
-                                    }
-                                }
-                            );
-                        },
-                        'delete': function (t) {
-                            if(!confirm("确认要删除吗？")){
-                                return;
-                            }
-                            var id = $(t).attr("item");
-                            var url = "${basePath}/admin/file/delete?pictureId="+id;
-                            $.get(url,function (data) {
-                                if(data.code ==0 ){
-                                    $(t).hide();
-                                }else{
-                                    alert(data.msg)
-                                }
-                            })
+            </c:if>
 
-                        }
+            <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+
+            //上传图片
+            $("#uploadBtn").click(function () {
+                var temp = "";
+                $("#leaf_category").find(".selected").each(function (i) {
+                    id = $(this).attr("id");
+                    if (id.indexOf("all") != -1) {
+                        $.each($(this).siblings(), function (i, n) {
+                            id = $(this).attr("id");
+                            temp += id + ","
+                        });
+                    } else {
+                        temp += id + ","
                     }
                 });
+                //console.log(temp);
+                if(temp.indexOf(",") !=-1){
+                    temp = temp.substring(0,temp.length-1);
+                }
+                //console.log(temp);
+                var url = "${basePath}/admin/file/toUpload?category=" + temp
+                art.dialog.open(url,
+                    {
+                        "id": "2345",
+                        title: "上传文件",
+                        width: 500,
+                        height: 400,
+                        close: function () {
+                            var selected = getAllSelected();
+                            var path = "${basePath}/admin/subCategory/showCategory"
+                            $("#fourthSelectedId").val(selected);
+                            $("#categoryForm").attr("action", path);
+                            $("#categoryForm").submit();
+                        }
+                    }
+                );
+            })
+            //上传附图 删除
+            $('.site-piclist li').contextMenu('menuPic', {
+                bindings: {
+                    'addAttach': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/file/toUploadAttach?id="+id;
+                        art.dialog.open(url,
+                            {
+                                "id": "2345",
+                                title: "上传文件",
+                                width: 500,
+                                height: 400,
+                                close: function () {
+
+                                }
+                            }
+                        );
+                    },
+                    'delete': function (t) {
+                        if(!confirm("确认要删除吗？")){
+                            return;
+                        }
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/file/delete?pictureId="+id;
+                        $.get(url,function (data) {
+                            if(data.code ==0 ){
+                                $(t).hide();
+                            }else{
+                                alert(data.msg)
+                            }
+                        })
+
+                    }
+                }
+            });
             </c:if>
 
 
@@ -434,7 +440,7 @@
             //叶子节点,点击类别
             $(".leaf_item").click(function () {
                 <c:choose>
-                    <c:when test="${isAdmin}">
+                    <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
                         if ($(this).hasClass("selected")) {
                             $(this).removeClass("selected");
                             if($(this).parent().children().length  == $(this).parent().children().not(".selected").length){
@@ -505,7 +511,6 @@
                var filePaths="";
                $(".site-piclist_pic a").each(function (i) {
                    ids=ids+$(this).attr("id")+",";
-                   filePaths=filePaths+$(this).attr("path")+",";
                });
                $("#selectedId").val(selectedImg);
                $("#picIds").val(ids);
@@ -529,8 +534,13 @@
                      $(this).parent().parent().css("height","25px");
                      $(this).text("更多")
                 }
+           })
 
-
+           $(".site-piclist_pic").hover(
+               function () {
+               $(this).css("border","2px solid #00c40c");
+           },function () {
+                   $(this).css("border","2px solid white");
            })
         })
 
@@ -588,8 +598,8 @@
         </form>
     </div>
 
-    <c:if test="${isAdmin }">
-        <div class="contextMenu" id="myMenu1">
+    <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0}">
+        <div class="contextMenu" id="myMenu1" style="display: none">
             <ul>
                 <li id="add"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16" width="16"/> 新增同类</li>
                 <li id="addSub"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154118&size=16"  width="16"/> 新增子类</li>
@@ -597,34 +607,32 @@
             </ul>
         </div>
 
-        <div class="contextMenu" id="myMenu2">
+        <div class="contextMenu" id="myMenu2" style="display: none">
             <ul>
                 <li id="add2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
                 <li id="rename2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
             </ul>
         </div>
 
-        <div class="contextMenu" id="myMenu3">
+        <div class="contextMenu" id="myMenu3" style="display: none">
             <ul>
                 <li id="rename3"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
             </ul>
         </div>
+  </c:if>
 
-
-
-        <div class="contextMenu" id="menuPic">
+    <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+        <div class="contextMenu" id="menuPic" style="display: none">
             <ul>
-                <!--
                 <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
-                -->
                 <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
             </ul>
         </div>
-  </c:if>
+    </c:if>
 
     <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
          <div class="mod_sear_list">
-        <h3>选择：</h3>
+        <h3>目录：</h3>
         <ul class="mod_category_item">
             <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
                 <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
@@ -660,17 +668,18 @@
                                 </c:if>
                             </c:forEach>
 
-                            <c:if test="${iscontain}">
-                                <li id="${category.id}"  class=" li_item leaf_item selected"
-                                categoryLevel="${category.categoryLevel}" parentId="${category.parentId}"> <a id="a_${category.id}" href="javascript:void()"
-                                      class="">${category.name}</a> </li>
-                            </c:if>
-                            <c:if test="${!iscontain}">
-                                <li id="${category.id}"  class=" li_item leaf_item
+                            <c:choose>
+                                <c:when test="${iscontain}">
+                                    <li id="${category.id}"  class=" li_item leaf_item selected"
+                                        categoryLevel="${category.categoryLevel}" parentId="${category.parentId}"> <a id="a_${category.id}" href="javascript:void()"
+                                                                                                                      class="">${category.name}</a> </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li id="${category.id}"  class=" li_item leaf_item
                                 "  categoryLevel="${category.categoryLevel}" parentId="${category.parentId}"> <a id="a_${category.id}" href="javascript:void()"
-                                      class="">${category.name} </a> </li>
-                            </c:if>
-
+                                                                                                                 class="">${category.name} </a> </li>
+                                </c:otherwise>
+                            </c:choose>
                         </c:forEach>
                     </ul>
                 </div>
@@ -681,10 +690,14 @@
 
 
     <div>
-        <c:if test="${isAdmin }">
-             <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
+        <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
              <input type="button" id="userManagerBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理"></button>
         </c:if>
+
+        <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+            <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
+        </c:if>
+
     </div>
     <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
@@ -695,8 +708,8 @@
             <c:forEach var="item" items="${pictures}" varStatus="status">
                 <li item="${item.id}">
                     <div class="site-piclist_pic">
-                        <a id="${item.id}" path="${item.filePath}" alt="${item.name}" title="${item.name}"
-                           href="javascript:void(0)" class="site-piclist_pic_link" target="_blank">
+                        <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
+                           href="javascript:void(0)" class="site-piclist_pic_link" attach="${item.attach}">
                             <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"
                                  src="${basePath}/resources/img/grey.gif" width="280" height="199"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280${watermarkParam}">
                         </a>

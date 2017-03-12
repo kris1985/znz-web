@@ -305,3 +305,10 @@ div:after, ul:after, dl:after {
       border-bottom-left-radius: 4px;
       border-top-left-radius: 4px;
   }
+
+  .site-piclist_pic{
+      border: 2px solid white;
+      height: 199px;
+  }
+
+  .lazy{width: 276px;}

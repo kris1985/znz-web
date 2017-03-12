@@ -109,7 +109,19 @@ function initMaxWH(){
                 alt = currentItem.find("a:first").attr("title"),
                 percent = 0,
                 preloader = new Image();
-
+                //console.log("currentItem:"+ currentItem.find("a:first").attr("attachs"))
+                var attachs =   currentItem.find("a:first").attr("attachs");
+                //console.log("attachs:"+attachs)
+                if(attachs!=undefined && attachs!=""){
+                var arr =  attachs.split(",");
+                var res="";
+                for( var i=0;i<arr.length;i++){
+                    res+="<div class=\"attach_item\"> <img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+ arr[i]+ "?x-oss-process=image/resize,m_pad,h_43,w_60' origin_src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+ arr[i] +"' /> </div>"
+                }
+                $("#attachs").html(res);
+            }else{
+             $("#attachs").html("");
+            }
             // 开始显示loading
             overlay.removeClass(CLS_HIDE);
             this.isloading = true;

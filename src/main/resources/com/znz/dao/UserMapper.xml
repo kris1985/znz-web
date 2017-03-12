@@ -46,7 +46,7 @@
         select
         <include refid="Base_Column_List" />
         from t_user2
-        where user_type != 3 order by company desc;
+        where user_type != 0 order by user_type desc, company desc;
     </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

@@ -9,10 +9,7 @@ import com.aliyun.oss.model.PutObjectResult;
 import com.znz.config.AppConfig;
 import com.znz.dao.*;
 import com.znz.model.*;
-import com.znz.util.Constants;
-import com.znz.util.FilePathConverter;
-import com.znz.util.ImageUtil;
-import com.znz.util.MyFileUtil;
+import com.znz.util.*;
 import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.map.HashedMap;
@@ -70,10 +67,9 @@ public class FileController {
     public
     @ResponseBody
     void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, String category, Model model) throws IOException {
-        // String realPath  = request.getSession().getServletContext().getRealPath(Constants.UPLOAD_ROOT_PATH);
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
-        if (!checkPermisson(userSession, result)) {
+        if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
         OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
@@ -115,9 +111,8 @@ public class FileController {
     public
     @ResponseBody
     ResultVO uploadWatermark(HttpServletRequest request, @RequestParam MultipartFile file, Model model) {
-        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
-        if (!checkPermisson(userSession, result)) {
+        if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
         OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
@@ -158,29 +153,28 @@ public class FileController {
     @RequestMapping(value = "/uploadChild", method = RequestMethod.POST)
     public
     @ResponseBody
-    void uploadChild(HttpServletRequest request, @RequestParam MultipartFile[] files, Long pictureId) throws IOException {
-        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
-        ResultVO result = new ResultVO();
-        if (!checkPermisson(userSession, result)) {
+    void uploadChild(HttpServletRequest request, @RequestParam MultipartFile file, Long pictureId) throws IOException {
+
+        if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
+        Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
+        String attach = picture.getAttach();
         OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
         try {
-            List<String> attachs = new ArrayList<>();
-            String childPath;
-            for (MultipartFile file : files) {
-                childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
-                boolean b = upload(ossClient, file, childPath);
-                if (b) {
-                    attachs.add(childPath);
-                }
+            String childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
+            boolean b = upload(ossClient, file, childPath);
+            if (b) {
+                attach = childPath;
             }
-            if (!CollectionUtils.isEmpty(attachs)) {
-                Picture picture = new Picture();
-                picture.setId(pictureId);
-                picture.setAttach(JSON.toJSONString(attachs));
-                pictureMapper.updateByPrimaryKeySelective(picture);
+            Picture pic = new Picture();
+            pic.setId(pictureId);
+            if (!StringUtils.isEmpty(picture.getAttach())) {
+                pic.setAttach(picture.getAttach()+","+attach);
+            }else{
+                pic.setAttach(attach);
             }
+            pictureMapper.updateByPrimaryKeySelective(pic);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
@@ -205,20 +199,20 @@ public class FileController {
     }
 
     @RequestMapping(value = "/listImg", method = RequestMethod.POST)
-    public String listImg(HttpServletRequest request, Long id, String ids, String filePaths, Model model) {
-        Picture picture = pictureMapper.selectByPrimaryKey(id);
-        model.addAttribute("selectedImg", picture.getFilePath());
-        model.addAttribute("imgs", Arrays.asList(filePaths.split(",")));
-        model.addAttribute("parentName", picture.getName());
+    public String listImg(HttpServletRequest request, Long id, String ids, Model model) {
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
-        if(StringUtils.isNoneBlank(picture.getAttach())){
-            try{
-                model.addAttribute("attachs", JSON.parseArray(picture.getAttach(),String.class));
-            }catch (Exception e){
-                log.error(e.getLocalizedMessage(),e);
+        List<Picture> pictures = pictureMapper.selectByIds(listIds);
+        Picture picture = pictures.stream().filter(s->s.getId() == id).findAny().get();
+        for(Picture p :pictures){
+            if(StringUtils.isNoneBlank(p.getAttach())){
+                p.setAttach(p.getFilePath()+","+p.getAttach());//加上原图
             }
         }
+        model.addAttribute("selectedImg", picture.getFilePath());
+        model.addAttribute("selectedName", picture.getName());
+        model.addAttribute("attachs", picture.getFilePath());
         model.addAttribute("currentIndex", listIds.indexOf(id));
+        model.addAttribute("pictures", pictures);
         return "admin/album";
     }
 
@@ -226,10 +220,9 @@ public class FileController {
     public
     @ResponseBody
     ResultVO delete(HttpServletRequest request, Long pictureId) {
-        UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
         ResultVO result = new ResultVO();
-        if (!checkPermisson(userSession, result)) {
-            return result;
+        if (!PermissionUtil.checkPermisson(request)) {
+            throw new RuntimeException("无权限操作");
         }
         OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
         List<String> keys = new ArrayList<>();
@@ -273,14 +266,7 @@ public class FileController {
     }
 
 
-    private boolean checkPermisson(UserSession userSession, ResultVO result) {
-        if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3) {
-            result.setCode(-1);
-            result.setMsg("无权限操作");
-            return false;
-        }
-        return true;
-    }
+
 
 
     @RequestMapping(value = "/uploadIndexBg", method = RequestMethod.POST)

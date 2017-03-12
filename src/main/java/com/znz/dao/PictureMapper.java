@@ -22,4 +22,6 @@ public interface PictureMapper {
     List<Picture> selectByPage(FileQueryVO fileQueryVO);
 
     void deleteByPrimaryKeys(List<Long> pictureIds);
+
+    List<Picture> selectByIds(List<Long> listIds);
 }

@@ -72,10 +72,8 @@ public class UserController {
 
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.GET)
     public @ResponseBody ResultVO delete(HttpServletRequest request, @PathVariable int userId) {
-        UserSession userSession = (UserSession) request.getSession().getAttribute(
-            Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
-        if (!checkPermisson(userSession)) {
+        if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
         }else{
             userMapper.deleteByPrimaryKey(userId);
@@ -87,10 +85,7 @@ public class UserController {
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST)
     public String  add(HttpServletRequest request, @Valid @ModelAttribute UserAddVO userAddVO, BindingResult br, Model model){
-        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
-        if (!checkPermisson(userSession)){
-            throw  new RuntimeException("无权限操作");
-        }
+        PermissionUtil.checkPermisson(request);
         if (br.hasErrors()){
             model.addAttribute("br",br);
             return  "/admin/userAdd";
@@ -128,6 +123,8 @@ public class UserController {
         return "redirect:/admin/user/users";
     }
 
+
+
     @RequestMapping(value = "/update/{userId}", method = RequestMethod.GET)
     public String modify(@PathVariable int userId, Model model) {
         User user = userMapper.selectByPrimaryKey(userId);
@@ -141,10 +138,7 @@ public class UserController {
 
     @RequestMapping(value = "/update" , method= RequestMethod.POST)
     public String  update(HttpServletRequest request,@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
-        UserSession userSession =  (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
-        if (!checkPermisson(userSession)){
-            throw  new RuntimeException("无权限操作");
-        }
+        PermissionUtil.checkPermisson(request);
         if (br.hasErrors()){
             model.addAttribute("br",br);
             return  "/admin/userAdd";
@@ -239,11 +233,4 @@ public class UserController {
     }
 
 
-
-    private boolean checkPermisson(UserSession userSession) {
-        if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3) {
-            return false;
-        }
-        return true;
-    }
 }

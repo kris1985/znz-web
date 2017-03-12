@@ -12,7 +12,7 @@ public class PermissionUtil {
     public static boolean checkPermisson(HttpServletRequest request) {
         UserSession userSession = (UserSession) request.getSession().getAttribute(
                 Constants.USER_SESSION);
-        if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3) {
+        if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3 &&  userSession.getUser().getUserType() != 0) {
             return false;
         }
         return true;

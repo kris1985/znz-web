@@ -36,5 +36,7 @@ public class UserAddVO {
 
     private String device;
 
+    private Integer userType;
+
     private WatermarkVO watermarkVO;
 }

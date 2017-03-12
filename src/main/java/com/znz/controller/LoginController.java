@@ -88,7 +88,7 @@ public class LoginController {
             try{
                 WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
                 String watermarkParam ="";
-                if(watermarkVO.getImage()!=null){
+                if(!StringUtils.isEmpty(watermarkVO.getImage())){
                     if(watermarkVO.getP()!=null){
                         String img = watermarkVO.getImage()+"?x-oss-process=image/resize,P_"+watermarkVO.getP();
                         String base64 = safeUrlBase64Encode(img.getBytes("UTF-8"));
@@ -119,7 +119,6 @@ public class LoginController {
         user.setLastLoginTime(new Date());
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
-        request.getSession().setAttribute(Constants.ADMIN_FLAG,(userSession.getUser().getUserType() == 2 || userSession.getUser().getUserType() == 3));
         if(1==userLoginVO.getRemember()){
             String uname = "";
             try {

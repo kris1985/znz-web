@@ -61,8 +61,8 @@ public class SubCategoryController {
         }
         HttpSession session = request.getSession();
         List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
-        if(! (Boolean) session.getAttribute(Constants.ADMIN_FLAG)){  //不是admin
-            UserSession userSession = (UserSession)session.getAttribute(Constants.USER_SESSION);
+        UserSession userSession = (UserSession)session.getAttribute(Constants.USER_SESSION);
+        if(!PermissionUtil.checkPermisson(request)){  //不是admin
            if(CollectionUtils.isEmpty(userSession.getUserAuths())){
                userSession.setUserAuths(new ArrayList<>());
             }
@@ -166,10 +166,8 @@ public class SubCategoryController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public @ResponseBody ResultVO delete(HttpServletRequest request, @PathVariable int id) {
-        UserSession userSession = (UserSession) request.getSession()
-            .getAttribute(Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
-        if (!checkPermisson(userSession)) {
+        if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
         } else {
             subCategoryMapper.deleteByPrimaryKey(id);
@@ -181,10 +179,9 @@ public class SubCategoryController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(HttpServletRequest request,
                       @Valid @ModelAttribute SubCategoryVO subCategoryVO) {
-        UserSession userSession = (UserSession) request.getSession()
-            .getAttribute(Constants.USER_SESSION);
+
         ResultVO resultVO = new ResultVO();
-        if (!checkPermisson(userSession)) {
+        if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
         }
         SubCategory subCategory = new SubCategory();
@@ -200,7 +197,7 @@ public class SubCategoryController {
         UserSession userSession = (UserSession) request.getSession()
             .getAttribute(Constants.USER_SESSION);
         ResultVO resultVO = new ResultVO();
-        if (!checkPermisson(userSession)) {
+        if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
             resultVO.setCode(1);
         } else {
@@ -213,12 +210,7 @@ public class SubCategoryController {
         return resultVO;
     }
 
-    private boolean checkPermisson(UserSession userSession) {
-        if (userSession.getUser().getUserType() != 2 && userSession.getUser().getUserType() != 3) {
-            return false;
-        }
-        return true;
-    }
+
 
     @RequestMapping(value = "/sort", method = RequestMethod.POST)
     public @ResponseBody ResultVO sort(HttpServletRequest request, String param) {
