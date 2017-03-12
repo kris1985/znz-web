@@ -25,7 +25,7 @@
                 $('#file_upload').uploadify({
                     'formData'     : {
                         'timestamp' : new Date().getTime(),
-                        'pictureId': '${param.id}'
+                        'pictureId': ${param.id}
                     },
                     //	'auto':false,
                     'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;',
@@ -33,9 +33,6 @@
                     'buttonText' : '选择文件',
                     'swf'      : '${basePath}/resources/uploadify.swf',
                     'uploader' : '${basePath}/admin/file/uploadChild',
-                    'formData'      : {'category' : "${category}" },
-                    'simUploadLimit':10,
-                    'queueSizeLimit':10,
                     'onUploadSuccess' : function(file, data, response) {
                         var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
                         $("#result").show();
@@ -90,6 +87,7 @@
     <form>
         <div id="queue"></div>
         <input id="file_upload" name="file_upload" type="files" multiple="true">
+        	<input type = "hidden" name="pictureId" id="pictureId" value="${param.id}">
         <div id="result" >
         </div>
 
