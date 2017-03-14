@@ -171,8 +171,8 @@
         })*/
 
         $(".attachs img").live("click",function(){
-            $(".attach_item").css("border"," 2px solid #699f00");
-            $(this).parent().css("border"," 2px solid #9B9B9B");
+            $(".attach_item").css("border"," 2px solid #9B9B9B");
+            $(this).parent().css("border"," 2px solid #699f00");
             $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
         });
 		//setTitle();

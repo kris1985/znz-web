@@ -240,8 +240,8 @@ font-family: "黑体";
     background: #fff;
 }
   .mod-page .active a {
-      background: #00c40c;
-      border: 1px solid #01bd0c;
+      background: #699f00;
+      border: 1px solid #5f9000;
       color: #fff;
       cursor: default;
   }
