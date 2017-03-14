@@ -200,7 +200,7 @@ bottom: 45px;z-index:1999;
 }
 
 .album-carousel-btn-prev:hover,.album-carousel-btn-next:hover{
-	color:#01bd0c;
+	color:#699f00;
 	
 }
 
@@ -308,3 +308,29 @@ bottom: 45px;z-index:1999;
 .fixedBtns li{float:left;text-align:center;cursor:pointer;color:#ffffff;width: 69px;display: block;}
 .fixedBtns li:hover{font-weight:bold;color:#01bd0c}
 ..bs-glyphicons-list{margin:0;margin-top:5px;}
+
+.attachs{
+	position: absolute;
+	left: 70px;
+	border: 0px solid #24F055;
+	width: 130px;
+	top: 20px;
+	background: #FAFAFA;
+	z-index: 9999;
+}
+
+.attachs img{
+	cursor: pointer;
+	display: block;
+	margin: 0 auto;
+}
+
+#album-image-ft{display: none}
+.attach_item{
+	border: 2px solid #9B9B9B;
+	width: 124px;
+	margin: 5px auto;
+}
+.ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;}
+.ite_btn span{font-size:24px;margin: 5px;}
+.ite_btn span:hover{ color: #699f00}

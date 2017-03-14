@@ -116,7 +116,7 @@ function initMaxWH(){
                 var arr =  attachs.split(",");
                 var res="";
                 for( var i=0;i<arr.length;i++){
-                    res+="<div class=\"attach_item\"> <img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+ arr[i]+ "?x-oss-process=image/resize,m_pad,h_43,w_60' origin_src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+ arr[i] +"' /> </div>"
+                    res+="<div class=\"attach_item\"> <img src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+ arr[i]+ "?x-oss-process=image/resize,m_pad,h_85,w_110' origin_src='http://testznz.oss-cn-shanghai.aliyuncs.com/"+ arr[i] +"' /> </div>"
                 }
                 $("#attachs").html(res);
             }else{

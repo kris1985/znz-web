@@ -129,7 +129,7 @@
   }
 
   .mod_category_item .selected a {
-    background: #00c40c;
+    background: #699f00;
     padding: 1px 7px 2px;
     color: #fff;
     border-radius: 1px;
@@ -312,3 +312,4 @@ div:after, ul:after, dl:after {
   }
 
   .lazy{width: 276px;}
+

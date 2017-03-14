@@ -20,27 +20,7 @@
     <link href="${basePath}/resources/css/album.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/base.css" rel="stylesheet" type="text/css" media="all" />
     <style>
-        .attachs{
-            position: absolute;
-            right: 150px;
-            border: 0px solid #24F055;
-            width: 70px;
-            top: 40px;
-            background: #FAFAFA;
-            z-index: 9999;
-        }
 
-        .attachs img{
-            cursor: pointer;
-        }
-
-        #album-image-ft{display: none}
-        .attach_item{
-            border: 2px solid #FFFFFF;
-            margin: 5px;
-            width: 64px;
-            margin: 3px auto;
-        }
 
     </style>
 </head>
@@ -48,7 +28,12 @@
 <div class="content1">
 
     <div class="album" id="album" >
-        <div class="skin">
+        <div class="ite_btn" >
+            <span id="addSizeBtn" class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+            <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+            <span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+        </div>
+        <div class="skin" style="display: none">
             <ul>
                 <li id="skin1" style="background:#FFFFFF">1</li>
                 <li id="skin2" style="background:#F1F1F1">2</li>
@@ -64,10 +49,10 @@
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
             <div class="attachs" id="attachs" >
-                    <img src="${ossPath}/${selectedImg}?x-oss-process=image/resize,m_pad,h_43,w_60" origin_src="${ossPath}/${selectedImg}" >
+                    <img src="${ossPath}/${selectedImg}?x-oss-process=image/resize,m_pad,h_85,w_110" origin_src="${ossPath}/${selectedImg}" >
                     <c:forEach var="item" items="${attachs}">
                         <div class="attach_item">
-                            <img src="${ossPath}/${item}?x-oss-process=image/resize,m_pad,h_43,w_60" origin_src="${ossPath}/${item}">
+                            <img src="${ossPath}/${item}?x-oss-process=image/resize,m_pad,h_85,w_110" origin_src="${ossPath}/${item}">
                         </div>
                     </c:forEach>
             </div>
@@ -100,7 +85,7 @@
         </div>
         <a href="#next-group" class="album-carousel-btn-next" id="album-carousel-btn-next">›</a>
     </div>
-    <div class="fixedBtns" style="height:45px;background-color:black; z-index:999; position:fixed; bottom:0; left:0; width:100%; _position:absolute;">
+    <div class="fixedBtns" style="height:45px;background-color:black; z-index:999; position:fixed; bottom:0; left:0; width:100%; _position:absolute;display: none">
         <div style="width:414px; margin:0 auto;height:45px;" >
             <ul class="bs-glyphicons-list" style="height:45px;margin-top:1px">
                 <li id="preBtn">
@@ -111,24 +96,24 @@
                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><br/>
                     <span class="glyphicon-class">下一张</span>
                 </li>
-                <li id="addSizeBtn">
-                    <span class="glyphicon glyphicon-plus"></span><br/>
-                    <span class="glyphicon-class">放大</span>
-                </li>
-                <li id="subSizeBtn">
-                    <span class="glyphicon glyphicon-minus" ></span><br/>
-                    <span class="glyphicon-class">缩小</span>
-                </li>
-                <li id="downloadBtn">
-                    <span class="glyphicon glyphicon-download-alt"></span><br/>
-                    <span class="glyphicon-class">下载</span>
-                </li>
-				<!--
-                <li id="thumbBtn">
-                    <span class="glyphicon glyphicon-picture"></span><br/>
-                    <span class="glyphicon-class">缩略图</span>
-                </li>
-				-->
+                <!-- <li id="addSizeBtn">
+                     <span class="glyphicon glyphicon-plus"></span><br/>
+                     <span class="glyphicon-class">放大</span>
+                 </li>
+                 <li id="subSizeBtn">
+                     <span class="glyphicon glyphicon-minus" ></span><br/>
+                     <span class="glyphicon-class">缩小</span>
+                 </li>
+                 <li id="downloadBtn">
+                     <span class="glyphicon glyphicon-download-alt"></span><br/>
+                     <span class="glyphicon-class">下载</span>
+                 </li>
+
+                 <li id="thumbBtn">
+                     <span class="glyphicon glyphicon-picture"></span><br/>
+                     <span class="glyphicon-class">缩略图</span>
+                 </li>
+                 -->
 
             </ul>
 
@@ -159,7 +144,7 @@
         image.onload = function () {
             var width = image.width;
             var height = image.height;
-            maxHeight = $(document).height() - 90;
+            maxHeight = $(document).height() - 0;
             maxWidth = $(document).width();
             w = $("#album-image").width();
             h = $("#album-image").height();
@@ -186,8 +171,8 @@
         })*/
 
         $(".attachs img").live("click",function(){
-            $(".attach_item").css("border"," 2px solid white");
-            $(this).parent().css("border"," 2px solid #00c40c");
+            $(".attach_item").css("border"," 2px solid #699f00");
+            $(this).parent().css("border"," 2px solid #9B9B9B");
             $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
         });
 		//setTitle();
@@ -295,6 +280,24 @@
 
      //   document.oncontextmenu=function(){return false;}
 
+        document.onkeydown=function(e){
+            e=window.event||e;
+            switch(e.keyCode){
+                case 37: //左键
+                    Album.prev();
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    back2Normal();
+                    break;
+                case 39: //右键
+                    Album.next();
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    back2Normal();
+                default:
+                    break;
+            }
+        }
     });
 
     function setTitle(){
