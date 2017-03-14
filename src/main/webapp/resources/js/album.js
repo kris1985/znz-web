@@ -182,7 +182,7 @@ function initMaxWH(){
                     "height": height + PX,
                     "margin-left": -(width / 2) + PX,
                     "margin-top": -(height / 2) + PX
-                }, 500, function(){
+                }, 1, function(){
                     // 更新图片路径和图片alt属性
                     image.attr({
                         "src": src,

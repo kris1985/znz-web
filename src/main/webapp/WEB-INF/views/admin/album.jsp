@@ -47,7 +47,7 @@
             <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}?x-oss-process=image${watermarkParam}" id="album-image" alt="${selectedName}" onmousewheel="return bbimg(this)"/></div>
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
-            <p class="album-image-loading-overlay hide" id="album-image-loading-overlay"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
+            <p class="album-image-loading-overlay hide" id="album-image-loading-overlay" style="display: none"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
             <div class="attachs" id="attachs" >
                     <img src="${ossPath}/${selectedImg}?x-oss-process=image/resize,m_pad,h_85,w_110" origin_src="${ossPath}/${selectedImg}" >
                     <c:forEach var="item" items="${attachs}">
