@@ -538,7 +538,7 @@
 
            $(".site-piclist_pic").hover(
                function () {
-               $(this).css("border","2px solid #00c40c");
+               $(this).css("border","2px solid #699f00");
            },function () {
                    $(this).css("border","2px solid white");
            })
