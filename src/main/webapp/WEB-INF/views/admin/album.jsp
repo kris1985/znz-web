@@ -25,7 +25,12 @@
 <div class="content1">
 
     <div class="album" id="album" >
-        <div class="skin">
+        <div class="ite_btn" >
+            <span id="addSizeBtn" class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+            <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+            <span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+        </div>
+        <div class="skin" style="display: none">
             <ul>
                 <li id="skin1" style="background:#FFFFFF">1</li>
                 <li id="skin2" style="background:#F1F1F1">2</li>
@@ -47,7 +52,7 @@
                         -->
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
-            <p class="album-image-loading-overlay hide" id="album-image-loading-overlay"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
+            <p class="album-image-loading-overlay hide" id="album-image-loading-overlay" style="display: none"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
         </div>
 
     </div>
@@ -91,7 +96,7 @@
         </div>
         <a href="#next-group" class="album-carousel-btn-next" id="album-carousel-btn-next">›</a>
     </div>
-    <div class="fixedBtns" style="height:45px;background-color:black; z-index:999; position:fixed; bottom:0; left:0; width:100%; _position:absolute;">
+    <div class="fixedBtns" style="height:45px;background-color:black; z-index:999; position:fixed; bottom:0; left:0; width:100%; _position:absolute;display: none">
         <div style="width:414px; margin:0 auto;height:45px;" >
             <ul class="bs-glyphicons-list" style="height:45px;margin-top:1px">
                 <li id="preBtn">
@@ -102,24 +107,24 @@
                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><br/>
                     <span class="glyphicon-class">下一张</span>
                 </li>
-                <li id="addSizeBtn">
-                    <span class="glyphicon glyphicon-plus"></span><br/>
-                    <span class="glyphicon-class">放大</span>
-                </li>
-                <li id="subSizeBtn">
-                    <span class="glyphicon glyphicon-minus" ></span><br/>
-                    <span class="glyphicon-class">缩小</span>
-                </li>
-                <li id="downloadBtn">
-                    <span class="glyphicon glyphicon-download-alt"></span><br/>
-                    <span class="glyphicon-class">下载</span>
-                </li>
-				<!--
-                <li id="thumbBtn">
-                    <span class="glyphicon glyphicon-picture"></span><br/>
-                    <span class="glyphicon-class">缩略图</span>
-                </li>
-				-->
+                <!-- <li id="addSizeBtn">
+                     <span class="glyphicon glyphicon-plus"></span><br/>
+                     <span class="glyphicon-class">放大</span>
+                 </li>
+                 <li id="subSizeBtn">
+                     <span class="glyphicon glyphicon-minus" ></span><br/>
+                     <span class="glyphicon-class">缩小</span>
+                 </li>
+                 <li id="downloadBtn">
+                     <span class="glyphicon glyphicon-download-alt"></span><br/>
+                     <span class="glyphicon-class">下载</span>
+                 </li>
+
+                 <li id="thumbBtn">
+                     <span class="glyphicon glyphicon-picture"></span><br/>
+                     <span class="glyphicon-class">缩略图</span>
+                 </li>
+                 -->
 
             </ul>
 
@@ -141,12 +146,34 @@
         if(zoom>80&&zoom<=500) o.style.zoom=zoom+'%';
         return false;
     }
-    var Album = new jQuery.Album({
-        // 当前显示图片在缩略图的中索引值
-        curIndex: ${currentIndex}
-    });
+   var Album;
 
     $(function(){
+     var image = new Image();
+            image.src = $("#album-image").attr("src");
+            image.onload = function () {
+                var width = image.width;
+                var height = image.height;
+                maxHeight = $(document).height() - 0;
+                maxWidth = $(document).width();
+                w = $("#album-image").width();
+                h = $("#album-image").height();
+                console.log("$(#album-image):" + $("#album-image").attr("src"));
+                console.log(w + "-" + h + "-" + maxWidth + "-" + maxHeight);
+                if (w > h) {
+                    maxWidth = maxHeight * (w / h);
+                } else {
+                    maxWidth = maxHeight * (h / w);
+                }
+                Album = new jQuery.Album({
+                    // 当前显示图片在缩略图的中索引值
+                    curIndex: ${currentIndex},
+                    // 大图片显示区域的最大宽度
+                    maxWidth: maxWidth,
+                    // 大图片显示区域的最高宽度
+                    maxHeight: maxHeight
+                });
+            };
 		setTitle();
        /* var imgName = '${selectedImg}';
         imgName = imgName.substring(imgName.lastIndexOf("thumb_")+6,imgName.lastIndexOf("."));
@@ -258,6 +285,25 @@
         });
 
         document.oncontextmenu=function(){return false;}
+
+         document.onkeydown=function(e){
+                    e=window.event||e;
+                    switch(e.keyCode){
+                        case 37: //左键
+                            Album.prev();
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            back2Normal();
+                            break;
+                        case 39: //右键
+                            Album.next();
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            back2Normal();
+                        default:
+                            break;
+                    }
+                }
     });
 
     function setTitle(){

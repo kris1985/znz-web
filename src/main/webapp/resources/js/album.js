@@ -13,8 +13,7 @@ var maxHeight,maxWidth;
 function initMaxWH(){
     maxHeight = $(document).height()-90;
     maxWidth = $(document).width();
-    w = $("#album-image").width();
-    h = $("#album-image").height();
+
     if(w>h){
         maxWidth = maxHeight*(w/h);
     }else{
@@ -26,7 +25,7 @@ function initMaxWH(){
     var CLS_SELECTED = "album-carousel-thumb-selected",
         CLS_HIDE = "hide",
         PX = "px";
-    initMaxWH();
+    //initMaxWH();
     jQuery.Album = function(config){
         this.setting = {
             // 大图片显示区域
@@ -171,7 +170,7 @@ function initMaxWH(){
                     "height": height + PX,
                     "margin-left": -(width / 2) + PX,
                     "margin-top": -(height / 2) + PX
-                }, 500, function(){
+                }, 1, function(){
                     // 更新图片路径和图片alt属性
                     image.attr({
                         "src": src,
