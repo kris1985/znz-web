@@ -331,6 +331,6 @@ bottom: 45px;z-index:1999;
 	width: 124px;
 	margin: 5px auto;
 }
-.ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;}
+.ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;z-index: 999999;cursor: pointer;}
 .ite_btn span{font-size:24px;margin: 5px;}
 .ite_btn span:hover{ color: #699f00}
