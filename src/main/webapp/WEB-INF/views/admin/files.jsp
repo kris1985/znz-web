@@ -5,10 +5,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+   <meta name="renderer" content="webkit"/>
     <link rel="icon" href="../../favicon.ico">
     <%@ include file="../common/common.jsp" %>
     <link rel="stylesheet" href="${basePath}/resources/css/bootstrap.min.css">
@@ -454,7 +451,7 @@ selectedId = encodeURI(selectedId);
         <c:if test="${user.user.userType ==1 }">
              var sclHeight = $(document).height() - 80;
         </c:if>
-        console.log("sclHeight:"+sclHeight);
+        //console.log("sclHeight:"+sclHeight);
 
         //左边滚动条
         $("#left_container").mCustomScrollbar({

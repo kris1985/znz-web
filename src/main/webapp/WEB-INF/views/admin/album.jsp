@@ -5,11 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta name="renderer" content="webkit"/>
     <link rel="icon" href="../../favicon.ico">
     <title>相册</title>
      <%@ include file="../common/common.jsp"%>
@@ -158,8 +154,8 @@
                 maxWidth = $(document).width();
                 w = $("#album-image").width();
                 h = $("#album-image").height();
-                console.log("$(#album-image):" + $("#album-image").attr("src"));
-                console.log(w + "-" + h + "-" + maxWidth + "-" + maxHeight);
+                //console.log("$(#album-image):" + $("#album-image").attr("src"));
+                //console.log(w + "-" + h + "-" + maxWidth + "-" + maxHeight);
                 if (w > h) {
                     maxWidth = maxHeight * (w / h);
                 } else {
