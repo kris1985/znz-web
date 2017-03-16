@@ -94,5 +94,11 @@ http://www.springframework.org/schema/task/spring-task-3.0.xsd
 		http://localhost:8080/#forms and form.jsp for examples
 	-->
 	<bean id="requestDataValueProcessor" class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor"/>
+
+	<bean id="ossClient" class="com.aliyun.oss.OSSClient">
+		<constructor-arg name="endpoint" value="${oss.endpoint}"/>
+		<constructor-arg name="accessKeyId" value="${oss.accessKeyId}"/>
+		<constructor-arg name="secretAccessKey" value="${oss.accessKeySecret}"/>
+	</bean>
     <task:annotation-driven />
 </beans>

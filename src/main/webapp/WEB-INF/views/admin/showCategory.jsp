@@ -551,7 +551,7 @@
 <div class="header">
     <div class="nav_bar">
         <div class="logo">
-            <a href="/"><img src="${ossPath}/logo.png" height="38"> </a>
+            <a href="/"><img src="${basePath}/resources/img/logo.png" height="38"> </a>
         </div>
         <div class="nav_warp">
             <ul class="navbar-ul mod_category_item">

@@ -7,7 +7,7 @@
     <meta charset="utf-8">
      <meta name="renderer" content="webkit"/>
     <link rel="icon" href="../../favicon.ico">
-    <title>指南针鞋讯-大图</title>
+    <title>指南针鞋讯-大图 ${watermarkParam}</title>
      <%@ include file="../common/common.jsp"%>
     <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/docs-min.css" rel="stylesheet" type="text/css" media="all" />
@@ -16,10 +16,10 @@
     <link href="${basePath}/resources/css/grids.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/album.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/base.css" rel="stylesheet" type="text/css" media="all" />
-    <style>
-
-
-    </style>
+   <c:set var="watermarkParamProcess" value="" />
+                 <c:if test="${ not empty watermarkParam  }">
+                      <c:set var="watermarkParamProcess" value="?x-oss-process=image${watermarkParam}" />
+                  </c:if>
 </head>
 <body class="trs-tags" style="background:black;overflow-x:hidden;overflow-y:hidden" sroll="no">
 <div class="content1">
@@ -41,7 +41,7 @@
         </div>
         <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
-            <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}?x-oss-process=image${watermarkParam}" id="album-image" alt="${selectedName}" onmousewheel="return bbimg(this)"/></div>
+            <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}${watermarkParamProcess}" id="album-image" alt="${selectedName}" onmousewheel="return bbimg(this)"/></div>
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay" style="display: none"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
@@ -62,15 +62,15 @@
         <div class="album-carousel-zone" id="album-carousel-zone">
             <ul class="album-carousel-list" id="album-carousel-list">
 
-
                 <c:forEach items="${pictures}" var="img">
+
                     <c:choose>
                         <c:when test="${img.filePath eq selectedImg}">
-                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${ossPath}/${img.filePath}?x-oss-process=image${watermarkParam}"
+                            <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}"
                                                                                               title="${img.name}" attachs="${img.attach}"></a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="album-carousel-thumb"><a href="${ossPath}/${img.filePath}?x-oss-process=image${watermarkParam}" title="${img.name}" attachs="${img.attach}"></a></li>
+                            <li class="album-carousel-thumb"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}" title="${img.name}" attachs="${img.attach}"></a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>

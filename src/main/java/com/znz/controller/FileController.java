@@ -61,6 +61,9 @@ public class FileController {
     @Resource
     private SubCategoryMapper subCategoryMapper;
 
+    @Resource
+    private OSSClient ossClient;
+
 
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -72,7 +75,7 @@ public class FileController {
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
-        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
+
         List<PictureCategory> pictureCategories = new ArrayList<>();
         String[] categorys = category.split(",");
         try {
@@ -101,8 +104,6 @@ public class FileController {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        } finally {
-            ossClient.shutdown();
         }
     }
 
@@ -115,7 +116,6 @@ public class FileController {
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
-        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
         try {
             String originalName = file.getOriginalFilename();
             String path = "watermark_"+originalName;
@@ -129,8 +129,6 @@ public class FileController {
             result.setCode(0);
             log.error(e.getMessage(), e);
             return result;
-        } finally {
-            ossClient.shutdown();
         }
     }
 
@@ -160,7 +158,7 @@ public class FileController {
         }
         Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
         String attach = picture.getAttach();
-        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
+
         try {
             String childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
             boolean b = upload(ossClient, file, childPath);
@@ -177,8 +175,6 @@ public class FileController {
             pictureMapper.updateByPrimaryKeySelective(pic);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        } finally {
-            ossClient.shutdown();
         }
     }
 
@@ -224,7 +220,6 @@ public class FileController {
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
-        OSSClient ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig.getAccessKeySecret());
         List<String> keys = new ArrayList<>();
         try {
             Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
@@ -236,8 +231,6 @@ public class FileController {
             result.setCode(-1);
             result.setMsg("删除文件失败");
             return result;
-        } finally {
-            ossClient.shutdown();
         }
         return result;
     }
