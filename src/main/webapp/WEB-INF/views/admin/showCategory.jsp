@@ -679,6 +679,9 @@
                             </c:choose>
                         </c:forEach>
                     </ul>
+                    <div class="openBtn">
+                            <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
+                     </div>
                 </div>
             </c:if>
         </c:forEach>
@@ -732,9 +735,8 @@
 
 <div class="footerN1214">
     <p class="footmenu">
-        <a href="#" class="s1">APP专区</a><a href="#">公司介绍</a>
-        <a href="#">新闻动态</a><a href="#">联系方式</a>
-        <a href="#">招聘英才</a><a href="http://open.iqiyi.com">开放平台</a><a href="#">帮助与反馈</a><a href="#">About Us</a>
+        <a href="#" class="s1">x</a>
+
     </p>
     <p class="fEn">
         <a href="http://tyulan.com/" class="link0"></a>&nbsp;&nbsp;

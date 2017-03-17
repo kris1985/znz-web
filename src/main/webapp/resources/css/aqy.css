@@ -313,3 +313,47 @@ div:after, ul:after, dl:after {
 
   .lazy{width: 276px;}
 
+
+  .mod_sear_list_open .openBtn {
+
+      top: auto;
+      bottom: 9px;
+      _bottom: -5px;
+  }
+  .openBtn {
+      position: absolute;
+      right: 0;
+      top: 6px;
+      cursor:pointer;
+  }
+
+.openBtn-txt {
+    width: 45px;
+    display: block;
+}
+.openBtn-txt em, .close-mod_btn em {
+    cursor: pointer;
+    _vertical-align: 10px;
+}
+.vm-inline {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ico-explain-b {
+    background-position: -19px -10px;
+}
+
+.ico-explain-b, .ico-explain-t {
+    background: url(http://www.qiyipic.com/common/fix/list_images/list-tb-icon.png) no-repeat;
+    display: inline-block;
+    height: 6px;
+    width: 11px;
+    overflow: hidden;
+    vertical-align: middle;
+    _vertical-align: 12px;
+    margin: 2px 0 0 6px;
+    background-position: -19px -10px;
+}
+
+
