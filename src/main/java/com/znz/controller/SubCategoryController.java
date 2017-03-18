@@ -1,6 +1,8 @@
 package com.znz.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,7 +54,7 @@ public class SubCategoryController {
     private PictureCategoryMapper pictureCategoryMapper;
 
     @RequestMapping(value = "/showCategory")
-    public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model){
+    public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model) throws ParseException {
         if(queryParam.getCurrentPage() == null){
             queryParam.setCurrentPage(1);
         }
@@ -130,6 +132,13 @@ public class SubCategoryController {
         if(!CollectionUtils.isEmpty(categoryConditions) && categoryConditions.stream().allMatch(s->s.size()>0)){
             fileQueryVO.setPage(pageParameter);
             fileQueryVO.setCategoryConditions(categoryConditions);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            if(StringUtils.isNoneBlank(queryParam.getStartTime())){
+                fileQueryVO.setStartTime(simpleDateFormat.parse(queryParam.getStartTime()));
+            }
+            if(StringUtils.isNoneBlank(queryParam.getEndTime())){
+                fileQueryVO.setEndTime(simpleDateFormat.parse(queryParam.getEndTime()));
+            }
             List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
             int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();
@@ -142,6 +151,8 @@ public class SubCategoryController {
         model.addAttribute("secondSelectedId",queryParam.getSecondSelectedId());
         model.addAttribute("thirdSelectedId",queryParam.getThirdSelectedId());
         model.addAttribute("fourthSet",forthCategorys);
+        model.addAttribute("startTime",queryParam.getStartTime());
+        model.addAttribute("endTime",queryParam.getEndTime());
         return "admin/showCategory";
     }
 
@@ -164,17 +175,56 @@ public class SubCategoryController {
         return subCategoryVOs;
     }
 
+    private List<SubCategory> getchildren(List<SubCategory> subCategories, int parentId) {
+        List<SubCategory> subCategories1 = new ArrayList<>();
+        for (SubCategory subCategory : subCategories) {
+            if (subCategory.getParentId() == parentId) {
+                subCategories1.add(subCategory);
+            }
+        }
+        return subCategories1;
+    }
+
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public @ResponseBody ResultVO delete(HttpServletRequest request, @PathVariable int id) {
         ResultVO resultVO = new ResultVO();
+        resultVO.setCode(-1);
         if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
         } else {
-            subCategoryMapper.deleteByPrimaryKey(id);
-            resultVO.setCode(0);
+            List<SubCategory> subCategories = subCategoryMapper.selectByParentId(id);
+            if(!CollectionUtils.isEmpty(subCategories)){
+                resultVO.setMsg("该类别下有子类，请删除子类");
+            }else{
+                List<Long> list = pictureCategoryMapper.selectByCategoryId(id);
+                if(!CollectionUtils.isEmpty(list)){
+                    resultVO.setMsg("该类别下图片，请删除该类别下的图片");
+                }else{
+                    subCategoryMapper.deleteByPrimaryKey(id);
+                    resultVO.setCode(0);
+                }
+            }
         }
         return resultVO;
     }
+
+    private void getAllChildCategory(List<SubCategory> subCategories1, Integer parentId ,List<SubCategory> childs) {
+        for(SubCategory subCategory:subCategories1){
+                List<SubCategory> childList = getchildren(subCategories1,subCategory.getId());
+                if(!CollectionUtils.isEmpty(childList) ){
+                    if(childList.get(0).getCategoryLevel() == 3){
+                        for(SubCategory child:childList){
+                            childs.add(child);
+                        }
+                    }else{
+                        getAllChildCategory(childList,subCategory.getId(),childs);
+                    }
+                }else{
+                    break;
+                }
+         }
+    }
+
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(HttpServletRequest request,

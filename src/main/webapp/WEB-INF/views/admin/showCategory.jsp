@@ -22,6 +22,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/iframeTools.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jqPaginator.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
+    <script language="javascript" type="text/javascript" src="${basePath}/resources/js/datepicker/WdatePicker.js"></script>
     <script>
         var basePath = getContextPath();
 
@@ -88,7 +89,7 @@
                         //console.log(array[i].id);
                         data += array[i].id + ":" + i + ";";
                     }
-                    console.log(data);
+                    //console.log(data);
                     $.ajax({
                         type: "POST",
                         url: basePath + "/admin/subCategory/sort",
@@ -207,9 +208,19 @@
                             });
 
                         }
-
+                        ,'delete1':function (t) {
+                            var url = basePath + "/admin/subCategory/delete/"+t.id;
+                            if(confirm("确认要删除吗？")){
+                                $.get(url,function (data) {
+                                    if(data.code!=0){
+                                        alert(data.msg);
+                                    }else{
+                                        $("#"+t.id).hide(1000);
+                                    }
+                                });
+                            }
+                        }
                     }
-
                 });
 
                 $('.leaf_item').contextMenu('myMenu2', {
@@ -284,7 +295,18 @@
                             });
 
                         }
-
+                        ,'delete2':function (t) {
+                            var url = basePath + "/admin/subCategory/delete/"+t.id;
+                            if(confirm("确认要删除吗？")){
+                                $.get(url,function (data) {
+                                    if(data.code!=0){
+                                        alert(data.msg);
+                                    }else{
+                                        $("#"+t.id).hide(1000);
+                                    }
+                                });
+                            }
+                        }
                     }
                 });
 
@@ -331,6 +353,18 @@
                                     }
                                 }]
                         });
+                    }
+                    ,'delete3':function (t) {
+                        var url = basePath + "/admin/subCategory/delete/"+t.id;
+                        if(confirm("确认要删除吗？")){
+                            $.get(url,function (data) {
+                                if(data.code!=0){
+                                    alert(data.msg);
+                                }else{
+                                    $("#"+t.id).hide(1000);
+                                }
+                            });
+                        }
                     }
                 }
             });
@@ -431,7 +465,7 @@
 
             //图片懒加载
             $("img.lazy").lazyload({
-                threshold : 100
+                threshold : 200
             });
 
             //叶子节点,点击类别
@@ -466,6 +500,22 @@
                 var url = "${basePath}/admin/subCategory/showCategory";
                 $("#fourthSelectedId").val(selected);
                 url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
+                window.location.href= url;
+            });
+
+            //查询按钮
+            $("#queryBtn").click(function () {
+                var startTime = $.trim($("#startTime").val());
+                var endTime = $.trim($("#endTime").val());
+                if(startTime=="" && endTime=="" ){
+                    alert("请输入时间");
+                    return;
+                }
+                var selected = getAllSelected();
+                var url = "${basePath}/admin/subCategory/showCategory";
+                $("#fourthSelectedId").val(selected);
+                url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
+                url+="&startTime="+startTime+"&endTime="+endTime;
                 window.location.href= url;
             });
 
@@ -515,23 +565,25 @@
                $("#picForm").submit();
            })
 
-           //添加更多
-          /* $(".mod_category_item").each(function (i) {
-            if($(this).children().length >10){
-                $(this).parent().css("height","50px");
-                $(this).append("<li class='more_item'>更多</li>")
-            }
-           })*/
 
-           $(".more_item").click(function(){
-                if( $(this).text()=="更多"){
-                     $(this).parent().parent().css("height","50px");
-                     $(this).text("收起")
+           $(".openBtn").click(function(){
+                if( $(this).find("em").text()=="更多"){
+                    $(this).parent().css("height","auto");
+                    $(this).find("em").text("收起");
+                    $(this).find("i").css("background-position", "0 -10px")
                 }else{
-                     $(this).parent().parent().css("height","25px");
-                     $(this).text("更多")
+                    $(this).parent().css("height","31px");
+                    $(this).find("em").text("更多")
+                    $(this).find("i").css("background-position", "-19 -10px")
                 }
            })
+
+            $(".mod_sear_list").each(function (i) {
+                console.log("$(this).find('ul').children():"+$(this).find("ul").children().length);
+                if($(this).find("ul").children().length>12){
+                    $(this).find(".openBtn").show();
+                }
+            })
 
            $(".site-piclist_pic").hover(
                function () {
@@ -566,7 +618,6 @@
                 <c:if test="${item.categoryLevel == 0 && firstSelectedId != item.id  }">
                     <li id="${item.id}" class="li_item noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
                             href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a>
-
                     </li>
                 </c:if>
             </c:forEach>
@@ -591,7 +642,9 @@
             <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="1">
-             <input type="hidden" id="pageSize" name = "pageSize" value="40">
+            <input type="hidden" id="pageSize" name = "pageSize" value="40">
+            <input id="startTime1" name="startTime" type="hidden" />
+            <input id="endTime1"    name="endTime" type="hidden"/>
         </form>
     </div>
 
@@ -601,6 +654,7 @@
                 <li id="add"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16" width="16"/> 新增同类</li>
                 <li id="addSub"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154118&size=16"  width="16"/> 新增子类</li>
                 <li id="rename"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"  width="16"/> 重命名</li>
+                <li id="delete1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
             </ul>
         </div>
 
@@ -608,12 +662,14 @@
             <ul>
                 <li id="add2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
                 <li id="rename2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
+                <li id="delete2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
             </ul>
         </div>
 
         <div class="contextMenu" id="myMenu3" style="display: none">
             <ul>
                 <li id="rename3"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
+                <li id="delete3"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
             </ul>
         </div>
   </c:if>
@@ -645,6 +701,9 @@
 
             </c:forEach>
         </ul>
+             <div class="openBtn">
+                 <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
+             </div>
     </div>
 
          <div id="leaf_category">
@@ -689,14 +748,29 @@
     </div>
 
 
-    <div>
-        <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
-             <input type="button" id="userManagerBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理"></button>
-        </c:if>
+    <div class="operation" style="position: relative">
+        <c:choose>
+            <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
+                <input type="button" id="userManagerBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理"></button>
+                <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
+                <div style="position: absolute;right: 5px;top: 0;">
+                    时间  从<input id="startTime" name="startTime" type="text" value="${startTime}" onClick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"/>
+                    至<input id="endTime"    name="endTime" type="text" value="${endTime}" onClick="WdatePicker({startDate:'%y-%M-01 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"/>
+                    <input type="button" id="queryBtn" class="ui-state-default ui-corner-all ui-button" value="查询"></button>
+                    <input type="button" id="delBtn" class="ui-state-default ui-corner-all ui-button" value="删除"></button>
+                </div>
+            </c:when>
+            <c:when test="${userSession.user.userType ==3}">
+                <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
+                <div  style="position: absolute;right: 5px;top: 0;">
+                    时间  从<input id="startTime" name="startTime" type="text" value="${startTime}" onClick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"/>
+                    至<input id="endTime"    name="endTime" type="text" value="${endTime}" onClick="WdatePicker({startDate:'%y-%M-01 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"/>
+                    <input type="button" id="queryBtn" class="ui-state-default ui-corner-all ui-button" value="查询"></button>
+                    <input type="button" id="delBtn" class="ui-state-default ui-corner-all ui-button" value="删除"></button>
+                </div>
+            </c:when>
+        </c:choose>
 
-        <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
-            <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传"></button>
-        </c:if>
 
     </div>
     <div  class="ad-wrapper clearfix">

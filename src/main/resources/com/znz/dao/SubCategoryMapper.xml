@@ -126,4 +126,11 @@
   </select>
 
 
+  <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_sub_category where parent_id =  #{parentId,jdbcType=INTEGER}
+  </select>
+
+
 </mapper>

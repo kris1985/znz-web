@@ -90,8 +90,7 @@
     border-bottom: 1px dotted #d5d5d5;
     position: relative;
     padding: 5px 15px 5px 57px;
-
-    overflow: hidden;
+    overflow: hidden;height: 31px;
   }
 
   .mod_sear_list h3 {
@@ -125,7 +124,7 @@
   }
 
   .mod_category_item a:hover {
-    color: #01bd0c;
+    color: #699f00;
   }
 
   .mod_category_item .selected a {
@@ -144,6 +143,9 @@
   .openBtn-txt {
     width: 45px;
     display: block;
+  }
+  .openBtn a:hover{
+      color: #699f00;
   }
 
   .mod_sear_list_open {
@@ -324,7 +326,7 @@ div:after, ul:after, dl:after {
       position: absolute;
       right: 0;
       top: 6px;
-      cursor:pointer;
+      cursor:pointer;display: none;
   }
 
 .openBtn-txt {
@@ -340,12 +342,10 @@ div:after, ul:after, dl:after {
     vertical-align: middle;
 }
 
-.ico-explain-b {
-    background-position: -19px -10px;
-}
+
 
 .ico-explain-b, .ico-explain-t {
-    background: url(http://www.qiyipic.com/common/fix/list_images/list-tb-icon.png) no-repeat;
+    background: url(../img/list-tb-icon.png) no-repeat;
     display: inline-block;
     height: 6px;
     width: 11px;
