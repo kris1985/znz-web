@@ -197,7 +197,7 @@ public class FileController {
     public String listImg(HttpServletRequest request, Long id, String ids, Model model) {
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
         List<Picture> pictures = pictureMapper.selectByIds(listIds);
-        Picture picture = pictures.stream().filter(s->s.getId() == id).findAny().get();
+        Picture picture = pictureMapper.selectByPrimaryKey(id);
         for(Picture p :pictures){
             if(StringUtils.isNoneBlank(p.getAttach())){
                 p.setAttach(p.getFilePath()+"|"+p.getName()+","+p.getAttach());//加上原图
