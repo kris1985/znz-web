@@ -7,20 +7,8 @@ function back2Normal(){
     $("#album-image").css({"left":"50%","top":"50%"})
 }
 var maxHeight,maxWidth;
-function initMaxWH(){
-    maxHeight = $(document).height()-90;
-    maxWidth = $(document).width();
-    w = $("#album-image").width();
-    h = $("#album-image").height();
-    console.log("$(#album-image):"+$("#album-image").attr("src"));
-    console.log(w+"-"+h+"-"+maxWidth+"-"+maxHeight);
-    if(w>h){
-        maxWidth = maxHeight*(w/h);
-    }else{
-        maxWidth = maxHeight*(h/w);
-    }
-    console.log(w+"-"+h+"-"+maxWidth+"-"+maxHeight);
-}
+var ossPath = getOssPath();
+var watermark = getWatermark();
 (function($){
     var CLS_SELECTED = "album-carousel-thumb-selected",
         CLS_HIDE = "hide",
@@ -28,6 +16,7 @@ function initMaxWH(){
     //initMaxWH();
     jQuery.Album = function(config){
         this.setting = {
+
             // 大图片显示区域
             root: $("#album-image-md"),
             // 大图片
@@ -107,17 +96,24 @@ function initMaxWH(){
                 btnDownload = Album.getBtnDownload(),
                 src = currentItem.find("a:first").attr("href"),
                 alt = currentItem.find("a:first").attr("title"),
+                picId = currentItem.find("a:first").attr("id"),
                 percent = 0,
                 preloader = new Image();
                 //console.log("currentItem:"+ currentItem.find("a:first").attr("attachs"))
                 var attachs =   currentItem.find("a:first").attr("attachs");
                 //console.log("attachs:"+attachs)
-                if(attachs!=undefined && attachs!=""){
+                if(attachs!=undefined && attachs!=""  && attachs!=null){
                 var arr =  attachs.split(",");
                 var res="";
+                var attachSrc = "";
+                var attachAlt = "";
                 for( var i=0;i<arr.length;i++){
-                    res+="<div class=\"attach_item\"> <img src='http://znz.oss-cn-shenzhen.aliyuncs.com/"+ arr[i]+ "?x-oss-process=image/resize,m_pad,h_85,w_110' origin_src='http://znz.oss-cn-shenzhen.aliyuncs.com/"+ arr[i] +"' /> </div>"
+                    attachSrc =  arr[i].substr(0,arr[i].indexOf("|"));
+                    attachAlt =  arr[i].substr(arr[i].indexOf("|")+1);
+                    res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
+                        "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' /> <div class=\"del\" >x</div> </div>";
                 }
+                //console.log("res:"+res);
                 $("#attachs").html(res);
             }else{
              $("#attachs").html("");

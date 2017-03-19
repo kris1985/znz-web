@@ -12,4 +12,11 @@
     return basePath;
  }
 
+ function getOssPath() {
+   return "${ossPath}"
+ }
+ function getWatermark(){
+     return "${watermarkParamProcess}"
+ }
+
 </script>

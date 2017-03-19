@@ -46,12 +46,7 @@
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay" style="display: none"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
             <div class="attachs" id="attachs" >
-                    <img src="${ossPath}/${selectedImg}?x-oss-process=image/resize,m_pad,h_85,w_110" origin_src="${ossPath}/${selectedImg}" >
-                    <c:forEach var="item" items="${attachs}">
-                        <div class="attach_item">
-                            <img src="${ossPath}/${item}?x-oss-process=image/resize,m_pad,h_85,w_110" origin_src="${ossPath}/${item}">
-                        </div>
-                    </c:forEach>
+
             </div>
         </div>
 
@@ -67,10 +62,10 @@
                     <c:choose>
                         <c:when test="${img.filePath eq selectedImg}">
                             <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}"
-                                                                                              title="${img.name}" attachs="${img.attach}"></a></li>
+                                                                                              title="${img.name}" attachs="${img.attach}" id="${img.id}"></a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="album-carousel-thumb"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}" title="${img.name}" attachs="${img.attach}"></a></li>
+                            <li class="album-carousel-thumb"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}" title="${img.name}" attachs="${img.attach}" id="${img.id}"></a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
@@ -161,6 +156,36 @@
                 maxHeight: maxHeight
             });
         };
+        <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+
+        if($(".attach_item").length>1){
+            alert("ss");
+            $(".attach_item").eq(0).find(".del").hide();
+        }
+        $(".attach_item").live("hover",function(){
+                $(this).find(".del").show();
+                $(this).find(".del").css({"color":"red"});
+            },function () {
+                $(this).find(".del").css({"color":"black"});
+            });
+
+             $(".del").live("click",function(evt){
+                 evt.preventDefault();
+                 evt.stopPropagation();
+                 var parent = $(this).parent();
+                var pictureId = parent.find("img").attr("parentId");
+                var attachPath = parent.find("img").attr("path");
+                var url = "${basePath}/admin/file/deleteAttach?pictureId="+pictureId+"&attachPath="+attachPath;
+
+                $.get(url,function (data) {
+                    if(data.code == 0){
+                        parent.hide(500);
+                    }else {
+                        alert(data.msg);
+                    }
+                });
+            })
+        </c:if>
 
 
      /*   $(".attachs img").click(function () {
@@ -171,6 +196,7 @@
             $(".attach_item").css("border"," 2px solid #ECECEC");
             $(this).parent().css("border"," 2px solid #699f00");
             $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
+            $("#album-image-bd img").attr("alt", $(this).attr("alt") );
         });
 		//setTitle();
         if($.cookie('albumBackground') !=undefined){

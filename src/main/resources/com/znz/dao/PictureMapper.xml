@@ -170,4 +170,29 @@
     </foreach>
   </delete>
 
+
+  <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
+  select
+  <include refid="Base_Column_List" />
+  from t_picture where 1=1
+  <if test="categoryConditions!=null and categoryConditions.size()!=0">
+    <foreach item="item" index="index" collection="categoryConditions" >
+      and id in(
+      SELECT picture_id  FROM `t_picture_category`
+
+      where sub_category_id  in
+      <foreach item="subItem" index="subIndex" collection="item"  open="(" separator="," close=")">
+        #{subItem}
+      </foreach>
+      )
+    </foreach>
+  </if>
+  <if test="startTime!=null">
+    and create_time &gt;=  #{startTime,jdbcType=TIMESTAMP}
+  </if>
+  <if test="endTime!=null">
+    and create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+  </if>
+  </select>
+
 </mapper>

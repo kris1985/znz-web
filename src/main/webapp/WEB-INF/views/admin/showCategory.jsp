@@ -518,6 +518,22 @@
                 url+="&startTime="+startTime+"&endTime="+endTime;
                 window.location.href= url;
             });
+            //删除
+            $("#delBtn").click(function () {
+                var startTime = $.trim($("#startTime").val());
+                var endTime = $.trim($("#endTime").val());
+                if(startTime=="" && endTime=="" ){
+                    alert("请输入时间");
+                    return;
+                }
+                var selected = getAllSelected();
+                var url = "${basePath}/admin/subCategory/showCategory";
+                $("#fourthSelectedId").val(selected);
+                url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
+                url+="&startTime="+startTime+"&endTime="+endTime;
+                url+="&delFlag=true"
+                window.location.href= url;
+            })
 
             $(".mod_sear_list").last().css("border-bottom","0")
             $(".all_item").each(function (i) {

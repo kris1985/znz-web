@@ -80,9 +80,9 @@
     </foreach>
   </insert>
 
-  <delete id="deleteByPrimaryKeys"  >
+  <delete id="deleteByPictrueIds"  >
     delete from t_picture_category
-    where pictureId in
+    where picture_id in
     <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
       #{item}
     </foreach>

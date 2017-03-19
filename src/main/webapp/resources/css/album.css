@@ -329,8 +329,9 @@ bottom: 45px;z-index:1999;
 .attach_item{
 	border: 2px solid #ECECEC;
 	width: 124px;
-	margin: 0px auto;
+	margin: 0px auto;position: relative;
 }
+.attach_item .del{position: absolute;top: 0;right: 5px;}
 .ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;z-index: 999999;cursor: pointer;}
 .ite_btn span{font-size:24px;margin: 5px;}
 .ite_btn span:hover{ color: red}

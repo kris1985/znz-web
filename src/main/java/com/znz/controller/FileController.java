@@ -152,29 +152,28 @@ public class FileController {
     public
     @ResponseBody
     void uploadChild(HttpServletRequest request, @RequestParam MultipartFile file, Long pictureId) throws IOException {
-
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
         Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
-        String attach = picture.getAttach();
-
         try {
+            String fileName = file.getOriginalFilename();
             String childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
             boolean b = upload(ossClient, file, childPath);
             if (b) {
-                attach = childPath;
+                String attach = childPath;
+                Picture pic = new Picture();
+                pic.setId(pictureId);
+                if (!StringUtils.isEmpty(picture.getAttach())) {
+                    pic.setAttach(picture.getAttach()+","+attach+"|"+fileName);
+                }else{
+                    pic.setAttach(attach+"|"+fileName);
+                }
+                pictureMapper.updateByPrimaryKeySelective(pic);
             }
-            Picture pic = new Picture();
-            pic.setId(pictureId);
-            if (!StringUtils.isEmpty(picture.getAttach())) {
-                pic.setAttach(picture.getAttach()+","+attach);
-            }else{
-                pic.setAttach(attach);
-            }
-            pictureMapper.updateByPrimaryKeySelective(pic);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -201,7 +200,7 @@ public class FileController {
         Picture picture = pictures.stream().filter(s->s.getId() == id).findAny().get();
         for(Picture p :pictures){
             if(StringUtils.isNoneBlank(p.getAttach())){
-                p.setAttach(p.getFilePath()+","+p.getAttach());//加上原图
+                p.setAttach(p.getFilePath()+"|"+p.getName()+","+p.getAttach());//加上原图
             }
         }
         model.addAttribute("selectedImg", picture.getFilePath());
@@ -224,6 +223,9 @@ public class FileController {
         try {
             Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             int i =  pictureMapper.deleteByPrimaryKey(pictureId);
+            List list = new ArrayList();
+            list.add(pictureId);
+            pictureCategoryMapper.deleteByPictrueIds(list);
             deleteFile(pictureId, ossClient, keys, picture, i);
             result.setCode(0);
         } catch (Exception e) {
@@ -235,26 +237,71 @@ public class FileController {
         return result;
     }
 
-    public void deleteFile(Long pictureId, OSSClient ossClient, List<String> keys, Picture picture, int i) {
-        if (picture != null & i>0) {
-            pictureCategoryMapper.deleteByPrimaryKey(pictureId);
-            keys.add(picture.getFilePath());
-            String attach = picture.getAttach();
-            if (StringUtils.isNoneBlank(attach)) {
-                List<String> attachs = JSON.parseArray(attach, String.class);
-                if (!CollectionUtils.isEmpty(attachs)) {
-                    keys.addAll(attachs);
-                }
-            }
-            deleteFile(pictureId, ossClient, keys);
+    @RequestMapping(value = "/deleteAttach", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResultVO deleteAttach(HttpServletRequest request, Long pictureId,String attachPath) {
+        ResultVO result = new ResultVO();
+        if (!PermissionUtil.checkPermisson(request)) {
+            throw new RuntimeException("无权限操作");
         }
+        List<String> keys = new ArrayList<>();
+        try {
+            Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
+            String attach = picture.getAttach();
+            if(StringUtils.isNoneBlank(attach)){
+              List<String> list =   Arrays.stream(attach.split(",")).filter(s-> !s.substring(0,s.indexOf("|")).equals(attachPath)).collect(Collectors.toList());
+              if(!CollectionUtils.isEmpty(list)){
+                  attach =  StringUtils.join(list,",");
+              }else{
+                  attach = "";
+              }
+                Picture p = new Picture();
+                p.setId(pictureId);
+                p.setAttach(attach);
+                pictureMapper.updateByPrimaryKeySelective(p);
+                keys.add(attachPath);
+                deleteFile( ossClient, keys);
+            }
+            result.setCode(0);
+        } catch (Exception e) {
+            log.error("删除文件失败", e);
+            result.setCode(-1);
+            result.setMsg("删除文件失败");
+            return result;
+        }
+        return result;
     }
 
-    public void deleteFile(Long pictureId, OSSClient ossClient, List<String> keys) {
+    public void deleteFile(Long pictureId, OSSClient ossClient, List<String> keys, Picture picture, int i) {
+        try{
+            if (picture != null & i>0) {
+                keys.add(picture.getFilePath());
+                String attach = picture.getAttach();
+                if (StringUtils.isNoneBlank(attach)) {
+                    List<String> attachs = Arrays.stream(attach.split(",")).map(s->s.substring(0,s.indexOf("|"))).collect(Collectors.toList());
+                    if (!CollectionUtils.isEmpty(attachs)) {
+                        keys.addAll(attachs);
+                    }
+                }
+                deleteFile( ossClient, keys);
+            }
+        }catch (Exception e){
+            log.error(e.getLocalizedMessage(),e);
+        }
+
+    }
+
+    public void deleteFile( OSSClient ossClient, List<String> keys) {
         if (!CollectionUtils.isEmpty(keys)) {
-            DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
-            deleteObjectsRequest.setKeys(keys);
-            ossClient.deleteObjects(deleteObjectsRequest);
+            try{
+                DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
+                deleteObjectsRequest.setKeys(keys);
+                ossClient.deleteObjects(deleteObjectsRequest);
+            }catch (Exception e){
+                log.error(e.getLocalizedMessage(),e);
+            }
+
         }
     }
 

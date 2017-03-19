@@ -84,7 +84,7 @@ public class LoginController {
         UserSession userSession = new UserSession();
         userSession.setUser(user);
         userSession.setUserAuths(userAuths);
-        if(user.getWatermark()!=null){
+        if(!StringUtils.isEmpty(user.getWatermark())){
             try{
                 WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
                 String watermarkParam ="";

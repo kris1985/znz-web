@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -13,6 +16,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.alibaba.fastjson.JSON;
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.DeleteObjectsRequest;
+import com.znz.config.AppConfig;
 import com.znz.dao.PictureCategoryMapper;
 import com.znz.dao.PictureMapper;
 import com.znz.dao.SubCategoryMapper;
@@ -52,6 +58,14 @@ public class SubCategoryController {
 
     @Resource
     private PictureCategoryMapper pictureCategoryMapper;
+
+    @Resource
+    private OSSClient ossClient;
+
+    @Resource
+    private AppConfig appConfig;
+
+    public static ExecutorService pool = Executors.newFixedThreadPool(10);
 
     @RequestMapping(value = "/showCategory")
     public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model) throws ParseException {
@@ -139,12 +153,18 @@ public class SubCategoryController {
             if(StringUtils.isNoneBlank(queryParam.getEndTime())){
                 fileQueryVO.setEndTime(simpleDateFormat.parse(queryParam.getEndTime()));
             }
-            List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
-            int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
-                    / pageParameter.getPageSize();
-            model.addAttribute("totalPage",totalPage);
-            model.addAttribute("totalCount",pageParameter.getTotalCount());
-            model.addAttribute("pictures",pictures);
+            if(StringUtils.isNoneBlank(queryParam.getDelFlag())){
+                //删除
+                deletePictrues(fileQueryVO);
+            }else{
+                List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
+                int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
+                        / pageParameter.getPageSize();
+                model.addAttribute("totalPage",totalPage);
+                model.addAttribute("totalCount",pageParameter.getTotalCount());
+                model.addAttribute("pictures",pictures);
+            }
+
         }
         model.addAttribute("subCategoryVOs",subCategoryVOs);
         model.addAttribute("firstSelectedId",queryParam.getFirstSelectedId());
@@ -154,6 +174,41 @@ public class SubCategoryController {
         model.addAttribute("startTime",queryParam.getStartTime());
         model.addAttribute("endTime",queryParam.getEndTime());
         return "admin/showCategory";
+    }
+
+    private void deletePictrues(FileQueryVO fileQueryVO) {
+        List<Picture> pictures = pictureMapper.selectByParam(fileQueryVO);
+        if(CollectionUtils.isEmpty(pictures)){
+            return;
+        }
+        List<Long> ids = pictures.stream().map(s->s.getId()).collect(Collectors.toList());
+        pictureMapper.deleteByPrimaryKeys(ids);
+        pictureCategoryMapper.deleteByPictrueIds(ids);
+        deleteFiles(pictures);
+    }
+
+    private void deleteFiles(List<Picture> pictures) {
+       /* pool.submit(new Runnable() {
+            @Override
+            public void run() {*/
+                try {
+                    List<String> keys = new ArrayList<>();
+                    for(Picture p:pictures){
+                        keys.add(p.getFilePath());
+                        String attach = p.getAttach();
+                        if (StringUtils.isNoneBlank(attach)) {
+                            List<String> attachs = Arrays.stream(attach.split(",")).map(s->s.substring(0,s.indexOf("|"))).collect(Collectors.toList());
+                            if (!CollectionUtils.isEmpty(attachs)) {
+                                keys.addAll(attachs);
+                            }
+                        }
+                    }
+                    deleteFile(keys);
+                }catch (Exception e){
+                    log.error(e.getLocalizedMessage(),e);
+                }
+           /* }
+        });*/
     }
 
     private List<SubCategoryVO> getchildrens(List<SubCategory> subCategories, int parentId) {
@@ -287,6 +342,35 @@ public class SubCategoryController {
             resultVO.setCode(0);
         }
         return resultVO;
+    }
+
+    public void deleteFile( List<String> keys) {
+        if (!CollectionUtils.isEmpty(keys)) {
+            if(keys.size()>1000){
+                int count = keys.size()/1000;
+                List<String> childs ;
+                for(int i=0;i<count;i++){
+                    int endIndex = (i+1)*1000-1;
+                    if(endIndex>keys.size()-1){
+                        endIndex = keys.size()-1;
+                    }
+                    childs = keys.subList(i*1000,endIndex);
+                    DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
+                    deleteObjectsRequest.setKeys(childs);
+                    ossClient.deleteObjects(deleteObjectsRequest);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else{
+                DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
+                deleteObjectsRequest.setKeys(keys);
+                ossClient.deleteObjects(deleteObjectsRequest);
+            }
+
+        }
     }
 
 }

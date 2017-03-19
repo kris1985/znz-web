@@ -19,9 +19,10 @@ public interface PictureCategoryMapper {
 
     void batchInsert(List<PictureCategory> pictureCategories);
 
-    void deleteByPrimaryKeys(List<Long> pictureIds);
 
     List<Long> selectByCategoryId(Integer subCategoryId);
 
     List<Long> selectByCategoryIds(List<Integer> subCategoryIds);
+
+    void deleteByPictrueIds(List<Long> pictureIds);
 }

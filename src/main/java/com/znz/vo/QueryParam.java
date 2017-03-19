@@ -16,4 +16,5 @@ public class QueryParam {
     private Integer pageSize;
     private String startTime;
     private String endTime;
+    private String delFlag;
 }
