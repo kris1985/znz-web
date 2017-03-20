@@ -8,6 +8,7 @@ function back2Normal(){
 }
 var maxHeight,maxWidth;
 var ossPath = getOssPath();
+var basePath = getContextPath();
 var watermark = getWatermark();
 (function($){
     var CLS_SELECTED = "album-carousel-thumb-selected",
@@ -110,8 +111,14 @@ var watermark = getWatermark();
                 for( var i=0;i<arr.length;i++){
                     attachSrc =  arr[i].substr(0,arr[i].indexOf("|"));
                     attachAlt =  arr[i].substr(arr[i].indexOf("|")+1);
-                    res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
-                        "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' /> <div class=\"del\" >x</div> </div>";
+                    if(i==0){
+                        res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
+                                            "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' />  </div>";
+                    }else{
+                      res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
+                                            "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' /> <div class=\"del\" ><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></div> </div>";
+                    }
+
                 }
                 //console.log("res:"+res);
                 $("#attachs").html(res);
@@ -231,7 +238,15 @@ var watermark = getWatermark();
             // 移动到第一张以后
             if (this.getCurrentIndex() < 0) {
                 // 循环到最后一张图片，并且滚动缩略图
-                this.setCurrentIndex(this.getLength() - 1).prevGroup();
+                 //this.setCurrentIndex(this.getLength() - 1).prevGroup();
+                 var currentPage = parseInt($("#currentPage").val());
+                 var totalPage = parseInt($("#totalPage").val());
+                  if(currentPage>1){
+                        $("#currentPage").val(currentPage-1)
+                        $("#albumForm").submit();
+                  }else{
+                    alert("已经到第一张");
+                  }
             }
             else {
                 // 不是第一张图片
@@ -259,7 +274,15 @@ var watermark = getWatermark();
             // 移动到最后一张以后
             if (this.getCurrentIndex() > this.getLength() - 1) {
                 // 循环显示第一张图片，并且滚动缩略图
-                this.setCurrentIndex(0).nextGroup();
+               // this.setCurrentIndex(0).nextGroup();
+                var currentPage = parseInt($("#currentPage").val());
+                var totalPage = parseInt($("#totalPage").val());
+                if(currentPage<totalPage){
+                   $("#currentPage").val(currentPage+1)
+                   $("#albumForm").submit();
+                }else{
+                    alert("已经是最后一张了");
+                }
             }
             else {
                 // 不是最后一张图片

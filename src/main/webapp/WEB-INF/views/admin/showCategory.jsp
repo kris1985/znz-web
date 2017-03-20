@@ -571,14 +571,16 @@
            $(".site-piclist_pic a").click(function () {
                var selectedImg = $(this).attr("id");
                var ids="";
-               var filePaths="";
                $(".site-piclist_pic a").each(function (i) {
                    ids=ids+$(this).attr("id")+",";
                });
                $("#selectedId").val(selectedImg);
                $("#picIds").val(ids);
-               $("#filePaths").val(filePaths);
-               $("#picForm").submit();
+               var selected = getAllSelected();
+               $("#fourthSelectedId").val(selected);
+               var url = "${basePath}/admin/file/listImg"
+               $("#categoryForm").action(url);
+               $("#categoryForm").submit();
            })
 
 
@@ -659,8 +661,14 @@
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="1">
             <input type="hidden" id="pageSize" name = "pageSize" value="40">
+            <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
             <input id="startTime1" name="startTime" type="hidden" />
             <input id="endTime1"    name="endTime" type="hidden"/>
+            <!--点击大图选择的图片id-->
+            <input type="hidden" name="id" id="selectedId">
+            <!--当前页所有图片id-->
+            <input type="hidden" name="ids"id="picIds">
+
         </form>
     </div>
 
@@ -809,11 +817,6 @@
         </ul>
     </div>
 
-     <form id="picForm" method="POST" target="_blank" action="${basePath}/admin/file/listImg">
-         <input type="hidden" name="id" id="selectedId">
-         <input type="hidden" name="ids"id="picIds">
-         <input type="hidden" name="filePaths" id="filePaths">
-     </form>
   <div class="mod-page">
     <ul class="pagination" id="pagination1"></ul>
   </div>

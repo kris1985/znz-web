@@ -133,7 +133,7 @@ cursor:pointer}
 }
 
 .album-image-btn-prev:hover,.album-image-btn-next:hover{
-	color:red;
+	color:#699f00;
 	
 }
 
@@ -314,7 +314,7 @@ bottom: 45px;z-index:1999;
 	left: 70px;
 	border: 0px solid #24F055;
 	width: 130px;
-	top: 15px;
+	top: 20px;
 	background: #FAFAFA;
 	z-index: 9999;
 }
@@ -327,11 +327,10 @@ bottom: 45px;z-index:1999;
 
 #album-image-ft{display: none}
 .attach_item{
-	border: 2px solid #ECECEC;
+	border: 2px solid #9B9B9B;
 	width: 124px;
-	margin: 0px auto;position: relative;
+	margin: 5px auto;
 }
-.attach_item .del{position: absolute;top: 0;right: 5px;}
 .ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;z-index: 999999;cursor: pointer;}
 .ite_btn span{font-size:24px;margin: 5px;}
-.ite_btn span:hover{ color: red}
+.ite_btn span:hover{ color: #699f00;}

@@ -194,7 +194,7 @@ public class FileController {
     }
 
     @RequestMapping(value = "/listImg", method = RequestMethod.POST)
-    public String listImg(HttpServletRequest request, Long id, String ids, Model model) {
+    public String listImg(HttpServletRequest request, Long id, String ids,String fourthSelectedId,Integer currentPage,Integer totalPage,Integer pageSize, Model model) {
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
         List<Picture> pictures = pictureMapper.selectByIds(listIds);
         Picture picture = pictureMapper.selectByPrimaryKey(id);
@@ -208,6 +208,55 @@ public class FileController {
         model.addAttribute("attachs", picture.getFilePath());
         model.addAttribute("currentIndex", listIds.indexOf(id));
         model.addAttribute("pictures", pictures);
+        model.addAttribute("fourthSelectedId", fourthSelectedId);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("pageSize", pageSize);
+        return "admin/album";
+    }
+
+
+    @RequestMapping(value = "/reloadListImg", method = RequestMethod.POST)
+    public String reloadListImg(String fourthSelectedId,Integer currentPage,Integer pageSize, Model model) {
+        PageParameter pageParameter = new PageParameter(currentPage, pageSize);
+        List<Set<Integer>> categoryConditions = new ArrayList<>();
+        FileQueryVO fileQueryVO = new FileQueryVO();
+        fileQueryVO.setPage(pageParameter);
+        String[] ids = fourthSelectedId.split("[;]");
+        Set<Integer> set ;
+        for(String x:ids){
+            set = new HashSet<>();
+            String[] arr = x.split(",");
+            for(String item:arr){
+                if(StringUtils.isNumeric(item)){
+                    set.add(Integer.parseInt(item));
+                }
+            }
+            if(!CollectionUtils.isEmpty(set)){
+                categoryConditions.add(set);
+            }
+
+        }
+        fileQueryVO.setCategoryConditions(categoryConditions);
+        List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
+        int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
+                / pageParameter.getPageSize();
+
+
+        Picture picture = pictures.get(0);
+        for(Picture p :pictures){
+            if(StringUtils.isNoneBlank(p.getAttach())){
+                p.setAttach(p.getFilePath()+"|"+p.getName()+","+p.getAttach());//加上原图
+            }
+        }
+        model.addAttribute("selectedImg", picture.getFilePath());
+        model.addAttribute("selectedName", picture.getName());
+        model.addAttribute("currentIndex", 0);
+        model.addAttribute("pictures", pictures);
+        model.addAttribute("fourthSelectedId", fourthSelectedId);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPage",totalPage);
+        model.addAttribute("pageSize",pageSize);
         return "admin/album";
     }
 

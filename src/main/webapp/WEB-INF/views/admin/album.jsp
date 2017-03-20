@@ -30,15 +30,7 @@
             <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
             <span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
         </div>
-        <div class="skin" style="display: none">
-            <ul>
-                <li id="skin1" style="background:#FFFFFF">1</li>
-                <li id="skin2" style="background:#F1F1F1">2</li>
-                <li id="skin3" style="background:#202020">3</li>
-                <li  id="skin4" style="background:#652121">4</li>
-                <li id="skin5" style="background:#000000">5</li>
-            </ul>
-        </div>
+
         <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
             <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}${watermarkParamProcess}" id="album-image" alt="${selectedName}" onmousewheel="return bbimg(this)"/></div>
@@ -77,41 +69,16 @@
         </div>
         <a href="#next-group" class="album-carousel-btn-next" id="album-carousel-btn-next">›</a>
     </div>
-    <div class="fixedBtns" style="height:45px;background-color:black; z-index:999; position:fixed; bottom:0; left:0; width:100%; _position:absolute;display: none">
-        <div style="width:414px; margin:0 auto;height:45px;" >
-            <ul class="bs-glyphicons-list" style="height:45px;margin-top:1px">
-                <li id="preBtn">
-                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span><br/>
-                    <span class="glyphicon-class">上一张</span>
-                </li>
-                <li id="nextBtn">
-                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><br/>
-                    <span class="glyphicon-class">下一张</span>
-                </li>
-                <!-- <li id="addSizeBtn">
-                     <span class="glyphicon glyphicon-plus"></span><br/>
-                     <span class="glyphicon-class">放大</span>
-                 </li>
-                 <li id="subSizeBtn">
-                     <span class="glyphicon glyphicon-minus" ></span><br/>
-                     <span class="glyphicon-class">缩小</span>
-                 </li>
-                 <li id="downloadBtn">
-                     <span class="glyphicon glyphicon-download-alt"></span><br/>
-                     <span class="glyphicon-class">下载</span>
-                 </li>
 
-                 <li id="thumbBtn">
-                     <span class="glyphicon glyphicon-picture"></span><br/>
-                     <span class="glyphicon-class">缩略图</span>
-                 </li>
-                 -->
 
-            </ul>
 
-        </div>
-    </div>
 </div>
+<form id="albumForm" method="post" action = "${basePat}/file/reloadListImg">
+            <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
+            <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
+            <input type="hidden" id="pageSize" name = "pageSize" value="40">
+            <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
+</form>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/album.js"></script>
@@ -122,7 +89,6 @@
 
     //无级缩放图片大小
     function bbimg(o){
-//alert("s");
         var zoom=parseInt(o.style.zoom,10)||100;zoom+=event.wheelDelta/12;
         if(zoom>80&&zoom<=500) o.style.zoom=zoom+'%';
         return false;
@@ -140,8 +106,8 @@
             maxWidth = $(document).width();
             w = $("#album-image").width();
             h = $("#album-image").height();
-            console.log("$(#album-image):" + $("#album-image").attr("src"));
-            console.log(w + "-" + h + "-" + maxWidth + "-" + maxHeight);
+           // console.log("$(#album-image):" + $("#album-image").attr("src"));
+            //console.log(w + "-" + h + "-" + maxWidth + "-" + maxHeight);
             if (w > h) {
                 maxWidth = maxHeight * (w / h);
             } else {
@@ -158,12 +124,8 @@
         };
         <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
 
-        if($(".attach_item").length>1){
-            alert("ss");
-            $(".attach_item").eq(0).find(".del").hide();
-        }
+
         $(".attach_item").live("hover",function(){
-                $(this).find(".del").show();
                 $(this).find(".del").css({"color":"red"});
             },function () {
                 $(this).find(".del").css({"color":"black"});
