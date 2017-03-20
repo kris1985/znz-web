@@ -194,10 +194,10 @@ public class FileController {
     }
 
     @RequestMapping(value = "/listImg", method = RequestMethod.POST)
-    public String listImg(HttpServletRequest request, Long id, String ids,String fourthSelectedId,Integer currentPage,Integer totalPage,Integer pageSize, Model model) {
+    public String listImg(HttpServletRequest request, Long selectedId, String ids,String fourthSelectedId,Integer currentPage,Integer totalPage,Integer pageSize, Model model) {
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
         List<Picture> pictures = pictureMapper.selectByIds(listIds);
-        Picture picture = pictureMapper.selectByPrimaryKey(id);
+        Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
         for(Picture p :pictures){
             if(StringUtils.isNoneBlank(p.getAttach())){
                 p.setAttach(p.getFilePath()+"|"+p.getName()+","+p.getAttach());//加上原图
@@ -206,7 +206,7 @@ public class FileController {
         model.addAttribute("selectedImg", picture.getFilePath());
         model.addAttribute("selectedName", picture.getName());
         model.addAttribute("attachs", picture.getFilePath());
-        model.addAttribute("currentIndex", listIds.indexOf(id));
+        model.addAttribute("currentIndex", listIds.indexOf(selectedId));
         model.addAttribute("pictures", pictures);
         model.addAttribute("fourthSelectedId", fourthSelectedId);
         model.addAttribute("currentPage", currentPage);

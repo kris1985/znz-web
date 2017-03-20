@@ -579,7 +579,7 @@
                var selected = getAllSelected();
                $("#fourthSelectedId").val(selected);
                var url = "${basePath}/admin/file/listImg"
-               $("#categoryForm").action(url);
+               $("#categoryForm").attr("action",url);
                $("#categoryForm").submit();
            })
 
@@ -665,7 +665,7 @@
             <input id="startTime1" name="startTime" type="hidden" />
             <input id="endTime1"    name="endTime" type="hidden"/>
             <!--点击大图选择的图片id-->
-            <input type="hidden" name="id" id="selectedId">
+            <input type="hidden" name="selectedId" id="selectedId">
             <!--当前页所有图片id-->
             <input type="hidden" name="ids"id="picIds">
 
