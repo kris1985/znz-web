@@ -194,7 +194,9 @@ public class FileController {
     }
 
     @RequestMapping(value = "/listImg", method = RequestMethod.POST)
-    public String listImg(HttpServletRequest request, Long selectedId, String ids,String fourthSelectedId,Integer currentPage,Integer totalPage,Integer pageSize, Model model) {
+    public String listImg(HttpServletRequest request, Long selectedId, String ids, String secondSelectedId,
+                          String fourthSelectedId, Integer currentPage, Integer totalPage, Integer pageSize, Model model) {
+
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
         List<Picture> pictures = pictureMapper.selectByIds(listIds);
         Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
@@ -209,6 +211,7 @@ public class FileController {
         model.addAttribute("currentIndex", listIds.indexOf(selectedId));
         model.addAttribute("pictures", pictures);
         model.addAttribute("fourthSelectedId", fourthSelectedId);
+        model.addAttribute("secondSelectedId", secondSelectedId);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("pageSize", pageSize);
@@ -217,32 +220,36 @@ public class FileController {
 
 
     @RequestMapping(value = "/reloadListImg", method = RequestMethod.POST)
-    public String reloadListImg(String fourthSelectedId,Integer currentPage,Integer pageSize, Model model) {
+    public String reloadListImg(String fourthSelectedId,String secondSelectedId,Integer currentPage,Integer pageSize,String moveFlag, Model model) {
         PageParameter pageParameter = new PageParameter(currentPage, pageSize);
         List<Set<Integer>> categoryConditions = new ArrayList<>();
         FileQueryVO fileQueryVO = new FileQueryVO();
         fileQueryVO.setPage(pageParameter);
-        String[] ids = fourthSelectedId.split("[;]");
-        Set<Integer> set ;
-        for(String x:ids){
-            set = new HashSet<>();
-            String[] arr = x.split(",");
-            for(String item:arr){
-                if(StringUtils.isNumeric(item)){
-                    set.add(Integer.parseInt(item));
+        if(StringUtils.isBlank(fourthSelectedId)){
+            List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
+            Set<Integer> thirdCategorys =    subCategories.stream().filter(s-> String.valueOf(s.getParentId()).equals(secondSelectedId) ).map(s->s.getId()).collect(Collectors.toSet());//三级类
+            Set<Integer> set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
+            categoryConditions.add(set);
+        }else{
+            String[] ids = fourthSelectedId.split("[;]");
+            Set<Integer> set ;
+            for(String x:ids){
+                set = new HashSet<>();
+                String[] arr = x.split(",");
+                for(String item:arr){
+                    if(StringUtils.isNumeric(item)){
+                        set.add(Integer.parseInt(item));
+                    }
+                }
+                if(!CollectionUtils.isEmpty(set)){
+                    categoryConditions.add(set);
                 }
             }
-            if(!CollectionUtils.isEmpty(set)){
-                categoryConditions.add(set);
-            }
-
         }
         fileQueryVO.setCategoryConditions(categoryConditions);
         List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
         int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                 / pageParameter.getPageSize();
-
-
         Picture picture = pictures.get(0);
         for(Picture p :pictures){
             if(StringUtils.isNoneBlank(p.getAttach())){
@@ -254,9 +261,11 @@ public class FileController {
         model.addAttribute("currentIndex", 0);
         model.addAttribute("pictures", pictures);
         model.addAttribute("fourthSelectedId", fourthSelectedId);
+        model.addAttribute("secondSelectedId", secondSelectedId);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPage",totalPage);
         model.addAttribute("pageSize",pageSize);
+        model.addAttribute("moveFlag",moveFlag);
         return "admin/album";
     }
 

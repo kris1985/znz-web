@@ -118,7 +118,6 @@ var watermark = getWatermark();
                       res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
                                             "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' /> <div class=\"del\" ><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></div> </div>";
                     }
-
                 }
                 //console.log("res:"+res);
                 $("#attachs").html(res);
@@ -234,7 +233,6 @@ var watermark = getWatermark();
         prev: function(){
             // 当前缩略图的索引值减1
             this.setCurrentIndex(this.getCurrentIndex() - 1);
-
             // 移动到第一张以后
             if (this.getCurrentIndex() < 0) {
                 // 循环到最后一张图片，并且滚动缩略图
@@ -242,10 +240,14 @@ var watermark = getWatermark();
                  var currentPage = parseInt($("#currentPage").val());
                  var totalPage = parseInt($("#totalPage").val());
                   if(currentPage>1){
-                        $("#currentPage").val(currentPage-1)
+                        $("#currentPage").val(currentPage-1);
+                        $("#moveFlag").val("pre");
                         $("#albumForm").submit();
                   }else{
-                    alert("已经到第一张");
+                      if(this.getCurrentIndex()<0){
+                          this.setCurrentIndex(0);
+                      }
+                      alert("已经到第一张");
                   }
             }
             else {
@@ -278,9 +280,13 @@ var watermark = getWatermark();
                 var currentPage = parseInt($("#currentPage").val());
                 var totalPage = parseInt($("#totalPage").val());
                 if(currentPage<totalPage){
-                   $("#currentPage").val(currentPage+1)
+                   $("#currentPage").val(currentPage+1);
+                    $("#moveFlag").val("next");
                    $("#albumForm").submit();
                 }else{
+                    if(this.getCurrentIndex()>this.getLength() - 1){
+                        this.setCurrentIndex(this.getLength() - 1);
+                    }
                     alert("已经是最后一张了");
                 }
             }

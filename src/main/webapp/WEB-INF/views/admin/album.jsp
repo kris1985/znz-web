@@ -16,6 +16,7 @@
     <link href="${basePath}/resources/css/grids.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/album.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/base.css" rel="stylesheet" type="text/css" media="all" />
+
    <c:set var="watermarkParamProcess" value="" />
                  <c:if test="${ not empty watermarkParam  }">
                       <c:set var="watermarkParamProcess" value="?x-oss-process=image${watermarkParam}" />
@@ -73,11 +74,13 @@
 
 
 </div>
-<form id="albumForm" method="post" action = "${basePat}/file/reloadListImg">
+<form id="albumForm" method="post" action = "${basePath}/admin/file/reloadListImg">
+             <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
             <input type="hidden" id="pageSize" name = "pageSize" value="40">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
+            <input type="hidden" id="moveFlag" name = "moveFlag">
 </form>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>
@@ -115,7 +118,14 @@
             }
             Album = new jQuery.Album({
                 // 当前显示图片在缩略图的中索引值
-                curIndex: ${currentIndex},
+                <c:choose>
+                    <c:when test="${moveFlag eq 'pre'}">
+                         curIndex:${pageSize-1},
+                    </c:when>
+                <c:otherwise>
+                    curIndex: ${currentIndex},
+                </c:otherwise>
+                </c:choose>
                 // 大图片显示区域的最大宽度
                 maxWidth: maxWidth,
                 // 大图片显示区域的最高宽度
@@ -125,11 +135,6 @@
         <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
 
 
-        $(".attach_item").live("hover",function(){
-                $(this).find(".del").css({"color":"red"});
-            },function () {
-                $(this).find(".del").css({"color":"black"});
-            });
 
              $(".del").live("click",function(evt){
                  evt.preventDefault();
@@ -148,8 +153,9 @@
                 });
             })
         </c:if>
-
-
+        <c:if test="${userSession.user.userType ==1}">
+         $(".del").hide();
+        </c:if>
      /*   $(".attachs img").click(function () {
           $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
         })*/

@@ -329,8 +329,17 @@ bottom: 45px;z-index:1999;
 .attach_item{
 	border: 2px solid #9B9B9B;
 	width: 124px;
-	margin: 5px auto;
+	margin: 5px auto;position: relative;
 }
 .ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;z-index: 999999;cursor: pointer;}
 .ite_btn span{font-size:24px;margin: 5px;}
 .ite_btn span:hover{ color: #699f00;}
+
+
+.del{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background: white;cursor: pointer;
+}
+.del:hover{background: red}

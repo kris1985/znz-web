@@ -69,6 +69,7 @@ public class SubCategoryController {
 
     @RequestMapping(value = "/showCategory")
     public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model) throws ParseException {
+        model.addAttribute("totalPage",0);
         if(queryParam.getCurrentPage() == null){
             queryParam.setCurrentPage(1);
         }
@@ -142,7 +143,7 @@ public class SubCategoryController {
         PageParameter pageParameter = new PageParameter(queryParam.getCurrentPage(), queryParam.getPageSize());
         FileQueryVO fileQueryVO = new FileQueryVO();
         model.addAttribute("currentPage",queryParam.getCurrentPage());
-        model.addAttribute("totalPage",0);
+
         if(!CollectionUtils.isEmpty(categoryConditions) && categoryConditions.stream().allMatch(s->s.size()>0)){
             fileQueryVO.setPage(pageParameter);
             fileQueryVO.setCategoryConditions(categoryConditions);

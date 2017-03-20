@@ -580,6 +580,7 @@
                $("#fourthSelectedId").val(selected);
                var url = "${basePath}/admin/file/listImg"
                $("#categoryForm").attr("action",url);
+               $("#categoryForm").attr("target","_blank");
                $("#categoryForm").submit();
            })
 
