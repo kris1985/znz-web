@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit"/>
     <link rel="icon" href="../../favicon.ico">
-    <title>指南针鞋讯-目录1</title>
+    <title>指南针鞋讯-目录</title>
     <%@ include file="../common/common.jsp" %>
 
     <link href="${basePath}/resources/css/jquery-ui-1.8.24.custom.css" rel="stylesheet"  />
@@ -600,7 +600,7 @@
                 }else{
                     $(this).parent().css("height","31px");
                     $(this).find("em").text("更多")
-                    $(this).find("i").css("background-position", "-19 -10px")
+                    $(this).find("i").css("background-position", "-19px -10px")
                 }
            })
 

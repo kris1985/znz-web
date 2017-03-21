@@ -138,7 +138,7 @@
   .openBtn {
     position: absolute;
     right: 0;
-    top: 6px;
+    top: 10px;
   }
 
   .openBtn-txt {
@@ -326,7 +326,7 @@ div:after, ul:after, dl:after {
   .openBtn {
       position: absolute;
       right: 0;
-      top: 6px;
+      top:10px;
       cursor:pointer;display: none;
   }
 
