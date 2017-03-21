@@ -10,6 +10,7 @@ var maxHeight,maxWidth;
 var ossPath = getOssPath();
 var basePath = getContextPath();
 var watermark = getWatermark();
+var uerType = getUserType();
 (function($){
     var CLS_SELECTED = "album-carousel-thumb-selected",
         CLS_HIDE = "hide",
@@ -111,7 +112,8 @@ var watermark = getWatermark();
                 for( var i=0;i<arr.length;i++){
                     attachSrc =  arr[i].substr(0,arr[i].indexOf("|"));
                     attachAlt =  arr[i].substr(arr[i].indexOf("|")+1);
-                    if(i==0){
+                    //console.log("uerType:"+uerType)
+                    if(i==0 || (uerType!=""&&uerType!=null&&uerType!=undefined && uerType=="1")){
                         res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
                                             "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' />  </div>";
                     }else{

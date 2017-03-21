@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit"/>
     <link rel="icon" href="../../favicon.ico">
-    <title>指南针鞋讯-目录</title>
+    <title>指南针鞋讯-目录1</title>
     <%@ include file="../common/common.jsp" %>
 
     <link href="${basePath}/resources/css/jquery-ui-1.8.24.custom.css" rel="stylesheet"  />
@@ -544,7 +544,14 @@
 
             //分页
             $.jqPaginator('#pagination1', {
-                  totalPages: ${totalPage},
+                <c:choose>
+                    <c:when test="${totalPage ==0}">
+                        totalPages: 1,
+                    </c:when>
+                    <c:otherwise>
+                         totalPages: ${totalPage},
+                    </c:otherwise>
+                </c:choose>
                   visiblePages: 10,
                   first: '<li class="first"><a href="javascript:void(0);" style="width:40px">首页<\/a><\/li>',
                   prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',

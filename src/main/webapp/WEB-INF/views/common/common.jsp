@@ -19,4 +19,8 @@
      return "${watermarkParamProcess}"
  }
 
+ function getUserType(){
+     return "${userSession.user.userType}"
+ }
+
 </script>

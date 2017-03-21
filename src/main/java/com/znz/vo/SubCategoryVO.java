@@ -28,4 +28,8 @@ public class SubCategoryVO {
     private String allFlag;
 
     private List<SubCategoryVO> childrens;
+
+    private String firstSelectedId;
+
+    private String secondSelectedId;
 }

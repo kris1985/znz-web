@@ -68,7 +68,7 @@ public class SubCategoryController {
     public static ExecutorService pool = Executors.newFixedThreadPool(10);
 
     @RequestMapping(value = "/showCategory")
-    public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model) throws ParseException {
+    public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model,String firstCategoryId,String secondCategoryId) throws ParseException {
         model.addAttribute("totalPage",0);
         if(queryParam.getCurrentPage() == null){
             queryParam.setCurrentPage(1);
@@ -95,10 +95,19 @@ public class SubCategoryController {
             SubCategoryVO subCategoryVO ;
             for(SubCategory subCategory:subCategories){
                 if(queryParam.getFirstSelectedId()==null && subCategory.getCategoryLevel() == 0){
-                    queryParam.setFirstSelectedId(String.valueOf(subCategory.getId()));
+                    if(StringUtils.isNotEmpty(firstCategoryId)){
+                        queryParam.setFirstSelectedId(firstCategoryId);
+                    }else{
+                        queryParam.setFirstSelectedId(String.valueOf(subCategory.getId()));
+                    }
                 }
                 if(queryParam.getSecondSelectedId()==null && String.valueOf(subCategory.getParentId()).equals(queryParam.getFirstSelectedId()) ){
-                    queryParam.setSecondSelectedId(String.valueOf(subCategory.getId()));
+                    if(StringUtils.isNotEmpty(secondCategoryId)){
+                        queryParam.setSecondSelectedId(secondCategoryId);
+                    }else{
+                        queryParam.setSecondSelectedId(String.valueOf(subCategory.getId()));
+                    }
+
                 }
                 subCategoryVO = new SubCategoryVO();
                 subCategoryVO.setId(String.valueOf(subCategory.getId()));
@@ -295,7 +304,7 @@ public class SubCategoryController {
         subCategory.setId(null);
         subCategory.setAllFlag("N");
         subCategoryMapper.insert(subCategory);
-        return "redirect:/admin/subCategory/showCategory";
+        return "redirect:/admin/subCategory/showCategory?firstCategoryId="+subCategoryVO.getFirstSelectedId()+"&secondCategoryId="+subCategoryVO.getSecondSelectedId();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)

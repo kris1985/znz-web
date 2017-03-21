@@ -153,9 +153,7 @@
                 });
             })
         </c:if>
-        <c:if test="${userSession.user.userType ==1}">
-         $(".del").hide();
-        </c:if>
+
      /*   $(".attachs img").click(function () {
           $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
         })*/
