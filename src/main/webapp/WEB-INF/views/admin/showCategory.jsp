@@ -605,8 +605,8 @@
            })
 
             $(".mod_sear_list").each(function (i) {
-                console.log("$(this).find('ul').children():"+$(this).find("ul").children().length);
-                if($(this).find("ul").children().length>12){
+                //console.log("$(this).find('ul').children():"+$(this).find("ul").children().length);
+                if($(this).find("a").text().length>60){
                     $(this).find(".openBtn").show();
                 }
             })

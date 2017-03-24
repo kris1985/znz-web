@@ -337,6 +337,8 @@ div:after, ul:after, dl:after {
 .openBtn-txt em, .close-mod_btn em {
     cursor: pointer;
     _vertical-align: 10px;
+        font-style: normal;
+        font-size: 14px;
 }
 .vm-inline {
     display: inline-block;
