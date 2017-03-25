@@ -32,6 +32,8 @@
             <span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
         </div>
 
+        <div class="page_bar"><span id="totalIndex">${totalIndex}</span>/<span id="totalCounts">${totalCount}</span></div>
+
         <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
             <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}${watermarkParamProcess}" id="album-image" alt="${selectedName}" onmousewheel="return bbimg(this)"/></div>
@@ -81,6 +83,7 @@
             <input type="hidden" id="pageSize" name = "pageSize" value="40">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
             <input type="hidden" id="moveFlag" name = "moveFlag">
+            <input type="hidden" id="totalCount" name = "totalCount" value="${totalCount}">
 </form>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>

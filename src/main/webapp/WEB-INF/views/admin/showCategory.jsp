@@ -23,6 +23,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/jqPaginator.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
     <script language="javascript" type="text/javascript" src="${basePath}/resources/js/datepicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
     <script>
         var basePath = getContextPath();
 
@@ -192,7 +193,6 @@
                                                    async: false,
                                                    success: function (ret) {
                                                        if (ret.code == 0) {
-                                                           console.log($("ssssss:"+$("#" + t.id).find("a").text()));
                                                            $("#" + t.id).find("a").text(name);
                                                            $("#dialog").dialog("close");
                                                        } else {
@@ -234,7 +234,6 @@
                             // console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
                             var sortId = id.parent().children().length + 1;
                             $("#sortId").val(sortId);
-                            console.log( $("#dialog"));
                             $("#dialog").dialog({
                                 height: 150,
                                 modal: true,
@@ -403,15 +402,12 @@
                         temp += id + ","
                     }
                 });
-                //console.log(temp);
                 if(temp.indexOf(",") !=-1){
                     temp = temp.substring(0,temp.length-1);
                 }
-                //console.log(temp);
                 var url = "${basePath}/admin/file/toUpload?category=" + temp
                 art.dialog.open(url,
                     {
-                        "id": "2345",
                         title: "上传文件",
                         width: 500,
                         height: 400,
@@ -572,7 +568,7 @@
                     }
                 });
             //共多少页面
-            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalCount}条</a></li>')
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}条</a></li>')
 
             //点击图片看大图
            $(".site-piclist_pic a").click(function () {
@@ -595,17 +591,29 @@
            $(".openBtn").click(function(){
                 if( $(this).find("em").text()=="更多"){
                     $(this).parent().css("height","auto");
+                    $.cookie($(this).parent().attr("id"), "auto");
                     $(this).find("em").text("收起");
                     $(this).find("i").css("background-position", "0 -10px")
                 }else{
-                    $(this).parent().css("height","31px");
-                    $(this).find("em").text("更多")
+                    $(this).parent().css("height","29px");
+                    $.cookie($(this).parent().attr("id"), "29px");
+                    $(this).find("em").text("更多");
                     $(this).find("i").css("background-position", "-19px -10px")
                 }
            })
 
             $(".mod_sear_list").each(function (i) {
-                //console.log("$(this).find('ul').children():"+$(this).find("ul").children().length);
+                var height = $.cookie($(this).attr("id"));
+                if(height!=undefined){
+                    $(this).css("height",height);
+                    if(height!="auto"){
+                        $(this).find("em").text("更多");
+                        $(this).find("i").css("background-position", "-19px -10px")
+                    }else{
+                        $(this).find("em").text("收起");
+                        $(this).find("i").css("background-position", "0 -10px")
+                    }
+                }
                 if($(this).find("a").text().length>60){
                     $(this).find(".openBtn").show();
                 }
@@ -667,9 +675,10 @@
             <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
             <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
-            <input type="hidden" id="currentPage" name = "currentPage" value="1">
+            <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
             <input type="hidden" id="pageSize" name = "pageSize" value="40">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
+            <input type="hidden" id="totalCount" name="totalCount" value="${totalCount}">
             <input id="startTime1" name="startTime" type="hidden" />
             <input id="endTime1"    name="endTime" type="hidden"/>
             <!--点击大图选择的图片id-->
@@ -716,7 +725,7 @@
     </c:if>
 
     <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
-         <div class="mod_sear_list">
+         <div class="mod_sear_list" id="mod_${firstSelectedId}">
         <h3>目录：</h3>
         <ul class="mod_category_item">
             <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
@@ -741,7 +750,7 @@
          <div id="leaf_category">
         <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
             <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
-                <div class="mod_sear_list">
+                <div class="mod_sear_list" id="${item.id}">
                     <h3 id="${item.id}" class="choice_item"><span>${item.name}</span>：</h3>
                     <ul class="mod_category_item ">
                         <li id="all_${item.id}" class="li_item leaf_item all_item " categoryLevel="${item.categoryLevel +1}" parentId="${item.id}"><a id="aa"
@@ -836,8 +845,7 @@
 
 <div class="footerN1214">
     <p class="footmenu">
-        <a href="#" class="s1">x</a>
-
+        <a href="#" class="s1"></a>
     </p>
     <p class="fEn">
         <a href="http://tyulan.com/" class="link0"></a>&nbsp;&nbsp;

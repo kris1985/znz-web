@@ -133,7 +133,7 @@ cursor:pointer}
 }
 
 .album-image-btn-prev:hover,.album-image-btn-next:hover{
-	color:#699f00;
+	color:#FF0000;
 	
 }
 
@@ -333,7 +333,7 @@ bottom: 45px;z-index:1999;
 }
 .ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;z-index: 999999;cursor: pointer;}
 .ite_btn span{font-size:24px;margin: 5px;}
-.ite_btn span:hover{ color: #699f00;}
+.ite_btn span:hover{ color: #FF0000}
 
 
 .del{
@@ -343,3 +343,13 @@ bottom: 45px;z-index:1999;
 	background: white;cursor: pointer;
 }
 .del:hover{background: red}
+
+.page_bar{position: absolute;
+	right: 90px;
+	border-bottom: 8px;
+	font-size: 26px;
+	z-index: 999999;
+	bottom: 8px;
+	font-weight: bold;
+	font-family: "Times New Roman";
+}
