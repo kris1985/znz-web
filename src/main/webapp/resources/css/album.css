@@ -345,7 +345,7 @@ bottom: 45px;z-index:1999;
 .del:hover{background: red}
 
 .page_bar{position: absolute;
-	right: 90px;
+	right: 65px;
 	border-bottom: 8px;
 	font-size: 26px;
 	z-index: 999999;
