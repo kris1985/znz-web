@@ -49,6 +49,9 @@
 
 
         $(function () {
+             <c:if test="${currentPage >1}">
+              window.location.href = "#piclist";
+            </c:if>
              <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
                 //栏目排序 左右
                 $(".mod_category_item").sortable({
@@ -562,6 +565,7 @@
                                var url = "${basePath}/admin/subCategory/showCategory"
                                $("#fourthSelectedId").val(selected);
                                $("#currentPage").val(num);
+                                $("#categoryForm").attr("target", "_self");
                                $("#categoryForm").attr("action", url);
                                $("#categoryForm").submit();
                             }
@@ -811,13 +815,12 @@
                 </div>
             </c:when>
         </c:choose>
-
-
     </div>
+
     <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
     </div>
-
+     <a name="piclist"></a>
     <div class="wrapper-piclist" style="    margin-left: -20px;">
         <ul class="site-piclist">
             <c:forEach var="item" items="${pictures}" varStatus="status">
