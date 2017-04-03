@@ -455,8 +455,43 @@
                                 alert(data.msg)
                             }
                         })
-
+                    },
+                    'rec': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/subCategory/recommend/"+id;
+                        if($(t).find(".my_rec").css("display") =="block"){
+                            alert("您已推荐过该图片");
+                            return;
+                        }
+                        $.get(url,function (data) {
+                            if(data.code ==0 ){
+                                $(t).find(".rec_ico").show();
+                                $(t).find(".my_rec").show();
+                            }else{
+                                alert(data.msg)
+                            }
+                        })
+                    },
+                    'cancleRec': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/subCategory/cancelRecommend/"+id;
+                        if($(t).find(".my_rec").css("display") =="none"){
+                            alert("您还没推荐过该图片");
+                            return;
+                        }
+                        $.get(url,function (data) {
+                            if(data.code ==0 ){
+                                $(t).find(".my_rec").hide();
+                            }if(data.code ==1 ){
+                                $(t).find(".rec_ico").hide();
+                                $(t).find(".my_rec").hide();
+                            }
+                            else{
+                                alert(data.msg)
+                            }
+                        })
                     }
+
                 }
             });
             </c:if>
@@ -629,6 +664,23 @@
            },function () {
                    $(this).css("border","2px solid white");
            })
+
+            //推荐
+            $("#recommend_list li").click(function () {
+                var selected = getAllSelected();
+                var recommendId =  $(this).attr("id");
+                if(recommendId.indexOf("all")!=-1){
+                    recommendId = "";
+                }else{
+                    recommendId = recommendId.replace("rec_","");
+                }
+                $("#fourthSelectedId").val(selected);
+                $("#recommendId").val(recommendId);
+                var url = "${basePath}/admin/subCategory/showCategory"
+                $("#categoryForm").attr("action",url);
+                $("#categoryForm").attr("target","_self");
+                $("#categoryForm").submit();
+            })
         })
 
 
@@ -689,7 +741,7 @@
             <input type="hidden" name="selectedId" id="selectedId">
             <!--当前页所有图片id-->
             <input type="hidden" name="ids"id="picIds">
-
+            <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
         </form>
     </div>
 
@@ -724,6 +776,8 @@
             <ul>
                 <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
                 <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+                <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
+                <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
             </ul>
         </div>
     </c:if>
@@ -790,6 +844,38 @@
             </c:if>
         </c:forEach>
     </div>
+        <!--推荐-->
+        <c:if test="${not empty users}">
+            <div class="mod_sear_list" id="recommend_list">
+                <h3 id="recommend_h3"><span>推荐</span>：</h3>
+                <ul class="mod_category_item  ui-sortable">
+                    <c:choose>
+                        <c:when test="${not empty recommendId}">
+                            <li id="recommend_all" class="li_item"><a href="javascript:;" class="">全部</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li id="recommend_all" class="li_item selected"><a href="javascript:;" class="">全部</a></li>
+                        </c:otherwise>
+                    </c:choose>
+
+                    <c:forEach var="user" items="${users}">
+                        <c:choose>
+                            <c:when test="${user.userId eq recommendId}">
+                                <li id="rec_${user.userId}" class="li_item selected" ><a href="javascript:;">${user.company}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li id="rec_${user.userId}" class="li_item" ><a href="javascript:;">${user.company}</a></li>
+                            </c:otherwise>
+
+                        </c:choose>
+                    </c:forEach>
+                </ul>
+                <div class="openBtn">
+                    <a class="openBtn-txt" href="javascript:;"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
+                </div>
+            </div>
+        </c:if>
+        <!--推荐-->
     </div>
 
 
@@ -823,9 +909,21 @@
      <a name="piclist"></a>
     <div class="wrapper-piclist" style="    margin-left: -20px;">
         <ul class="site-piclist">
+
             <c:forEach var="item" items="${pictures}" varStatus="status">
+                <c:set var="myRec" value="none" />
+                <c:if test="${fn:contains(item.recId,userSession.user.userId)}">
+                    <c:set var="myRec" value="block" />
+                </c:if>
+
+                <c:set var="recDisplay" value="none" />
+                <c:if test="${not empty item.recId}">
+                    <c:set var="recDisplay" value="block" />
+                </c:if>
                 <li item="${item.id}">
                     <div class="site-piclist_pic">
+                        <div class="rec_ico" style="display: ${recDisplay};"><img src="${basePath}/resources/img/rec.gif"></div>
+                        <div class="my_rec" style="display: ${myRec}">我推荐的</div>
                         <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" attach="${item.attach}">
                             <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"

@@ -23,4 +23,6 @@ public class FileQueryVO {
 
     private Date endTime;
 
+    private Integer recommendId;
+
 }

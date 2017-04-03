@@ -82,12 +82,13 @@
     <div class="form-group">
         <label for="recommendFlag" class="col-sm-2 col-md-2 control-label">推荐权限</label>
         <div class="col-sm-10 col-md-10">
-            <input type="checkbox"  name="recommendFlag" id="recommendFlag" value="1" />
+            <input type="radio"  name="recommendFlag" id="recommendFlag1" value="0" checked /> 不推荐
+            <input type="radio"  name="recommendFlag" id="recommendFlag2" value="1" /> 推荐
         </div>
     </div>
 
         <div class="form-group">
-            <label for="recommendFlag" class="col-sm-2 col-md-2 control-label">水印图片</label>
+            <label for="file_upload" class="col-sm-2 col-md-2 control-label">水印图片</label>
             <div class="col-sm-10 col-md-10">
                 <input id="file_upload" name="file_upload" type="files" multiple="false">
             </div>

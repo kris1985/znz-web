@@ -17,4 +17,5 @@ public class QueryParam {
     private String startTime;
     private String endTime;
     private String delFlag;
+    private Integer recommendId;
 }

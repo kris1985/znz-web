@@ -129,7 +129,7 @@ public class UserController {
     public String modify(@PathVariable int userId, Model model) {
         User user = userMapper.selectByPrimaryKey(userId);
         model.addAttribute("user", user);
-        if(user.getWatermark()!=null){
+        if(StringUtils.isNoneBlank(user.getWatermark())){
             WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
             model.addAttribute("watermarkVO", watermarkVO);
         }

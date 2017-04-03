@@ -94,10 +94,12 @@
             <div class="col-sm-10 col-md-10">
                 <c:choose>
                     <c:when test="${user.recommendFlag == 1}">
-                        <input type="checkbox"  name="recommendFlag" id="recommendFlag" value="1" checked />
+                        <input type="radio"  name="recommendFlag" id="recommendFlag" value="0"  />不推荐
+                        <input type="radio"  name="recommendFlag" id="recommendFlag" value="1" checked />推荐
                     </c:when>
                     <c:otherwise>
-                        <input type="checkbox"  name="recommendFlag" id="recommendFlag" value="0"  />
+                        <input type="radio"  name="recommendFlag" id="recommendFlag" value="0" checked />不推荐
+                        <input type="radio"  name="recommendFlag" id="recommendFlag" value="1"  />推荐
                     </c:otherwise>
                 </c:choose>
 
@@ -163,13 +165,12 @@
       <div class="col-sm-offset-2 col-sm-10 col-md-10">
 		 <button type="button" class="btn btn-default " id="pre-setp-btn" >上一步</button>
 		 <button type="submit" class="btn btn-primary " id="submit-btn" >提交</button>
-
       </div>
    </div>
   </div>
 
    </div>
-         <input type="hidden" name="watermarkVO.image" id="watermarkImg">
+         <input type="hidden" name="watermarkVO.image" id="watermarkImg" value="${watermarkVO.image}">
 </form>
 
  </div>

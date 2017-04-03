@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -164,7 +164,9 @@
         $(".attachs img").live("click",function(){
             $(".attach_item").css("border"," 2px solid #ECECEC");
             $(this).parent().css("border"," 2px solid #699f00");
-            $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
+            var src = $(this).attr("origin_src");
+            console.log("src:"+src);
+            $("#album-image-bd img").attr("src", src );
             $("#album-image-bd img").attr("alt", $(this).attr("alt") );
         });
 		//setTitle();

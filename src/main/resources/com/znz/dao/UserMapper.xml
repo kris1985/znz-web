@@ -161,4 +161,8 @@
     </choose>
     ${sord}
   </select>
+  
+  <select id="selectByFirstCategory" resultMap="BaseResultMap" >
+    select user_id,user_name,company from t_user2 where recommend_flag=1 AND user_id in(select user_id from t_user_authority where auth_id =#{authId,jdbcType=VARCHAR})
+  </select>
 </mapper>
