@@ -366,29 +366,25 @@ public class SubCategoryController {
     public @ResponseBody ResultVO recommend(HttpServletRequest request, @PathVariable Long id) {
         ResultVO resultVO = new ResultVO();
         resultVO.setCode(-1);
-        if (!PermissionUtil.checkPermisson(request)) {
-            resultVO.setMsg("无权限操作");
-        } else {
-            UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
-            Integer userId = userSession.getUser().getUserId();
-            PicRecommend picRecommend = new PicRecommend();
-            picRecommend.setPictureId(id);
-            picRecommend.setUserId(userSession.getUser().getUserId());
-            picRecommend.setPartionCode(null);
-            picRecommend.setCreateTime(new Date());
-            picRecommendMapper.insert(picRecommend);
-            Picture record =pictureMapper.selectByPrimaryKey(id);
-            if(StringUtils.isNoneBlank(record.getRecId())){
-                record.setRecId(record.getRecId()+","+userId);
-            }else{
-                record.setRecId(String.valueOf(userId));
-            }
-            Picture updatePicture = new Picture();
-            updatePicture.setId(id);
-            updatePicture.setRecId(record.getRecId());
-            pictureMapper.updateByPrimaryKeySelective(updatePicture);
-            resultVO.setCode(0);
+        UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        Integer userId = userSession.getUser().getUserId();
+        PicRecommend picRecommend = new PicRecommend();
+        picRecommend.setPictureId(id);
+        picRecommend.setUserId(userSession.getUser().getUserId());
+        picRecommend.setPartionCode(null);
+        picRecommend.setCreateTime(new Date());
+        picRecommendMapper.insert(picRecommend);
+        Picture record =pictureMapper.selectByPrimaryKey(id);
+        if(StringUtils.isNoneBlank(record.getRecId())){
+            record.setRecId(record.getRecId()+","+userId);
+        }else{
+            record.setRecId(String.valueOf(userId));
         }
+        Picture updatePicture = new Picture();
+        updatePicture.setId(id);
+        updatePicture.setRecId(record.getRecId());
+        pictureMapper.updateByPrimaryKeySelective(updatePicture);
+        resultVO.setCode(0);
         return resultVO;
     }
 
@@ -396,28 +392,24 @@ public class SubCategoryController {
     public @ResponseBody ResultVO cancelRecommend(HttpServletRequest request, @PathVariable Long id) {
         ResultVO resultVO = new ResultVO();
         resultVO.setCode(-1);
-        if (!PermissionUtil.checkPermisson(request)) {
-            resultVO.setMsg("无权限操作");
-        } else {
-            UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
-            Integer userId = userSession.getUser().getUserId();
-            picRecommendMapper.delete(id,userId);
+        UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        Integer userId = userSession.getUser().getUserId();
+        picRecommendMapper.delete(id,userId);
 
-            Picture record =pictureMapper.selectByPrimaryKey(id);
-            if(StringUtils.isNoneBlank(record.getRecId())){
-                List list =  Arrays.stream(record.getRecId().split(",")).filter(s->!s.equals(String.valueOf(userId))).collect(Collectors.toList());
-                String recId  = StringUtils.join(list,",");
-                record.setRecId(recId);
-                Picture updatePicture = new Picture();
-                updatePicture.setId(id);
-                updatePicture.setRecId(record.getRecId());
-                pictureMapper.updateByPrimaryKeySelective(updatePicture);
-                if(StringUtils.isBlank(record.getRecId())){
-                    resultVO.setCode(1);//没有推荐
-                    return resultVO;
-                }else{
-                    resultVO.setCode(0);
-                }
+        Picture record =pictureMapper.selectByPrimaryKey(id);
+        if(StringUtils.isNoneBlank(record.getRecId())){
+            List list =  Arrays.stream(record.getRecId().split(",")).filter(s->!s.equals(String.valueOf(userId))).collect(Collectors.toList());
+            String recId  = StringUtils.join(list,",");
+            record.setRecId(recId);
+            Picture updatePicture = new Picture();
+            updatePicture.setId(id);
+            updatePicture.setRecId(record.getRecId());
+            pictureMapper.updateByPrimaryKeySelective(updatePicture);
+            if(StringUtils.isBlank(record.getRecId())){
+                resultVO.setCode(1);//没有推荐
+                return resultVO;
+            }else{
+                resultVO.setCode(0);
             }
         }
         return resultVO;

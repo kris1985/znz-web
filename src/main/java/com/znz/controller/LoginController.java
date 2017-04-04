@@ -158,6 +158,8 @@ public class LoginController {
         String safeBase64Str = encodeBase64.replace('+', '-');
         safeBase64Str = safeBase64Str.replace('/', '_');
         safeBase64Str = safeBase64Str.replaceAll("=", "");
+        safeBase64Str = safeBase64Str.replaceAll("\r\n", "");
+        safeBase64Str = safeBase64Str.replaceAll("\n", "");
         return safeBase64Str;
     }
 

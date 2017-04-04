@@ -84,6 +84,7 @@
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
             <input type="hidden" id="moveFlag" name = "moveFlag">
             <input type="hidden" id="totalCount" name = "totalCount" value="${totalCount}">
+            <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
 </form>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>

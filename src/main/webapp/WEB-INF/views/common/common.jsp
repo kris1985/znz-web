@@ -9,7 +9,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="${basePath}/resources/img/favicon.ico" media="screen" /> 
 <script>
  var basePath = '<%= request.getContextPath()%>';
-<%request.setAttribute("vEnter", "\r\n"); %>
+<%request.setAttribute("vEnter", "\n"); %>
  function getContextPath(){
     return basePath;
  }
@@ -20,7 +20,6 @@
  function getWatermark(){
      <c:choose>
         <c:when test="${ not empty watermarkParam  }">
-     console.log("watermarkParam:"+ "${fn:replace(watermarkParam,vEnter,"")}");
            return "?x-oss-process=image${fn:replace(watermarkParam,vEnter,"")}";
         </c:when>
          <c:otherwise>

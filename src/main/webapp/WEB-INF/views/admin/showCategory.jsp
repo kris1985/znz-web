@@ -455,7 +455,9 @@
                                 alert(data.msg)
                             }
                         })
-                    },
+                    }
+                    <c:if test="${userSession.user.recommendFlag == 1}">
+                    ,
                     'rec': function (t) {
                         var id = $(t).attr("item");
                         var url = "${basePath}/admin/subCategory/recommend/"+id;
@@ -465,7 +467,6 @@
                         }
                         $.get(url,function (data) {
                             if(data.code ==0 ){
-                                $(t).find(".rec_ico").show();
                                 $(t).find(".my_rec").show();
                             }else{
                                 alert(data.msg)
@@ -480,23 +481,53 @@
                             return;
                         }
                         $.get(url,function (data) {
-                            if(data.code ==0 ){
+                            if(data.code ==0 || data.code ==1){
                                 $(t).find(".my_rec").hide();
-                            }if(data.code ==1 ){
-                                $(t).find(".rec_ico").hide();
-                                $(t).find(".my_rec").hide();
-                            }
-                            else{
+                            } else{
                                 alert(data.msg)
                             }
                         })
                     }
-
+                    </c:if>
                 }
             });
             </c:if>
-
-
+            <c:if test="${userSession.user.userType ==1 and userSession.user.recommendFlag == 1}">
+                 $('.site-piclist li').contextMenu('menuPic', {
+                    bindings: {
+                        'rec': function (t) {
+                            var id = $(t).attr("item");
+                            var url = "${basePath}/admin/subCategory/recommend/"+id;
+                            if($(t).find(".my_rec").css("display") =="block"){
+                                alert("您已推荐过该图片");
+                                return;
+                            }
+                            $.get(url,function (data) {
+                                if(data.code ==0 ||data.code ==1){
+                                    $(t).find(".my_rec").show();
+                                }else{
+                                    alert(data.msg)
+                                }
+                            })
+                        },
+                        'cancleRec': function (t) {
+                            var id = $(t).attr("item");
+                            var url = "${basePath}/admin/subCategory/cancelRecommend/"+id;
+                            if($(t).find(".my_rec").css("display") =="none"){
+                                alert("您还没推荐过该图片");
+                                return;
+                            }
+                            $.get(url,function (data) {
+                                if(data.code ==0 || data.code ==1){
+                                    $(t).find(".my_rec").hide();
+                                } else{
+                                    alert(data.msg)
+                                }
+                            })
+                        }
+                    }
+                 });
+            </c:if>
             //图片懒加载
             $("img.lazy").lazyload({
                 threshold : 200
@@ -771,16 +802,32 @@
         </div>
   </c:if>
 
-    <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
-        <div class="contextMenu" id="menuPic" style="display: none">
-            <ul>
-                <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
-                <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
-                <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
-                <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
-            </ul>
-        </div>
-    </c:if>
+    <c:choose>
+        <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+            <div class="contextMenu" id="menuPic" style="display: none">
+                <ul>
+                    <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
+                    <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+                    <c:if test="${userSession.user.recommendFlag == 1}">
+                        <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
+                        <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
+                    </c:if>
+                </ul>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="contextMenu" id="menuPic" style="display: none">
+                <ul>
+                    <c:if test="${userSession.user.recommendFlag == 1}">
+                        <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
+                        <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
+                    </c:if>
+                </ul>
+            </div>
+        </c:otherwise>
+    </c:choose>
+
+
 
     <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
          <div class="mod_sear_list" id="mod_${firstSelectedId}">
@@ -922,7 +969,6 @@
                 </c:if>
                 <li item="${item.id}">
                     <div class="site-piclist_pic">
-                        <div class="rec_ico" style="display: ${recDisplay};"><img src="${basePath}/resources/img/rec.gif"></div>
                         <div class="my_rec" style="display: ${myRec}">我推荐的</div>
                         <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" attach="${item.attach}">
