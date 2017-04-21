@@ -7,6 +7,7 @@ import com.znz.listener.MySessionLister;
 import com.znz.model.User;
 import com.znz.model.UserAuth;
 import com.znz.util.Constants;
+import com.znz.util.IPUtil;
 import com.znz.vo.UserLoginVO;
 import com.znz.vo.UserSession;
 import com.znz.vo.WatermarkVO;
@@ -66,7 +67,7 @@ public class LoginController {
         //账号密码验证正确
         int limitIpFlag = user.getLimitIpFlag();
         //鉴权IP
-        if(1==limitIpFlag && !StringUtils.isEmpty(user.getLimitIps()) && !user.getLimitIps().contains(request.getRemoteHost())){
+        if(1==limitIpFlag && !StringUtils.isEmpty(user.getLimitIps()) && !user.getLimitIps().contains(IPUtil.getIpAddr(request))){
             model.addAttribute("error", "IP鉴权不通过");
             return  "/index";
         }
