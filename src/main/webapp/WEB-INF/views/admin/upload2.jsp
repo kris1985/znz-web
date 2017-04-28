@@ -15,7 +15,6 @@
 <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
 <link href="${basePath}/resources/css/uploadify.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="${basePath}/resources/js/jquery.uploadify.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.uploadify.min.js"></script>
 <script type="text/javascript">
 

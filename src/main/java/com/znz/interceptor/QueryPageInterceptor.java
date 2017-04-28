@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import lombok.extern.slf4j.Slf4j;
@@ -158,6 +159,20 @@ public class QueryPageInterceptor implements Interceptor {
         }
     }
 
+    /**
+     * 普通分页sql
+     * select  *  from t where sellerid=100 order by id desc limit 100000，20
+     普通limit M，N的翻页写法，往往在越往后翻页的过程中速度越慢，原因
+     mysql会读取表中的前M+N条数据，M越大，性能就越差：
+
+     优化sql
+     * select t1.* from  t t1,
+     (select id from t  sellerid=100 limit 100000，20) t2
+     where t1.id=t2.id;
+     * @param sql
+     * @param page
+     * @return
+     */
     private StringBuilder buildPageSqlForMySql(String sql, PageParameter page) {
         StringBuilder pageSql = new StringBuilder();
         long beginrow = (page.getCurrentPage() - 1) * page.getPageSize();
@@ -239,4 +254,14 @@ public class QueryPageInterceptor implements Interceptor {
             }
         }
     }
+
+   /* private List<String> tableNames = Lists.newArrayList();
+//http://www.myexception.cn/program/1979626.html
+    private String decorateSql(String executeSql, ShardParam shardParam) {
+        for(String tableName : tableNames){
+            String newTaleName = TABLE_ROUTER.get(tableName).getTableName(tableName , shardParam);
+            executeSql = executeSql.replaceAll(tableName,newTaleName);
+        }
+        return executeSql;
+    }*/
 }
