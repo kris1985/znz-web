@@ -10,9 +10,12 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="attach" property="attach" jdbcType="VARCHAR" />
+    <result column="sec_category" property="secCategory" jdbcType="INTEGER" />
+    <result column="rec_id" property="recId" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, file_path, click_times, download_times, create_time, create_user,attach
+    id, name, file_path, click_times, download_times, create_time, create_user,attach,sec_category,rec_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -27,10 +30,10 @@
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.Picture" >
     insert into t_picture (id, name, file_path, 
       click_times, download_times, create_time, 
-      create_user)
+      create_user,sec_category,rec_id)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
       #{clickTimes,jdbcType=INTEGER}, #{downloadTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR})
+      #{createUser,jdbcType=VARCHAR},#{secCategory,jdbcType=INTEGER},#{recId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.znz.model.Picture" >
     insert into t_picture
@@ -105,6 +108,13 @@
       <if test="attach != null" >
         attach = #{attach,jdbcType=VARCHAR}
       </if>
+      <if test="recId != null" >
+        rec_id = #{recId,jdbcType=VARCHAR}
+      </if>
+      <if test="secCategory != null" >
+        sec_category = #{secCategory,jdbcType=VARCHAR}
+      </if>
+
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -126,6 +136,11 @@
     select
     <include refid="Base_Column_List" />
     from t_picture where 1=1
+
+    <if test="recommendId!=null">
+      and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} )
+    </if>
+
     <if test="categoryConditions!=null and categoryConditions.size()!=0">
       <foreach item="item" index="index" collection="categoryConditions" >
         and id in(
@@ -175,6 +190,9 @@
   select
   <include refid="Base_Column_List" />
   from t_picture where 1=1
+    <if test="recommendId!=null">
+      and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} )
+    </if>
   <if test="categoryConditions!=null and categoryConditions.size()!=0">
     <foreach item="item" index="index" collection="categoryConditions" >
       and id in(

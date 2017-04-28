@@ -23,6 +23,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/jqPaginator.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
     <script language="javascript" type="text/javascript" src="${basePath}/resources/js/datepicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
     <script>
         var basePath = getContextPath();
 
@@ -48,6 +49,9 @@
 
 
         $(function () {
+             <c:if test="${currentPage >1}">
+              window.location.href = "#piclist";
+            </c:if>
              <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
                 //栏目排序 左右
                 $(".mod_category_item").sortable({
@@ -192,7 +196,6 @@
                                                    async: false,
                                                    success: function (ret) {
                                                        if (ret.code == 0) {
-                                                           console.log($("ssssss:"+$("#" + t.id).find("a").text()));
                                                            $("#" + t.id).find("a").text(name);
                                                            $("#dialog").dialog("close");
                                                        } else {
@@ -234,7 +237,6 @@
                             // console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
                             var sortId = id.parent().children().length + 1;
                             $("#sortId").val(sortId);
-                            console.log( $("#dialog"));
                             $("#dialog").dialog({
                                 height: 150,
                                 modal: true,
@@ -403,15 +405,12 @@
                         temp += id + ","
                     }
                 });
-                //console.log(temp);
                 if(temp.indexOf(",") !=-1){
                     temp = temp.substring(0,temp.length-1);
                 }
-                //console.log(temp);
                 var url = "${basePath}/admin/file/toUpload?category=" + temp
                 art.dialog.open(url,
                     {
-                        "id": "2345",
                         title: "上传文件",
                         width: 500,
                         height: 400,
@@ -456,13 +455,79 @@
                                 alert(data.msg)
                             }
                         })
-
                     }
+                    <c:if test="${userSession.user.recommendFlag == 1}">
+                    ,
+                    'rec': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/subCategory/recommend/"+id;
+                        if($(t).find(".my_rec").css("display") =="block"){
+                            alert("您已推荐过该图片");
+                            return;
+                        }
+                        $.get(url,function (data) {
+                            if(data.code ==0 ){
+                                $(t).find(".my_rec").show();
+                            }else{
+                                alert(data.msg)
+                            }
+                        })
+                    },
+                    'cancleRec': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/subCategory/cancelRecommend/"+id;
+                        if($(t).find(".my_rec").css("display") =="none"){
+                            alert("您还没推荐过该图片");
+                            return;
+                        }
+                        $.get(url,function (data) {
+                            if(data.code ==0 || data.code ==1){
+                                $(t).find(".my_rec").hide();
+                            } else{
+                                alert(data.msg)
+                            }
+                        })
+                    }
+                    </c:if>
                 }
             });
             </c:if>
-
-
+            <c:if test="${userSession.user.userType ==1 and userSession.user.recommendFlag == 1}">
+                 $('.site-piclist li').contextMenu('menuPic', {
+                    bindings: {
+                        'rec': function (t) {
+                            var id = $(t).attr("item");
+                            var url = "${basePath}/admin/subCategory/recommend/"+id;
+                            if($(t).find(".my_rec").css("display") =="block"){
+                                alert("您已推荐过该图片");
+                                return;
+                            }
+                            $.get(url,function (data) {
+                                if(data.code ==0 ||data.code ==1){
+                                    $(t).find(".my_rec").show();
+                                }else{
+                                    alert(data.msg)
+                                }
+                            })
+                        },
+                        'cancleRec': function (t) {
+                            var id = $(t).attr("item");
+                            var url = "${basePath}/admin/subCategory/cancelRecommend/"+id;
+                            if($(t).find(".my_rec").css("display") =="none"){
+                                alert("您还没推荐过该图片");
+                                return;
+                            }
+                            $.get(url,function (data) {
+                                if(data.code ==0 || data.code ==1){
+                                    $(t).find(".my_rec").hide();
+                                } else{
+                                    alert(data.msg)
+                                }
+                            })
+                        }
+                    }
+                 });
+            </c:if>
             //图片懒加载
             $("img.lazy").lazyload({
                 threshold : 200
@@ -566,13 +631,14 @@
                                var url = "${basePath}/admin/subCategory/showCategory"
                                $("#fourthSelectedId").val(selected);
                                $("#currentPage").val(num);
+                                $("#categoryForm").attr("target", "_self");
                                $("#categoryForm").attr("action", url);
                                $("#categoryForm").submit();
                             }
                     }
                 });
             //共多少页面
-            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:58px">共${totalCount}条</a></li>')
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}条</a></li>')
 
             //点击图片看大图
            $(".site-piclist_pic a").click(function () {
@@ -595,17 +661,29 @@
            $(".openBtn").click(function(){
                 if( $(this).find("em").text()=="更多"){
                     $(this).parent().css("height","auto");
+                    $.cookie($(this).parent().attr("id"), "auto");
                     $(this).find("em").text("收起");
                     $(this).find("i").css("background-position", "0 -10px")
                 }else{
-                    $(this).parent().css("height","31px");
-                    $(this).find("em").text("更多")
+                    $(this).parent().css("height","29px");
+                    $.cookie($(this).parent().attr("id"), "29px");
+                    $(this).find("em").text("更多");
                     $(this).find("i").css("background-position", "-19px -10px")
                 }
            })
 
             $(".mod_sear_list").each(function (i) {
-                //console.log("$(this).find('ul').children():"+$(this).find("ul").children().length);
+                var height = $.cookie($(this).attr("id"));
+                if(height!=undefined){
+                    $(this).css("height",height);
+                    if(height!="auto"){
+                        $(this).find("em").text("更多");
+                        $(this).find("i").css("background-position", "-19px -10px")
+                    }else{
+                        $(this).find("em").text("收起");
+                        $(this).find("i").css("background-position", "0 -10px")
+                    }
+                }
                 if($(this).find("a").text().length>60){
                     $(this).find(".openBtn").show();
                 }
@@ -617,6 +695,23 @@
            },function () {
                    $(this).css("border","2px solid white");
            })
+
+            //推荐
+            $("#recommend_list li").click(function () {
+                var selected = getAllSelected();
+                var recommendId =  $(this).attr("id");
+                if(recommendId.indexOf("all")!=-1){
+                    recommendId = "";
+                }else{
+                    recommendId = recommendId.replace("rec_","");
+                }
+                $("#fourthSelectedId").val(selected);
+                $("#recommendId").val(recommendId);
+                var url = "${basePath}/admin/subCategory/showCategory"
+                $("#categoryForm").attr("action",url);
+                $("#categoryForm").attr("target","_self");
+                $("#categoryForm").submit();
+            })
         })
 
 
@@ -667,16 +762,17 @@
             <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
             <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
-            <input type="hidden" id="currentPage" name = "currentPage" value="1">
+            <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
             <input type="hidden" id="pageSize" name = "pageSize" value="40">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
+            <input type="hidden" id="totalCount" name="totalCount" value="${totalCount}">
             <input id="startTime1" name="startTime" type="hidden" />
             <input id="endTime1"    name="endTime" type="hidden"/>
             <!--点击大图选择的图片id-->
             <input type="hidden" name="selectedId" id="selectedId">
             <!--当前页所有图片id-->
             <input type="hidden" name="ids"id="picIds">
-
+            <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
         </form>
     </div>
 
@@ -706,17 +802,35 @@
         </div>
   </c:if>
 
-    <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
-        <div class="contextMenu" id="menuPic" style="display: none">
-            <ul>
-                <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
-                <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
-            </ul>
-        </div>
-    </c:if>
+    <c:choose>
+        <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+            <div class="contextMenu" id="menuPic" style="display: none">
+                <ul>
+                    <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
+                    <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+                    <c:if test="${userSession.user.recommendFlag == 1}">
+                        <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
+                        <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
+                    </c:if>
+                </ul>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="contextMenu" id="menuPic" style="display: none">
+                <ul>
+                    <c:if test="${userSession.user.recommendFlag == 1}">
+                        <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
+                        <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
+                    </c:if>
+                </ul>
+            </div>
+        </c:otherwise>
+    </c:choose>
+
+
 
     <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
-         <div class="mod_sear_list">
+         <div class="mod_sear_list" id="mod_${firstSelectedId}">
         <h3>目录：</h3>
         <ul class="mod_category_item">
             <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
@@ -741,7 +855,7 @@
          <div id="leaf_category">
         <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
             <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
-                <div class="mod_sear_list">
+                <div class="mod_sear_list" id="${item.id}">
                     <h3 id="${item.id}" class="choice_item"><span>${item.name}</span>：</h3>
                     <ul class="mod_category_item ">
                         <li id="all_${item.id}" class="li_item leaf_item all_item " categoryLevel="${item.categoryLevel +1}" parentId="${item.id}"><a id="aa"
@@ -777,6 +891,38 @@
             </c:if>
         </c:forEach>
     </div>
+        <!--推荐-->
+        <c:if test="${not empty users}">
+            <div class="mod_sear_list" id="recommend_list">
+                <h3 id="recommend_h3"><span>推荐</span>：</h3>
+                <ul class="mod_category_item  ui-sortable">
+                    <c:choose>
+                        <c:when test="${not empty recommendId}">
+                            <li id="recommend_all" class="li_item"><a href="javascript:;" class="">全部</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li id="recommend_all" class="li_item selected"><a href="javascript:;" class="">全部</a></li>
+                        </c:otherwise>
+                    </c:choose>
+
+                    <c:forEach var="user" items="${users}">
+                        <c:choose>
+                            <c:when test="${user.userId eq recommendId}">
+                                <li id="rec_${user.userId}" class="li_item selected" ><a href="javascript:;">${user.company}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li id="rec_${user.userId}" class="li_item" ><a href="javascript:;">${user.company}</a></li>
+                            </c:otherwise>
+
+                        </c:choose>
+                    </c:forEach>
+                </ul>
+                <div class="openBtn">
+                    <a class="openBtn-txt" href="javascript:;"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
+                </div>
+            </div>
+        </c:if>
+        <!--推荐-->
     </div>
 
 
@@ -802,18 +948,28 @@
                 </div>
             </c:when>
         </c:choose>
-
-
     </div>
+
     <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
     </div>
-
+     <a name="piclist"></a>
     <div class="wrapper-piclist" style="    margin-left: -20px;">
         <ul class="site-piclist">
+
             <c:forEach var="item" items="${pictures}" varStatus="status">
+                <c:set var="myRec" value="none" />
+                <c:if test="${fn:contains(item.recId,userSession.user.userId)}">
+                    <c:set var="myRec" value="block" />
+                </c:if>
+
+                <c:set var="recDisplay" value="none" />
+                <c:if test="${not empty item.recId}">
+                    <c:set var="recDisplay" value="block" />
+                </c:if>
                 <li item="${item.id}">
                     <div class="site-piclist_pic">
+                        <div class="my_rec" style="display: ${myRec}">我推荐的</div>
                         <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" attach="${item.attach}">
                             <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"
@@ -836,8 +992,7 @@
 
 <div class="footerN1214">
     <p class="footmenu">
-        <a href="#" class="s1">x</a>
-
+        <a href="#" class="s1"></a>
     </p>
     <p class="fEn">
         <a href="http://tyulan.com/" class="link0"></a>&nbsp;&nbsp;

@@ -235,6 +235,11 @@ var uerType = getUserType();
         prev: function(){
             // 当前缩略图的索引值减1
             this.setCurrentIndex(this.getCurrentIndex() - 1);
+            var totalIndex = parseInt($("#totalIndex").text());
+            var totalCount = parseInt($("#totalCounts").text());
+            if(totalIndex>1){
+                $("#totalIndex").text(totalIndex-1);
+            }
             // 移动到第一张以后
             if (this.getCurrentIndex() < 0) {
                 // 循环到最后一张图片，并且滚动缩略图
@@ -250,11 +255,13 @@ var uerType = getUserType();
                           this.setCurrentIndex(0);
                       }
                       alert("已经到第一张");
+                      $("#totalIndex").text(1);
                   }
             }
             else {
                 // 不是第一张图片
                 if (this.getCurrentIndex() > 0) {
+
                     // 移动到缩略图当前显示区域索引值最小的一张图片之前，这时候需要移动缩略图区域到上一组图片
                     if (this.getCurrentIndex() < this.getCurrentPage() * this.getItemsPrePage()) {
                         this.prevGroup();
@@ -274,7 +281,11 @@ var uerType = getUserType();
         next: function(){
             // 当前缩略图的索引值+1
             this.setCurrentIndex(this.getCurrentIndex() + 1);
-
+            var totalIndex = parseInt($("#totalIndex").text());
+            var totalCount = parseInt($("#totalCounts").text());
+            if(totalIndex<totalCount){
+                $("#totalIndex").text(totalIndex+1);
+            }
             // 移动到最后一张以后
             if (this.getCurrentIndex() > this.getLength() - 1) {
                 // 循环显示第一张图片，并且滚动缩略图
@@ -289,11 +300,13 @@ var uerType = getUserType();
                     if(this.getCurrentIndex()>this.getLength() - 1){
                         this.setCurrentIndex(this.getLength() - 1);
                     }
+                    $("#totalIndex").text($("#totalCounts").text());
                     alert("已经是最后一张了");
                 }
             }
             else {
                 // 不是最后一张图片
+
                 if (this.getCurrentPage() < this.getMaxPages()) {
                     // 移动到缩略图当前显示区域索引值最大的一张图片之后，这时候需要移动缩略图区域到下一组图片
                     if (this.getCurrentIndex() > ((this.getCurrentPage() + 1) * this.getItemsPrePage()) - 1) {

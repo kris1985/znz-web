@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +31,8 @@
             <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
             <span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
         </div>
+
+        <div class="page_bar"><span id="totalIndex">${totalIndex}</span>/<span id="totalCounts">${totalCount}</span></div>
 
         <p class="album-image-ft" id="album-image-ft"></p>
         <div class="album-image-md" id="album-image-md" >
@@ -81,6 +83,8 @@
             <input type="hidden" id="pageSize" name = "pageSize" value="40">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
             <input type="hidden" id="moveFlag" name = "moveFlag">
+            <input type="hidden" id="totalCount" name = "totalCount" value="${totalCount}">
+            <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
 </form>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>
@@ -161,7 +165,9 @@
         $(".attachs img").live("click",function(){
             $(".attach_item").css("border"," 2px solid #ECECEC");
             $(this).parent().css("border"," 2px solid #699f00");
-            $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
+            var src = $(this).attr("origin_src");
+            console.log("src:"+src);
+            $("#album-image-bd img").attr("src", src );
             $("#album-image-bd img").attr("alt", $(this).attr("alt") );
         });
 		//setTitle();

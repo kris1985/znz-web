@@ -20,4 +20,5 @@ public interface UserMapper {
 
     int downloadTimes();
 
+    List<User> selectByFirstCategory(String firstCategoryId);
 }

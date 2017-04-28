@@ -11,6 +11,10 @@ import com.znz.model.User;
 import com.znz.model.UserAuth;
 import com.znz.util.Constants;
 import com.znz.vo.*;
+import com.znz.util.IPUtil;
+import com.znz.vo.UserLoginVO;
+import com.znz.vo.UserSession;
+import com.znz.vo.WatermarkVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Controller;
@@ -32,7 +36,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2015/1/27.
@@ -77,7 +80,7 @@ public class LoginController {
         //账号密码验证正确
         int limitIpFlag = user.getLimitIpFlag();
         //鉴权IP
-        if(1==limitIpFlag && !StringUtils.isEmpty(user.getLimitIps()) && !user.getLimitIps().contains(request.getRemoteHost())){
+        if(1==limitIpFlag && !StringUtils.isEmpty(user.getLimitIps()) && !user.getLimitIps().contains(IPUtil.getIpAddr(request))){
             model.addAttribute("error", "IP鉴权不通过");
             return  "/index";
         }
@@ -173,6 +176,8 @@ public class LoginController {
         String safeBase64Str = encodeBase64.replace('+', '-');
         safeBase64Str = safeBase64Str.replace('/', '_');
         safeBase64Str = safeBase64Str.replaceAll("=", "");
+        safeBase64Str = safeBase64Str.replaceAll("\r\n", "");
+        safeBase64Str = safeBase64Str.replaceAll("\n", "");
         return safeBase64Str;
     }
 

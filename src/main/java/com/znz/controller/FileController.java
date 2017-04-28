@@ -194,8 +194,8 @@ public class FileController {
     }
 
     @RequestMapping(value = "/listImg", method = RequestMethod.POST)
-    public String listImg(HttpServletRequest request, Long selectedId, String ids, String secondSelectedId,
-                          String fourthSelectedId, Integer currentPage, Integer totalPage, Integer pageSize, Model model) {
+    public String listImg( Long selectedId, String ids, String secondSelectedId,
+                          String fourthSelectedId, Integer currentPage, Integer totalPage, Integer totalCount,Integer pageSize,Integer recommendId, Model model) {
 
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
         List<Picture> pictures = pictureMapper.selectByIds(listIds);
@@ -205,22 +205,26 @@ public class FileController {
                 p.setAttach(p.getFilePath()+"|"+p.getName()+","+p.getAttach());//加上原图
             }
         }
+        int currentIndex =  listIds.indexOf(selectedId);
         model.addAttribute("selectedImg", picture.getFilePath());
         model.addAttribute("selectedName", picture.getName());
         model.addAttribute("attachs", picture.getFilePath());
-        model.addAttribute("currentIndex", listIds.indexOf(selectedId));
+        model.addAttribute("currentIndex", currentIndex);
         model.addAttribute("pictures", pictures);
         model.addAttribute("fourthSelectedId", fourthSelectedId);
         model.addAttribute("secondSelectedId", secondSelectedId);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("recommendId",recommendId);
+        model.addAttribute("totalIndex", (currentIndex+1)+pageSize*(currentPage-1));
         return "admin/album";
     }
 
 
     @RequestMapping(value = "/reloadListImg", method = RequestMethod.POST)
-    public String reloadListImg(String fourthSelectedId,String secondSelectedId,Integer currentPage,Integer pageSize,String moveFlag, Model model) {
+    public String reloadListImg(String fourthSelectedId,String secondSelectedId,Integer currentPage,Integer pageSize,String moveFlag,Integer totalCount,Integer recommendId, Model model) {
         PageParameter pageParameter = new PageParameter(currentPage, pageSize);
         List<Set<Integer>> categoryConditions = new ArrayList<>();
         FileQueryVO fileQueryVO = new FileQueryVO();
@@ -247,6 +251,7 @@ public class FileController {
             }
         }
         fileQueryVO.setCategoryConditions(categoryConditions);
+        fileQueryVO.setRecommendId(recommendId);
         List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
         int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                 / pageParameter.getPageSize();
@@ -266,6 +271,13 @@ public class FileController {
         model.addAttribute("totalPage",totalPage);
         model.addAttribute("pageSize",pageSize);
         model.addAttribute("moveFlag",moveFlag);
+        if("pre".equals(moveFlag)){
+            model.addAttribute("totalIndex", pageSize*currentPage);
+        }else{
+            model.addAttribute("totalIndex", (currentPage-1)*pageSize+1);
+        }
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("recommendId",recommendId);
         return "admin/album";
     }
 

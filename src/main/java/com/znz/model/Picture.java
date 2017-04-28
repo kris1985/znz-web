@@ -20,6 +20,10 @@ public class Picture {
 
     private String attach;
 
+    private Integer secCategory;
+
+    private String recId;
+
     public Long getId() {
         return id;
     }
@@ -82,5 +86,21 @@ public class Picture {
 
     public String getAttach() {
         return attach;
+    }
+
+    public Integer getSecCategory() {
+        return secCategory;
+    }
+
+    public void setSecCategory(Integer secCategory) {
+        this.secCategory = secCategory;
+    }
+
+    public String getRecId() {
+        return recId;
+    }
+
+    public void setRecId(String recId) {
+        this.recId = recId;
     }
 }

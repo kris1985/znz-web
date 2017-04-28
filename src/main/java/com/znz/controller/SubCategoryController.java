@@ -19,12 +19,8 @@ import com.alibaba.fastjson.JSON;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.znz.config.AppConfig;
-import com.znz.dao.PictureCategoryMapper;
-import com.znz.dao.PictureMapper;
-import com.znz.dao.SubCategoryMapper;
-import com.znz.model.Picture;
-import com.znz.model.SubCategory;
-import com.znz.model.UserAuth;
+import com.znz.dao.*;
+import com.znz.model.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -33,7 +29,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.znz.model.Category;
 import com.znz.util.Constants;
 import com.znz.util.PermissionUtil;
 import com.znz.vo.*;
@@ -58,6 +53,12 @@ public class SubCategoryController {
 
     @Resource
     private PictureCategoryMapper pictureCategoryMapper;
+
+    @Resource
+    private UserMapper userMapper;
+
+    @Resource
+    private PicRecommendMapper picRecommendMapper;
 
     @Resource
     private OSSClient ossClient;
@@ -151,6 +152,9 @@ public class SubCategoryController {
         }
         PageParameter pageParameter = new PageParameter(queryParam.getCurrentPage(), queryParam.getPageSize());
         FileQueryVO fileQueryVO = new FileQueryVO();
+        if(queryParam.getRecommendId()!=null){
+            fileQueryVO.setRecommendId(queryParam.getRecommendId());
+        }
         model.addAttribute("currentPage",queryParam.getCurrentPage());
 
         if(!CollectionUtils.isEmpty(categoryConditions) && categoryConditions.stream().allMatch(s->s.size()>0)){
@@ -176,6 +180,8 @@ public class SubCategoryController {
             }
 
         }
+        List<User> users = userMapper.selectByFirstCategory(queryParam.getFirstSelectedId());
+
         model.addAttribute("subCategoryVOs",subCategoryVOs);
         model.addAttribute("firstSelectedId",queryParam.getFirstSelectedId());
         model.addAttribute("secondSelectedId",queryParam.getSecondSelectedId());
@@ -183,6 +189,8 @@ public class SubCategoryController {
         model.addAttribute("fourthSet",forthCategorys);
         model.addAttribute("startTime",queryParam.getStartTime());
         model.addAttribute("endTime",queryParam.getEndTime());
+        model.addAttribute("users",users);
+        model.addAttribute("recommendId",queryParam.getRecommendId());
         return "admin/showCategory";
     }
 
@@ -350,6 +358,59 @@ public class SubCategoryController {
             resultVO.setMsg("类别名称已经存在，请使用其它类别名称");
         } else {
             resultVO.setCode(0);
+        }
+        return resultVO;
+    }
+
+    @RequestMapping(value = "/recommend/{id}", method = RequestMethod.GET)
+    public @ResponseBody ResultVO recommend(HttpServletRequest request, @PathVariable Long id) {
+        ResultVO resultVO = new ResultVO();
+        resultVO.setCode(-1);
+        UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        Integer userId = userSession.getUser().getUserId();
+        PicRecommend picRecommend = new PicRecommend();
+        picRecommend.setPictureId(id);
+        picRecommend.setUserId(userSession.getUser().getUserId());
+        picRecommend.setPartionCode(null);
+        picRecommend.setCreateTime(new Date());
+        picRecommendMapper.insert(picRecommend);
+        Picture record =pictureMapper.selectByPrimaryKey(id);
+        if(StringUtils.isNoneBlank(record.getRecId())){
+            record.setRecId(record.getRecId()+","+userId);
+        }else{
+            record.setRecId(String.valueOf(userId));
+        }
+        Picture updatePicture = new Picture();
+        updatePicture.setId(id);
+        updatePicture.setRecId(record.getRecId());
+        pictureMapper.updateByPrimaryKeySelective(updatePicture);
+        resultVO.setCode(0);
+        return resultVO;
+    }
+
+    @RequestMapping(value = "/cancelRecommend/{id}", method = RequestMethod.GET)
+    public @ResponseBody ResultVO cancelRecommend(HttpServletRequest request, @PathVariable Long id) {
+        ResultVO resultVO = new ResultVO();
+        resultVO.setCode(-1);
+        UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        Integer userId = userSession.getUser().getUserId();
+        picRecommendMapper.delete(id,userId);
+
+        Picture record =pictureMapper.selectByPrimaryKey(id);
+        if(StringUtils.isNoneBlank(record.getRecId())){
+            List list =  Arrays.stream(record.getRecId().split(",")).filter(s->!s.equals(String.valueOf(userId))).collect(Collectors.toList());
+            String recId  = StringUtils.join(list,",");
+            record.setRecId(recId);
+            Picture updatePicture = new Picture();
+            updatePicture.setId(id);
+            updatePicture.setRecId(record.getRecId());
+            pictureMapper.updateByPrimaryKeySelective(updatePicture);
+            if(StringUtils.isBlank(record.getRecId())){
+                resultVO.setCode(1);//没有推荐
+                return resultVO;
+            }else{
+                resultVO.setCode(0);
+            }
         }
         return resultVO;
     }
