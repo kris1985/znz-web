@@ -44,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin/subCategory")
 public class SubCategoryController {
 
+    public static final int PAGE_SIZE = 80;
     @Resource
     private SubCategoryMapper     subCategoryMapper;
 
@@ -75,7 +76,7 @@ public class SubCategoryController {
             queryParam.setCurrentPage(1);
         }
         if(queryParam.getPageSize() == null){
-            queryParam.setPageSize(40);
+            queryParam.setPageSize(PAGE_SIZE);
         }
         HttpSession session = request.getSession();
         List<SubCategory> subCategories = subCategoryMapper.selectAll(null);

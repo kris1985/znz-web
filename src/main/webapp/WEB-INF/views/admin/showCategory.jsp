@@ -638,7 +638,7 @@
                     }
                 });
             //共多少页面
-            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}条</a></li>')
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}张</a></li>')
 
             //点击图片看大图
            $(".site-piclist_pic a").click(function () {
@@ -763,7 +763,7 @@
             <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
-            <input type="hidden" id="pageSize" name = "pageSize" value="40">
+            <input type="hidden" id="pageSize" name = "pageSize" value="80">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
             <input type="hidden" id="totalCount" name="totalCount" value="${totalCount}">
             <input id="startTime1" name="startTime" type="hidden" />

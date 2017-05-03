@@ -80,7 +80,7 @@
              <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
-            <input type="hidden" id="pageSize" name = "pageSize" value="40">
+            <input type="hidden" id="pageSize" name = "pageSize" value="80">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
             <input type="hidden" id="moveFlag" name = "moveFlag">
             <input type="hidden" id="totalCount" name = "totalCount" value="${totalCount}">
@@ -293,6 +293,7 @@
                     break;
             }
         }
+        document.oncontextmenu=function(){return false;}
     });
 
     function setTitle(){
