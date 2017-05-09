@@ -24,6 +24,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
     <script language="javascript" type="text/javascript" src="${basePath}/resources/js/datepicker/WdatePicker.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
+
     <script>
         var basePath = getContextPath();
 
@@ -618,10 +619,8 @@
                     </c:otherwise>
                 </c:choose>
                   visiblePages: 10,
-                  first: '<li class="first"><a href="javascript:void(0);" style="width:40px">首页<\/a><\/li>',
                   prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
                   next: '<li class="next"><a href="javascript:void(0);" style="width:58px">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
-                  last: '<li class="last"><a href="javascript:void(0);" style="width:40px">末页<\/a><\/li>',
                   page: '<li class="page"><a href="javascript:void(0);" style="width:40px">{{page}}<\/a><\/li>',
                   currentPage: ${currentPage},
 
@@ -639,8 +638,32 @@
                 });
             //共多少页面
             $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}张</a></li>')
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:160px;border:0">到第<input type="text" style="  width: 34px; margin: 0px 5px;height: 18px;padding:2px;text-align: center " id="switchToPage" value="${currentPage}">页<input type="button" value="确定" id="switchToPageBtn" style=" cursor: pointer; width: 50px;  height: 24px;margin-left:10px  "></a></li>');
+            $("#switchToPageBtn").live("click",function(evt){
+                var currentPage = $.trim($("#switchToPage").val());
+                console.log(currentPage);
+                if(isNaN(currentPage)){
+                    alert("请输入数字")
+                    return;
+                }else{
+                    if(parseInt(currentPage)==0){
+                        currentPage = 1;
+                    }else if(parseInt(currentPage)>${totalPage}){
+                        currentPage = "${totalPage}";
+                    }
+                    var selected = getAllSelected();
+                    var url = "${basePath}/admin/subCategory/showCategory"
+                    $("#fourthSelectedId").val(selected);
+                    $("#currentPage").val(currentPage);
+                    $("#categoryForm").attr("target", "_self");
+                    $("#categoryForm").attr("action", url);
+                    $("#categoryForm").submit();
+                }
+            });
 
             //点击图片看大图
+
+
            $(".site-piclist_pic a").click(function () {
                var selectedImg = $(this).attr("id");
                var ids="";
@@ -984,7 +1007,13 @@
   <div class="mod-page">
     <ul class="pagination" id="pagination1"></ul>
   </div>
-  <div id="1000000000046" class="ad-wrapper clearfix">
+    <div id="scrollTop" >
+        <div class="level-2"></div>
+        <div class="level-3"></div>
+    </div>
+
+
+    <div id="1000000000046" class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
    </div>
 </div>
@@ -999,7 +1028,7 @@
         2017 TYULAN.COM
     </p>
 </div>
-
+<script type="text/javascript" src="${basePath}/resources/js/top.js"></script>
 </body>
 
 </html>

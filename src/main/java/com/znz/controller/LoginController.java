@@ -219,16 +219,15 @@ public class LoginController {
         if(StringUtils.isEmpty(imei)){
             throw new ServiceException("101","imei不能为空");
         }
-        if(user == null || !pwd.equals(user.getPwd())){
-            throw new ServiceException("102","用户或名密码不正确");
+        if(!StringUtils.isEmpty(user.getImei()) && !imei.equals(user.getImei())){
+            throw new ServiceException("104","该账户只能在绑定的电脑上登陆");
         }
         if(!"WEB".equalsIgnoreCase(user.getDevice())){
             throw new ServiceException("103","该账号只能在PC端使用");
         }
-        if(!StringUtils.isEmpty(user.getImei()) && !imei.equals(user.getImei())){
-            throw new ServiceException("104","该账户只能在绑定的电脑上登陆");
+        if(user == null || !pwd.equals(user.getPwd())){
+            throw new ServiceException("102","用户名或密码不正确");
         }
-
     }
 
 
@@ -267,5 +266,10 @@ public class LoginController {
         Cookie cookie = new Cookie("MAC","FDSGHJ3");
         response.addCookie(cookie);
         return  "redirect:/admin/subCategory/showCategory";
+    }
+
+    @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
+    public CommonResponse signIn(HttpServletRequest request,HttpServletResponse response) throws Exception {
+
     }
 }
