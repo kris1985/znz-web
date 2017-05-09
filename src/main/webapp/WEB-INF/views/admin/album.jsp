@@ -29,7 +29,7 @@
         <div class="ite_btn" >
             <span id="addSizeBtn" class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
             <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
-            <span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+			<span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
         </div>
 
         <div class="page_bar"><span id="totalIndex">${totalIndex}</span>/<span id="totalCounts">${totalCount}</span></div>

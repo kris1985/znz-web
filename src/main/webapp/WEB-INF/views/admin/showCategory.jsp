@@ -379,8 +379,8 @@
                     art.dialog.open(url,
                         {
                             "id": "2347",
-                            title: "上传文件",
-                            width: 800,
+                            title: "用户管理",
+                            width: 1200,
                             height: 800
                         }
                     );

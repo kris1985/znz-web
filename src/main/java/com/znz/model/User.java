@@ -45,6 +45,8 @@ public class User {
 
     private String device;
 
+    private String imei;
+
 
 
 }

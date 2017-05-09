@@ -21,10 +21,11 @@
     <result column="watermark" property="watermark" jdbcType="VARCHAR" />
     <result column="recommend_flag" property="recommendFlag" jdbcType="INTEGER" />
     <result column="device" property="device" jdbcType="VARCHAR" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, user_name, pwd, company, limit_ip_flag, limit_ips, access_flag, max_download_times, 
-    download_per_day, download_total, phone, create_time, update_time, session_id, user_type,last_login_time,watermark,recommend_flag,device
+    download_per_day, download_total, phone, create_time, update_time, session_id, user_type,last_login_time,watermark,recommend_flag,device,imei
   </sql>
   <!---->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -59,14 +60,14 @@
       company, limit_ip_flag, limit_ips, 
       access_flag, max_download_times, download_per_day, 
       download_total, phone, create_time, 
-      update_time, session_id, user_type,watermark,recommend_flag,device
+      update_time, session_id, user_type,watermark,recommend_flag,device,imei
       )
     values (#{userName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{limitIpFlag,jdbcType=INTEGER}, #{limitIps,jdbcType=VARCHAR}, 
       #{accessFlag,jdbcType=INTEGER}, #{maxDownloadTimes,jdbcType=INTEGER}, #{downloadPerDay,jdbcType=INTEGER}, 
       #{downloadTotal,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER},
-      #{watermark,jdbcType=VARCHAR}, #{recommendFlag,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR}
+      #{watermark,jdbcType=VARCHAR}, #{recommendFlag,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR},#{imei,jdbcType=VARCHAR}
       )
 
       <selectKey keyProperty="userId" resultType="int" order="AFTER">
@@ -130,6 +131,9 @@
       </if>
       <if test="device != null" >
         device = #{device,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
       </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}

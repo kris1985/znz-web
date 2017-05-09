@@ -39,6 +39,8 @@
                                                 {"header":"用戶名", "key":"userName"},
                                                 {"header":"当日下载", "key":"downloadPerDay"},
                                                 {"header":"总下载", "key":"downloadTotal"},
+                                                {"header":"IP", "key":"limitIps"},
+                                                {"header":"MAC", "key":"imei"},
                                                 {"header":"最后登录时间", "key":"lastLoginTimeStr"},
                                                 {"header":"操作",
                                                  "key":"userId",

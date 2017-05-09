@@ -331,8 +331,19 @@ bottom: 45px;z-index:1999;
 	width: 124px;
 	margin: 5px auto;position: relative;
 }
-.ite_btn{position: absolute;right: 30px;top: 8px;height: 40px;line-height: 40px;font-size: 24px;z-index: 999999;cursor: pointer;}
-.ite_btn span{font-size:24px;margin: 5px;}
+.ite_btn{position: absolute;
+right: 30px;
+top: 8px;
+height: 40px;
+line-height: 40px;
+font-size: 24px;
+z-index: 999999;
+cursor: pointer;}
+.ite_btn span{font-size: 24px;
+margin: 5px;
+display: block;
+margin-bottom: 10px;
+margin-top: 10px;}
 .ite_btn span:hover{ color: #FF0000}
 
 
@@ -345,11 +356,12 @@ bottom: 45px;z-index:1999;
 .del:hover{background: red}
 
 .page_bar{position: absolute;
-	right: 65px;
-	border-bottom: 8px;
-	font-size: 26px;
-	z-index: 999999;
-	bottom: 8px;
-	font-weight: bold;
-	font-family: "Times New Roman";
+	position: absolute;
+right: 15px;
+border-bottom: 8px;
+font-size: 14px;
+z-index: 999999;
+bottom: 42px;
+font-family: "微软雅黑";
+color: rgb(165, 165, 165);
 }

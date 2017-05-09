@@ -9,7 +9,9 @@ import com.znz.listener.MySessionLister;
 import com.znz.model.SubCategory;
 import com.znz.model.User;
 import com.znz.model.UserAuth;
+import com.znz.util.AESUtil;
 import com.znz.util.Constants;
+import com.znz.util.DESUtil;
 import com.znz.vo.*;
 import com.znz.util.IPUtil;
 import com.znz.vo.UserLoginVO;
@@ -33,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +49,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LoginController {
 
+    public static final String EKY = "b868a6c1-e554-4f";
     @Resource
     private UserMapper userMapper;
 
@@ -74,7 +78,7 @@ public class LoginController {
             model.addAttribute("error", "用户或名密码不正确");
             return  "/index";
         }
-        if(!"WEB".equals(user.getDevice())){
+        if(!"WEB".equalsIgnoreCase(user.getDevice())){
             model.addAttribute("error", "该账号只能在手机端使用");
             return  "/index";
         }
@@ -133,7 +137,7 @@ public class LoginController {
             cookie.setMaxAge(-1);
             response.addCookie(cookie);
         }
-        MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
+       // MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
 
         return  "redirect:/admin/subCategory/showCategory";
 
@@ -182,40 +186,24 @@ public class LoginController {
         return safeBase64Str;
     }
 
-    @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
-    public @ResponseBody CommonResponse<UserInfo> signIn(HttpServletRequest request, String userName, String pwd, String imei) {
-        log.info("signIn request userName:{}",userName);
-        CommonResponse<UserInfo> response = new CommonResponse<>();
+    @RequestMapping(value = "/verify" , method= RequestMethod.GET)
+    public @ResponseBody CommonResponse verify(HttpServletRequest request) {
+        String encParam = request.getQueryString();
+        log.info("signIn request param:{}",encParam);
+        CommonResponse response = new CommonResponse<>();
         try{
-        User user =  userMapper.selectByUser(userName);
-        checkUser(pwd, imei, user);
-
-        if(!StringUtils.isEmpty(user.getWatermark())){
-            try{
-                WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
-                String watermarkParam ="";
-                watermarkParam = getWaterMark(watermarkVO, watermarkParam);
-                request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
-            }catch (Exception e){
-                log.error(e.getLocalizedMessage(),e);
-            }
-        }
-        user.setSessionId(imei);
-        user.setLastLoginTime(new Date());
-        userMapper.updateByPrimaryKeySelective(user);
-        UserInfo userInfo = new UserInfo();
-        List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
-        List<UserAuth> userAuths = userAuthMapper.listByUserId(user.getUserId());
-        if(CollectionUtils.isNotEmpty(userAuths) && user.getUserType()==1){ //普通用户
-            userAuths.stream().map(s->s.getAuthId()).collect(Collectors.toList());// 一级栏目
-        }
-
-        response.setResult(userInfo);
+            String decr = AESUtil.Decrypt(URLDecoder.decode(encParam.replace("param=",""),"utf-8"), EKY);
+            String temp1 = new String(decr.getBytes("ISO-8859-1"),"UTF-8");
+            String userName = decr.split("\\|")[0];
+            String pwd = decr.split("\\|")[1];
+            String imei = decr.split("\\|")[2];
+            User user =  userMapper.selectByUser(userName);
+            checkUser(pwd, imei, user);
+            response.setSuccess(true);
         } catch (ServiceException e){
             response.setErrorCode(e.getErrCode());
             response.setErrorMsg(e.getErrReason());
-        }
-        catch (Exception e){
+        } catch (Exception e){
             log.error(e.getLocalizedMessage(),e);
             response.setErrorCode("999");
             response.setErrorMsg("系统忙请稍后再试");
@@ -225,17 +213,59 @@ public class LoginController {
     }
 
     private void checkUser(String pwd, String imei, User user) {
+        if(user==null){
+            throw new ServiceException("100","账号不存在");
+        }
         if(StringUtils.isEmpty(imei)){
             throw new ServiceException("101","imei不能为空");
         }
         if(user == null || !pwd.equals(user.getPwd())){
             throw new ServiceException("102","用户或名密码不正确");
         }
-        if(!"APP".equals(user.getDevice())){
+        if(!"WEB".equalsIgnoreCase(user.getDevice())){
             throw new ServiceException("103","该账号只能在PC端使用");
         }
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(user.getSessionId()) && !user.getSessionId().equals(imei)){
-            throw new ServiceException("104","一个账号只能在一台终端上使用");
+        if(!StringUtils.isEmpty(user.getImei()) && !imei.equals(user.getImei())){
+            throw new ServiceException("104","该账户只能在绑定的电脑上登陆");
         }
+
+    }
+
+
+
+    @RequestMapping(value = "/register" , method= RequestMethod.GET)
+    public String register(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        request.setCharacterEncoding("UTF-8");
+        String encParam = request.getQueryString();
+        log.info("signIn request param:{}",encParam);
+        String decr = AESUtil.Decrypt(URLDecoder.decode(encParam.replace("param=",""),"utf-8"), EKY);
+        String temp1 = new String(decr.getBytes("ISO-8859-1"),"UTF-8");
+        String userName = decr.split("\\|")[0];
+        String pwd = decr.split("\\|")[1];
+        String imei = decr.split("\\|")[2];
+        User user =  userMapper.selectByUser(userName);//userName:userName=&pwd=&imei=40-8D-5C-FF-F8-23
+        checkUser(pwd,imei,user);
+        List<UserAuth> userAuths = userAuthMapper.listByUserId(user.getUserId());
+        UserSession userSession = new UserSession();
+        userSession.setUser(user);
+        userSession.setUserAuths(userAuths);
+        if(!StringUtils.isEmpty(user.getWatermark())){
+            try{
+                WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
+                String watermarkParam ="";
+                watermarkParam = getWaterMark(watermarkVO, watermarkParam);
+
+                request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
+            }catch (Exception e){
+                log.error(e.getLocalizedMessage(),e);
+            }
+        }
+        user.setLastLoginTime(new Date());
+        user.setImei(imei);
+        userMapper.updateByPrimaryKeySelective(user);
+        request.getSession().setAttribute(Constants.USER_SESSION,userSession);
+        Cookie cookie = new Cookie("MAC","FDSGHJ3");
+        response.addCookie(cookie);
+        return  "redirect:/admin/subCategory/showCategory";
     }
 }

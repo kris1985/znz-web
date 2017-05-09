@@ -50,6 +50,13 @@ public class CommonResponse<T> implements Serializable {
         this.errorMsg = errorMsg;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
     public String toString() {
         return new StringBuilder(Objects.toString(this)).append("result:").append(this.result).append("success:").append(success).append("errorCode:").append(this.errorCode).append("errorMsg:").append(this.errorMsg).toString();
