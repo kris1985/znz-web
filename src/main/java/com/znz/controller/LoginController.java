@@ -207,17 +207,8 @@ public class LoginController {
         UserSession userSession = new UserSession();
         userSession.setUser(user);
         userSession.setUserAuths(userAuths);
-        if(!StringUtils.isEmpty(user.getWatermark())){
-            try{
-                WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
-                String watermarkParam ="";
-                watermarkParam = getWaterMark(watermarkVO, watermarkParam);
-
-                request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
-            }catch (Exception e){
-                log.error(e.getLocalizedMessage(),e);
-            }
-        }
+        String watermarkParam = WaterMarkUtil.getWaterMark(user.getWatermark());
+        request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
         user.setLastLoginTime(new Date());
         user.setImei(imei);
         userMapper.updateByPrimaryKeySelective(user);

@@ -146,7 +146,7 @@ public class MobileController {
         List<PictureInfo> pictureInfos = new ArrayList<>();
         PictureInfo pictureInfo ;
         for(Picture picture:pictures){
-            pictureInfo = new PictureInfo();
+           /* pictureInfo = new PictureInfo();
             pictureInfo.setId(picture.getId());
             pictureInfo.setClickTimes(picture.getClickTimes());
             pictureInfo.setDownloadTimes(picture.getDownloadTimes());
@@ -154,7 +154,7 @@ public class MobileController {
             pictureInfo.setFilePath(picture.getFilePath());
             pictureInfo.setMyRecommend(picture.getRecId().contains(String.valueOf(userId)));
             String attachs = picture.getAttach();
-            pictureInfo.setAttachs();
+            pictureInfo.setAttachs();*/
         }
         commonResponse.setResult(pictureInfos);
         return commonResponse;
