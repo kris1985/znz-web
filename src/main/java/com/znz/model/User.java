@@ -47,6 +47,8 @@ public class User {
 
     private String imei;
 
+    private String token;
 
+    private Integer limitImeiFlag;
 
 }

@@ -977,7 +977,7 @@
         <div class="divide-green-h"></div>
     </div>
      <a name="piclist"></a>
-    <div class="wrapper-piclist" style="    margin-left: -20px;">
+    <div class="wrapper-piclist" style="    margin-left: -10px;">
         <ul class="site-piclist">
 
             <c:forEach var="item" items="${pictures}" varStatus="status">

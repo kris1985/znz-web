@@ -1,11 +1,14 @@
 package com.znz.vo;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Created by Administrator on 2017/4/11.
  */
+@ToString
 public class CommonResponse<T> implements Serializable {
     private static final long serialVersionUID = -3214885479484534221L;
     private T result;
@@ -58,7 +61,5 @@ public class CommonResponse<T> implements Serializable {
         this.success = success;
     }
 
-    public String toString() {
-        return new StringBuilder(Objects.toString(this)).append("result:").append(this.result).append("success:").append(success).append("errorCode:").append(this.errorCode).append("errorMsg:").append(this.errorMsg).toString();
-    }
+
 }

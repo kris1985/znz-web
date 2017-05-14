@@ -225,6 +225,11 @@ public class FileController {
 
     @RequestMapping(value = "/reloadListImg", method = RequestMethod.POST)
     public String reloadListImg(String fourthSelectedId,String secondSelectedId,Integer currentPage,Integer pageSize,String moveFlag,Integer totalCount,Integer recommendId, Model model) {
+        if("pre".equals(moveFlag)){
+            currentPage = currentPage-1;
+        }else{
+            currentPage = currentPage +1;
+        }
         PageParameter pageParameter = new PageParameter(currentPage, pageSize);
         List<Set<Integer>> categoryConditions = new ArrayList<>();
         FileQueryVO fileQueryVO = new FileQueryVO();

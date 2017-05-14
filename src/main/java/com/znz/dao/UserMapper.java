@@ -21,4 +21,6 @@ public interface UserMapper {
     int downloadTimes();
 
     List<User> selectByFirstCategory(String firstCategoryId);
+
+    User selectByToken(String token);
 }
