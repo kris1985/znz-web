@@ -11,7 +11,7 @@ import com.znz.model.User;
 import com.znz.model.UserAuth;
 import com.znz.util.AESUtil;
 import com.znz.util.Constants;
-import com.znz.util.DESUtil;
+import com.znz.util.WaterMarkUtil;
 import com.znz.vo.*;
 import com.znz.util.IPUtil;
 import com.znz.vo.UserLoginVO;
@@ -104,18 +104,8 @@ public class LoginController {
         UserSession userSession = new UserSession();
         userSession.setUser(user);
         userSession.setUserAuths(userAuths);
-        if(!StringUtils.isEmpty(user.getWatermark())){
-            try{
-                WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
-                String watermarkParam ="";
-                watermarkParam = getWaterMark(watermarkVO, watermarkParam);
-
-                request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
-            }catch (Exception e){
-                log.error(e.getLocalizedMessage(),e);
-            }
-
-        }
+        String watermarkParam = WaterMarkUtil.getWaterMark(user.getWatermark());
+        request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
         user.setLastLoginTime(new Date());
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
@@ -144,30 +134,7 @@ public class LoginController {
 
     }
 
-    private String getWaterMark(WatermarkVO watermarkVO, String watermarkParam) throws UnsupportedEncodingException {
-        if(!StringUtils.isEmpty(watermarkVO.getImage())){
-            if(watermarkVO.getP()!=null){
-                String img = watermarkVO.getImage()+"?x-oss-process=image/resize,P_"+watermarkVO.getP();
-                String base64 = safeUrlBase64Encode(img.getBytes("UTF-8"));
-                watermarkParam+="/watermark,image_"+base64;
-            }else {
-                watermarkParam+="/watermark,image_"+safeUrlBase64Encode(watermarkVO.getImage().getBytes());
-            }
-            if(!watermarkParam.equals("") && watermarkVO.getT()!=null){
-                watermarkParam+=",t_"+watermarkVO.getT();
-            }
-            if(!watermarkParam.equals("") && watermarkVO.getG()!=null){
-                watermarkParam+=",g_"+watermarkVO.getG();
-            }
-            if(!watermarkParam.equals("") && watermarkVO.getX()!=null){
-                watermarkParam+=",x_"+watermarkVO.getX();
-            }
-            if(!watermarkParam.equals("") && watermarkVO.getY()!=null){
-                watermarkParam+=",y_"+watermarkVO.getY();
-            }
-        }
-        return watermarkParam;
-    }
+
 
     @RequestMapping(value = "/logout" , method= RequestMethod.GET)
     public String login(HttpServletRequest request) {
@@ -177,15 +144,7 @@ public class LoginController {
         return "redirect:/";
     }
 
-    public static String safeUrlBase64Encode(byte[] data){
-        String encodeBase64 = new BASE64Encoder().encode(data);
-        String safeBase64Str = encodeBase64.replace('+', '-');
-        safeBase64Str = safeBase64Str.replace('/', '_');
-        safeBase64Str = safeBase64Str.replaceAll("=", "");
-        safeBase64Str = safeBase64Str.replaceAll("\r\n", "");
-        safeBase64Str = safeBase64Str.replaceAll("\n", "");
-        return safeBase64Str;
-    }
+
 
     @RequestMapping(value = "/verify" , method= RequestMethod.GET)
     public @ResponseBody CommonResponse verify(HttpServletRequest request) {
@@ -249,17 +208,8 @@ public class LoginController {
         UserSession userSession = new UserSession();
         userSession.setUser(user);
         userSession.setUserAuths(userAuths);
-        if(!StringUtils.isEmpty(user.getWatermark())){
-            try{
-                WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
-                String watermarkParam ="";
-                watermarkParam = getWaterMark(watermarkVO, watermarkParam);
-
-                request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
-            }catch (Exception e){
-                log.error(e.getLocalizedMessage(),e);
-            }
-        }
+        String watermarkParam = WaterMarkUtil.getWaterMark(user.getWatermark());
+        request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
         user.setLastLoginTime(new Date());
         user.setImei(imei);
         userMapper.updateByPrimaryKeySelective(user);
@@ -269,8 +219,5 @@ public class LoginController {
         return  "redirect:/admin/subCategory/showCategory";
     }
 
-    @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
-    public CommonResponse signIn(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        return  null;
-    }
+
 }

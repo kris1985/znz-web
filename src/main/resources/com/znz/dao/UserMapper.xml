@@ -22,10 +22,12 @@
     <result column="recommend_flag" property="recommendFlag" jdbcType="INTEGER" />
     <result column="device" property="device" jdbcType="VARCHAR" />
     <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="token" property="token" jdbcType="VARCHAR" />
+    <result column="limit_imei_flag" property="limitImeiFlag" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, user_name, pwd, company, limit_ip_flag, limit_ips, access_flag, max_download_times, 
-    download_per_day, download_total, phone, create_time, update_time, session_id, user_type,last_login_time,watermark,recommend_flag,device,imei
+    download_per_day, download_total, phone, create_time, update_time, session_id, user_type,last_login_time,watermark,recommend_flag,device,imei,token,limit_imei_flag
   </sql>
   <!---->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -55,19 +57,21 @@
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
 
+
   <insert id="insert" parameterType="com.znz.model.User" >
     insert into t_user2 ( user_name, pwd,
       company, limit_ip_flag, limit_ips, 
       access_flag, max_download_times, download_per_day, 
       download_total, phone, create_time, 
-      update_time, session_id, user_type,watermark,recommend_flag,device,imei
+      update_time, session_id, user_type,watermark,recommend_flag,device,imei,token,limit_imei_flag
       )
     values (#{userName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{limitIpFlag,jdbcType=INTEGER}, #{limitIps,jdbcType=VARCHAR}, 
       #{accessFlag,jdbcType=INTEGER}, #{maxDownloadTimes,jdbcType=INTEGER}, #{downloadPerDay,jdbcType=INTEGER}, 
       #{downloadTotal,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER},
-      #{watermark,jdbcType=VARCHAR}, #{recommendFlag,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR},#{imei,jdbcType=VARCHAR}
+      #{watermark,jdbcType=VARCHAR}, #{recommendFlag,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR},#{imei,jdbcType=VARCHAR},
+      #{imei,jdbcType=VARCHAR}, #{limitImeiFlag,jdbcType=INTEGER},
       )
 
       <selectKey keyProperty="userId" resultType="int" order="AFTER">
@@ -135,6 +139,12 @@
       <if test="imei != null" >
         imei = #{imei,jdbcType=VARCHAR},
       </if>
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="limitImeiFlag != null" >
+        limit_imei_flag = #{limitImeiFlag,jdbcType=INTEGER},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -169,4 +179,12 @@
   <select id="selectByFirstCategory" resultMap="BaseResultMap" >
     select user_id,user_name,company from t_user2 where recommend_flag=1 AND user_id in(select user_id from t_user_authority where auth_id =#{authId,jdbcType=VARCHAR})
   </select>
+
+  <select id="selectByToken" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_user2
+    where token = #{token,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

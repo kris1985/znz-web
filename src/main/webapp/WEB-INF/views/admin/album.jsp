@@ -39,7 +39,8 @@
             <div class="album-image-bd" id="album-image-bd" ><img src="${ossPath}/${selectedImg}${watermarkParamProcess}" id="album-image" alt="${selectedName}" onmousewheel="return bbimg(this)"/></div>
             <a href="#prev-image" class="album-image-btn-prev" id="album-image-btn-prev">‹</a>
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
-            <p class="album-image-loading-overlay hide" id="album-image-loading-overlay" style="display: none"><img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>
+            <p class="album-image-loading-overlay hide" id="album-image-loading-overlay" style="display: block">
+                <!--<img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>-->
             <div class="attachs" id="attachs" >
 
             </div>
@@ -91,6 +92,7 @@
 <script type="text/javascript" src="${basePath}/resources/js/album.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-latest.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="${basePath}/resources/js/jquery.mousewheel.min.js"></script>
 <script type="text/javascript">
 
 
@@ -109,8 +111,8 @@
         image.onload = function () {
             var width = image.width;
             var height = image.height;
-            maxHeight = $(document).height() - 0;
-            maxWidth = $(document).width();
+            maxHeight = $(window).height() - 0;
+            maxWidth = $(window).width();
             w = $("#album-image").width();
             h = $("#album-image").height();
            // console.log("$(#album-image):" + $("#album-image").attr("src"));
@@ -187,9 +189,9 @@
             }
         }
         //alert($(document).width()+"-"+$(document).height());
-        $("#album-carousel-zone").width($(document).width()-100);
+        $("#album-carousel-zone").width($(window).width()-100);
 
-        $(".album-image-bd").height($(document).height()-0);
+        $(".album-image-bd").height($(window).height()-0);
         $('#album-image').draggable();
         $(".skin ul li").click(function(){
             //alert($(this).css("background"));
@@ -293,6 +295,18 @@
                     break;
             }
         }
+
+        $('body').bind('mousewheel', function(event, delta) {
+            var dir = delta > 0 ? 'Up' : 'Down';
+            if (dir == 'Up') {
+                Album.prev();
+                back2Normal();
+            }else {
+                Album.next();
+                back2Normal();
+            }
+        });
+
         document.oncontextmenu=function(){return false;}
     });
 

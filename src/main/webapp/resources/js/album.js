@@ -233,6 +233,7 @@ var uerType = getUserType();
          * @method prev
          */
         prev: function(){
+            if( this.isloading == true){return}
             // 当前缩略图的索引值减1
             this.setCurrentIndex(this.getCurrentIndex() - 1);
             var totalIndex = parseInt($("#totalIndex").text());
@@ -247,7 +248,7 @@ var uerType = getUserType();
                  var currentPage = parseInt($("#currentPage").val());
                  var totalPage = parseInt($("#totalPage").val());
                   if(currentPage>1){
-                        $("#currentPage").val(currentPage-1);
+                        $("#currentPage").val(currentPage);
                         $("#moveFlag").val("pre");
                         $("#albumForm").submit();
                   }else{
@@ -279,6 +280,7 @@ var uerType = getUserType();
          * @method next
          */
         next: function(){
+            if( this.isloading == true){return}
             // 当前缩略图的索引值+1
             this.setCurrentIndex(this.getCurrentIndex() + 1);
             var totalIndex = parseInt($("#totalIndex").text());
@@ -293,8 +295,8 @@ var uerType = getUserType();
                 var currentPage = parseInt($("#currentPage").val());
                 var totalPage = parseInt($("#totalPage").val());
                 if(currentPage<totalPage){
-                   $("#currentPage").val(currentPage+1);
-                    $("#moveFlag").val("next");
+                   $("#currentPage").val(currentPage);
+                   $("#moveFlag").val("next");
                    $("#albumForm").submit();
                 }else{
                     if(this.getCurrentIndex()>this.getLength() - 1){

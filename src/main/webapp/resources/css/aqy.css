@@ -249,9 +249,10 @@ font-family: "黑体";
       cursor: default;
   }
 .site-piclist li {
-    float: left;
-    padding-left: 20px;
-  width:280px;margin-bottom:35px;
+   float: left;
+   padding-left: 10px;
+   width: 286px;
+   margin-bottom: 25px;
 }
 
 .footerN1214 {
@@ -297,7 +298,7 @@ div:after, ul:after, dl:after {
       border-bottom: 5px solid #699f00;
       margin-bottom: -10px;
       color: #699f00;
-      font-weight: bold;
+
       font-size: 18px;
       background: none;
   }
@@ -322,10 +323,15 @@ div:after, ul:after, dl:after {
 
   .site-piclist_pic{
       border: 2px solid white;
-      height: 199px;position: relative;
+     height: 203px;
+     position: relative;
+     width: 286px;
   }
 
-  .lazy{width: 276px;}
+.lazy {
+width: 286px;
+height: 203px;
+}
 
 
   .mod_sear_list_open .openBtn {
