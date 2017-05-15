@@ -85,12 +85,13 @@ public class LoginController {
         //账号密码验证正确
         int limitIpFlag = user.getLimitIpFlag();
         //鉴权IP
-        if(1==limitIpFlag && !StringUtils.isEmpty(user.getLimitIps()) && !user.getLimitIps().contains(IPUtil.getIpAddr(request))){
+        String ip = IPUtil.getIpAddr(request);
+        if(1==limitIpFlag && !StringUtils.isEmpty(user.getLimitIps()) && !user.getLimitIps().contains(ip)){
             model.addAttribute("error", "IP鉴权不通过");
             return  "/index";
         }
         user.setUpdateTime(new Date());
-        user.setLimitIps(request.getRemoteHost());
+        user.setLimitIps(ip);
         boolean islogin = false;
         if(StringUtils.isEmpty(user.getSessionId())){
             user.setSessionId(request.getSession().getId());
@@ -270,6 +271,6 @@ public class LoginController {
 
     @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
     public CommonResponse signIn(HttpServletRequest request,HttpServletResponse response) throws Exception {
-
+        return  null;
     }
 }
