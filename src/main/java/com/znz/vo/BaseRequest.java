@@ -14,6 +14,14 @@ public class BaseRequest<T> {
 
     private String sid;
 
+    private String v;
+
+    private String sign;
+
+    private String appVersion;
+
+    private String timestamp;
+
     private T data;
 
 

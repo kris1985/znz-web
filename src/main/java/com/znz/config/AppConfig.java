@@ -32,4 +32,7 @@ public class AppConfig {
     @Value("${oss.path}")
     private String ossPath;
 
+
+
+
 }

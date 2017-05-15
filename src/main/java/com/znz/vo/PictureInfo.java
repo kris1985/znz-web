@@ -1,6 +1,7 @@
 package com.znz.vo;
 
 import lombok.Data;
+import org.springframework.security.web.PortResolverImpl;
 
 import java.util.List;
 
@@ -10,9 +11,11 @@ import java.util.List;
 @Data
 public class PictureInfo {
 
+    private List<Picture> pictures;
+    private PictureProperty pictureProperty;
 
     @Data
-    class Picture{
+    public static class Picture{
         private Long id;
         private String name;
         private String filePath;
@@ -23,8 +26,10 @@ public class PictureInfo {
     }
 
     @Data
-    class PictureProperty{
+    public static  class PictureProperty{
         private String url;
-        private String parameter;
+        private String paramPrefix;
+        private String sizeParam;
+        private String waterMark;
     }
 }

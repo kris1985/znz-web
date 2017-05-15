@@ -1,6 +1,7 @@
 package com.znz.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.znz.config.AppConfig;
 import com.znz.dao.PictureMapper;
 import com.znz.dao.SubCategoryMapper;
 import com.znz.dao.UserAuthMapper;
@@ -13,7 +14,10 @@ import com.znz.model.UserAuth;
 import com.znz.util.WaterMarkUtil;
 import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.web.PortResolverImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,10 +47,13 @@ public class MobileController {
     private SubCategoryMapper subCategoryMapper;
     @Resource
     private PictureMapper pictureMapper;
+    @Resource
+    private AppConfig appConfig;
 
     @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
-    public @ResponseBody CommonResponse<String> signIn(@RequestBody BaseRequest<SignInRequest> baseRequest) {
-        CommonResponse commonResponse = new CommonResponse();
+    public @ResponseBody CommonResponse<UserInfo> signIn(@RequestBody BaseRequest<SignInRequest> baseRequest) {
+        log.info("signIn request:{0}",baseRequest);
+        CommonResponse<UserInfo> commonResponse = new CommonResponse();
         try{
             SignInRequest signInRequest = baseRequest.getData();
             User user =  userMapper.selectByUser(signInRequest.getUserName());
@@ -58,7 +66,11 @@ public class MobileController {
             }
             user.setLastLoginTime(new Date());
             userMapper.updateByPrimaryKeySelective(user);
-            commonResponse.setResult(token);
+            UserInfo userInfo = new UserInfo();
+            userInfo.setToken(token);
+            userInfo.setUserName(user.getUserName());
+            userInfo.setRecommend(user.getRecommendFlag()==null?false:user.getRecommendFlag()==1);
+            commonResponse.setResult(userInfo);
         }catch (ServiceException e){
             commonResponse.setErrorCode(e.getErrCode());
             commonResponse.setErrorMsg(e.getErrReason());
@@ -70,9 +82,9 @@ public class MobileController {
         return commonResponse;
     }
 
-    @RequestMapping(value = "/category" , method= RequestMethod.POST)
-    public @ResponseBody CommonResponse<String> category(@RequestBody BaseRequest baseRequest) {
-        CommonResponse commonResponse = new CommonResponse();
+    @RequestMapping(value = "/categorys" , method= RequestMethod.POST)
+    public @ResponseBody CommonResponse<List<CategoryInfo>> category(@RequestBody BaseRequest baseRequest) {
+        CommonResponse<List<CategoryInfo>> commonResponse = new CommonResponse();
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         try{
             checkSid(baseRequest);
@@ -122,8 +134,9 @@ public class MobileController {
     }
 
     @RequestMapping(value = "/pictures" , method= RequestMethod.POST)
-    public @ResponseBody CommonResponse<List<PictureInfo>> pictures(@RequestBody BaseRequest<QueryParams> baseRequest){
-        CommonResponse<List<PictureInfo>> commonResponse = new CommonResponse<>();
+    public @ResponseBody PageResponse<PictureInfo> pictures(HttpServletRequest request,@RequestBody BaseRequest<QueryParams> baseRequest){
+        Device device = DeviceUtils.getCurrentDevice(request);
+        PageResponse<PictureInfo> commonResponse = new PageResponse();
         checkSid(baseRequest);
         checkToken(baseRequest.getToken());
         User user = getUserByToken(baseRequest);
@@ -143,20 +156,51 @@ public class MobileController {
         }
         int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                 / pageParameter.getPageSize();
-        List<PictureInfo> pictureInfos = new ArrayList<>();
-        PictureInfo pictureInfo ;
-        for(Picture picture:pictures){
-           /* pictureInfo = new PictureInfo();
-            pictureInfo.setId(picture.getId());
-            pictureInfo.setClickTimes(picture.getClickTimes());
-            pictureInfo.setDownloadTimes(picture.getDownloadTimes());
-            pictureInfo.setName(picture.getName());
-            pictureInfo.setFilePath(picture.getFilePath());
-            pictureInfo.setMyRecommend(picture.getRecId().contains(String.valueOf(userId)));
-            String attachs = picture.getAttach();
-            pictureInfo.setAttachs();*/
+        PictureInfo pictureInfo = new PictureInfo() ;
+        PictureInfo.Picture picture ;
+        List<PictureInfo.Picture> list = new ArrayList<>();
+        for(Picture p:pictures){
+            picture = new PictureInfo.Picture();
+            picture.setId(p.getId());
+            picture.setClickTimes(p.getClickTimes());
+            picture.setDownloadTimes(p.getDownloadTimes());
+            picture.setName(p.getName());
+            picture.setFilePath(p.getFilePath());
+            picture.setMyRecommend(p.getRecId().contains(String.valueOf(userId)));
+            String attachs = p.getAttach();
+            if(!StringUtils.isEmpty(attachs)){
+                try{
+                    picture.setAttachs(Arrays.asList(attachs.split(",")));
+                }catch (Exception e){
+                    log.error(e.getLocalizedMessage(),e);
+                }
+            }
+            list.add(picture);
         }
-        commonResponse.setResult(pictureInfos);
+        String width;
+        String height;
+        if(device.isMobile()){
+            width = "";
+            height = "";
+        }else{
+            width = "";
+            height = "";
+        }
+        String paramPrefix = "?x-oss-process=image";
+        String resizeParam = "/resize,m_pad,h_"+height+",w_"+width;
+        //?x-oss-process=image/resize,m_pad,h_199,w_280
+        //?x-oss-process=image/resize,m_pad,h_199,w_280/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
+        //?x-oss-process=image/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
+        PictureInfo.PictureProperty p = new PictureInfo.PictureProperty();
+        p.setUrl(appConfig.getOssPath());
+        p.setSizeParam(resizeParam);
+        p.setParamPrefix(paramPrefix);
+        p.setWaterMark(waterMark);
+        pictureInfo.setPictures(list);
+        pictureInfo.setPictureProperty(p);
+        commonResponse.setTotalPage(totalPage);
+        commonResponse.setTotalCount(pageParameter.getTotalCount());
+        commonResponse.setResult(pictureInfo);
         return commonResponse;
     }
 
@@ -165,7 +209,7 @@ public class MobileController {
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         CategoryInfo categoryInfo ;
         for(SubCategory subCategory:allcategories){
-            if(subCategory.getParentId() == id){
+            if(subCategory.getParentId().equals(id)){
                 categoryInfo = new CategoryInfo();
                 categoryInfo.setId(subCategory.getId());
                 categoryInfo.setName(subCategory.getName());
@@ -207,7 +251,8 @@ public class MobileController {
         if(!"app".equalsIgnoreCase(user.getDevice())){
             throw new ServiceException("103","该账号只能在app端使用");
         }
-        if(user == null || !pwd.equals(user.getPwd())){
+        String password =  new Md5PasswordEncoder().encodePassword(user.getPwd(),SALT);
+        if(user == null || !pwd.equals(password)){
             throw new ServiceException("102","用户名或密码不正确");
         }
     }
@@ -237,5 +282,28 @@ public class MobileController {
         signInRequest.setPassword("sfdf");
         baseRequest.setData(signInRequest);
         System.out.println(JSON.toJSONString(baseRequest));
+
+        CommonResponse<PictureInfo> pictureInfoCommonResponse = new CommonResponse<>();
+        PictureInfo pictureInfo = new PictureInfo();
+        PictureInfo.PictureProperty pictureProperty = new PictureInfo.PictureProperty();
+        pictureProperty.setUrl("http://znz.oss-cn-shenzhen.aliyuncs.com/");
+       // pictureProperty.setParameter("x-oss-process=image/resize,m_pad,h_199,w_280");
+        pictureInfo.setPictureProperty(pictureProperty);
+        List<PictureInfo.Picture> pictures = new ArrayList<>();
+        PictureInfo.Picture picture = new PictureInfo.Picture();
+        picture.setId(12353L);
+        picture.setFilePath("63f3f5fc-e11f-4fae-82f2-cd82b8f31bd5.jpg");
+        picture.setName("男单170508n_1503.jpg");
+        picture.setClickTimes(0);
+        picture.setDownloadTimes(0);
+        List<String> attachs = new ArrayList<>();
+        attachs.add("435b78a6-bc8e-4602-aa90-8e6d6d018bd6.jpg");
+        picture.setAttachs(attachs);
+        pictures.add(picture);
+        pictureInfo.setPictures(pictures);
+        pictureInfoCommonResponse.setResult(pictureInfo);
+        System.out.println(JSON.toJSONString(pictureInfoCommonResponse));
+
+        BaseRequest<QueryParams> queryParamsBaseRequest = new BaseRequest<>();
     }
 }

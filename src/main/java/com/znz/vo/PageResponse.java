@@ -6,7 +6,7 @@ import lombok.Data;
  * Created by Administrator on 2017/5/15.
  */
 @Data
-public class PageResponse extends CommonResponse {
+public class PageResponse<T> extends CommonResponse {
 
     private Integer totalPage;
 

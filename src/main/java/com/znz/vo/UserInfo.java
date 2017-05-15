@@ -9,6 +9,7 @@ import java.util.List;
  */
 @Data
 public class UserInfo {
-
-    private List<String> cateogryIds;
+    private String token;
+    private String userName;
+    private boolean recommend;
 }
