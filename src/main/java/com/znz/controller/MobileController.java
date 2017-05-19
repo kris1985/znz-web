@@ -226,34 +226,34 @@ public class MobileController {
     public User getUserByToken(BaseRequest baseRequest) {
         User user =  userMapper.selectByToken(baseRequest.getToken());
         if(user==null){
-            throw new ServiceException("108","token不存在或已过期");
+            throw new ServiceException("1008","token不存在或已过期");
         }
         return user;
     }
 
     public void checkToken(String token) {
         if(StringUtils.isEmpty(token)){
-            throw new ServiceException("107","token不能为空");
+            throw new ServiceException("1007","token不能为空");
         }
     }
 
 
     private void checkUser(String pwd, String imei, User user) {
         if(user==null){
-            throw new ServiceException("100","账号不存在");
+            throw new ServiceException("1000","账号不存在");
         }
         if(StringUtils.isEmpty(imei)){
-            throw new ServiceException("101","imei不能为空");
+            throw new ServiceException("1001","imei不能为空");
         }
         if(!StringUtils.isEmpty(user.getImei()) && !imei.equals(user.getImei())){
-            throw new ServiceException("104","该账户只能在绑定的设备上登陆");
+            throw new ServiceException("1004","该账户只能在绑定的设备上登陆");
         }
         if(!"app".equalsIgnoreCase(user.getDevice())){
-            throw new ServiceException("103","该账号只能在app端使用");
+            throw new ServiceException("1003","该账号只能在pc端使用");
         }
         String password =  new Md5PasswordEncoder().encodePassword(user.getPwd(),SALT);
         if(user == null || !pwd.equals(password)){
-            throw new ServiceException("102","用户名或密码不正确");
+            throw new ServiceException("1002","用户名或密码不正确");
         }
     }
 
@@ -262,13 +262,13 @@ public class MobileController {
             return;
         }
         if(StringUtils.isEmpty(baseRequest.getSid())){
-            throw new ServiceException("106","sid不能为空");
+            throw new ServiceException("1006","sid不能为空");
         }
         String sid = baseRequest.getSid();
         Object obj = baseRequest.getData();
         String encStr = new Md5PasswordEncoder().encodePassword(JSON.toJSONString(obj), SALT);
         if(!sid.equals(encStr)){
-            throw new ServiceException("105","签名不正确");
+            throw new ServiceException("1005","签名不正确");
         }
     }
 
