@@ -435,7 +435,7 @@ public class FileController {
             reader = new BufferedInputStream(con.getInputStream());
             out = response.getOutputStream();
             response.reset(); // 非常重要
-            response.setContentType("application/x-msdownload");
+            response.setContentType("applicatoin/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
             while ((len = reader.read(buf)) > 0)
                 out.write(buf, 0, len);

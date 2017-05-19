@@ -536,26 +536,14 @@
 
             //叶子节点,点击类别
             $(".leaf_item").click(function () {
-                <c:choose>
-                    <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
-                        if ($(this).hasClass("selected")) {
-                            $(this).removeClass("selected");
-                            if($(this).parent().children().length  == $(this).parent().children().not(".selected").length){
-                                $(this).parent().children().first().addClass("selected");//都没选中，全选选中
-                            }
-                        } else {
-                            $(this).addClass("selected");
-                        }
-                    </c:when>
-                    <c:otherwise>
+
                          if ($(this).hasClass("selected")) {
                              return;
                          }else {
                              $(this).addClass("selected");
                              $(this).siblings().removeClass("selected");
                          }
-                     </c:otherwise>
-                </c:choose>
+
 
 
                 if($(this).attr("id").indexOf("all") == -1){
