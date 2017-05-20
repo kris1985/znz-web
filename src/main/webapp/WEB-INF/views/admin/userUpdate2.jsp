@@ -60,12 +60,22 @@
       </div>
    </div>
 
+    <div class="form-group">
+        <label for="limitImeiFlag" class="col-sm-2 col-md-2 control-label">MAC策略</label>
+        <div class="col-sm-10 col-md-10">
+            <input type="checkbox" name="limitImeiFlag" value="1" id="limitImeiFlag"> 限制MAC  <input type="text" class="form-control" id="imei" name="imei"
+                                                                                               placeholder="请输入MAC或APP设备号" maxlength="60" value=${user.imei}>
+        </div>
+    </div>
+
    <div class="form-group">
       <label for="accessFlag" class="col-sm-2 col-md-2 control-label">访问策略</label>
       <div class="col-sm-10 col-md-10">
         <input type="checkbox" name="accessFlag" value="1" id="accessFlag"> 单台电脑访问
       </div>
    </div>
+
+
 
    <div class="form-group">
       <label for="maxDownloadTimes" class="col-sm-2 col-md-2 control-label">每天下载次数</label>
@@ -221,6 +231,9 @@ $(function(){
     if(${user.accessFlag}==1){
         $("#accessFlag").attr("checked",'true');
     }
+    if(${user.limitImeiFlag}==1){
+        $("#limitImeiFlag").attr("checked",'true');
+    }
     <c:if test="${watermarkVO.g !=null }">
      $("#watermarkPosation").val("${watermarkVO.g }");
     </c:if>
@@ -307,6 +320,13 @@ $(function(){
                 $("#limitIps").val("");
            }
        });
+    $("#limitImeiFlag").click(function(){
+        //alert($(this).get(0).checked);
+        if(!$(this).get(0).checked){
+            $("#imei").val("");
+        }
+    });
+
 	})
 </script>
 

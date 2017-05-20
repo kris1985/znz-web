@@ -39,4 +39,8 @@ public class UserAddVO {
     private Integer userType;
 
     private WatermarkVO watermarkVO;
+
+    private int limitImeiFlag;
+
+    private String imei;
 }

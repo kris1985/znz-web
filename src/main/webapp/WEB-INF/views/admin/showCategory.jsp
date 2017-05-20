@@ -536,16 +536,12 @@
 
             //叶子节点,点击类别
             $(".leaf_item").click(function () {
-
-                         if ($(this).hasClass("selected")) {
-                             return;
-                         }else {
-                             $(this).addClass("selected");
-                             $(this).siblings().removeClass("selected");
-                         }
-
-
-
+                 if ($(this).hasClass("selected")) {
+                     return;
+                 }else {
+                     $(this).addClass("selected");
+                     $(this).siblings().removeClass("selected");
+                 }
                 if($(this).attr("id").indexOf("all") == -1){
                     $(this).parent().children().first().removeClass("selected") //如果选择了非全选，全选去掉选中
                 }

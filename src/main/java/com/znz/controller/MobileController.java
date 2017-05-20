@@ -11,13 +11,15 @@ import com.znz.model.Picture;
 import com.znz.model.SubCategory;
 import com.znz.model.User;
 import com.znz.model.UserAuth;
+import com.znz.util.CategoryUtil;
+import com.znz.util.SignUtil;
 import com.znz.util.WaterMarkUtil;
 import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.web.PortResolverImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -56,14 +58,12 @@ public class MobileController {
         CommonResponse<UserInfo> commonResponse = new CommonResponse();
         try{
             SignInRequest signInRequest = baseRequest.getData();
+            checkSign(baseRequest);
             User user =  userMapper.selectByUser(signInRequest.getUserName());
-            checkSid(baseRequest);
             checkUser(signInRequest.getPassword(), baseRequest.getImei(), user);
             String token = new Md5PasswordEncoder().encodePassword(baseRequest.getImei()+System.currentTimeMillis(),SALT);
             user.setToken(token);
-            if(!StringUtils.isEmpty(user.getLimitImeiFlag()) && user.getLimitImeiFlag().equals("1")){
-                user.setImei(baseRequest.getImei());
-            }
+            user.setImei(baseRequest.getImei());
             user.setLastLoginTime(new Date());
             userMapper.updateByPrimaryKeySelective(user);
             UserInfo userInfo = new UserInfo();
@@ -76,7 +76,7 @@ public class MobileController {
             commonResponse.setErrorMsg(e.getErrReason());
         } catch (Exception e){
             log.error(e.getLocalizedMessage(),e);
-            commonResponse.setErrorCode("999");
+            commonResponse.setErrorCode("9999");
             commonResponse.setErrorMsg("系统忙请稍后再试");
         }
         return commonResponse;
@@ -87,7 +87,7 @@ public class MobileController {
         CommonResponse<List<CategoryInfo>> commonResponse = new CommonResponse();
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         try{
-            checkSid(baseRequest);
+            checkSign(baseRequest);
             checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
@@ -109,7 +109,7 @@ public class MobileController {
                 categoryInfo.setId(subCategory.getId());
                 categoryInfo.setName(subCategory.getName());
                 categoryInfo.setSortId(subCategory.getSortId());
-                categoryInfo.setChildrens(getChildren(categoryInfo.getId(),allcategories));
+                categoryInfo.setChildrens(CategoryUtil.getChildren(categoryInfo.getId(),allcategories));
                 List<User> users = userMapper.selectByFirstCategory(String.valueOf(categoryInfo.getId()));
                 if(!CollectionUtils.isEmpty(users)){
                     for(User u:users){
@@ -127,7 +127,7 @@ public class MobileController {
             commonResponse.setErrorMsg(e.getErrReason());
         } catch (Exception e){
             log.error(e.getLocalizedMessage(),e);
-            commonResponse.setErrorCode("999");
+            commonResponse.setErrorCode("9999");
             commonResponse.setErrorMsg("系统忙请稍后再试");
         }
         return commonResponse;
@@ -137,18 +137,35 @@ public class MobileController {
     public @ResponseBody PageResponse<PictureInfo> pictures(HttpServletRequest request,@RequestBody BaseRequest<QueryParams> baseRequest){
         Device device = DeviceUtils.getCurrentDevice(request);
         PageResponse<PictureInfo> commonResponse = new PageResponse();
-        checkSid(baseRequest);
+        checkSign(baseRequest);
         checkToken(baseRequest.getToken());
         User user = getUserByToken(baseRequest);
         Integer userId = user.getUserId();
         String waterMark = WaterMarkUtil.getWaterMark(user.getWatermark());;
         FileQueryVO fileQueryVO = new FileQueryVO();
         QueryParams queryParams = baseRequest.getData();
+        if(queryParams == null){
+            throw new ServiceException("1008","参数不合法");
+        }
+        if(CollectionUtils.isEmpty(queryParams.getCategoryIds())){
+            throw new ServiceException("1008","分类不能为空");
+        }
+        if(queryParams.getCurrentPage()==null){
+            queryParams.setCurrentPage(1);
+        }
+        if(queryParams.getPageSize()==null){
+            queryParams.setPageSize(80);
+        }
+        if(CollectionUtils.isEmpty(queryParams.getCategoryIds())){
+            //todo
+        }
         PageParameter pageParameter = new PageParameter(queryParams.getCurrentPage(), queryParams.getPageSize());
         fileQueryVO.setRecommendId(queryParams.getReferrerId());
         fileQueryVO.setPage(pageParameter);
         List<Set<Integer>> categoryConditions = new ArrayList<>();
-        categoryConditions.add(queryParams.getCategoryIds());
+        if(!CollectionUtils.isEmpty(queryParams.getCategoryIds())){
+            categoryConditions.add(queryParams.getCategoryIds());
+        }
         fileQueryVO.setCategoryConditions(categoryConditions);
         List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
         if(CollectionUtils.isEmpty(pictures)){
@@ -166,7 +183,7 @@ public class MobileController {
             picture.setDownloadTimes(p.getDownloadTimes());
             picture.setName(p.getName());
             picture.setFilePath(p.getFilePath());
-            picture.setMyRecommend(p.getRecId().contains(String.valueOf(userId)));
+            picture.setMyRecommend(p.getRecId()!=null && p.getRecId().contains(String.valueOf(userId)));
             String attachs = p.getAttach();
             if(!StringUtils.isEmpty(attachs)){
                 try{
@@ -180,11 +197,11 @@ public class MobileController {
         String width;
         String height;
         if(device.isMobile()){
-            width = "";
-            height = "";
+            width = "140";
+            height = "98";
         }else{
-            width = "";
-            height = "";
+            width = "140";
+            height = "98";
         }
         String paramPrefix = "?x-oss-process=image";
         String resizeParam = "/resize,m_pad,h_"+height+",w_"+width;
@@ -205,23 +222,7 @@ public class MobileController {
     }
 
 
-    private List<CategoryInfo> getChildren(Integer id, List<SubCategory> allcategories) {
-        List<CategoryInfo> categoryInfos = new ArrayList<>();
-        CategoryInfo categoryInfo ;
-        for(SubCategory subCategory:allcategories){
-            if(subCategory.getParentId().equals(id)){
-                categoryInfo = new CategoryInfo();
-                categoryInfo.setId(subCategory.getId());
-                categoryInfo.setName(subCategory.getName());
-                categoryInfo.setSortId(subCategory.getSortId());
-                if(subCategory.getCategoryLevel()!=3){
-                    categoryInfo.setChildrens(getChildren(categoryInfo.getId(),allcategories));
-                }
-                categoryInfos.add(categoryInfo);
-            }
-        }
-        return categoryInfos;
-    }
+
 
     public User getUserByToken(BaseRequest baseRequest) {
         User user =  userMapper.selectByToken(baseRequest.getToken());
@@ -245,29 +246,54 @@ public class MobileController {
         if(StringUtils.isEmpty(imei)){
             throw new ServiceException("1001","imei不能为空");
         }
-        if(!StringUtils.isEmpty(user.getImei()) && !imei.equals(user.getImei())){
+        if("1".equals(user.getLimitIpFlag()) && !StringUtils.isEmpty(user.getImei())  && !imei.equals(user.getImei())){
             throw new ServiceException("1004","该账户只能在绑定的设备上登陆");
         }
         if(!"app".equalsIgnoreCase(user.getDevice())){
             throw new ServiceException("1003","该账号只能在pc端使用");
         }
-        String password =  new Md5PasswordEncoder().encodePassword(user.getPwd(),SALT);
+        String password =  new Md5PasswordEncoder().encodePassword(user.getPwd()+SALT,"");
         if(user == null || !pwd.equals(password)){
             throw new ServiceException("1002","用户名或密码不正确");
         }
     }
 
-    private void checkSid(BaseRequest baseRequest) {
-        if(true){
+    private void checkSign(BaseRequest baseRequest) {
+        if(baseRequest.getData() == null){
             return;
         }
-        if(StringUtils.isEmpty(baseRequest.getSid())){
-            throw new ServiceException("1006","sid不能为空");
+        if(StringUtils.isEmpty(baseRequest.getSign())){
+            throw new ServiceException("1006","sign不能为空");
         }
-        String sid = baseRequest.getSid();
+        String sign = baseRequest.getSign();
         Object obj = baseRequest.getData();
-        String encStr = new Md5PasswordEncoder().encodePassword(JSON.toJSONString(obj), SALT);
-        if(!sid.equals(encStr)){
+        if(obj == null){
+            return;
+        }
+        String paramSign = "" ;
+        Map<String,Object> paramMap = new HashedMap();
+        if(obj instanceof  SignInRequest){
+            SignInRequest request = (SignInRequest)obj;
+            paramMap.put("userName",request.getUserName());
+            paramMap.put("password",request.getPassword());
+            paramSign = SignUtil.sign(paramMap);
+        }else if(obj instanceof  QueryParams) {
+            QueryParams request = (QueryParams)obj;
+            if(request.getReferrerId()!=null){
+                paramMap.put("referrerId",request.getReferrerId());
+            }
+            if(request.getCurrentPage()!=null){
+                paramMap.put("currentPage",request.getCurrentPage());
+            }
+            if(request.getPageSize()!=null){
+                paramMap.put("pageSize",request.getPageSize());
+            }
+            if(!CollectionUtils.isEmpty(request.getCategoryIds())){
+                paramMap.put("categoryIds",request.getCategoryIds());
+            }
+            paramSign = SignUtil.sign(paramMap);
+        }
+        if(!sign.equals(paramSign)){
             throw new ServiceException("1005","签名不正确");
         }
     }
@@ -275,7 +301,6 @@ public class MobileController {
     public static void main(String[] args) {
         BaseRequest<SignInRequest>  baseRequest = new BaseRequest<>();
         baseRequest.setImei("123");
-        baseRequest.setSid("11");
         baseRequest.setToken("343556773");
         SignInRequest signInRequest = new SignInRequest();
         signInRequest.setUserName("ere");
@@ -283,7 +308,7 @@ public class MobileController {
         baseRequest.setData(signInRequest);
         System.out.println(JSON.toJSONString(baseRequest));
 
-        CommonResponse<PictureInfo> pictureInfoCommonResponse = new CommonResponse<>();
+        /*CommonResponse<PictureInfo> pictureInfoCommonResponse = new CommonResponse<>();
         PictureInfo pictureInfo = new PictureInfo();
         PictureInfo.PictureProperty pictureProperty = new PictureInfo.PictureProperty();
         pictureProperty.setUrl("http://znz.oss-cn-shenzhen.aliyuncs.com/");
@@ -304,6 +329,6 @@ public class MobileController {
         pictureInfoCommonResponse.setResult(pictureInfo);
         System.out.println(JSON.toJSONString(pictureInfoCommonResponse));
 
-        BaseRequest<QueryParams> queryParamsBaseRequest = new BaseRequest<>();
+        BaseRequest<QueryParams> queryParamsBaseRequest = new BaseRequest<>();*/
     }
 }

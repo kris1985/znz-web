@@ -12,8 +12,6 @@ public class BaseRequest<T> {
 
     private String imei;
 
-    private String sid;
-
     private String v;
 
     private String sign;

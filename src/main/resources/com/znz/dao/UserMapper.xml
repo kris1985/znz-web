@@ -71,7 +71,7 @@
       #{downloadTotal,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{sessionId,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER},
       #{watermark,jdbcType=VARCHAR}, #{recommendFlag,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR},#{imei,jdbcType=VARCHAR},
-      #{imei,jdbcType=VARCHAR}, #{limitImeiFlag,jdbcType=INTEGER},
+      #{imei,jdbcType=VARCHAR}, #{limitImeiFlag,jdbcType=INTEGER}
       )
 
       <selectKey keyProperty="userId" resultType="int" order="AFTER">

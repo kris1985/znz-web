@@ -49,13 +49,21 @@
       </div>
    </div>
 
-    <div class="form-group">
+   <div class="form-group">
       <label for="limitIps" class="col-sm-2 col-md-2 control-label">IP策略</label>
       <div class="col-sm-10 col-md-10">
         <input type="checkbox" name="limitIpFlag" value="1"> 限制IP  <input type="text" class="form-control" id="limitIps" name="limitIps"
             placeholder="请输入IP" maxlength="60">
       </div>
    </div>
+
+    <div class="form-group">
+        <label for="limitIps" class="col-sm-2 col-md-2 control-label">MAC策略</label>
+        <div class="col-sm-10 col-md-10">
+            <input type="checkbox" name="limitImeiFlag" value="1"> 限制MAC  <input type="text" class="form-control" id="imei" name="imei"
+                                                                              placeholder="请输入MAC或APP设备号" maxlength="60">
+        </div>
+    </div>
 
    <div class="form-group">
       <label for="accessFlag" class="col-sm-2 col-md-2 control-label">访问策略</label>
