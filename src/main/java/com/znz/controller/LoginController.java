@@ -19,6 +19,7 @@ import com.znz.vo.UserSession;
 import com.znz.vo.WatermarkVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -152,8 +153,8 @@ public class LoginController {
         log.info("signIn request param:{}",encParam);
         CommonResponse response = new CommonResponse<>();
         try{
-            String decr = AESUtil.Decrypt(URLDecoder.decode(encParam.replace("param=",""),"utf-8"), EKY);
-            String temp1 = new String(decr.getBytes("ISO-8859-1"),"UTF-8");
+            encParam = URLDecoder.decode(encParam,"utf-8");
+            String decr = encParam.replace("param=","");
             String userName = decr.split("\\|")[0];
             String pwd = decr.split("\\|")[1];
             String imei = decr.split("\\|")[2];
@@ -179,11 +180,16 @@ public class LoginController {
         if(StringUtils.isEmpty(imei)){
             throw new ServiceException("101","imei不能为空");
         }
-        if(!StringUtils.isEmpty(user.getImei()) && !imei.equals(user.getImei())){
+        if("1".equals(user.getLimitImeiFlag()) && !imei.equals(user.getImei())){
             throw new ServiceException("104","该账户只能在绑定的电脑上登陆");
         }
         if(!"WEB".equalsIgnoreCase(user.getDevice())){
-            throw new ServiceException("103","该账号只能在PC端使用");
+            throw new ServiceException("103","该账号只能在APP端使用");
+        }
+        try {
+            pwd = AESUtil.Decrypt(pwd,EKY);
+        } catch (Exception e) {
+            throw new ServiceException("109","解密错误");
         }
         if(user == null || !pwd.equals(user.getPwd())){
             throw new ServiceException("102","用户名或密码不正确");
@@ -196,9 +202,9 @@ public class LoginController {
     public String register(HttpServletRequest request,HttpServletResponse response) throws Exception {
         request.setCharacterEncoding("UTF-8");
         String encParam = request.getQueryString();
+        encParam = URLDecoder.decode(encParam,"utf-8");
         log.info("signIn request param:{}",encParam);
-        String decr = AESUtil.Decrypt(URLDecoder.decode(encParam.replace("param=",""),"utf-8"), EKY);
-        String temp1 = new String(decr.getBytes("ISO-8859-1"),"UTF-8");
+        String decr = encParam.replace("param=","");
         String userName = decr.split("\\|")[0];
         String pwd = decr.split("\\|")[1];
         String imei = decr.split("\\|")[2];

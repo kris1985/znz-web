@@ -22,19 +22,19 @@ public class SignUtil {
         // 拼接有序的参数名-值串
         StringBuilder stringBuilder = new StringBuilder();
         for (String key : keyArray) {
-            stringBuilder.append(key).append(paramMap.get(key));
+            stringBuilder.append(paramMap.get(key));
         }
         String key = "b868a6c1-e554-4f";
         stringBuilder.append(key);
         String codes = stringBuilder.toString();
-        String sign = org.apache.commons.codec.digest.DigestUtils.shaHex(codes).toUpperCase();
+        String sign = new Md5PasswordEncoder().encodePassword(codes,"");
         return sign;
     }
 
     public static void main(String[] args) {
         Map<String,Object> paramMap = new HashMap<>();
-        paramMap.put("a","a");
-        paramMap.put("b","b");
+        paramMap.put("userName","ios-test");
+        paramMap.put("password","1ef4830aca80f4a5907d41a2fc504667");
         System.out.println(sign(paramMap));
 
         BaseRequest<SignInRequest> baseRequest = new BaseRequest<>();
