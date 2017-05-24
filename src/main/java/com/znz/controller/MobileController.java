@@ -1,6 +1,7 @@
 package com.znz.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.sun.org.apache.regexp.internal.RE;
 import com.znz.config.AppConfig;
 import com.znz.dao.PictureMapper;
 import com.znz.dao.SubCategoryMapper;
@@ -102,24 +103,15 @@ public class MobileController {
             }
             List<SubCategory> categories = allcategories.stream().filter(s->ids.contains(s.getId())).collect(Collectors.toList());
             CategoryInfo categoryInfo ;
-            List<ReferrerInfo> referrerInfos = new ArrayList<>();
-            ReferrerInfo referrerInfo;
             for(SubCategory subCategory:categories){
                 categoryInfo = new CategoryInfo();
                 categoryInfo.setId(subCategory.getId());
                 categoryInfo.setName(subCategory.getName());
                 categoryInfo.setSortId(subCategory.getSortId());
                 categoryInfo.setChildrens(CategoryUtil.getChildren(categoryInfo.getId(),allcategories));
-                List<User> users = userMapper.selectByFirstCategory(String.valueOf(categoryInfo.getId()));
-                if(!CollectionUtils.isEmpty(users)){
-                    for(User u:users){
-                        referrerInfo = new ReferrerInfo();
-                        referrerInfo.setReferrerId(u.getUserId());
-                        referrerInfo.setReferrerName(u.getUserName());
-                        referrerInfos.add(referrerInfo);
-                    }
+                if(subCategory.getCategoryLevel() == 0){
+                    categoryInfo.setReferrerInfos(getReferrers(categoryInfo.getId()));
                 }
-                categoryInfo.setReferrerInfos(referrerInfos);
                 categoryInfos.add(categoryInfo);
             }
         }catch (ServiceException e){
@@ -131,6 +123,21 @@ public class MobileController {
             commonResponse.setErrorMsg("系统忙请稍后再试");
         }
         return commonResponse;
+    }
+
+    public List<ReferrerInfo> getReferrers(int categoryId) {
+        ReferrerInfo referrerInfo;
+        List<ReferrerInfo> referrerInfos = new ArrayList();
+        List<User> users = userMapper.selectByFirstCategory(String.valueOf(categoryId));
+        if(!CollectionUtils.isEmpty(users)){
+            for(User u:users){
+                referrerInfo = new ReferrerInfo();
+                referrerInfo.setReferrerId(u.getUserId());
+                referrerInfo.setReferrerName(u.getUserName());
+                referrerInfos.add(referrerInfo);
+            }
+        }
+        return referrerInfos;
     }
 
     @RequestMapping(value = "/pictures" , method= RequestMethod.POST)
