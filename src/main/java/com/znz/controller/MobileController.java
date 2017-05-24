@@ -154,24 +154,34 @@ public class MobileController {
         if(queryParams == null){
             throw new ServiceException("1008","参数不合法");
         }
-        if(CollectionUtils.isEmpty(queryParams.getCategoryIds())){
+        if(StringUtils.isEmpty(queryParams.getCategoryIds())){
             throw new ServiceException("1008","分类不能为空");
         }
         if(queryParams.getCurrentPage()==null){
             queryParams.setCurrentPage(1);
         }
         if(queryParams.getPageSize()==null){
-            queryParams.setPageSize(80);
+            queryParams.setPageSize(120);
         }
-        if(CollectionUtils.isEmpty(queryParams.getCategoryIds())){
-            //todo
-        }
+        List<Set<Integer>> categoryConditions = new ArrayList<>();
+        String categoryIds = queryParams.getCategoryIds();
+        String[] ids = categoryIds.split("[;]");
         PageParameter pageParameter = new PageParameter(queryParams.getCurrentPage(), queryParams.getPageSize());
         fileQueryVO.setRecommendId(queryParams.getReferrerId());
         fileQueryVO.setPage(pageParameter);
-        List<Set<Integer>> categoryConditions = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(queryParams.getCategoryIds())){
-            categoryConditions.add(queryParams.getCategoryIds());
+        Set<Integer> set ;
+        for(String x:ids){
+            set = new HashSet<>();
+            String[] arr = x.split(",");
+            for(String item:arr){
+                if(org.apache.commons.lang3.StringUtils.isNumeric(item)){
+                    set.add(Integer.parseInt(item));
+                }
+            }
+            if(!CollectionUtils.isEmpty(set)){
+                categoryConditions.add(set);
+            }
+
         }
         fileQueryVO.setCategoryConditions(categoryConditions);
         List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
@@ -295,7 +305,7 @@ public class MobileController {
             if(request.getPageSize()!=null){
                 paramMap.put("pageSize",request.getPageSize());
             }
-            if(!CollectionUtils.isEmpty(request.getCategoryIds())){
+            if(!StringUtils.isEmpty(request.getCategoryIds())){
                 paramMap.put("categoryIds",request.getCategoryIds());
             }
             paramSign = SignUtil.sign(paramMap);

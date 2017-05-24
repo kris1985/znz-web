@@ -10,7 +10,7 @@ import java.util.Set;
  */
 @Data
 public class QueryParams {
-    private Set<Integer> categoryIds;
+    private String categoryIds;
     private Integer referrerId;
     private Integer currentPage;
     private Integer pageSize;
