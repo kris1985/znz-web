@@ -214,11 +214,11 @@ public class MobileController {
         String width;
         String height;
         if(device.isMobile()){
-            width = "140";
-            height = "98";
+            width = "286";
+            height = "203";
         }else{
-            width = "140";
-            height = "98";
+            width = "286";
+            height = "203";
         }
         String paramPrefix = "?x-oss-process=image";
         String resizeParam = "/resize,m_pad,h_"+height+",w_"+width;
