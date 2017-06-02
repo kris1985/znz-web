@@ -82,7 +82,7 @@
   }
 
   .site-main {
-    width: 1180px;
+    width: 1181px;
     margin: 0 auto;
   }
 
@@ -198,7 +198,7 @@
     margin: 12px auto;
 }
 .header{background:black;}
-.nav_bar{height:45px;width:1180px;margin:0 auto;position:relative}
+.nav_bar{height:45px;width:1181px;margin:0 auto;position:relative}
 
 .logo{position:absolute;left:2px;top:3px;}
 .nav_warp{position:absolute;left:150px;top:0;}
@@ -251,7 +251,7 @@ font-family: "黑体";
 .site-piclist li {
    float: left;
    padding-left: 10px;
-   width: 286px;
+   width: 387px;
    margin-bottom: 25px;
 }
 
@@ -323,14 +323,14 @@ div:after, ul:after, dl:after {
 
   .site-piclist_pic{
       border: 2px solid white;
-     height: 203px;
+     height: 274px;
      position: relative;
-     width: 286px;
+     width: 387px;
   }
 
 .lazy {
-width: 286px;
-height: 203px;
+width: 387px;
+height: 274px;
 }
 
 

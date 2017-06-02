@@ -165,24 +165,11 @@ public class MobileController {
         }
         List<Set<Integer>> categoryConditions = new ArrayList<>();
         String categoryIds = queryParams.getCategoryIds();
-        String[] ids = categoryIds.split("[;]");
+        String[] ids = categoryIds.split("[;,]");
         PageParameter pageParameter = new PageParameter(queryParams.getCurrentPage(), queryParams.getPageSize());
         fileQueryVO.setRecommendId(queryParams.getReferrerId());
         fileQueryVO.setPage(pageParameter);
-        Set<Integer> set ;
-        for(String x:ids){
-            set = new HashSet<>();
-            String[] arr = x.split(",");
-            for(String item:arr){
-                if(org.apache.commons.lang3.StringUtils.isNumeric(item)){
-                    set.add(Integer.parseInt(item));
-                }
-            }
-            if(!CollectionUtils.isEmpty(set)){
-                categoryConditions.add(set);
-            }
-
-        }
+        categoryConditions.add(Arrays.stream(ids).map(s->Integer.parseInt(s.trim())).collect(Collectors.toSet()));
         fileQueryVO.setCategoryConditions(categoryConditions);
         List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
         if(CollectionUtils.isEmpty(pictures)){
@@ -214,11 +201,11 @@ public class MobileController {
         String width;
         String height;
         if(device.isMobile()){
-            width = "286";
-            height = "203";
+            width = "387";
+            height = "284";
         }else{
-            width = "286";
-            height = "203";
+            width = "387";
+            height = "284";
         }
         String paramPrefix = "?x-oss-process=image";
         String resizeParam = "/resize,m_pad,h_"+height+",w_"+width;

@@ -536,12 +536,16 @@
 
             //叶子节点,点击类别
             $(".leaf_item").click(function () {
-                 if ($(this).hasClass("selected")) {
-                     return;
-                 }else {
-                     $(this).addClass("selected");
-                     $(this).siblings().removeClass("selected");
-                 }
+
+                         if ($(this).hasClass("selected")) {
+                             return;
+                         }else {
+                             $(this).addClass("selected");
+                             $(this).siblings().removeClass("selected");
+                         }
+
+
+
                 if($(this).attr("id").indexOf("all") == -1){
                     $(this).parent().children().first().removeClass("selected") //如果选择了非全选，全选去掉选中
                 }
@@ -980,7 +984,7 @@
                         <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" attach="${item.attach}">
                             <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"
-                                 src="${basePath}/resources/img/grey.gif" width="280" height="199"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_199,w_280${watermarkParam}">
+                                 src="${basePath}/resources/img/grey.gif" width="386" height="274"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_274,w_386${watermarkParam}">
                         </a>
                     </div>
                 </li>
