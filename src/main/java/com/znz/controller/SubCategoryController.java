@@ -129,7 +129,9 @@ public class SubCategoryController {
         final String  temp = queryParam.getSecondSelectedId();
         Set<Integer> forthCategorys = new HashSet<>();
         List<Set<Integer>> categoryConditions = new ArrayList<>();
+        boolean noFourthSelectedId = false;
         if(StringUtils.isEmpty(queryParam.getFourthSelectedId())) {
+            noFourthSelectedId = true;
             Set<Integer> thirdCategorys =    subCategories.stream().filter(s-> String.valueOf(s.getParentId()).equals(temp) ).map(s->s.getId()).collect(Collectors.toSet());//三级类
             Set<Integer> set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
             categoryConditions.add(set);
@@ -158,7 +160,8 @@ public class SubCategoryController {
             fileQueryVO.setRecommendId(queryParam.getRecommendId());
         }
         model.addAttribute("currentPage",queryParam.getCurrentPage());
-
+        Integer partionCode = subCategories.stream().filter(s-> String.valueOf(s.getId()).equals(queryParam.getSecondSelectedId())).map(s->s.getPartionCode()).findAny().orElse(null);
+        PartionCodeHoder.set(String.valueOf(partionCode));
         if(!CollectionUtils.isEmpty(categoryConditions) && categoryConditions.stream().allMatch(s->s.size()>0)){
             fileQueryVO.setPage(pageParameter);
             fileQueryVO.setCategoryConditions(categoryConditions);
@@ -173,16 +176,18 @@ public class SubCategoryController {
                 //删除
                 deletePictrues(fileQueryVO);
             }else{
-                PartionCodeHoder.set(queryParam.getSecondSelectedId());
-                List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
-                PartionCodeHoder.clear();
+                List<Picture> pictures;
+                if(noFourthSelectedId){
+                    pictures = pictureMapper.selectBySimplePage(fileQueryVO);
+                }else{
+                    pictures =  pictureMapper.selectByPage(fileQueryVO);
+                }
                 int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                         / pageParameter.getPageSize();
                 model.addAttribute("totalPage",totalPage);
                 model.addAttribute("totalCount",pageParameter.getTotalCount());
                 model.addAttribute("pictures",pictures);
             }
-
         }
         List<User> users = userMapper.selectByFirstCategory(queryParam.getFirstSelectedId());
 
@@ -195,6 +200,7 @@ public class SubCategoryController {
         model.addAttribute("endTime",queryParam.getEndTime());
         model.addAttribute("users",users);
         model.addAttribute("recommendId",queryParam.getRecommendId());
+        PartionCodeHoder.clear();
         return "admin/showCategory";
     }
 

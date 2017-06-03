@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author huangtao
  * @version Id: SqlsessionFactoryPostProcessor.java, v 0.1 2017/3/29 11:48 huagntao Exp $$
  */
-@Component
+//@Component
 //BeanFactoryPostProcessor
 public class SqlsessionFactoryPostProcessor implements BeanPostProcessor {
 

@@ -9,6 +9,7 @@ import com.aliyun.oss.model.PutObjectResult;
 import com.znz.config.AppConfig;
 import com.znz.dao.*;
 import com.znz.model.*;
+import com.znz.service.CategoryService;
 import com.znz.util.*;
 import com.znz.vo.*;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,9 @@ public class FileController {
 
     @Resource
     private OSSClient ossClient;
+
+    @Resource
+    private CategoryService categoryService;
 
 
 
@@ -196,10 +200,12 @@ public class FileController {
     @RequestMapping(value = "/listImg", method = RequestMethod.POST)
     public String listImg( Long selectedId, String ids, String secondSelectedId,
                           String fourthSelectedId, Integer currentPage, Integer totalPage, Integer totalCount,Integer pageSize,Integer recommendId, Model model) {
-
+        Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondSelectedId));
+        PartionCodeHoder.set(String.valueOf(partionCode));
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(Collectors.toList());
         List<Picture> pictures = pictureMapper.selectByIds(listIds);
         Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
+        PartionCodeHoder.clear();
         for(Picture p :pictures){
             if(StringUtils.isNoneBlank(p.getAttach())){
                 p.setAttach(p.getFilePath()+"|"+p.getName()+","+p.getAttach());//加上原图
@@ -230,6 +236,8 @@ public class FileController {
         }else{
             currentPage = currentPage +1;
         }
+        Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondSelectedId));
+        PartionCodeHoder.set(String.valueOf(partionCode));
         PageParameter pageParameter = new PageParameter(currentPage, pageSize);
         List<Set<Integer>> categoryConditions = new ArrayList<>();
         FileQueryVO fileQueryVO = new FileQueryVO();
@@ -266,6 +274,7 @@ public class FileController {
                 p.setAttach(p.getFilePath()+"|"+p.getName()+","+p.getAttach());//加上原图
             }
         }
+        PartionCodeHoder.clear();
         model.addAttribute("selectedImg", picture.getFilePath());
         model.addAttribute("selectedName", picture.getName());
         model.addAttribute("currentIndex", 0);
@@ -379,10 +388,6 @@ public class FileController {
 
         }
     }
-
-
-
-
 
     @RequestMapping(value = "/uploadIndexBg", method = RequestMethod.POST)
     public

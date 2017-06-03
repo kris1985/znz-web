@@ -13,7 +13,7 @@ public class SubCategory {
 
     private String allFlag;
 
-    private String partionCode;
+    private Integer partionCode;
 
     public Integer getId() {
         return id;
@@ -63,11 +63,11 @@ public class SubCategory {
         this.allFlag = allFlag;
     }
 
-    public String getPartionCode() {
+    public Integer getPartionCode() {
         return partionCode;
     }
 
-    public void setPartionCode(String partionCode) {
+    public void setPartionCode(Integer partionCode) {
         this.partionCode = partionCode;
     }
 }

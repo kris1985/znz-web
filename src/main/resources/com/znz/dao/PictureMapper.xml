@@ -180,7 +180,7 @@
     <include refid="querySql"/>
   </select>
 
-  <select id="selectBySimplePage" resultMap="BaseResultMap">
+  <select id="selectBySimplePage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
     select
     <include refid="Base_Column_List" />
     from t_picture order by id desc

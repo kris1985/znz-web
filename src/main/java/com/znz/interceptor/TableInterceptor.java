@@ -24,7 +24,7 @@ import org.apache.ibatis.plugin.Signature;
  * @author huangtao
  * @version Id: TableInterceptor.java, v 0.1 2017/3/29 10:29 huagntao Exp $$
  */
-@Intercepts(@Signature(type=StatementHandler.class,method="prepare",args=Connection.class))
+//@Intercepts(@Signature(type=StatementHandler.class,method="prepare",args=Connection.class))
 public class TableInterceptor implements Interceptor {
 
     public static final String SQLMAPID_REG = "cn.com.ykse.commons.push";

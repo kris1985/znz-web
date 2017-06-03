@@ -2,6 +2,7 @@ package com.znz.dao;
 
 import com.znz.model.Picture;
 import com.znz.vo.FileQueryVO;
+import com.znz.vo.PageParameter;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -34,5 +35,5 @@ public interface PictureMapper {
 
     void deleteByGids(List<String> gids);
 
-    List<Picture> selectBySimplePage();
+    List<Picture> selectBySimplePage(FileQueryVO fileQueryVO);
 }

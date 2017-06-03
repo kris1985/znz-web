@@ -30,8 +30,10 @@ public class Test {
 
         //moveFiles(new File("d:/temp/test2"),new File("d:/temp/test3"));
        // System.out.println(DateTime.now().toString("yyyyMMDD"));
-
-        System.out.println(safeUrlBase64Encode ("watermark_浅口女单140623200nVIP时装_013.JPG?x-oss-process=image/resize,P_10".getBytes("utf-8")));
+        String test = "from t_picture where 1=1 t_picture_category".replaceAll("t_picture[^\\_]","t_picture"+0+" ");
+        System.out.println(test);
+        Integer s = new ArrayList<Integer>().stream().findAny().orElse(null);
+        System.out.println(s);
 
 
 

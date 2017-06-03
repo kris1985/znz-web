@@ -45,8 +45,17 @@ public class QueryPageInterceptor implements Interceptor {
             "mappedStatement");
 
         // 只重写需要分页的sql语句。通过MappedStatement的ID匹配，默认重写以Page结尾的MappedStatement的sql
+        BoundSql boundSql = delegate.getBoundSql();
+        String partionCode = PartionCodeHoder.get();
+        if(mappedStatement.getId().contains("PictureMapper") || mappedStatement.getId().contains("PictureCategoryMapper")){
+            if(StringUtils.isNoneBlank(partionCode)){
+                String sql = boundSql.getSql();
+                sql = sql.replaceAll("t\\_picture[^\\_]","t_picture"+partionCode+" ");
+                sql = sql.replaceAll("t\\_picture_category","t_picture_category"+partionCode);
+                setFieldValue(boundSql,"sql",sql);
+            }
+        }
         if (mappedStatement.getId().matches(sqlmapId)) {
-            BoundSql boundSql = delegate.getBoundSql();
             Object parameterObject = boundSql.getParameterObject();
             if (parameterObject == null) {
                 throw new NullPointerException("parameterObject is null!");
@@ -177,10 +186,6 @@ public class QueryPageInterceptor implements Interceptor {
     private StringBuilder buildPageSqlForMySql(String sql, PageParameter page) {
         StringBuilder pageSql = new StringBuilder();
         long beginrow = (page.getCurrentPage() - 1) * page.getPageSize();
-        String partionCode = PartionCodeHoder.get();
-        if(StringUtils.isNoneBlank(partionCode)){
-            sql = sql.replaceAll("t\\_picture","t_picture"+partionCode);
-        }
         pageSql.append(sql);
         pageSql.append(" limit ").append(beginrow).append(",").append(page.getPageSize());
         return pageSql;
