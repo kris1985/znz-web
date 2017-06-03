@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin/subCategory")
 public class SubCategoryController {
 
-    public static final int PAGE_SIZE = 80;
+    public static final int PAGE_SIZE = 120;
     @Resource
     private SubCategoryMapper     subCategoryMapper;
 
