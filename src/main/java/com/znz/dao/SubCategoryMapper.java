@@ -11,8 +11,6 @@ public interface SubCategoryMapper {
 
     int insert(SubCategory record);
 
-    int insertSelective(SubCategory record);
-
     SubCategory selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(SubCategory record);

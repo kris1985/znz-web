@@ -8,10 +8,12 @@
     <result column="parent_id" property="parentId" jdbcType="INTEGER" />
     <result column="category_level" property="categoryLevel" jdbcType="INTEGER" />
     <result column="all_flag" property="allFlag" jdbcType="VARCHAR" />
+    <result column="partion_code" property="partionCode" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, sort_id, parent_id ,category_level,all_flag
+    id, name, sort_id, parent_id ,category_level,all_flag,partion_code
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -24,53 +26,11 @@
   </delete>
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.SubCategory" >
     insert into t_sub_category (id, name, sort_id, 
-      parent_id,category_level,all_flag)
+      parent_id,category_level,all_flag,partion_code)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sortId,jdbcType=INTEGER}, 
-      #{parentId,jdbcType=INTEGER},#{categoryLevel,jdbcType=INTEGER},#{allFlag,jdbcType=VARCHAR})
+      #{parentId,jdbcType=INTEGER},#{categoryLevel,jdbcType=INTEGER},#{allFlag,jdbcType=VARCHAR},#{partionCode,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.znz.model.SubCategory" >
-    insert into t_sub_category
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="sortId != null" >
-        sort_id,
-      </if>
-      <if test="parentId != null" >
-        parent_id,
-      </if>
-      <if test="categoryLevel != null" >
-        category_level,
-      </if>
-      <if test="allFlag != null" >
-        all_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="sortId != null" >
-        #{sortId,jdbcType=INTEGER},
-      </if>
-      <if test="parentId != null" >
-        #{parentId,jdbcType=INTEGER},
-      </if>
-      <if test="categoryLevel != null" >
-        #{categoryLevel,jdbcType=INTEGER},
-      </if>
-      <if test="allFlag != null" >
-        #{allFlag,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.SubCategory" >
     update t_sub_category
     <set >
@@ -89,6 +49,9 @@
       <if test="allFlag != null" >
         all_flag = #{allFlag,jdbcType=VARCHAR},
       </if>
+      <if test="partionCode != null" >
+        partion_code = #{partionCode,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -96,9 +59,10 @@
     update t_sub_category
     set name = #{name,jdbcType=VARCHAR},
       sort_id = #{sortId,jdbcType=INTEGER},
-      parent_id = #{parentId,jdbcType=INTEGER}
-      category_level = #{categoryLevel,jdbcType=INTEGER}
-      all_flag = #{allFlag,jdbcType=VARCHAR}
+      parent_id = #{parentId,jdbcType=INTEGER},
+      category_level = #{categoryLevel,jdbcType=INTEGER},
+      all_flag = #{allFlag,jdbcType=VARCHAR},
+      partion_code = #{partionCode,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 

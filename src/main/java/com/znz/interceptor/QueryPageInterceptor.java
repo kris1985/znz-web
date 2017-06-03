@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
+import com.znz.util.PartionCodeHoder;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -176,6 +177,10 @@ public class QueryPageInterceptor implements Interceptor {
     private StringBuilder buildPageSqlForMySql(String sql, PageParameter page) {
         StringBuilder pageSql = new StringBuilder();
         long beginrow = (page.getCurrentPage() - 1) * page.getPageSize();
+        String partionCode = PartionCodeHoder.get();
+        if(StringUtils.isNoneBlank(partionCode)){
+            sql = sql.replaceAll("t\\_picture","t_picture"+partionCode);
+        }
         pageSql.append(sql);
         pageSql.append(" limit ").append(beginrow).append(",").append(page.getPageSize());
         return pageSql;

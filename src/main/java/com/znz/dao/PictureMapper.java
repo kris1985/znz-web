@@ -11,7 +11,6 @@ public interface PictureMapper {
 
     int insert(Picture record);
 
-    int insertSelective(Picture record);
 
     Picture selectByPrimaryKey(Long id);
 
@@ -26,4 +25,14 @@ public interface PictureMapper {
     List<Picture> selectByIds(List<Long> listIds);
 
     List<Picture> selectByParam(FileQueryVO fileQueryVO);
+
+    Picture selectByGid(String gid);
+
+    int deleteByGid(String gid);
+
+    List<Picture> selectByGids(List<String> gids);
+
+    void deleteByGids(List<String> gids);
+
+    List<Picture> selectBySimplePage();
 }

@@ -13,6 +13,8 @@ public class SubCategory {
 
     private String allFlag;
 
+    private String partionCode;
+
     public Integer getId() {
         return id;
     }
@@ -59,5 +61,13 @@ public class SubCategory {
 
     public void setAllFlag(String allFlag) {
         this.allFlag = allFlag;
+    }
+
+    public String getPartionCode() {
+        return partionCode;
+    }
+
+    public void setPartionCode(String partionCode) {
+        this.partionCode = partionCode;
     }
 }

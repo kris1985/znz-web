@@ -12,10 +12,11 @@
     <result column="attach" property="attach" jdbcType="VARCHAR" />
     <result column="sec_category" property="secCategory" jdbcType="INTEGER" />
     <result column="rec_id" property="recId" jdbcType="VARCHAR" />
+    <result column="gid" property="gid" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, file_path, click_times, download_times, create_time, create_user,attach,sec_category,rec_id
+    id, name, file_path, click_times, download_times, create_time, create_user,attach,sec_category,rec_id,gid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -23,67 +24,34 @@
     from t_picture
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectByGid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_picture
+    where gid = #{gid,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from t_picture
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+
+  <delete id="deleteByGid" parameterType="java.lang.String" >
+    delete from t_picture
+    where gid = #{gid,jdbcType=VARCHAR}
+  </delete>
+
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.Picture" >
     insert into t_picture (id, name, file_path, 
       click_times, download_times, create_time, 
-      create_user,sec_category,rec_id)
+      create_user,sec_category,rec_id,gid)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
       #{clickTimes,jdbcType=INTEGER}, #{downloadTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR},#{secCategory,jdbcType=INTEGER},#{recId,jdbcType=VARCHAR})
+      #{createUser,jdbcType=VARCHAR},#{secCategory,jdbcType=INTEGER},#{recId,jdbcType=VARCHAR},#{gid,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.znz.model.Picture" >
-    insert into t_picture
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="filePath != null" >
-        file_path,
-      </if>
-      <if test="clickTimes != null" >
-        click_times,
-      </if>
-      <if test="downloadTimes != null" >
-        download_times,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="createUser != null" >
-        create_user,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="filePath != null" >
-        #{filePath,jdbcType=VARCHAR},
-      </if>
-      <if test="clickTimes != null" >
-        #{clickTimes,jdbcType=INTEGER},
-      </if>
-      <if test="downloadTimes != null" >
-        #{downloadTimes,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.Picture" >
     update t_picture
     <set >
@@ -130,9 +98,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-
-
-  <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
+  <sql id="querySql">
     select
     <include refid="Base_Column_List" />
     from t_picture where 1=1
@@ -147,9 +113,9 @@
         SELECT picture_id  FROM `t_picture_category`
 
         where sub_category_id  in
-          <foreach item="subItem" index="subIndex" collection="item"  open="(" separator="," close=")">
-            #{subItem}
-          </foreach>
+        <foreach item="subItem" index="subIndex" collection="item"  open="(" separator="," close=")">
+          #{subItem}
+        </foreach>
         )
       </foreach>
     </if>
@@ -159,13 +125,17 @@
     <if test="endTime!=null">
       and create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
     </if>
+  </sql>
 
+
+
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
+   <include refid="querySql"/>
     order by id desc
-
   </select>
 
 
-  <select id="selectByIds" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
+  <select id="selectByIds" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from t_picture where id in
@@ -174,6 +144,18 @@
         </foreach>
     order by id desc
   </select>
+
+
+  <select id="selectByGids" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from t_picture where gid in
+    <foreach item="subItem" index="subIndex" collection="list"  open="(" separator="," close=")">
+      #{subItem}
+    </foreach>
+    order by id desc
+  </select>
+
 
 
 
@@ -185,32 +167,23 @@
     </foreach>
   </delete>
 
+  <delete id="deleteByGids"  >
+    delete from t_picture
+    where gid in
+    <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
 
   <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
-  select
-  <include refid="Base_Column_List" />
-  from t_picture where 1=1
-    <if test="recommendId!=null">
-      and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} )
-    </if>
-  <if test="categoryConditions!=null and categoryConditions.size()!=0">
-    <foreach item="item" index="index" collection="categoryConditions" >
-      and id in(
-      SELECT picture_id  FROM `t_picture_category`
+    <include refid="querySql"/>
+  </select>
 
-      where sub_category_id  in
-      <foreach item="subItem" index="subIndex" collection="item"  open="(" separator="," close=")">
-        #{subItem}
-      </foreach>
-      )
-    </foreach>
-  </if>
-  <if test="startTime!=null">
-    and create_time &gt;=  #{startTime,jdbcType=TIMESTAMP}
-  </if>
-  <if test="endTime!=null">
-    and create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
-  </if>
+  <select id="selectBySimplePage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_picture order by id desc
   </select>
 
 </mapper>

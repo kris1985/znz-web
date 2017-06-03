@@ -24,6 +24,8 @@ public class Picture {
 
     private String recId;
 
+    private String gid;
+
     public Long getId() {
         return id;
     }
@@ -102,5 +104,13 @@ public class Picture {
 
     public void setRecId(String recId) {
         this.recId = recId;
+    }
+
+    public String getGid() {
+        return gid;
+    }
+
+    public void setGid(String gid) {
+        this.gid = gid;
     }
 }

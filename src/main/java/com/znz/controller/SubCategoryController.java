@@ -21,6 +21,7 @@ import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.znz.config.AppConfig;
 import com.znz.dao.*;
 import com.znz.model.*;
+import com.znz.util.PartionCodeHoder;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -172,7 +173,9 @@ public class SubCategoryController {
                 //删除
                 deletePictrues(fileQueryVO);
             }else{
+                PartionCodeHoder.set(queryParam.getSecondSelectedId());
                 List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
+                PartionCodeHoder.clear();
                 int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                         / pageParameter.getPageSize();
                 model.addAttribute("totalPage",totalPage);
