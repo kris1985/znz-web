@@ -10,6 +10,7 @@ import java.util.Set;
  */
 @Data
 public class QueryParams {
+    private String secondCategoryId;
     private String categoryIds;
     private Integer referrerId;
     private Integer currentPage;

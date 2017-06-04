@@ -242,12 +242,9 @@ public class FileController {
         List<Set<Integer>> categoryConditions = new ArrayList<>();
         FileQueryVO fileQueryVO = new FileQueryVO();
         fileQueryVO.setPage(pageParameter);
-        if(StringUtils.isBlank(fourthSelectedId)){
-            List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
-            Set<Integer> thirdCategorys =    subCategories.stream().filter(s-> String.valueOf(s.getParentId()).equals(secondSelectedId) ).map(s->s.getId()).collect(Collectors.toSet());//三级类
-            Set<Integer> set =  subCategories.stream().filter(s->thirdCategorys.contains(s.getParentId())).map(s->s.getId()).collect(Collectors.toSet()) ;//根据3级别类查找4级类
-            categoryConditions.add(set);
-        }else{
+        fileQueryVO.setRecommendId(recommendId);
+        List<Picture> pictures;
+        if(!StringUtils.isBlank(fourthSelectedId)){
             String[] ids = fourthSelectedId.split("[;]");
             Set<Integer> set ;
             for(String x:ids){
@@ -262,10 +259,12 @@ public class FileController {
                     categoryConditions.add(set);
                 }
             }
+            fileQueryVO.setCategoryConditions(categoryConditions);
+            pictures =  pictureMapper.selectByPage(fileQueryVO);
+        }else{
+            pictures = pictureMapper.selectBySimplePage(fileQueryVO);
         }
-        fileQueryVO.setCategoryConditions(categoryConditions);
-        fileQueryVO.setRecommendId(recommendId);
-        List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
+
         int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                 / pageParameter.getPageSize();
         Picture picture = pictures.get(0);

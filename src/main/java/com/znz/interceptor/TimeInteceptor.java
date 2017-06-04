@@ -33,7 +33,7 @@ public class TimeInteceptor implements HandlerInterceptor {
         long startTime = (Long)request.getAttribute("startTime");
         long endTime = System.currentTimeMillis();
         long executeTime = endTime - startTime;
-        log.info("[" + handler + "] executeTime : " + executeTime);
+        log.info("[" + handler + "] executeTime:" + executeTime);
     }
 
     public void afterCompletion(HttpServletRequest arg0,

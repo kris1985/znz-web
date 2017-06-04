@@ -774,7 +774,7 @@
             <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
-            <input type="hidden" id="pageSize" name = "pageSize" value="80">
+            <input type="hidden" id="pageSize" name = "pageSize" value="120">
             <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
             <input type="hidden" id="totalCount" name="totalCount" value="${totalCount}">
             <input id="startTime1" name="startTime" type="hidden" />

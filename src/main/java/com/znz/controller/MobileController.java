@@ -12,7 +12,9 @@ import com.znz.model.Picture;
 import com.znz.model.SubCategory;
 import com.znz.model.User;
 import com.znz.model.UserAuth;
+import com.znz.service.CategoryService;
 import com.znz.util.CategoryUtil;
+import com.znz.util.PartionCodeHoder;
 import com.znz.util.SignUtil;
 import com.znz.util.WaterMarkUtil;
 import com.znz.vo.*;
@@ -52,6 +54,8 @@ public class MobileController {
     private PictureMapper pictureMapper;
     @Resource
     private AppConfig appConfig;
+    @Resource
+    private CategoryService categoryService;
 
     @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
     public @ResponseBody CommonResponse<UserInfo> signIn(@RequestBody BaseRequest<SignInRequest> baseRequest) {
@@ -141,87 +145,113 @@ public class MobileController {
     }
 
     @RequestMapping(value = "/pictures" , method= RequestMethod.POST)
-    public @ResponseBody PageResponse<PictureInfo> pictures(HttpServletRequest request,@RequestBody BaseRequest<QueryParams> baseRequest){
-        Device device = DeviceUtils.getCurrentDevice(request);
-        PageResponse<PictureInfo> commonResponse = new PageResponse();
-        checkSign(baseRequest);
-        checkToken(baseRequest.getToken());
-        User user = getUserByToken(baseRequest);
-        Integer userId = user.getUserId();
-        String waterMark = WaterMarkUtil.getWaterMark(user.getWatermark());;
-        FileQueryVO fileQueryVO = new FileQueryVO();
-        QueryParams queryParams = baseRequest.getData();
-        if(queryParams == null){
-            throw new ServiceException("1008","参数不合法");
-        }
-        if(StringUtils.isEmpty(queryParams.getCategoryIds())){
-            throw new ServiceException("1008","分类不能为空");
-        }
-        if(queryParams.getCurrentPage()==null){
-            queryParams.setCurrentPage(1);
-        }
-        if(queryParams.getPageSize()==null){
-            queryParams.setPageSize(120);
-        }
-        List<Set<Integer>> categoryConditions = new ArrayList<>();
-        String categoryIds = queryParams.getCategoryIds();
-        String[] ids = categoryIds.split("[;,]");
-        PageParameter pageParameter = new PageParameter(queryParams.getCurrentPage(), queryParams.getPageSize());
-        fileQueryVO.setRecommendId(queryParams.getReferrerId());
-        fileQueryVO.setPage(pageParameter);
-        categoryConditions.add(Arrays.stream(ids).map(s->Integer.parseInt(s.trim())).collect(Collectors.toSet()));
-        fileQueryVO.setCategoryConditions(categoryConditions);
-        List<Picture> pictures =  pictureMapper.selectByPage(fileQueryVO);
-        if(CollectionUtils.isEmpty(pictures)){
-            return commonResponse;
-        }
-        int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
-                / pageParameter.getPageSize();
-        PictureInfo pictureInfo = new PictureInfo() ;
-        PictureInfo.Picture picture ;
-        List<PictureInfo.Picture> list = new ArrayList<>();
-        for(Picture p:pictures){
-            picture = new PictureInfo.Picture();
-            picture.setId(p.getId());
-            picture.setClickTimes(p.getClickTimes());
-            picture.setDownloadTimes(p.getDownloadTimes());
-            picture.setName(p.getName());
-            picture.setFilePath(p.getFilePath());
-            picture.setMyRecommend(p.getRecId()!=null && p.getRecId().contains(String.valueOf(userId)));
-            String attachs = p.getAttach();
-            if(!StringUtils.isEmpty(attachs)){
-                try{
-                    picture.setAttachs(Arrays.asList(attachs.split(",")));
-                }catch (Exception e){
-                    log.error(e.getLocalizedMessage(),e);
-                }
+    public @ResponseBody CommonResponse<PictureInfo> pictures(HttpServletRequest request,@RequestBody BaseRequest<QueryParams> baseRequest){
+        CommonResponse<PictureInfo> commonResponse = new CommonResponse();
+        try {
+            Device device = DeviceUtils.getCurrentDevice(request);
+            checkSign(baseRequest);
+            checkToken(baseRequest.getToken());
+            User user = getUserByToken(baseRequest);
+            Integer userId = user.getUserId();
+            String waterMark = WaterMarkUtil.getWaterMark(user.getWatermark());
+            ;
+            FileQueryVO fileQueryVO = new FileQueryVO();
+            QueryParams queryParams = baseRequest.getData();
+            if (queryParams == null) {
+                throw new ServiceException("1008", "参数不合法");
             }
-            list.add(picture);
+            if (StringUtils.isEmpty(queryParams.getSecondCategoryId())) {
+                throw new ServiceException("1008", "分类不能为空");
+            }
+            if (queryParams.getCurrentPage() == null) {
+                queryParams.setCurrentPage(1);
+            }
+            if (queryParams.getPageSize() == null) {
+                queryParams.setPageSize(120);
+            }
+            List<Set<Integer>> categoryConditions = new ArrayList<>();
+            String categoryIds = queryParams.getCategoryIds();
+            String[] ids = categoryIds.split("[,]");
+            PageParameter pageParameter = new PageParameter(queryParams.getCurrentPage(), queryParams.getPageSize());
+            fileQueryVO.setRecommendId(queryParams.getReferrerId());
+            fileQueryVO.setPage(pageParameter);
+            List<Picture> pictures ;
+            Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(queryParams.getSecondCategoryId()));
+            PartionCodeHoder.set(String.valueOf(partionCode));
+            if(StringUtils.isEmpty(categoryIds)){
+                pictures = pictureMapper.selectBySimplePage(fileQueryVO);
+            }else{
+                Set<Integer> set ;
+                for(String x:ids){
+                    set = new HashSet<>();
+                    set.add(Integer.parseInt(x));
+                    if(!CollectionUtils.isEmpty(set)){
+                        categoryConditions.add(set);
+                    }
+                }
+                //categoryConditions.add(Arrays.stream(ids).map(s -> Integer.parseInt(s.trim())).collect(Collectors.toSet()));
+                fileQueryVO.setCategoryConditions(categoryConditions);
+                pictures = pictureMapper.selectByPage(fileQueryVO);
+            }
+            PartionCodeHoder.clear();
+            if (CollectionUtils.isEmpty(pictures)) {
+                return commonResponse;
+            }
+            int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
+                    / pageParameter.getPageSize();
+            PictureInfo pictureInfo = new PictureInfo();
+            PictureInfo.Picture picture;
+            List<PictureInfo.Picture> list = new ArrayList<>();
+            for (Picture p : pictures) {
+                picture = new PictureInfo.Picture();
+                picture.setId(p.getGid());
+                picture.setClickTimes(p.getClickTimes());
+                picture.setDownloadTimes(p.getDownloadTimes());
+                picture.setName(p.getName());
+                picture.setFilePath(p.getFilePath());
+                picture.setMyRecommend(p.getRecId() != null && p.getRecId().contains(String.valueOf(userId)));
+                String attachs = p.getAttach();
+                if (!StringUtils.isEmpty(attachs)) {
+                    try {
+                        picture.setAttachs(Arrays.asList(attachs.split(",")));
+                    } catch (Exception e) {
+                        log.error(e.getLocalizedMessage(), e);
+                    }
+                }
+                list.add(picture);
+            }
+            String width;
+            String height;
+            if (device.isMobile()) {
+                width = "387";
+                height = "284";
+            } else {
+                width = "387";
+                height = "284";
+            }
+            String paramPrefix = "?x-oss-process=image";
+            String resizeParam = "/resize,m_pad,h_" + height + ",w_" + width;
+            //?x-oss-process=image/resize,m_pad,h_199,w_280
+            //?x-oss-process=image/resize,m_pad,h_199,w_280/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
+            //?x-oss-process=image/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
+            PictureInfo.PictureProperty p = new PictureInfo.PictureProperty();
+            p.setUrl(appConfig.getOssPath());
+            p.setSizeParam(resizeParam);
+            p.setParamPrefix(paramPrefix);
+            p.setWaterMark(waterMark);
+            pictureInfo.setPictures(list);
+            pictureInfo.setPictureProperty(p);
+            pictureInfo.setTotalPage(totalPage);
+            pictureInfo.setTotalCount(pageParameter.getTotalCount());
+            commonResponse.setResult(pictureInfo);
+        }catch (ServiceException e){
+            commonResponse.setErrorCode(e.getErrCode());
+            commonResponse.setErrorMsg(e.getErrReason());
+        } catch (Exception e){
+            log.error(e.getLocalizedMessage(),e);
+            commonResponse.setErrorCode("9999");
+            commonResponse.setErrorMsg("系统忙请稍后再试");
         }
-        String width;
-        String height;
-        if(device.isMobile()){
-            width = "387";
-            height = "284";
-        }else{
-            width = "387";
-            height = "284";
-        }
-        String paramPrefix = "?x-oss-process=image";
-        String resizeParam = "/resize,m_pad,h_"+height+",w_"+width;
-        //?x-oss-process=image/resize,m_pad,h_199,w_280
-        //?x-oss-process=image/resize,m_pad,h_199,w_280/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
-        //?x-oss-process=image/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
-        PictureInfo.PictureProperty p = new PictureInfo.PictureProperty();
-        p.setUrl(appConfig.getOssPath());
-        p.setSizeParam(resizeParam);
-        p.setParamPrefix(paramPrefix);
-        p.setWaterMark(waterMark);
-        pictureInfo.setPictures(list);
-        pictureInfo.setPictureProperty(p);
-        commonResponse.setTotalPage(totalPage);
-        commonResponse.setTotalCount(pageParameter.getTotalCount());
-        commonResponse.setResult(pictureInfo);
         return commonResponse;
     }
 
@@ -294,6 +324,9 @@ public class MobileController {
             }
             if(!StringUtils.isEmpty(request.getCategoryIds())){
                 paramMap.put("categoryIds",request.getCategoryIds());
+            }
+            if(!StringUtils.isEmpty(request.getSecondCategoryId())){
+                paramMap.put("secondCategoryId",request.getSecondCategoryId());
             }
             paramSign = SignUtil.sign(paramMap);
         }

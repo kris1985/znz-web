@@ -11,12 +11,14 @@ import java.util.List;
 @Data
 public class PictureInfo {
 
+    private Integer totalPage;
+    private Integer totalCount;
     private List<Picture> pictures;
     private PictureProperty pictureProperty;
 
     @Data
     public static class Picture{
-        private Long id;
+        private String id;
         private String name;
         private String filePath;
         private Integer clickTimes;
