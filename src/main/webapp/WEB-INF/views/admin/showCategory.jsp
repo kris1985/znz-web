@@ -409,7 +409,8 @@
                 if(temp.indexOf(",") !=-1){
                     temp = temp.substring(0,temp.length-1);
                 }
-                var url = "${basePath}/admin/file/toUpload?category=" + temp
+                var secondCategory = $("#no_leaf_item").find(".selected").attr("id");
+                var url = "${basePath}/admin/file/toUpload?category=" + temp +"&secondCategory=" + secondCategory;
                 art.dialog.open(url,
                     {
                         title: "上传文件",
@@ -430,7 +431,8 @@
                 bindings: {
                     'addAttach': function (t) {
                         var id = $(t).attr("item");
-                        var url = "${basePath}/admin/file/toUploadAttach?id="+id;
+                        var secondCategory = $("#no_leaf_item").find(".selected").attr("id");
+                        var url = "${basePath}/admin/file/toUploadAttach?id="+id+"&secondCategory="+secondCategory;
                         art.dialog.open(url,
                             {
                                 "id": "2345",
@@ -843,7 +845,7 @@
     <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
          <div class="mod_sear_list" id="mod_${firstSelectedId}">
         <h3>目录：</h3>
-        <ul class="mod_category_item">
+        <ul class="mod_category_item" id="no_leaf_item">
             <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
                 <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
                     <li id="${item.id}" class="li_item selected noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a

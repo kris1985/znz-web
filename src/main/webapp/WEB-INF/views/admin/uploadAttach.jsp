@@ -25,7 +25,8 @@
                 $('#file_upload').uploadify({
                     'formData'     : {
                         'timestamp' : new Date().getTime(),
-                        'pictureId': ${param.id}
+                        'pictureId': ${param.id},
+                        'secondCategory': ${param.secondCategory}
                     },
                     //	'auto':false,
                     'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png;*.bmp;*.wbmp;',

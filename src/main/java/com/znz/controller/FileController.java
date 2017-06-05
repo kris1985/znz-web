@@ -73,19 +73,20 @@ public class FileController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
-    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, String category, Model model) throws IOException {
+    void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, String category,String secondCategory) throws IOException {
         UserSession userSession = (UserSession) request.getSession().getAttribute(Constants.USER_SESSION);
-        ResultVO result = new ResultVO();
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
-
         List<PictureCategory> pictureCategories = new ArrayList<>();
         String[] categorys = category.split(",");
         try {
+            Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondCategory));
+            PartionCodeHoder.set(String.valueOf(partionCode));
             for (MultipartFile file : files) {
                 String originalName = file.getOriginalFilename();
-                String path = UUID.randomUUID().toString() + getSuffix(originalName);
+                String uuid = UUID.randomUUID().toString();
+                String path = uuid + getSuffix(originalName);
                 boolean b = upload(ossClient, file, path);
                 if (b) {
                     Picture picture = new Picture();
@@ -95,6 +96,7 @@ public class FileController {
                     picture.setCreateUser(userSession.getUser().getUserName());
                     picture.setClickTimes(0);
                     picture.setDownloadTimes(0);
+                    picture.setGid(secondCategory+"_"+uuid);
                     pictureMapper.insert(picture);
 
                     for (String c : categorys) {
@@ -108,6 +110,8 @@ public class FileController {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        }finally {
+            PartionCodeHoder.clear();
         }
     }
 
@@ -155,12 +159,14 @@ public class FileController {
     @RequestMapping(value = "/uploadChild", method = RequestMethod.POST)
     public
     @ResponseBody
-    void uploadChild(HttpServletRequest request, @RequestParam MultipartFile file, Long pictureId) throws IOException {
+    void uploadChild(HttpServletRequest request, @RequestParam MultipartFile file, Long pictureId,String secondCategory) throws IOException {
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
-        Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
         try {
+            Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
+            Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondCategory));
+            PartionCodeHoder.set(secondCategory);
             String fileName = file.getOriginalFilename();
             String childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
             boolean b = upload(ossClient, file, childPath);
@@ -178,13 +184,16 @@ public class FileController {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
+        }finally {
+            PartionCodeHoder.clear();
         }
     }
 
 
     @RequestMapping(value = "/toUpload", method = RequestMethod.GET)
-    public String toUpload(String category, Model model) throws IOException {
+    public String toUpload(String category,String secondCategory, Model model) throws IOException {
         model.addAttribute("category", category);
+        model.addAttribute("secondCategory", secondCategory);
         return "admin/upload2";
     }
 

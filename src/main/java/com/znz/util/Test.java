@@ -8,16 +8,20 @@ import sun.misc.BASE64Encoder;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by huangtao on 2015/1/23.
  */
 public class Test {
 
-    public static  void  main(String args[]) throws IOException {
+    public static  void  main(String args[]) throws IOException, NoSuchAlgorithmException {
         //ZipUtil.unpack(new File("d:/temp/test.zip"), new File("d:/temp/"));
         //ZipUtil.explode(new File("d:/temp/temp.zip"));
        // String extName ="11132.txt".substring("11132.txt".lastIndexOf(".")+1);
@@ -34,6 +38,12 @@ public class Test {
         System.out.println(test);
         Integer s = new ArrayList<Integer>().stream().findAny().orElse(null);
         System.out.println(s);
+//        System.out.println(UUID.randomUUID().clockSequence());
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        UUID uuid = UUID.randomUUID();
+        String guidStr = uuid.toString();
+        md.update(guidStr.getBytes(), 0, guidStr.length());
+        System.out.println(new BigInteger(1, md.digest()).toString(16));
 
 
 
