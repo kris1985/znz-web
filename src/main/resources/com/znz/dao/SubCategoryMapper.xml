@@ -96,5 +96,9 @@
     from t_sub_category where parent_id =  #{parentId,jdbcType=INTEGER}
   </select>
 
+  <select id="selectMaxPartionCode" resultType="java.lang.Integer" >
+    select max(partion_code) from t_sub_category
+  </select>
+
 
 </mapper>

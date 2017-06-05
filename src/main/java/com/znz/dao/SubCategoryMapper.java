@@ -24,4 +24,7 @@ public interface SubCategoryMapper {
     Integer selectMaxSortId(Integer parentId);
 
     List<SubCategory> selectByParentId(Integer parentId);
+
+    Integer selectMaxPartionCode();
+
 }

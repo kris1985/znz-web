@@ -317,10 +317,20 @@ public class SubCategoryController {
         if (!PermissionUtil.checkPermisson(request)) {
             resultVO.setMsg("无权限操作");
         }
+
+
         SubCategory subCategory = new SubCategory();
         BeanUtils.copyProperties(subCategoryVO, subCategory);
         subCategory.setId(null);
         subCategory.setAllFlag("N");
+        if(subCategory.getCategoryLevel() == 1){
+            Integer partionCode = subCategoryMapper.selectMaxPartionCode() ;
+            if(partionCode==null){
+                partionCode = 0;
+            }
+            partionCode = partionCode + 1;
+            subCategory.setPartionCode(partionCode);
+        }
         subCategoryMapper.insert(subCategory);
         return "redirect:/admin/subCategory/showCategory?firstCategoryId="+subCategoryVO.getFirstSelectedId()+"&secondCategoryId="+subCategoryVO.getSecondSelectedId();
     }
