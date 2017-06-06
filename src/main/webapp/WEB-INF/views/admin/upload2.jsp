@@ -33,7 +33,7 @@
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',
          				'uploader' : '${basePath}/admin/file/upload',
-         				 'formData'      : {'category' : "${category}" },
+         				 'formData'      : {'category' : "${category}",'secondCategory': "${secondCategory}"},
          				'onUploadSuccess' : function(file, data, response) {
          				                var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
          				                $("#result").show();
@@ -88,7 +88,8 @@
 <form>
 		<div id="queue"></div>
 		<input id="file_upload" name="file_upload" type="files" multiple="true">
-		<input type = "hidden" name="category" id="category" value="${category}">
+	 	<input type = "hidden" name="category" id="category" value="${category}">
+        <input type = "hidden" name="secondCategory" id="secondCategory" value="${secondCategory}">
 <div id="result" >
 </div>
 <!--
