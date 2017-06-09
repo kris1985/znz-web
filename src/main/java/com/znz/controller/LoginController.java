@@ -218,6 +218,13 @@ public class LoginController {
         request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
         user.setLastLoginTime(new Date());
         user.setImei(imei);
+        if(StringUtils.isEmpty(user.getSessionId())){
+            user.setSessionId(request.getSession().getId());
+        }
+        boolean islogin =   MySessionLister.replaceSession(request.getSession(), user.getSessionId());
+        if(islogin){
+            user.setSessionId(request.getSession().getId());//如果已经登陆，覆盖之前的sessionId
+        }
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         Cookie cookie = new Cookie("MAC","FDSGHJ3");
