@@ -96,7 +96,7 @@ public class FileController {
                     picture.setCreateUser(userSession.getUser().getUserName());
                     picture.setClickTimes(0);
                     picture.setDownloadTimes(0);
-                    picture.setGid(secondCategory+"_"+uuid);
+                    picture.setGid(partionCode+"_"+uuid);
                     pictureMapper.insert(picture);
 
                     for (String c : categorys) {
