@@ -21,6 +21,7 @@ import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.znz.config.AppConfig;
 import com.znz.dao.*;
 import com.znz.model.*;
+import com.znz.service.CategoryService;
 import com.znz.util.PartionCodeHoder;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +68,9 @@ public class SubCategoryController {
 
     @Resource
     private AppConfig appConfig;
+
+    @Resource
+    private CategoryService categoryService;
 
     public static ExecutorService pool = Executors.newFixedThreadPool(10);
 
@@ -205,20 +209,32 @@ public class SubCategoryController {
     }
 
     private void deletePictrues(FileQueryVO fileQueryVO) {
-        List<Picture> pictures = pictureMapper.selectByParam(fileQueryVO);
-        if(CollectionUtils.isEmpty(pictures)){
-            return;
+        FileQueryVO queryVO = new FileQueryVO();
+        queryVO.setCategoryConditions(fileQueryVO.getCategoryConditions());
+        PageParameter page = new PageParameter(fileQueryVO.getPage().getCurrentPage(),1000);
+        queryVO.setPage(page);
+        queryVO.setStartTime(fileQueryVO.getStartTime());
+        queryVO.setEndTime(fileQueryVO.getEndTime());
+        queryVO.setRecommendId(fileQueryVO.getRecommendId());
+        List<Picture>  pictures =  pictureMapper.selectByPage(queryVO);
+        while(!CollectionUtils.isEmpty(pictures)){
+            List<Long> ids = pictures.stream().map(s->s.getId()).collect(Collectors.toList());
+            pictureMapper.deleteByPrimaryKeys(ids);
+            pictureCategoryMapper.deleteByPictrueIds(ids);
+            deleteFiles(pictures);
+            PageParameter pageParameter = queryVO.getPage();
+            int curentPage = pageParameter.getCurrentPage()+1;
+            pageParameter.setCurrentPage(curentPage);
+            pictures =  pictureMapper.selectByPage(queryVO);
         }
-        List<Long> ids = pictures.stream().map(s->s.getId()).collect(Collectors.toList());
-        pictureMapper.deleteByPrimaryKeys(ids);
-        pictureCategoryMapper.deleteByPictrueIds(ids);
-        deleteFiles(pictures);
+
+
     }
 
     private void deleteFiles(List<Picture> pictures) {
-       /* pool.submit(new Runnable() {
+        pool.submit(new Runnable() {
             @Override
-            public void run() {*/
+            public void run() {
                 try {
                     List<String> keys = new ArrayList<>();
                     for(Picture p:pictures){
@@ -235,8 +251,8 @@ public class SubCategoryController {
                 }catch (Exception e){
                     log.error(e.getLocalizedMessage(),e);
                 }
-           /* }
-        });*/
+            }
+        });
     }
 
     private List<SubCategoryVO> getchildrens(List<SubCategory> subCategories, int parentId) {
@@ -276,12 +292,21 @@ public class SubCategoryController {
             resultVO.setMsg("无权限操作");
         } else {
             List<SubCategory> subCategories = subCategoryMapper.selectByParentId(id);
+
             if(!CollectionUtils.isEmpty(subCategories)){
                 resultVO.setMsg("该类别下有子类，请删除子类");
             }else{
-                List<Long> list = pictureCategoryMapper.selectByCategoryId(id);
-                if(!CollectionUtils.isEmpty(list)){
-                    resultVO.setMsg("该类别下图片，请删除该类别下的图片");
+                SubCategory subCategory = subCategoryMapper.selectByPrimaryKey(id);
+                if(subCategory.getCategoryLevel() == 3){
+                    Integer partionCdoe =  categoryService.getPartionCodeBy3(subCategory.getParentId());
+                    PartionCodeHoder.set(String.valueOf(partionCdoe));
+                    List<Long> list = pictureCategoryMapper.selectByCategoryId(id);
+                    if(!CollectionUtils.isEmpty(list)){
+                        resultVO.setMsg("该类别下图片，请删除该类别下的图片");
+                    }else{
+                        subCategoryMapper.deleteByPrimaryKey(id);
+                        resultVO.setCode(0);
+                    }
                 }else{
                     subCategoryMapper.deleteByPrimaryKey(id);
                     resultVO.setCode(0);
@@ -437,31 +462,35 @@ public class SubCategoryController {
 
     public void deleteFile( List<String> keys) {
         if (!CollectionUtils.isEmpty(keys)) {
-            if(keys.size()>1000){
-                int count = keys.size()/1000;
-                List<String> childs ;
-                for(int i=0;i<count;i++){
-                    int endIndex = (i+1)*1000-1;
-                    if(endIndex>keys.size()-1){
-                        endIndex = keys.size()-1;
+            if (!CollectionUtils.isEmpty(keys)) {
+                if (keys.size() > 1000) {
+                    int count = (keys.size() + 1000) / 1000;
+                    List<String> childs;
+                    for (int i = 0; i < count; i++) {
+                        int endIndex = (i + 1) * 1000;
+                        if (endIndex > keys.size()) {
+                            endIndex = keys.size();
+                        }
+                        childs = keys.subList(i * 1000, endIndex);
+                        System.out.println(childs.get(childs.size() - 1));
+                        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
+                        deleteObjectsRequest.setKeys(childs);
+                        log.info("delete from oss :keys ：+"+keys);
+                        ossClient.deleteObjects(deleteObjectsRequest);
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    childs = keys.subList(i*1000,endIndex);
+                } else {
                     DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
-                    deleteObjectsRequest.setKeys(childs);
+                    deleteObjectsRequest.setKeys(keys);
+                    log.info("delete from oss1 :keys ：+"+keys);
                     ossClient.deleteObjects(deleteObjectsRequest);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
-            }else{
-                DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(appConfig.getBucketName());
-                deleteObjectsRequest.setKeys(keys);
-                ossClient.deleteObjects(deleteObjectsRequest);
-            }
 
+            }
         }
     }
-
 }
