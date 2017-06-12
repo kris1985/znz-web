@@ -180,7 +180,7 @@ public class LoginController {
         if(StringUtils.isEmpty(imei)){
             throw new ServiceException("101","imei不能为空");
         }
-        if("1".equals(user.getLimitImeiFlag()) && !imei.equals(user.getImei())){
+        if(user.getLimitImeiFlag()!=null && 1 == user.getLimitImeiFlag() && !imei.equals(user.getImei())){
             throw new ServiceException("104","该账户只能在绑定的电脑上登陆");
         }
         if(!"WEB".equalsIgnoreCase(user.getDevice())){
