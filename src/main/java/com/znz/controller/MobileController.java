@@ -3,15 +3,9 @@ package com.znz.controller;
 import com.alibaba.fastjson.JSON;
 import com.sun.org.apache.regexp.internal.RE;
 import com.znz.config.AppConfig;
-import com.znz.dao.PictureMapper;
-import com.znz.dao.SubCategoryMapper;
-import com.znz.dao.UserAuthMapper;
-import com.znz.dao.UserMapper;
+import com.znz.dao.*;
 import com.znz.exception.ServiceException;
-import com.znz.model.Picture;
-import com.znz.model.SubCategory;
-import com.znz.model.User;
-import com.znz.model.UserAuth;
+import com.znz.model.*;
 import com.znz.service.CategoryService;
 import com.znz.util.CategoryUtil;
 import com.znz.util.PartionCodeHoder;
@@ -56,6 +50,8 @@ public class MobileController {
     private AppConfig appConfig;
     @Resource
     private CategoryService categoryService;
+    @Resource
+    private PicRecommendMapper picRecommendMapper;
 
     @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
     public @ResponseBody CommonResponse<UserInfo> signIn(@RequestBody BaseRequest<SignInRequest> baseRequest) {
@@ -251,6 +247,8 @@ public class MobileController {
             log.error(e.getLocalizedMessage(),e);
             commonResponse.setErrorCode("9999");
             commonResponse.setErrorMsg("系统忙请稍后再试");
+        }finally {
+            PartionCodeHoder.clear();
         }
         return commonResponse;
     }
@@ -310,7 +308,6 @@ public class MobileController {
             SignInRequest request = (SignInRequest)obj;
             paramMap.put("userName",request.getUserName());
             paramMap.put("password",request.getPassword());
-            paramSign = SignUtil.sign(paramMap);
         }else if(obj instanceof  QueryParams) {
             QueryParams request = (QueryParams)obj;
             if(request.getReferrerId()!=null){
@@ -328,12 +325,143 @@ public class MobileController {
             if(!StringUtils.isEmpty(request.getSecondCategoryId())){
                 paramMap.put("secondCategoryId",request.getSecondCategoryId());
             }
-            paramSign = SignUtil.sign(paramMap);
+        }else if(obj instanceof  PictureRequest) {
+            PictureRequest request = (PictureRequest)obj;
+            paramMap.put("id",request.getId());
         }
+        paramSign = SignUtil.sign(paramMap);
         if(!sign.equals(paramSign)){
             throw new ServiceException("1005","签名不正确");
         }
     }
+
+
+    @RequestMapping(value = "/recommend", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CommonResponse recommend(@RequestBody BaseRequest<PictureRequest> baseRequest) {
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            checkSign(baseRequest);
+            checkToken(baseRequest.getToken());
+            User user = getUserByToken(baseRequest);
+            String picId = baseRequest.getData().getId();
+            PartionCodeHoder.set(picId.substring(0, picId.indexOf("_")));
+            Picture picture = pictureMapper.selectByGid(picId);
+            int userId = user.getUserId();
+            PicRecommend picRecommend = new PicRecommend();
+            picRecommend.setPictureId(picture.getId());
+            picRecommend.setUserId(userId);
+            picRecommend.setPartionCode(null);
+            picRecommend.setCreateTime(new Date());
+            picRecommendMapper.insert(picRecommend);
+            if (org.apache.commons.lang3.StringUtils.isNoneBlank(picture.getRecId())) {
+                picture.setRecId(picture.getRecId() + "," + userId);
+            } else {
+                picture.setRecId(String.valueOf(userId));
+            }
+            Picture updatePicture = new Picture();
+            updatePicture.setId(picture.getId());
+            updatePicture.setRecId(picture.getRecId());
+            pictureMapper.updateByPrimaryKeySelective(updatePicture);
+            commonResponse.setResult(null);
+        } catch (ServiceException e) {
+            commonResponse.setErrorCode(e.getErrCode());
+            commonResponse.setErrorMsg(e.getErrReason());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            commonResponse.setErrorCode("9999");
+            commonResponse.setErrorMsg("系统忙请稍后再试");
+        }finally {
+            PartionCodeHoder.clear();
+        }
+        return commonResponse;
+    }
+
+    @RequestMapping(value = "/cancelRecommend", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CommonResponse cancelRecommend(@RequestBody BaseRequest<PictureRequest> baseRequest) {
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            checkSign(baseRequest);
+            checkToken(baseRequest.getToken());
+            User user = getUserByToken(baseRequest);
+            String picId = baseRequest.getData().getId();
+            PartionCodeHoder.set(picId.substring(0, picId.indexOf("_")));
+            Picture picture = pictureMapper.selectByGid(picId);
+            int userId = user.getUserId();
+            picRecommendMapper.delete(picture.getId(),userId);
+
+            if(org.apache.commons.lang3.StringUtils.isNoneBlank(picture.getRecId())) {
+                List list = Arrays.stream(picture.getRecId().split(",")).filter(s -> !s.equals(String.valueOf(userId))).collect(Collectors.toList());
+                String recId = org.apache.commons.lang3.StringUtils.join(list, ",");
+                picture.setRecId(recId);
+                Picture updatePicture = new Picture();
+                updatePicture.setId(picture.getId());
+                updatePicture.setRecId(picture.getRecId());
+                pictureMapper.updateByPrimaryKeySelective(updatePicture);
+            }
+            commonResponse.setResult(null);
+        } catch (ServiceException e) {
+            commonResponse.setErrorCode(e.getErrCode());
+            commonResponse.setErrorMsg(e.getErrReason());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            commonResponse.setErrorCode("9999");
+            commonResponse.setErrorMsg("系统忙请稍后再试");
+        }finally {
+            PartionCodeHoder.clear();
+        }
+        return commonResponse;
+    }
+
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CommonResponse download(@RequestBody BaseRequest<PictureRequest> baseRequest) {
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            checkSign(baseRequest);
+            checkToken(baseRequest.getToken());
+            User user = getUserByToken(baseRequest);
+            User u = new User();
+            u.setDownloadPerDay(user.getDownloadPerDay()+1);
+            u.setDownloadTotal(user.getDownloadTotal()+1);
+            u.setUserId(user.getUserId());
+            userMapper.updateByPrimaryKeySelective(u);
+            commonResponse.setResult(null);
+        } catch (ServiceException e) {
+            commonResponse.setErrorCode(e.getErrCode());
+            commonResponse.setErrorMsg(e.getErrReason());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            commonResponse.setErrorCode("9999");
+            commonResponse.setErrorMsg("系统忙请稍后再试");
+        }
+        return commonResponse;
+    }
+
+    @RequestMapping(value = "/checkUpdate", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CommonResponse<CheckUpdateVO> checkUpdate(@RequestBody BaseRequest baseRequest) {
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            CheckUpdateVO vo = new CheckUpdateVO();
+            commonResponse.setResult(vo);
+        } catch (ServiceException e) {
+            commonResponse.setErrorCode(e.getErrCode());
+            commonResponse.setErrorMsg(e.getErrReason());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            commonResponse.setErrorCode("9999");
+            commonResponse.setErrorMsg("系统忙请稍后再试");
+        }
+        return commonResponse;
+    }
+
+
 
     public static void main(String[] args) {
         BaseRequest<SignInRequest>  baseRequest = new BaseRequest<>();

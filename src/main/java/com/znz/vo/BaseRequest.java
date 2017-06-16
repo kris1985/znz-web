@@ -1,5 +1,6 @@
 package com.znz.vo;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 /**
@@ -21,6 +22,10 @@ public class BaseRequest<T> {
     private String timestamp;
 
     private T data;
+
+    public static void main(String[] args) {
+        System.out.println(JSON.toJSONString("32"));
+    }
 
 
 }
