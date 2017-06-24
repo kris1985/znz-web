@@ -25,4 +25,6 @@ public class FileQueryVO {
 
     private Integer recommendId;
 
+    private Integer partionCode;
+
 }

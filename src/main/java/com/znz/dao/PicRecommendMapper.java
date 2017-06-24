@@ -10,5 +10,5 @@ public interface PicRecommendMapper {
 
     int insert(PicRecommend picRecommend);
 
-    int delete(@Param("pictureId") Long pictureId, @Param("userId")Integer userId);
+    int delete(@Param("pictureId") Long pictureId, @Param("userId")Integer userId,@Param("partionCode")Integer partionCode);
 }

@@ -306,13 +306,15 @@ public class FileController {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResultVO delete(HttpServletRequest request, Long pictureId) {
+    ResultVO delete(HttpServletRequest request, Long pictureId,Integer secondSelectedId) {
         ResultVO result = new ResultVO();
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
         List<String> keys = new ArrayList<>();
         try {
+            Integer partionCode = categoryService.getPartionCodeBy2(secondSelectedId);
+            PartionCodeHoder.set(String.valueOf(partionCode));
             Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             int i =  pictureMapper.deleteByPrimaryKey(pictureId);
             List list = new ArrayList();
@@ -325,6 +327,8 @@ public class FileController {
             result.setCode(-1);
             result.setMsg("删除文件失败");
             return result;
+        }finally {
+            PartionCodeHoder.clear();
         }
         return result;
     }

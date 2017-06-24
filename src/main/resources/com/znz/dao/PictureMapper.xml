@@ -104,7 +104,7 @@
     from t_picture where 1=1
 
     <if test="recommendId!=null">
-      and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} )
+      and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} and partion_code= #{partionCode,jdbcType=INTEGER} )
     </if>
 
     <if test="categoryConditions!=null and categoryConditions.size()!=0">
@@ -183,7 +183,11 @@
   <select id="selectBySimplePage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
     select
     <include refid="Base_Column_List" />
-    from t_picture order by id desc
+    from t_picture where 1=1
+    <if test="recommendId!=null">
+      and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} and partion_code= #{partionCode,jdbcType=INTEGER} )
+    </if>
+     order by id desc
   </select>
 
 </mapper>

@@ -409,6 +409,10 @@
                 if(temp.indexOf(",") !=-1){
                     temp = temp.substring(0,temp.length-1);
                 }
+                if($("#leaf_category").children().size() != temp.split(",").length){
+                    alert("请选择分类");
+                    return;
+                }
                 var secondCategory = $("#no_leaf_item").find(".selected").attr("id");
                 var url = "${basePath}/admin/file/toUpload?category=" + temp +"&secondCategory=" + secondCategory;
                 art.dialog.open(url,
@@ -450,7 +454,7 @@
                             return;
                         }
                         var id = $(t).attr("item");
-                        var url = "${basePath}/admin/file/delete?pictureId="+id;
+                        var url = "${basePath}/admin/file/delete?pictureId="+id+"&secondSelectedId="+$("#secondSelectedId").val();
                         $.get(url,function (data) {
                             if(data.code ==0 ){
                                 $(t).hide();
@@ -463,7 +467,7 @@
                     ,
                     'rec': function (t) {
                         var id = $(t).attr("item");
-                        var url = "${basePath}/admin/subCategory/recommend/"+id;
+                        var url = "${basePath}/admin/subCategory/recommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
                         if($(t).find(".my_rec").css("display") =="block"){
                             alert("您已推荐过该图片");
                             return;
@@ -478,7 +482,7 @@
                     },
                     'cancleRec': function (t) {
                         var id = $(t).attr("item");
-                        var url = "${basePath}/admin/subCategory/cancelRecommend/"+id;
+                        var url = "${basePath}/admin/subCategory/cancelRecommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
                         if($(t).find(".my_rec").css("display") =="none"){
                             alert("您还没推荐过该图片");
                             return;
@@ -500,7 +504,7 @@
                     bindings: {
                         'rec': function (t) {
                             var id = $(t).attr("item");
-                            var url = "${basePath}/admin/subCategory/recommend/"+id;
+                            var url = "${basePath}/admin/subCategory/recommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
                             if($(t).find(".my_rec").css("display") =="block"){
                                 alert("您已推荐过该图片");
                                 return;
@@ -515,7 +519,7 @@
                         },
                         'cancleRec': function (t) {
                             var id = $(t).attr("item");
-                            var url = "${basePath}/admin/subCategory/cancelRecommend/"+id;
+                            var url = "${basePath}/admin/subCategory/cancelRecommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
                             if($(t).find(".my_rec").css("display") =="none"){
                                 alert("您还没推荐过该图片");
                                 return;
@@ -792,25 +796,25 @@
     <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0}">
         <div class="contextMenu" id="myMenu1" style="display: none">
             <ul>
-                <li id="add"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16" width="16"/> 新增同类</li>
-                <li id="addSub"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154118&size=16"  width="16"/> 新增子类</li>
-                <li id="rename"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"  width="16"/> 重命名</li>
-                <li id="delete1"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+                <li id="add"> 新增同类</li>
+                <li id="addSub"> 新增子类</li>
+                <li id="rename"> 重命名</li>
+                <li id="delete1"> 删除</li>
             </ul>
         </div>
 
         <div class="contextMenu" id="myMenu2" style="display: none">
             <ul>
-                <li id="add2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 新增同类</li>
-                <li id="rename2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
-                <li id="delete2"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+                <li id="add2"> 新增同类</li>
+                <li id="rename2"> 重命名</li>
+                <li id="delete2"> 删除</li>
             </ul>
         </div>
 
         <div class="contextMenu" id="myMenu3" style="display: none">
             <ul>
-                <li id="rename3"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 重命名</li>
-                <li id="delete3"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+                <li id="rename3">重命名</li>
+                <li id="delete3"> 删除</li>
             </ul>
         </div>
   </c:if>
@@ -819,11 +823,11 @@
         <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
             <div class="contextMenu" id="menuPic" style="display: none">
                 <ul>
-                    <li id="addAttach"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154104&size=16"/> 上传附图</li>
-                    <li id="delete"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 删除</li>
+                    <li id="addAttach"> 上传附图</li>
+                    <li id="delete"> 删除</li>
                     <c:if test="${userSession.user.recommendFlag == 1}">
-                        <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
-                        <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
+                        <li id="rec"> 推荐</li>
+                        <li id="cancleRec">取消推荐</li>
                     </c:if>
                 </ul>
             </div>
@@ -832,8 +836,8 @@
             <div class="contextMenu" id="menuPic" style="display: none">
                 <ul>
                     <c:if test="${userSession.user.recommendFlag == 1}">
-                        <li id="rec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 推荐</li>
-                        <li id="cancleRec"><img src="http://www.easyicon.net/api/resizeApi.php?id=1154126&size=16"/> 取消推荐</li>
+                        <li id="rec"> 推荐</li>
+                        <li id="cancleRec"> 取消推荐</li>
                     </c:if>
                 </ul>
             </div>

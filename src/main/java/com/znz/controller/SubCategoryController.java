@@ -166,6 +166,7 @@ public class SubCategoryController {
         model.addAttribute("currentPage",queryParam.getCurrentPage());
         Integer partionCode = subCategories.stream().filter(s-> String.valueOf(s.getId()).equals(queryParam.getSecondSelectedId())).map(s->s.getPartionCode()).findAny().orElse(null);
         PartionCodeHoder.set(String.valueOf(partionCode));
+        fileQueryVO.setPartionCode(partionCode);
         if(!CollectionUtils.isEmpty(categoryConditions) && categoryConditions.stream().allMatch(s->s.size()>0)){
             fileQueryVO.setPage(pageParameter);
             fileQueryVO.setCategoryConditions(categoryConditions);
@@ -216,6 +217,7 @@ public class SubCategoryController {
         queryVO.setStartTime(fileQueryVO.getStartTime());
         queryVO.setEndTime(fileQueryVO.getEndTime());
         queryVO.setRecommendId(fileQueryVO.getRecommendId());
+        queryVO.setPartionCode(fileQueryVO.getPartionCode());
         List<Picture>  pictures =  pictureMapper.selectByPage(queryVO);
         while(!CollectionUtils.isEmpty(pictures)){
             List<Long> ids = pictures.stream().map(s->s.getId()).collect(Collectors.toList());
@@ -408,18 +410,21 @@ public class SubCategoryController {
     }
 
     @RequestMapping(value = "/recommend/{id}", method = RequestMethod.GET)
-    public @ResponseBody ResultVO recommend(HttpServletRequest request, @PathVariable Long id) {
+    public @ResponseBody ResultVO recommend(HttpServletRequest request, @PathVariable Long id,Integer secondSelectedId) {
         ResultVO resultVO = new ResultVO();
         resultVO.setCode(-1);
         UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        Integer partionCode = categoryService.getPartionCodeBy2(secondSelectedId);
+        PartionCodeHoder.set(String.valueOf(partionCode));
+        Picture record =pictureMapper.selectByPrimaryKey(id);
         Integer userId = userSession.getUser().getUserId();
         PicRecommend picRecommend = new PicRecommend();
         picRecommend.setPictureId(id);
         picRecommend.setUserId(userSession.getUser().getUserId());
         picRecommend.setPartionCode(null);
         picRecommend.setCreateTime(new Date());
+        picRecommend.setPartionCode(partionCode);
         picRecommendMapper.insert(picRecommend);
-        Picture record =pictureMapper.selectByPrimaryKey(id);
         if(StringUtils.isNoneBlank(record.getRecId())){
             record.setRecId(record.getRecId()+","+userId);
         }else{
@@ -430,16 +435,19 @@ public class SubCategoryController {
         updatePicture.setRecId(record.getRecId());
         pictureMapper.updateByPrimaryKeySelective(updatePicture);
         resultVO.setCode(0);
+        PartionCodeHoder.clear();
         return resultVO;
     }
 
     @RequestMapping(value = "/cancelRecommend/{id}", method = RequestMethod.GET)
-    public @ResponseBody ResultVO cancelRecommend(HttpServletRequest request, @PathVariable Long id) {
+    public @ResponseBody ResultVO cancelRecommend(HttpServletRequest request, @PathVariable Long id,Integer secondSelectedId) {
         ResultVO resultVO = new ResultVO();
         resultVO.setCode(-1);
+        Integer partionCode = categoryService.getPartionCodeBy2(secondSelectedId);
+        PartionCodeHoder.set(String.valueOf(partionCode));
         UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
         Integer userId = userSession.getUser().getUserId();
-        picRecommendMapper.delete(id,userId);
+        picRecommendMapper.delete(id,userId,partionCode);
 
         Picture record =pictureMapper.selectByPrimaryKey(id);
         if(StringUtils.isNoneBlank(record.getRecId())){

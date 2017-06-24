@@ -346,13 +346,14 @@ public class MobileController {
             checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);
             String picId = baseRequest.getData().getId();
-            PartionCodeHoder.set(picId.substring(0, picId.indexOf("_")));
+            String partionCode = picId.substring(0, picId.indexOf("_"));
+            PartionCodeHoder.set(partionCode);
             Picture picture = pictureMapper.selectByGid(picId);
             int userId = user.getUserId();
             PicRecommend picRecommend = new PicRecommend();
             picRecommend.setPictureId(picture.getId());
             picRecommend.setUserId(userId);
-            picRecommend.setPartionCode(null);
+            picRecommend.setPartionCode(Integer.parseInt(partionCode));
             picRecommend.setCreateTime(new Date());
             picRecommendMapper.insert(picRecommend);
             if (org.apache.commons.lang3.StringUtils.isNoneBlank(picture.getRecId())) {
@@ -388,10 +389,11 @@ public class MobileController {
             checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);
             String picId = baseRequest.getData().getId();
-            PartionCodeHoder.set(picId.substring(0, picId.indexOf("_")));
+            String partionCode = picId.substring(0, picId.indexOf("_"));
+            PartionCodeHoder.set(partionCode);
             Picture picture = pictureMapper.selectByGid(picId);
             int userId = user.getUserId();
-            picRecommendMapper.delete(picture.getId(),userId);
+            picRecommendMapper.delete(picture.getId(),userId,Integer.parseInt(partionCode));
 
             if(org.apache.commons.lang3.StringUtils.isNoneBlank(picture.getRecId())) {
                 List list = Arrays.stream(picture.getRecId().split(",")).filter(s -> !s.equals(String.valueOf(userId))).collect(Collectors.toList());
