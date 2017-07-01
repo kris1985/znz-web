@@ -30,6 +30,9 @@
             <span id="addSizeBtn" class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
             <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
 			<span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+            <c:if test="${userSession.user.recommendFlag == 1 &&pictures.size()>0}">
+                 <span id="recBtn" class="glyphicon  glyphicon-thumbs-up" aria-hidden="true"></span>
+            </c:if>
         </div>
 
         <div class="page_bar"><span id="totalIndex">${totalIndex}</span>/<span id="totalCounts">${totalCount}</span></div>
@@ -58,10 +61,10 @@
                     <c:choose>
                         <c:when test="${img.filePath eq selectedImg}">
                             <li class="album-carousel-thumb album-carousel-thumb-selected"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}"
-                                                                                              title="${img.name}" attachs="${img.attach}" id="${img.id}"></a></li>
+                                                                                              title="${img.name}" attachs="${img.attach}" id="${img.id}" myRec="${fn:contains(img.recId,userSession.user.userId)}"></a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="album-carousel-thumb"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}" title="${img.name}" attachs="${img.attach}" id="${img.id}"></a></li>
+                            <li class="album-carousel-thumb"><a href="${ossPath}/${img.filePath}${watermarkParamProcess}" title="${img.name}" attachs="${img.attach}" id="${img.id}" myRec="${fn:contains(img.recId,userSession.user.userId)}"></a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
@@ -308,6 +311,14 @@
         });
 
         document.oncontextmenu=function(){return false;}
+
+        var myRec = $(".lbum-carousel-thumb-selected").attr("myRec");
+        console.log("myRec:"+myRec)
+        if(myRec){
+            $("#recBtn").css("color","red")
+        }else{
+            $("#recBtn").css("color","#ccc");
+        }
     });
 
     function setTitle(){

@@ -99,6 +99,7 @@ var uerType = getUserType();
                 src = currentItem.find("a:first").attr("href"),
                 alt = currentItem.find("a:first").attr("title"),
                 picId = currentItem.find("a:first").attr("id"),
+                myRec = currentItem.find("a:first").attr("myRec"),
                 percent = 0,
                 preloader = new Image();
                 //console.log("currentItem:"+ currentItem.find("a:first").attr("attachs"))
@@ -109,6 +110,7 @@ var uerType = getUserType();
                 var res="";
                 var attachSrc = "";
                 var attachAlt = "";
+                console.log("myRec--------------"+myRec)
                 for( var i=0;i<arr.length;i++){
                     attachSrc =  arr[i].substr(0,arr[i].indexOf("|"));
                     attachAlt =  arr[i].substr(arr[i].indexOf("|")+1);
@@ -190,8 +192,14 @@ var uerType = getUserType();
                     // 更新图片路径和图片alt属性
                     image.attr({
                         "src": src,
-                        "alt": alt
+                        "alt": alt,
+                        "myRec":myRec
                     });
+                    if(myRec){
+                        $("#recBtn").css("color","red");
+                    }else{
+                        $("#recBtn").css("color","#ccc");
+                    }
                     // 更新图片说明文字
                     title.html(alt);
                     // 更新下载图片的链接路径
