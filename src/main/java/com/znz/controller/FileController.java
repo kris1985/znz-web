@@ -166,7 +166,7 @@ public class FileController {
         try {
             Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondCategory));
-            PartionCodeHoder.set(secondCategory);
+            PartionCodeHoder.set(String.valueOf(partionCode));
             String fileName = file.getOriginalFilename();
             String childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
             boolean b = upload(ossClient, file, childPath);
