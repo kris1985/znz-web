@@ -173,6 +173,7 @@ public class MobileController {
             fileQueryVO.setPage(pageParameter);
             List<Picture> pictures ;
             Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(queryParams.getSecondCategoryId()));
+            fileQueryVO.setPartionCode(partionCode);
             PartionCodeHoder.set(String.valueOf(partionCode));
             if(StringUtils.isEmpty(categoryIds)){
                 pictures = pictureMapper.selectBySimplePage(fileQueryVO);

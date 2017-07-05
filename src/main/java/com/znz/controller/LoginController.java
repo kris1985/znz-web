@@ -148,7 +148,8 @@ public class LoginController {
 
 
     @RequestMapping(value = "/verify" , method= RequestMethod.GET)
-    public @ResponseBody CommonResponse verify(HttpServletRequest request) {
+    public @ResponseBody CommonResponse verify(HttpServletRequest request) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("UTF-8");
         String encParam = request.getQueryString();
         log.info("signIn request param:{}",encParam);
         CommonResponse response = new CommonResponse<>();
