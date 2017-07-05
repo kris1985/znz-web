@@ -164,9 +164,9 @@ public class FileController {
             throw new RuntimeException("无权限操作");
         }
         try {
-            Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondCategory));
             PartionCodeHoder.set(String.valueOf(partionCode));
+            Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             String fileName = file.getOriginalFilename();
             String childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
             boolean b = upload(ossClient, file, childPath);
