@@ -151,7 +151,7 @@
                  var parent = $(this).parent();
                 var pictureId = parent.find("img").attr("parentId");
                 var attachPath = parent.find("img").attr("path");
-                var url = "${basePath}/admin/file/deleteAttach?pictureId="+pictureId+"&attachPath="+attachPath;
+                var url = "${basePath}/admin/file/deleteAttach?pictureId="+pictureId+"&attachPath="+attachPath+"&secondSelectedId=${secondSelectedId}";
 
                 $.get(url,function (data) {
                     if(data.code == 0){
@@ -312,13 +312,41 @@
 
         document.oncontextmenu=function(){return false;}
 
-        var myRec = $(".lbum-carousel-thumb-selected").attr("myRec");
+        var myRec = $(".album-carousel-thumb-selected a").attr("myrec");;
         console.log("myRec:"+myRec)
         if(myRec){
             $("#recBtn").css("color","red")
         }else{
             $("#recBtn").css("color","#ccc");
         }
+
+        <c:if test="${userSession.user.recommendFlag == 1 &&pictures.size()>0}">
+        $("#recBtn").click(function () {
+            var id = $(".album-carousel-thumb-selected a").attr("id");
+            console.log("color:"+$(this).css("color"))
+            if($(this).css("color")=="rgb(255, 0, 0)"){
+                var url = "${basePath}/admin/subCategory/cancelRecommend/"+id+"?secondSelectedId=${secondSelectedId}";
+                $.get(url,function (data) {
+                    if(data.code ==0 ){
+                        $("#recBtn").css("color","#777");
+                        alert("取消推荐成功");
+                    }else{
+                        alert(data.msg)
+                    }
+                })
+            }else{
+                var url = "${basePath}/admin/subCategory/recommend/"+id+"?secondSelectedId=${secondSelectedId}";
+                $.get(url,function (data) {
+                    if(data.code ==0 ){
+                        $("#recBtn").css("color","rgb(255, 0, 0)");
+                        alert("推荐成功");
+                    }else{
+                        alert(data.msg)
+                    }
+                })
+            }
+        })
+        </c:if>
     });
 
     function setTitle(){

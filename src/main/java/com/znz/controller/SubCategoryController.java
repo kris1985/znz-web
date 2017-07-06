@@ -458,12 +458,7 @@ public class SubCategoryController {
             updatePicture.setId(id);
             updatePicture.setRecId(record.getRecId());
             pictureMapper.updateByPrimaryKeySelective(updatePicture);
-            if(StringUtils.isBlank(record.getRecId())){
-                resultVO.setCode(1);//没有推荐
-                return resultVO;
-            }else{
-                resultVO.setCode(0);
-            }
+            resultVO.setCode(0);
         }
         return resultVO;
     }
