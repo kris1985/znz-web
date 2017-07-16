@@ -102,31 +102,37 @@ var uerType = getUserType();
                 myRec = currentItem.find("a:first").attr("myRec"),
                 percent = 0,
                 preloader = new Image();
-                //console.log("currentItem:"+ currentItem.find("a:first").attr("attachs"))
-                var attachs =   currentItem.find("a:first").attr("attachs");
-                //console.log("attachs:"+attachs)
-                if(attachs!=undefined && attachs!=""  && attachs!=null){
+            //console.log("currentItem:"+ currentItem.find("a:first").attr("attachs"))
+            var attachs =   currentItem.find("a:first").attr("attachs");
+            //console.log("attachs:"+attachs)
+            console.log("myRec--------------"+myRec)
+            if(myRec == "true"){
+                $("#recBtn").css("color","red");
+            }else{
+                $("#recBtn").css("color","#777");
+            }
+            if(attachs!=undefined && attachs!=""  && attachs!=null){
                 var arr =  attachs.split(",");
                 var res="";
                 var attachSrc = "";
                 var attachAlt = "";
-                console.log("myRec--------------"+myRec)
+
                 for( var i=0;i<arr.length;i++){
                     attachSrc =  arr[i].substr(0,arr[i].indexOf("|"));
                     attachAlt =  arr[i].substr(arr[i].indexOf("|")+1);
                     //console.log("uerType:"+uerType)
                     if(i==0 || (uerType!=""&&uerType!=null&&uerType!=undefined && uerType=="1")){
                         res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
-                                            "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' />  </div>";
+                            "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' />  </div>";
                     }else{
-                      res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
-                                            "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' /> <div class=\"del\" ><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></div> </div>";
+                        res+="<div class=\"attach_item\"> <img src='"+ossPath+ attachSrc+ "?x-oss-process=image/resize,m_pad,h_85,w_110' " +
+                            "origin_src='"+ossPath+ attachSrc+watermark + "' alt='"+attachAlt+"' parentId='"+picId+"' path='"+attachSrc+"' /> <div class=\"del\" ><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></div> </div>";
                     }
                 }
                 //console.log("res:"+res);
                 $("#attachs").html(res);
             }else{
-             $("#attachs").html("");
+                $("#attachs").html("");
             }
             // 开始显示loading
             overlay.removeClass(CLS_HIDE);
@@ -195,11 +201,7 @@ var uerType = getUserType();
                         "alt": alt,
                         "myRec":myRec
                     });
-                    if(myRec){
-                        $("#recBtn").css("color","red");
-                    }else{
-                        $("#recBtn").css("color","#ccc");
-                    }
+
                     // 更新图片说明文字
                     title.html(alt);
                     // 更新下载图片的链接路径
@@ -252,20 +254,20 @@ var uerType = getUserType();
             // 移动到第一张以后
             if (this.getCurrentIndex() < 0) {
                 // 循环到最后一张图片，并且滚动缩略图
-                 //this.setCurrentIndex(this.getLength() - 1).prevGroup();
-                 var currentPage = parseInt($("#currentPage").val());
-                 var totalPage = parseInt($("#totalPage").val());
-                  if(currentPage>1){
-                        $("#currentPage").val(currentPage);
-                        $("#moveFlag").val("pre");
-                        $("#albumForm").submit();
-                  }else{
-                      if(this.getCurrentIndex()<0){
-                          this.setCurrentIndex(0);
-                      }
-                      alert("已经到第一张");
-                      $("#totalIndex").text(1);
-                  }
+                //this.setCurrentIndex(this.getLength() - 1).prevGroup();
+                var currentPage = parseInt($("#currentPage").val());
+                var totalPage = parseInt($("#totalPage").val());
+                if(currentPage>1){
+                    $("#currentPage").val(currentPage);
+                    $("#moveFlag").val("pre");
+                    $("#albumForm").submit();
+                }else{
+                    if(this.getCurrentIndex()<0){
+                        this.setCurrentIndex(0);
+                    }
+                    alert("已经到第一张");
+                    $("#totalIndex").text(1);
+                }
             }
             else {
                 // 不是第一张图片
@@ -299,13 +301,13 @@ var uerType = getUserType();
             // 移动到最后一张以后
             if (this.getCurrentIndex() > this.getLength() - 1) {
                 // 循环显示第一张图片，并且滚动缩略图
-               // this.setCurrentIndex(0).nextGroup();
+                // this.setCurrentIndex(0).nextGroup();
                 var currentPage = parseInt($("#currentPage").val());
                 var totalPage = parseInt($("#totalPage").val());
                 if(currentPage<totalPage){
-                   $("#currentPage").val(currentPage);
-                   $("#moveFlag").val("next");
-                   $("#albumForm").submit();
+                    $("#currentPage").val(currentPage);
+                    $("#moveFlag").val("next");
+                    $("#albumForm").submit();
                 }else{
                     if(this.getCurrentIndex()>this.getLength() - 1){
                         this.setCurrentIndex(this.getLength() - 1);

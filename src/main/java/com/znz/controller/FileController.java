@@ -174,9 +174,9 @@ public class FileController {
             throw new RuntimeException("无权限操作");
         }
         try {
-            Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondCategory));
             PartionCodeHoder.set(String.valueOf(partionCode));
+            Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             String fileName = file.getOriginalFilename();
             String childPath = UUID.randomUUID().toString() + getSuffix(file.getOriginalFilename());
             boolean b = upload(ossClient, file, childPath);
@@ -346,13 +346,15 @@ public class FileController {
     @RequestMapping(value = "/deleteAttach", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResultVO deleteAttach(HttpServletRequest request, Long pictureId,String attachPath) {
+    ResultVO deleteAttach(HttpServletRequest request, Long pictureId,String attachPath,Integer secondSelectedId) {
         ResultVO result = new ResultVO();
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
         }
         List<String> keys = new ArrayList<>();
         try {
+            Integer partionCode = categoryService.getPartionCodeBy2(secondSelectedId);
+            PartionCodeHoder.set(String.valueOf(partionCode));
             Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             String attach = picture.getAttach();
             if(StringUtils.isNoneBlank(attach)){
@@ -375,6 +377,8 @@ public class FileController {
             result.setCode(-1);
             result.setMsg("删除文件失败");
             return result;
+        }finally {
+            PartionCodeHoder.clear();
         }
         return result;
     }
