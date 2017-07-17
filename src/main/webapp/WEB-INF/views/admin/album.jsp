@@ -329,6 +329,7 @@
                 $.get(url,function (data) {
                     if(data.code ==0 ){
                         $("#recBtn").css("color","#777");
+                        $(".album-carousel-thumb-selected a").attr("myRec","false")
                         alert("取消推荐成功");
                     }else{
                         alert(data.msg)
@@ -339,6 +340,7 @@
                 $.get(url,function (data) {
                     if(data.code ==0 ){
                         $("#recBtn").css("color","rgb(255, 0, 0)");
+                        $(".album-carousel-thumb-selected a").attr("myRec","true")
                         alert("推荐成功");
                     }else{
                         alert(data.msg)

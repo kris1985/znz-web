@@ -110,7 +110,7 @@
 
  <div class="container1" >
      <div class="loginDivWrap">
-     <div class="loginDiv">
+     <div class="loginDiv" style="width: 1300px">
       <form  action="${basePath}/login"   method="post" id="loginForm">
        用户名： <input type="input" placeholder="请输入用户名" required autofocus id="userName" name="userName" value="${userName}" class="loginInput">
        密码：  <input type="password"  placeholder="请输入密码" required id="pwd" name="pwd" value="${pwd}" class="loginInput">
@@ -129,7 +129,10 @@
               </label>
 
         <button class="btn btn-sm btn-primary" type="button" id="loginBtn">登陆</button>
-
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF%28%E8%8B%B9%E6%9E%9C%EF%BC%89.dmg">苹果电脑客户端下载</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF64%E4%BD%8D.exe">Windows64位客户端下载</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF64%E4%BD%8D.exe">Windows32客户端位下载</a>
       </form>
 </div>
      </div>
