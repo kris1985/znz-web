@@ -25,11 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zeroturnaround.zip.ZipUtil;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -45,6 +48,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/file")
 public class FileController {
 
+    public static final String ZNZ_OSS_CN_SHENZHEN_INTERNAL_ALIYUNCS_COM = "znz.oss-cn-shenzhen-internal.aliyuncs.com/";
     @Resource
     private AppConfig appConfig;
 
@@ -97,6 +101,12 @@ public class FileController {
                     picture.setClickTimes(0);
                     picture.setDownloadTimes(0);
                     picture.setGid(partionCode+"_"+uuid);
+                    BigDecimal size = new BigDecimal(file.getSize());
+                    BufferedImage sourceImg = ImageIO.read(file.getInputStream());
+                    size = size.divide(new BigDecimal(1024),BigDecimal.ROUND_HALF_UP).setScale(0);
+                    picture.setSize(String.valueOf(size));
+                    picture.setWidth(String.valueOf(sourceImg.getWidth()));
+                    picture.setHeight(String.valueOf(sourceImg.getHeight()));
                     pictureMapper.insert(picture);
 
                     for (String c : categorys) {
@@ -470,5 +480,76 @@ public class FileController {
         }
 
     }
+
+
+    @RequestMapping(value = "/modifyDate", method = RequestMethod.GET)
+    public @ResponseBody String modifyDate(String partionCodes) throws IOException {
+        String arrs[] = partionCodes.split(",");
+        for (String partionCode:arrs){
+            modify(partionCode);
+        }
+        return "处理完成";
+    }
+
+    public void modify(String partionCode) {
+        PartionCodeHoder.set(partionCode);
+        int currentPage = 1;
+        while (true){
+            PageParameter pageParameter = new PageParameter(currentPage,120);
+            FileQueryVO fileQueryVO = new FileQueryVO();
+            fileQueryVO.setPage(pageParameter);
+            List<Picture> list = pictureMapper.selectBySimplePage(new FileQueryVO());
+            int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
+                    / pageParameter.getPageSize();
+            if(currentPage>totalPage || CollectionUtils.isEmpty(list)){
+                break;
+            }
+            for(Picture picture:list){
+                updateWH(picture);
+            }
+            currentPage++;
+        }
+        PartionCodeHoder.clear();
+    }
+
+    private void updateWH(Picture picture) {
+        HttpURLConnection httpconn = null;
+        InputStream inputStream = null;
+        try{
+            if(StringUtils.isNoneBlank(picture.getWidth())){
+                return;
+            }
+             String url = ZNZ_OSS_CN_SHENZHEN_INTERNAL_ALIYUNCS_COM +picture.getFilePath();
+            httpconn = (HttpURLConnection)new URL(url).openConnection();
+            inputStream  = httpconn.getInputStream();
+            BigDecimal size = new BigDecimal(httpconn.getContentLength());
+            size = size.divide(new BigDecimal(1024),BigDecimal.ROUND_HALF_UP).setScale(0);
+            BufferedImage sourceImg = ImageIO.read(inputStream);
+            Picture p = new Picture();
+            p.setId(picture.getId());
+            p.setWidth(String.valueOf(sourceImg.getWidth()));
+            p.setHeight(String.valueOf(sourceImg.getHeight()));
+            p.setSize(String.valueOf(size));
+            pictureMapper.updateByPrimaryKeySelective(p);
+        }catch (Exception e){
+            log.error(e.getLocalizedMessage(),e);
+        }finally {
+            if(inputStream!=null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(httpconn!=null){
+                try {
+                    httpconn.connect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
 }

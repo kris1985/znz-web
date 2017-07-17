@@ -1,8 +1,10 @@
 package com.znz.model;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
-
+@Data
 public class Picture {
     private Long id;
 
@@ -26,91 +28,11 @@ public class Picture {
 
     private String gid;
 
-    public Long getId() {
-        return id;
-    }
+    private String width;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String height;
 
-    public String getName() {
-        return name;
-    }
+    private String size;
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
 
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath == null ? null : filePath.trim();
-    }
-
-    public Integer getClickTimes() {
-        return clickTimes;
-    }
-
-    public void setClickTimes(Integer clickTimes) {
-        this.clickTimes = clickTimes;
-    }
-
-    public Integer getDownloadTimes() {
-        return downloadTimes;
-    }
-
-    public void setDownloadTimes(Integer downloadTimes) {
-        this.downloadTimes = downloadTimes;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
-    }
-
-    public void setAttach(String attach) {
-        this.attach = attach;
-    }
-
-    public String getAttach() {
-        return attach;
-    }
-
-    public Integer getSecCategory() {
-        return secCategory;
-    }
-
-    public void setSecCategory(Integer secCategory) {
-        this.secCategory = secCategory;
-    }
-
-    public String getRecId() {
-        return recId;
-    }
-
-    public void setRecId(String recId) {
-        this.recId = recId;
-    }
-
-    public String getGid() {
-        return gid;
-    }
-
-    public void setGid(String gid) {
-        this.gid = gid;
-    }
 }

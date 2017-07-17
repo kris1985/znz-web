@@ -13,10 +13,12 @@
     <result column="sec_category" property="secCategory" jdbcType="INTEGER" />
     <result column="rec_id" property="recId" jdbcType="VARCHAR" />
     <result column="gid" property="gid" jdbcType="VARCHAR" />
-
+    <result column="width" property="width" jdbcType="VARCHAR" />
+    <result column="height" property="height" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, file_path, click_times, download_times, create_time, create_user,attach,sec_category,rec_id,gid
+    id, name, file_path, click_times, download_times, create_time, create_user,attach,sec_category,rec_id,gid,width,height,size
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -46,10 +48,12 @@
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.Picture" >
     insert into t_picture (id, name, file_path, 
       click_times, download_times, create_time, 
-      create_user,sec_category,rec_id,gid)
+      create_user,sec_category,rec_id,gid,width,height,size)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
       #{clickTimes,jdbcType=INTEGER}, #{downloadTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR},#{secCategory,jdbcType=INTEGER},#{recId,jdbcType=VARCHAR},#{gid,jdbcType=VARCHAR})
+      #{createUser,jdbcType=VARCHAR},#{secCategory,jdbcType=INTEGER},#{recId,jdbcType=VARCHAR},#{gid,jdbcType=VARCHAR},
+      #{width,jdbcType=VARCHAR},#{height,jdbcType=VARCHAR},#{size,jdbcType=VARCHAR}
+      )
   </insert>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.Picture" >
@@ -82,7 +86,15 @@
       <if test="secCategory != null" >
         sec_category = #{secCategory,jdbcType=VARCHAR}
       </if>
-
+      <if test="width != null" >
+        width = #{width,jdbcType=VARCHAR}
+      </if>
+      <if test="height != null" >
+        height = #{height,jdbcType=VARCHAR}
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR}
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
