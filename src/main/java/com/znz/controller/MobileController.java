@@ -244,7 +244,9 @@ public class MobileController {
             pictureInfo.setTotalPage(totalPage);
             pictureInfo.setTotalCount(pageParameter.getTotalCount());
             commonResponse.setResult(pictureInfo);
+           // log.info("pictures commonResponse:{}",commonResponse);
         }catch (ServiceException e){
+            log.error(e.getLocalizedMessage(),e);
             commonResponse.setErrorCode(e.getErrCode());
             commonResponse.setErrorMsg(e.getErrReason());
         } catch (Exception e){
