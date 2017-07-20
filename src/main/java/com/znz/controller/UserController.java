@@ -120,7 +120,7 @@ public class UserController {
                 userAuthMapper.insert(userAuth);
             }
         }
-        return "redirect:/admin/user/users";
+        return "redirect:"+ Constants.INDEX_PAGE+"admin/user/users";
     }
 
 
@@ -164,7 +164,7 @@ public class UserController {
                 userAuthMapper.insert(userAuth);
             }
         }
-        return "redirect:/admin/user/users";
+        return "redirect:"+ Constants.INDEX_PAGE+"admin/user/users";
     }
 
     @RequestMapping(value = "/auths/{userId}" , method= RequestMethod.GET)

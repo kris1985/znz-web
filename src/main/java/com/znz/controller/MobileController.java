@@ -215,6 +215,9 @@ public class MobileController {
                         log.error(e.getLocalizedMessage(), e);
                     }
                 }
+                picture.setWidth(StringUtils.isEmpty(p.getWidth())?1400:Integer.parseInt(p.getWidth()));
+                picture.setHeight(StringUtils.isEmpty(p.getHeight())?1000:Integer.parseInt(p.getHeight()));
+                picture.setSize(StringUtils.isEmpty(p.getSize())?100:Integer.parseInt(p.getSize()));
                 list.add(picture);
             }
             String width;
@@ -241,7 +244,9 @@ public class MobileController {
             pictureInfo.setTotalPage(totalPage);
             pictureInfo.setTotalCount(pageParameter.getTotalCount());
             commonResponse.setResult(pictureInfo);
+           // log.info("pictures commonResponse:{}",commonResponse);
         }catch (ServiceException e){
+            log.error(e.getLocalizedMessage(),e);
             commonResponse.setErrorCode(e.getErrCode());
             commonResponse.setErrorMsg(e.getErrReason());
         } catch (Exception e){

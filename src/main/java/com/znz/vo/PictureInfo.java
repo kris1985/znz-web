@@ -25,6 +25,9 @@ public class PictureInfo {
         private Integer downloadTimes;
         private boolean myRecommend;
         private List<String> attachs;
+        private Integer width;
+        private Integer height;
+        private Integer size;
     }
 
     @Data

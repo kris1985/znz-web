@@ -131,7 +131,7 @@ public class LoginController {
         }
        // MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
 
-        return  "redirect:/admin/subCategory/showCategory";
+        return  "redirect:"+Constants.INDEX_PAGE+"admin/subCategory/showCategory";
 
     }
 
@@ -142,7 +142,7 @@ public class LoginController {
         request.getSession().removeAttribute(Constants.USER_SESSION);
         MySessionLister.removeSession(request.getSession().getId());
         request.getSession().invalidate();
-        return "redirect:/";
+        return "redirect:"+Constants.INDEX_PAGE;
     }
 
 

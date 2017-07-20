@@ -359,7 +359,7 @@ public class SubCategoryController {
             subCategory.setPartionCode(partionCode);
         }
         subCategoryMapper.insert(subCategory);
-        return "redirect:/admin/subCategory/showCategory?firstCategoryId="+subCategoryVO.getFirstSelectedId()+"&secondCategoryId="+subCategoryVO.getSecondSelectedId();
+        return "redirect:"+Constants.INDEX_PAGE+"admin/subCategory/showCategory?firstCategoryId="+subCategoryVO.getFirstSelectedId()+"&secondCategoryId="+subCategoryVO.getSecondSelectedId();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
