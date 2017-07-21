@@ -78,19 +78,19 @@
         create_user = #{createUser,jdbcType=VARCHAR},
       </if>
       <if test="attach != null" >
-        attach = #{attach,jdbcType=VARCHAR}
+        attach = #{attach,jdbcType=VARCHAR},
       </if>
       <if test="recId != null" >
-        rec_id = #{recId,jdbcType=VARCHAR}
+        rec_id = #{recId,jdbcType=VARCHAR},
       </if>
       <if test="secCategory != null" >
-        sec_category = #{secCategory,jdbcType=VARCHAR}
+        sec_category = #{secCategory,jdbcType=VARCHAR},
       </if>
       <if test="width != null" >
-        width = #{width,jdbcType=VARCHAR}
+        width = #{width,jdbcType=VARCHAR},
       </if>
       <if test="height != null" >
-        height = #{height,jdbcType=VARCHAR}
+        height = #{height,jdbcType=VARCHAR},
       </if>
       <if test="size != null" >
         size = #{size,jdbcType=VARCHAR}

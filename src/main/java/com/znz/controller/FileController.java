@@ -48,7 +48,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/file")
 public class FileController {
 
-    public static final String ZNZ_OSS_CN_SHENZHEN_INTERNAL_ALIYUNCS_COM = "znz.oss-cn-shenzhen-internal.aliyuncs.com/";
     @Resource
     private AppConfig appConfig;
 
@@ -487,8 +486,9 @@ public class FileController {
         String arrs[] = partionCodes.split(",");
         for (String partionCode:arrs){
             modify(partionCode);
+            log.info("--------------------"+partionCode+"处理完");
         }
-        return "处理完成";
+        return "success";
     }
 
     public void modify(String partionCode) {
@@ -498,7 +498,7 @@ public class FileController {
             PageParameter pageParameter = new PageParameter(currentPage,120);
             FileQueryVO fileQueryVO = new FileQueryVO();
             fileQueryVO.setPage(pageParameter);
-            List<Picture> list = pictureMapper.selectBySimplePage(new FileQueryVO());
+            List<Picture> list = pictureMapper.selectBySimplePage(fileQueryVO);
             int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
                     / pageParameter.getPageSize();
             if(currentPage>totalPage || CollectionUtils.isEmpty(list)){
@@ -519,7 +519,7 @@ public class FileController {
             if(StringUtils.isNoneBlank(picture.getWidth())){
                 return;
             }
-             String url = ZNZ_OSS_CN_SHENZHEN_INTERNAL_ALIYUNCS_COM +picture.getFilePath();
+            String url = "http://znz.oss-cn-shenzhen-internal.aliyuncs.com/"+picture.getFilePath();
             httpconn = (HttpURLConnection)new URL(url).openConnection();
             inputStream  = httpconn.getInputStream();
             BigDecimal size = new BigDecimal(httpconn.getContentLength());
