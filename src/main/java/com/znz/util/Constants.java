@@ -28,7 +28,7 @@ public class Constants {
     public static  final String  ADMIN_FLAG = "isAdmin";
 
     public static  final String  WATERMARK_PARAM = "watermarkParam";
-    public static  final String INDEX_PAGE ="https://www.tyulan.com/";
+    public static  final String INDEX_PAGE ="/";
 
 
     public static void main(String[] args) {
