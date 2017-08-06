@@ -243,6 +243,7 @@ public class MobileController {
             pictureInfo.setPictureProperty(p);
             pictureInfo.setTotalPage(totalPage);
             pictureInfo.setTotalCount(pageParameter.getTotalCount());
+            pictureInfo.setPageSize(queryParams.getPageSize());
             commonResponse.setResult(pictureInfo);
            // log.info("pictures commonResponse:{}",commonResponse);
         }catch (ServiceException e){

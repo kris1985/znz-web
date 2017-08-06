@@ -13,6 +13,7 @@ public class PictureInfo {
 
     private Integer totalPage;
     private Integer totalCount;
+    private Integer pageSize;
     private List<Picture> pictures;
     private PictureProperty pictureProperty;
 
