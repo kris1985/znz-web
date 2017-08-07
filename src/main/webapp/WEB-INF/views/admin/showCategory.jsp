@@ -537,7 +537,7 @@
             </c:if>
             //图片懒加载
             $("img.lazy").lazyload({
-                threshold : 200
+                threshold : 600
             });
 
             //叶子节点,点击类别
