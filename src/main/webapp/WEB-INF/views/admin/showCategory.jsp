@@ -395,23 +395,25 @@
             //上传图片
             $("#uploadBtn").click(function () {
                 var temp = "";
+                var error = "";
                 $("#leaf_category").find(".selected").each(function (i) {
                     id = $(this).attr("id");
                     if (id.indexOf("all") != -1) {
-                        $.each($(this).siblings(), function (i, n) {
+                        /*$.each($(this).siblings(), function (i, n) {
                             id = $(this).attr("id");
                             temp += id + ","
-                        });
+                        });*/
+                        error="t";
                     } else {
                         temp += id + ","
                     }
                 });
+                if(error!=""){
+                    alert("请选择分类!");
+                    return;
+                }
                 if(temp.indexOf(",") !=-1){
                     temp = temp.substring(0,temp.length-1);
-                }
-                if($("#leaf_category").children().size() != temp.split(",").length){
-                    alert("请选择分类");
-                    return;
                 }
                 var secondCategory = $("#no_leaf_item").find(".selected").attr("id");
                 var url = "${basePath}/admin/file/toUpload?category=" + temp +"&secondCategory=" + secondCategory;

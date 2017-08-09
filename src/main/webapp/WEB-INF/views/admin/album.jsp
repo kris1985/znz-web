@@ -27,11 +27,11 @@
 
     <div class="album" id="album" >
         <div class="ite_btn" >
-            <span id="addSizeBtn" class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
-            <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
-			<span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+            <span id="addSizeBtn" class="glyphicon glyphicon-zoom-in" aria-hidden="true" title="放大"></span>
+            <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true" title="缩小"></span>
+			<span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true" title="下载"></span>
             <c:if test="${userSession.user.recommendFlag == 1 &&pictures.size()>0}">
-                 <span id="recBtn" class="glyphicon  glyphicon-thumbs-up" aria-hidden="true"></span>
+                 <span id="recBtn" class="glyphicon  glyphicon-thumbs-up" aria-hidden="true" title="推荐"></span>
             </c:if>
         </div>
 

@@ -7,8 +7,8 @@
     <groupId>com.znz</groupId>
     <artifactId>v2</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
 
+    <packaging>war</packaging>
     <properties>
         <java-version>1.8</java-version>
         <org.springframework-version>4.0.1.RELEASE</org.springframework-version>
@@ -335,7 +335,7 @@
         </repository>
     </repositories>
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>ROOT</finalName>
         <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
