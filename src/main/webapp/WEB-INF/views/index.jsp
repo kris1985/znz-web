@@ -136,7 +136,19 @@
       </form>
 </div>
      </div>
+
+
     </div> <!-- /container -->
 
+    <div id="footer" style=" height: 30px;
+    position: absolute;
+    bottom: 0px;
+    background: black;
+    opacity: 0.5;
+    color: white;
+    width: 100%;
+    line-height: 30px;">
+        <div class="inner" style="text-align: center">广州铁玉兰贸易有限公司版权所有 <a href="http://www.miitbeian.gov.cn" target="_blank">粤ICP备17037183号</a></div>
+    </div>
 </body>
 </html>
