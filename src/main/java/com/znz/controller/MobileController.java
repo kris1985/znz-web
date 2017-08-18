@@ -285,7 +285,7 @@ public class MobileController {
         if(StringUtils.isEmpty(imei)){
             throw new ServiceException("1001","imei不能为空");
         }
-        if("1".equals(user.getLimitImeiFlag()) && !StringUtils.isEmpty(user.getImei())  && !imei.equals(user.getImei())){
+        if(1 == user.getLimitImeiFlag() && !StringUtils.isEmpty(user.getImei())  && !imei.equals(user.getImei())){
             throw new ServiceException("1004","该账户只能在绑定的设备上登陆");
         }
         if(!"app".equalsIgnoreCase(user.getDevice())){

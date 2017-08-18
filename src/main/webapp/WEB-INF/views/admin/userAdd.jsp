@@ -271,7 +271,7 @@ $(function(){
                         var myobj=eval(data);
                             auths = $('#auths').columns({
                                 data:myobj,
-    							templateFile: '${basePath}/resources/templates/default.mst',
+    							templateFile: '${basePath}/resources/templates/user.mst',
                                  schema: [
                                      {"header":"ID", "key":"authId" },
                                                     {"header":"选择权限", "key":"authName",

@@ -100,4 +100,12 @@ http://www.springframework.org/schema/task/spring-task-3.0.xsd
 		<constructor-arg name="secretAccessKey" value="${oss.accessKeySecret}"/>
 	</bean>
     <task:annotation-driven />
+
+
+	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+	<bean class="org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory">
+		<property name="hostName" value="192.168.1.149"/>
+		<property name="port" value="6379"/>
+		<property name="password" value="123456"/>
+	</bean>
 </beans>

@@ -125,19 +125,20 @@ public class UserController {
 
 
 
-    @RequestMapping(value = "/update/{userId}", method = RequestMethod.GET)
-    public String modify(@PathVariable int userId, Model model) {
+    @RequestMapping(value = "/update/{userId}/{currentPage}", method = RequestMethod.GET)
+    public String modify(@PathVariable("userId") int userId,@PathVariable("currentPage") int currentPage, Model model) {
         User user = userMapper.selectByPrimaryKey(userId);
         model.addAttribute("user", user);
         if(StringUtils.isNoneBlank(user.getWatermark())){
             WatermarkVO watermarkVO = JSON.parseObject(user.getWatermark(),WatermarkVO.class);
             model.addAttribute("watermarkVO", watermarkVO);
+            model.addAttribute("currentPage", currentPage);
         }
         return "/admin/userUpdate2";
     }
 
     @RequestMapping(value = "/update" , method= RequestMethod.POST)
-    public String  update(HttpServletRequest request,@Valid @ModelAttribute UserAddVO userAddVO,BindingResult br,Model model){
+    public String  update(HttpServletRequest request,@Valid @ModelAttribute UserAddVO userAddVO,Integer currentPage,BindingResult br,Model model){
         PermissionUtil.checkPermisson(request);
         if (br.hasErrors()){
             model.addAttribute("br",br);
@@ -164,7 +165,7 @@ public class UserController {
                 userAuthMapper.insert(userAuth);
             }
         }
-        return "redirect:"+ Constants.INDEX_PAGE+"admin/user/users";
+        return "redirect:"+ Constants.INDEX_PAGE+"admin/user/users?page="+currentPage;
     }
 
     @RequestMapping(value = "/auths/{userId}" , method= RequestMethod.GET)

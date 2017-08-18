@@ -29,6 +29,7 @@
 <div class="container1" style="width:600px;margin:0 auto">
 
      <form class="form-horizontal" role="form" method="post" action="${basePath}/admin/user/update">
+         <input type="hidden" name="currentPage" value="${currentPage}">
      <input type="hidden" name="userId" value=${user.userId}>
 	 <div style="margin-top:20px">
 	<div class="step1">
@@ -305,7 +306,7 @@ $(function(){
         var myobj=eval(data);
             auths = $('#auths').columns({
                 data:myobj,
-                templateFile: '${basePath}/resources/templates/default.mst',
+                templateFile: '${basePath}/resources/templates/user.mst',
                  schema: [
                                     {"header":"选择权限", "key":"checkBox"
                                      }

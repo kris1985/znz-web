@@ -57,10 +57,12 @@ $(".ui-table-controls img").each(function(){
 	
 	<!-- Columns Controls  -->
 	<div class="ui-table-footer">
-		<span class="ui-table-size">每页显示行数: {{{showRowsMenu}}}</span>
+		<span class="ui-table-size">每页显2示行数: {{{showRowsMenu}}}</span>
+
+		<span  id="cpage">{{page}}</span>
 		<span class="ui-table-results">
-			<strong>{{resultRange.start}} &ndash; {{resultRange.end}}</strong> of
-			<strong>{{tableTotal}}</strong>
+			<strong>{{resultRange.start}} &ndash;</strong><strong id="rangeEnd"> {{resultRange.end}}</strong> of
+			<strong id="totalNum">{{tableTotal}}</strong>
 		</span> 
 		<span class="ui-table-controls">
 			{{#prevPageExists}}	
