@@ -703,7 +703,7 @@
                         $(this).find("i").css("background-position", "0 -10px")
                     }
                 }
-                if($(this).find("a").text().length>60){
+                if($(this).find("a").text().length>40){
                     $(this).find(".openBtn").show();
                 }
             })
