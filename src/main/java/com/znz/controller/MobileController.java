@@ -133,7 +133,7 @@ public class MobileController {
             for(User u:users){
                 referrerInfo = new ReferrerInfo();
                 referrerInfo.setReferrerId(u.getUserId());
-                referrerInfo.setReferrerName(u.getUserName());
+                referrerInfo.setReferrerName(u.getCompany());
                 referrerInfos.add(referrerInfo);
             }
         }
