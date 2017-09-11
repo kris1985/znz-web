@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@ToString
 public class User implements Serializable {
     private Integer userId;
 

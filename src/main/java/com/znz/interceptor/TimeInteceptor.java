@@ -63,6 +63,10 @@ public class TimeInteceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest arg0,
                                 HttpServletResponse arg1, Object arg2, Exception arg3)
             throws Exception {
+       // log.info(arg2.toString());
+        if(arg3!=null){
+            log.error(arg3.getLocalizedMessage(),arg3);
+        }
         // TODO Auto-generated method stub
 
     }

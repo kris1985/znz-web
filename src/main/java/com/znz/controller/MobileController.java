@@ -80,6 +80,7 @@ public class MobileController {
             commonResponse.setErrorCode("9999");
             commonResponse.setErrorMsg("系统忙请稍后再试");
         }
+        log.info("signIn request:{0}",commonResponse);
         return commonResponse;
     }
 
