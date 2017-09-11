@@ -1,5 +1,7 @@
 package com.znz.interceptor;
 
+import com.sun.tools.javac.code.Attribute.Constant;
+import com.znz.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.web.method.HandlerMethod;
@@ -8,6 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
@@ -34,6 +38,9 @@ public class TimeInteceptor implements HandlerInterceptor {
             sb.append("Params    : ").append(getParamString(request.getParameterMap())).append(":");
             sb.append("URI       : ").append(request.getRequestURI()).append("\n");
             log.info(sb.toString());
+        }
+        if(request.getRequestURI().indexOf("/admin")!=-1 && request.getSession().getAttribute(Constants.USER_SESSION) == null){
+            redirect(response,"8888");
         }
         return true;
     }
@@ -72,5 +79,12 @@ public class TimeInteceptor implements HandlerInterceptor {
             }
         }
         return sb.toString();
+    }
+
+    private void redirect( HttpServletResponse response, String errorCode) throws
+        IOException {
+        // response2.sendRedirect(request2.getContextPath()+"/error?errorCode="+errorCode);
+        response.sendRedirect( Constants.INDEX_PAGE+"error?errorCode="+errorCode);
+
     }
 }

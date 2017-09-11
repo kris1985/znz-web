@@ -4,13 +4,16 @@ import com.znz.model.User;
 import com.znz.model.UserAuth;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/1/27.
+ *
+ * @author Administrator
+ * @date 2015/1/27
  */
 
-public class UserSession {
+public class UserSession implements Serializable{
 
     public void setUser(User user) {
         this.user = user;

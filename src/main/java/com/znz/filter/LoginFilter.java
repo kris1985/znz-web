@@ -27,6 +27,9 @@ public  class LoginFilter implements Filter {
         HttpServletRequest request2 = (HttpServletRequest)request;
         HttpServletResponse response2 = (HttpServletResponse)response;
         HttpSession session = request2.getSession();
+        if(true){
+            chain.doFilter(request, response);
+        }
         Object obj = session.getAttribute(Constants.USER_SESSION);
         if(obj == null){
             redirect(request2,response2,"8888");

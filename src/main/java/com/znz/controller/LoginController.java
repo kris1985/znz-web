@@ -97,10 +97,10 @@ public class LoginController {
         if(StringUtils.isEmpty(user.getSessionId())){
             user.setSessionId(request.getSession().getId());
         }
-        islogin =   MySessionLister.replaceSession(request.getSession(), user.getSessionId());
+       /* islogin =   MySessionLister.replaceSession(request.getSession(), user.getSessionId());
         if(islogin){
             user.setSessionId(request.getSession().getId());//如果已经登陆，覆盖之前的sessionId
-        }
+        }*/
         List<UserAuth> userAuths = userAuthMapper.listByUserId(user.getUserId());
         UserSession userSession = new UserSession();
         userSession.setUser(user);
@@ -140,7 +140,7 @@ public class LoginController {
     @RequestMapping(value = "/logout" , method= RequestMethod.GET)
     public String login(HttpServletRequest request) {
         request.getSession().removeAttribute(Constants.USER_SESSION);
-        MySessionLister.removeSession(request.getSession().getId());
+        //.removeSession(request.getSession().getId());
         request.getSession().invalidate();
         return "redirect:"+Constants.INDEX_PAGE;
     }
@@ -222,10 +222,10 @@ public class LoginController {
         if(StringUtils.isEmpty(user.getSessionId())){
             user.setSessionId(request.getSession().getId());
         }
-        boolean islogin =   MySessionLister.replaceSession(request.getSession(), user.getSessionId());
+       /* boolean islogin =   MySessionLister.replaceSession(request.getSession(), user.getSessionId());
         if(islogin){
             user.setSessionId(request.getSession().getId());//如果已经登陆，覆盖之前的sessionId
-        }
+        }*/
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         Cookie cookie = new Cookie("MAC","FDSGHJ3");
