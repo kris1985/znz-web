@@ -35,14 +35,14 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-    <filter>
+   <!-- <filter>
         <filter-name>loginFilter</filter-name>
         <filter-class>com.znz.filter.LoginFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>loginFilter</filter-name>
         <url-pattern>/admin/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping>-->
 
 	<filter>
 		<filter-name>deviceResolverRequestFilter</filter-name>
@@ -53,6 +53,21 @@
 		<filter-name>deviceResolverRequestFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<filter>
+		<filter-name>springSessionRepositoryFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSessionRepositoryFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+	</filter-mapping>
+
+
+
+
 	<!--
 	<filter>
 		<filter-name>csrfFilter</filter-name>
@@ -83,9 +98,16 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+
+
+
 	<!-- Disables Servlet Container welcome file handling. Needed for compatibility with Servlet 3.0 and Tomcat 7.0 -->
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>	
+	</welcome-file-list>
+
+	<session-config>
+		<session-timeout>1200</session-timeout>
+	</session-config>
 
 </web-app>
