@@ -32,7 +32,7 @@ public class TimeInteceptor implements HandlerInterceptor  {
                              HttpServletResponse response, Object handler)
             throws Exception {
         String ip = getIp(request);
-        MDC.put("traceId", UUID.randomUUID().toString());
+        MDC.put("TRACE_ID", UUID.randomUUID().toString());
         long startTime = System.currentTimeMillis();
         request.setAttribute("startTime", startTime);
         if (handler instanceof HandlerMethod) {
@@ -46,6 +46,7 @@ public class TimeInteceptor implements HandlerInterceptor  {
         }
         if(request.getRequestURI().indexOf("/admin")!=-1 && request.getSession().getAttribute(Constants.USER_SESSION) == null){
             redirect(response,"8888");
+            return false;
         }
         return true;
     }
@@ -78,6 +79,7 @@ public class TimeInteceptor implements HandlerInterceptor  {
             sb.append("CostTime:").append(executeTime).append("ms");
             log.info(sb.toString());
         }
+        MDC.clear();
     }
 
     @Override
@@ -88,6 +90,7 @@ public class TimeInteceptor implements HandlerInterceptor  {
         if(arg3!=null){
             log.error(arg3.getLocalizedMessage(),arg3);
         }
+
         // TODO Auto-generated method stub
 
     }

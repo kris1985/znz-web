@@ -1,6 +1,8 @@
 package com.znz.model;
 
-public class PictureCategory {
+import java.io.Serializable;
+
+public class PictureCategory implements Serializable {
     private Long id;
 
     private Long pictureId;

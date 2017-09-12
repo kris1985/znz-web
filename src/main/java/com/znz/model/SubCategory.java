@@ -1,6 +1,8 @@
 package com.znz.model;
 
-public class SubCategory {
+import java.io.Serializable;
+
+public class SubCategory implements Serializable {
     private Integer id;
 
     private String name;

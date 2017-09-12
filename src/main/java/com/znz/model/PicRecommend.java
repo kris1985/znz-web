@@ -1,11 +1,12 @@
 package com.znz.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Administrator on 2017/4/3.
  */
-public class PicRecommend {
+public class PicRecommend implements Serializable {
 
     private Long id;
 

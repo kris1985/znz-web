@@ -2,10 +2,11 @@ package com.znz.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 @Data
-public class Picture {
+public class Picture implements Serializable {
     private Long id;
 
     private String name;
