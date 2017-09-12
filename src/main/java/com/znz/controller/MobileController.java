@@ -55,7 +55,7 @@ public class MobileController {
 
     @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
     public @ResponseBody CommonResponse<UserInfo> signIn(@RequestBody BaseRequest<SignInRequest> baseRequest) {
-        log.info("signIn request:{0}",baseRequest);
+        log.info("signIn request:{}",baseRequest);
         CommonResponse<UserInfo> commonResponse = new CommonResponse();
         try{
             SignInRequest signInRequest = baseRequest.getData();
@@ -80,7 +80,7 @@ public class MobileController {
             commonResponse.setErrorCode("9999");
             commonResponse.setErrorMsg("系统忙请稍后再试");
         }
-        log.info("signIn request:{0}",commonResponse);
+        log.info("signIn request:{}",commonResponse);
         return commonResponse;
     }
 

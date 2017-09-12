@@ -1,6 +1,8 @@
 package com.znz.util;
 
 
+import com.znz.controller.LoginController;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -83,6 +85,8 @@ public class AESUtil {
         System.out.println("解密后的字串是：" + DeString);
         useTime = System.currentTimeMillis() - start;
         System.out.println("解密耗时：" + useTime + "毫秒");
+
+        System.out.println(new Md5PasswordEncoder().encodePassword("123456"+ LoginController.EKY,""));
     }
 }
 
