@@ -177,6 +177,9 @@ public class UserController {
             for (UserAuth userAuth:userAuths){
                 AuthFileVO authFileVO = new AuthFileVO();
                 SubCategory subCategory = subCategoryMapper.selectByPrimaryKey(Integer.parseInt(userAuth.getAuthId()));
+                if(subCategory == null){
+                    continue;
+                }
                // log.info("-1--"+authFileVO.getAuthName());
                 authFileVO.setAuthName(subCategory.getName());
                 authFileVO.setChecked(1);
