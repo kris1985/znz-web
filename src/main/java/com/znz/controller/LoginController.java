@@ -219,6 +219,7 @@ public class LoginController {
         request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
         user.setLastLoginTime(new Date());
         user.setImei(imei);
+        user.setLimitImeiFlag(1);//绑定mac地址
         if(StringUtils.isEmpty(user.getSessionId())){
             user.setSessionId(request.getSession().getId());
         }
