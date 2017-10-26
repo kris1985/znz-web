@@ -1,22 +1,20 @@
+<%@ page import="java.net.URLDecoder" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="renderer" content="webkit">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>中旅总社综合旅游中心</title>
+    <title>指南针</title>
     <%@ include file="common/common.jsp"%>
 
     <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet"  type="text/css" />
     <link href="${basePath}/resources/css/login.css" rel="stylesheet"  type="text/css" />
     <style>
-        body{ background: url("${basePath}/upload/bg/indexBg.jpg") center 0px  }
+        body{ background: url("http://znz-resources.oss-cn-shenzhen.aliyuncs.com/indexBg.jpg") center 0px no-repeat; }
     </style>
     <!--
         Used for including CSRF token in JSON requests
@@ -35,7 +33,11 @@
             }else{
                 $(".form-signin").show(1000)
             }
-
+            if("9999"=="${param.error}"){
+                alert("您的账号在其它地方登陆");
+            }else  if("8888"=="${param.error}"){
+                alert("会话超时请重新登陆");
+            }
             $("#remember").click(function(){
                 if($(this).get(0).checked){
                     $(this).val("1");
@@ -43,6 +45,8 @@
                     $(this).val("0");
                 }
             });
+
+
         });
         function refreshRandomCode(){
             $("#codeImg").attr("src", "/genCode?"+Math.random());
@@ -66,6 +70,7 @@
             $("#loginForm").submit();
         }
 
+
     </script>
 
     <script>
@@ -88,6 +93,7 @@
             if (cookies[i].getName().equals("znzauth")) {
                 if(!"".equals(cookies[i].getValue())){
                     name = cookies[i].getValue().split("-")[0];
+                    name = URLDecoder.decode(name, "UTF-8");
                     passward = cookies[i].getValue().split("-")[1];
                     pageContext.setAttribute("userName",name);
                     pageContext.setAttribute("pwd",passward);
@@ -104,7 +110,7 @@
 
 <div class="container1" >
     <div class="loginDivWrap">
-        <div class="loginDiv">
+        <div class="loginDiv" style="width: 1300px">
             <form  action="${basePath}/login"   method="post" id="loginForm">
                 用户名： <input type="input" placeholder="请输入用户名" required autofocus id="userName" name="userName" value="${userName}" class="loginInput">
                 密码：  <input type="password"  placeholder="请输入密码" required id="pwd" name="pwd" value="${pwd}" class="loginInput">
@@ -123,11 +129,26 @@
                 </label>
 
                 <button class="btn btn-sm btn-primary" type="button" id="loginBtn">登陆</button>
-
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF%28%E8%8B%B9%E6%9E%9C%EF%BC%89.dmg">苹果电脑客户端下载</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF64%E4%BD%8D.exe">Windows64位客户端下载</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF32%E4%BD%8D%28XP%29.exe">Windows32客户端位下载</a>
             </form>
         </div>
     </div>
+
+
 </div> <!-- /container -->
 
+<div id="footer" style=" height: 30px;
+    position: absolute;
+    bottom: 0px;
+    background: black;
+    opacity: 0.5;
+    color: white;
+    width: 100%;
+    line-height: 30px;">
+    <div class="inner" style="text-align: center">广州铁玉兰贸易有限公司版权所有 <a href="http://www.miitbeian.gov.cn" target="_blank">粤ICP备17037183号</a></div>
+</div>
 </body>
 </html>

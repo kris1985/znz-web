@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -435,6 +437,9 @@ public class MobileController {
             checkSign(baseRequest);
             checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);
+            if(user.getDownloadPerDay()>user.getMaxDownloadTimes()){
+                throw new ServiceException("1009","您已超出今日最大下载次数");
+            }
             User u = new User();
             u.setDownloadPerDay(user.getDownloadPerDay()+1);
             u.setDownloadTotal(user.getDownloadTotal()+1);
