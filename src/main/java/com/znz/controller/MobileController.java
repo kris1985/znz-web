@@ -437,8 +437,9 @@ public class MobileController {
             checkSign(baseRequest);
             checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);
+            log.info("user.getDownloadPerDay:{},getMaxDownloadTimes:{}",user.getDownloadPerDay(),user.getMaxDownloadTimes());
             if(user.getDownloadPerDay()>user.getMaxDownloadTimes()){
-                throw new ServiceException("1009","您已超出今日最大下载次数");
+                throw new ServiceException("1009","您已超出今日最大下载次数!");
             }
             User u = new User();
             u.setDownloadPerDay(user.getDownloadPerDay()+1);
@@ -464,6 +465,10 @@ public class MobileController {
         CommonResponse commonResponse = new CommonResponse();
         try {
             CheckUpdateVO vo = new CheckUpdateVO();
+            // Android 版本为1.0，IOS为1.0.1 升级为1.1.1
+            if(baseRequest.getAppVersion().length() ==5 && !"1.1.1".equals(baseRequest.getAppVersion())){
+                vo.setDownloadUrl("https://itunes.apple.com/us/app/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF/id1270152609?l=zh&ls=1&mt=8");
+            }
             commonResponse.setResult(vo);
         } catch (ServiceException e) {
             commonResponse.setErrorCode(e.getErrCode());

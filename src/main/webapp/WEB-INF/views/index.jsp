@@ -37,7 +37,9 @@
           <a style="color: white" href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF%28%E8%8B%B9%E6%9E%9C%EF%BC%89.dmg">苹果电脑客户端下载</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a style="color: white" href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF64%E4%BD%8D.exe">Windows64位客户端下载</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a style="color: white" href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF32%E4%BD%8D%28XP%29.exe">Windows32客户端位下载</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<%--
          <a style="color: white" href="http://znz-resources.oss-cn-shenzhen.aliyuncs.com/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF.apk">Android APP下载</a>
+--%>
 
 </div>
      </div>
