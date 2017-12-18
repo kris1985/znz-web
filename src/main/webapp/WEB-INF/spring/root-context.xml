@@ -103,7 +103,9 @@ http://www.springframework.org/schema/task/spring-task-3.0.xsd
 
 
 
-	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+		<property name="maxInactiveIntervalInSeconds" value="864000"></property>
+	</bean>
 
 	<bean class="org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory">
 		<property name="hostName" value="${redis.hostName}"/>
