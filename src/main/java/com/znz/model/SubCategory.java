@@ -17,6 +17,8 @@ public class SubCategory implements Serializable {
 
     private Integer partionCode;
 
+    private Integer ppid;
+
     public Integer getId() {
         return id;
     }
@@ -71,5 +73,13 @@ public class SubCategory implements Serializable {
 
     public void setPartionCode(Integer partionCode) {
         this.partionCode = partionCode;
+    }
+
+    public Integer getPpid() {
+        return ppid;
+    }
+
+    public void setPpid(Integer ppid) {
+        this.ppid = ppid;
     }
 }

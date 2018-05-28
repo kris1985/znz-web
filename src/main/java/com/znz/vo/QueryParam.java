@@ -18,4 +18,6 @@ public class QueryParam {
     private String endTime;
     private String delFlag;
     private Integer recommendId;
+    private Integer brandId;
+    private String brandName;
 }

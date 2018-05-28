@@ -171,9 +171,7 @@
             $(".attach_item").css("border"," 2px solid #ECECEC");
             $(this).parent().css("border"," 2px solid #699f00");
             var src = $(this).attr("origin_src");
-            console.log("src:"+src);
-            $("#album-image-bd img").attr("src", src );
-            $("#album-image-bd img").attr("alt", $(this).attr("alt") );
+            preload(src);
         });
 		//setTitle();
         if($.cookie('albumBackground') !=undefined){
@@ -313,7 +311,7 @@
         document.oncontextmenu=function(){return false;}
 
         var myRec = $(".album-carousel-thumb-selected a").attr("myrec");;
-        console.log("myRec:"+myRec)
+        //console.log("myRec:"+myRec)
         if(myRec){
             $("#recBtn").css("color","red")
         }else{
@@ -323,7 +321,7 @@
         <c:if test="${userSession.user.recommendFlag == 1 &&pictures.size()>0}">
         $("#recBtn").click(function () {
             var id = $(".album-carousel-thumb-selected a").attr("id");
-            console.log("color:"+$(this).css("color"))
+            //console.log("color:"+$(this).css("color"))
             if($(this).css("color")=="rgb(255, 0, 0)"){
                 var url = "${basePath}/admin/subCategory/cancelRecommend/"+id+"?secondSelectedId=${secondSelectedId}";
                 $.get(url,function (data) {
@@ -353,6 +351,45 @@
 
     function setTitle(){
         document.title = '${parentName}';
+    }
+    function preload(src) {
+        preloader = new Image();
+        preloader.src = src;
+        $(preloader).load(function(evt){
+            var width = preloader.width,
+                height = preloader.height,
+            percent = width / height;
+            if (width > maxWidth) {
+                width = maxWidth;
+                height = width / percent;
+                if (height > maxHeight) {
+                    percent = maxHeight / height;
+                    width = width * percent;
+                    height = maxHeight;
+                }
+            }
+            else {
+                if (width <= maxWidth) {
+                    if (height > maxHeight) {
+                        percent = maxHeight / height;
+                        width = width * percent;
+                        height = maxHeight;
+                    }
+                }
+            }
+
+            // 图片缩放和调整显示位置
+            $("#album-image-bd img").animate({
+                "width": width + "PX",
+                "height": height + "PX",
+                "margin-left": -(width / 2) + "PX",
+                "margin-top": -(height / 2) + "PX"
+            }, 1, function(){
+                $("#album-image-bd img").attr({
+                    "src": src
+                });
+            });
+        });
     }
 </script>
 

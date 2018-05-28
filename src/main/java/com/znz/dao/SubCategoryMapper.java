@@ -21,10 +21,15 @@ public interface SubCategoryMapper {
 
     SubCategory selectByName(String name);
 
+    SubCategory selectByNameAndPpid(@Param("name") String name, @Param("ppid") Integer ppid);
+
     Integer selectMaxSortId(Integer parentId);
 
     List<SubCategory> selectByParentId(Integer parentId);
 
     Integer selectMaxPartionCode();
 
+    List<SubCategory> selectByPpid(Integer ppid);
+
+    SubCategory selectSingleByPpid(Integer ppid);
 }

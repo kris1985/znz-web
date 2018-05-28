@@ -4,9 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -18,6 +20,10 @@ import javax.validation.Valid;
 import com.alibaba.fastjson.JSON;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.DeleteObjectsRequest;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.znz.config.AppConfig;
 import com.znz.dao.*;
 import com.znz.model.*;
@@ -72,10 +78,16 @@ public class SubCategoryController {
     @Resource
     private CategoryService categoryService;
 
+    final static Cache<String, Object> brandCache = CacheBuilder.newBuilder()
+        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .build();
+    Map<String,String> brandMap = new HashMap<>();
+
     public static ExecutorService pool = Executors.newFixedThreadPool(10);
 
     @RequestMapping(value = "/showCategory")
-    public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model,String firstCategoryId,String secondCategoryId) throws ParseException {
+    public String showCategory(HttpServletRequest request,QueryParam queryParam, Model model,String firstCategoryId,String secondCategoryId)
+        throws ParseException, ExecutionException {
         model.addAttribute("totalPage",0);
         if(queryParam.getCurrentPage() == null){
             queryParam.setCurrentPage(1);
@@ -83,6 +95,7 @@ public class SubCategoryController {
         if(queryParam.getPageSize() == null){
             queryParam.setPageSize(PAGE_SIZE);
         }
+        Integer brandId = queryParam.getBrandId();
         HttpSession session = request.getSession();
         List<SubCategory> subCategories = subCategoryMapper.selectAll(null);
         UserSession userSession = (UserSession)session.getAttribute(Constants.USER_SESSION);
@@ -177,14 +190,19 @@ public class SubCategoryController {
             if(StringUtils.isNoneBlank(queryParam.getEndTime())){
                 fileQueryVO.setEndTime(simpleDateFormat.parse(queryParam.getEndTime()));
             }
+            if(brandId!=null){
+                fileQueryVO.getCategoryConditions().add(Sets.newHashSet(brandId));
+            }
             if(StringUtils.isNoneBlank(queryParam.getDelFlag())){
                 //删除
                 deletePictrues(fileQueryVO);
             }else{
                 List<Picture> pictures;
-                if(noFourthSelectedId){
+                if(noFourthSelectedId && brandId==null){
                     pictures = pictureMapper.selectBySimplePage(fileQueryVO);
                 }else{
+                    List<Integer> ids = fileQueryVO.getCategoryConditions().stream().flatMap(s->s.stream()).collect(Collectors.toList());
+                    log.info("ids==================:{}",ids);
                     pictures =  pictureMapper.selectByPage(fileQueryVO);
                 }
                 int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
@@ -194,8 +212,19 @@ public class SubCategoryController {
                 model.addAttribute("pictures",pictures);
             }
         }
+        String key = queryParam.getSecondSelectedId();
+        String brandName = brandMap.get(key);
+        boolean brandFlag = false;
+        if(StringUtils.isNotBlank(brandName)){
+            brandFlag = true;
+        }else{
+            SubCategory subCategory = subCategoryMapper.selectSingleByPpid(Integer.parseInt(queryParam.getSecondSelectedId()));
+            if(subCategory!=null){
+                brandFlag = true;
+                brandMap.put(key,subCategory.getName());
+            }
+        }
         List<User> users = userMapper.selectByFirstCategory(queryParam.getFirstSelectedId());
-
         model.addAttribute("subCategoryVOs",subCategoryVOs);
         model.addAttribute("firstSelectedId",queryParam.getFirstSelectedId());
         model.addAttribute("secondSelectedId",queryParam.getSecondSelectedId());
@@ -205,6 +234,9 @@ public class SubCategoryController {
         model.addAttribute("endTime",queryParam.getEndTime());
         model.addAttribute("users",users);
         model.addAttribute("recommendId",queryParam.getRecommendId());
+        model.addAttribute("brandId",queryParam.getBrandId());
+        model.addAttribute("brandName",queryParam.getBrandName());
+        model.addAttribute("brandFlag",brandFlag);
         PartionCodeHoder.clear();
         return "admin/showCategory";
     }
@@ -496,4 +528,31 @@ public class SubCategoryController {
             }
         }
     }
+
+    @RequestMapping(value = "/brand/{ppid}", method = RequestMethod.GET)
+    public @ResponseBody List<BrandVO> getBrand(HttpServletRequest request, @PathVariable Integer ppid) {
+        List<SubCategory> subCategories = subCategoryMapper.selectByPpid(ppid);
+        if(CollectionUtils.isEmpty(subCategories)){
+            return new ArrayList();
+        }
+        List<BrandVO> brandVOS = new ArrayList<>();
+        for(SubCategory subCategory:subCategories){
+            BrandVO brandVO = new BrandVO();
+            brandVO.setId(subCategory.getId());
+            brandVO.setCityCode(subCategory.getId());
+            brandVO.setName(subCategory.getName());
+            brandVO.setParentId(ppid);
+            brandVO.setPinyin(subCategory.getName());
+            brandVO.setShortName(subCategory.getName());
+            char letter = brandVO.getName().toUpperCase().charAt(0);
+            brandVO.setLetter(String.valueOf(letter));
+            if(letter<65 || letter>90 ){
+                brandVO.setLetter("_");
+            }
+            brandVOS.add(brandVO);
+        }
+        return brandVOS;
+    }
+
+
 }

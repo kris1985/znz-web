@@ -26,9 +26,10 @@
   </delete>
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.SubCategory" >
     insert into t_sub_category (id, name, sort_id, 
-      parent_id,category_level,all_flag,partion_code)
+      parent_id,category_level,all_flag,partion_code,ppid)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sortId,jdbcType=INTEGER}, 
-      #{parentId,jdbcType=INTEGER},#{categoryLevel,jdbcType=INTEGER},#{allFlag,jdbcType=VARCHAR},#{partionCode,jdbcType=INTEGER})
+      #{parentId,jdbcType=INTEGER},#{categoryLevel,jdbcType=INTEGER},#{allFlag,jdbcType=VARCHAR},#{partionCode,jdbcType=INTEGER}
+      ,#{ppid,jdbcType=INTEGER})
   </insert>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.znz.model.SubCategory" >
@@ -74,6 +75,7 @@
       <if test="parentId != null" >
         parent_id = #{parentId,jdbcType=INTEGER}
       </if>
+      parent_id!=-1
     </where>
     order by category_level, sort_id
   </select>
@@ -83,6 +85,13 @@
     <include refid="Base_Column_List" />
     from t_sub_category where name = #{name,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByNameAndPpid" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_sub_category where name = #{name,jdbcType=VARCHAR} and ppid = #{ppid,jdbcType=INTEGER}
+  </select>
+
 
   <select id="selectMaxSortId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
     select max(sort_id) from t_sub_category
@@ -98,6 +107,18 @@
 
   <select id="selectMaxPartionCode" resultType="java.lang.Integer" >
     select max(partion_code) from t_sub_category
+  </select>
+
+  <select id="selectByPpid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_sub_category where ppid =  #{ppid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectSingleByPpid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_sub_category where ppid =  #{ppid,jdbcType=INTEGER} limit 1
   </select>
 
 

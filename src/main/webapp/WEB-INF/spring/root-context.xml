@@ -1,9 +1,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 http://www.springframework.org/schema/task
 http://www.springframework.org/schema/task/spring-task-3.0.xsd
@@ -99,12 +99,12 @@ http://www.springframework.org/schema/task/spring-task-3.0.xsd
 		<constructor-arg name="accessKeyId" value="${oss.accessKeyId}"/>
 		<constructor-arg name="secretAccessKey" value="${oss.accessKeySecret}"/>
 	</bean>
-    <task:annotation-driven />
+	<task:annotation-driven />
 
 
 
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
-		<property name="maxInactiveIntervalInSeconds" value="864000"></property>
+		<property name="maxInactiveIntervalInSeconds" value="43200"></property>
 	</bean>
 
 	<bean class="org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory">

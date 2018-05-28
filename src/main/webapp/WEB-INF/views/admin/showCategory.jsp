@@ -14,6 +14,7 @@
     <link href="${basePath}/resources/css/jquery.contextMenu.css" rel="stylesheet">
     <link href="${basePath}/resources/css/aqy.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="${basePath}/resources/css/skins/black.css"/>
+    <link rel="stylesheet" href="${basePath}/resources/css/city-select.css">
 
     <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/artDialog.js"></script>
@@ -24,7 +25,75 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery.lazyload.min.js"></script>
     <script language="javascript" type="text/javascript" src="${basePath}/resources/js/datepicker/WdatePicker.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
-
+    <script type="text/javascript" src="${basePath}/resources/js/newcitydata.js"></script>
+    <script type="text/javascript" src="${basePath}/resources/js/citySelect-1.0.3.js"></script>
+<style>
+    .BB +div {border-top: 1px dotted #d5d5d5}
+    .close_btn{position: absolute;right:20px;top:0px}
+    .close_btn a {
+        border-bottom: 1px solid transparent;
+        font-size: 14px;
+        color: #666;
+        padding: 0 6px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        position: relative;
+        bottom: -1px;
+        -moz-transition: all 1s;
+        -o-transition: all 1s;
+        -webkit-transition: all 1s;
+        transition: all 1s;
+    }
+    #searchTxtBtn{width: 90px;
+        cursor: pointer;
+        display: inline-block;
+        margin-left: 20px;
+        font-size: 14px;
+        padding: 4px;
+        background: url(../../resources/icon/icon_search.png) 62px 50% no-repeat;}
+    #searchTxtBtn:hover{color: #699f00;}
+    .city-info{display: none;}
+    .brand_ui{    position: absolute;
+        left: 610px;
+        top: 145px;
+        word-wrap: break-word;
+        width: 100%;}
+    .brand_ui li {
+        white-space: nowrap;
+        float: left;
+        display: inline;
+        margin: 0 20px 6px 0;
+        line-height: 22px;
+        font-size: 12px;
+    }
+    .brand_ui .selected a {
+        background: #699f00;
+        padding: 1px 7px 2px;
+        color: #fff;
+        border-radius: 1px;
+    }
+    .CC  .selected {
+        background: #699f00;
+        padding: 1px 7px 2px;
+        color: #fff;
+        border-radius: 1px;
+    }
+    .brand_ui a {
+        display: inline-block;
+        padding: 1px 7px 2px;
+        font-size: 14px;
+    }
+    .brand_ui .selected a {
+        background: #699f00;
+        padding: 1px 7px 2px;
+        color: #fff;
+        border-radius: 1px;
+    }
+/*
+    .city-tabs{position: relative}
+*/
+</style>
     <script>
         var basePath = getContextPath();
 
@@ -47,9 +116,67 @@
             return selected;
         }
 
+        function closeSelect(){
+            $("#close_btn").click(function(){
+                $('.city-info').hide();
+                $('.city-pavilion').hide();
+                if($('.city-list').css("display")=="block"){
+                    $('.city-list').hide();
+                }
+                $("#searchTxtBtn").show();
+                $(".input-search").val("");
+            })
+        }
 
+        function  openSearch() {
+
+        }
 
         $(function () {
+            $("#searchTxtBtn").click(function(){
+                   var ppid = parseInt($("#no_leaf_item").find(".selected").attr("id"));//选中的二级目录
+                   $.get("${basePath}/admin/subCategory/brand/"+ppid,function(data){
+                       var singleSelect1 = $('#single-select-1').citySelect({
+                           dataJson: data,
+                           multiSelect: false,
+                           whole: true,
+                           shorthand: true,
+                           search: true,
+                           onInit: function () {
+                               console.log(this);
+                           },
+                           onTabsAfter: function (target) {
+                               console.log("1111111:"+target)
+                           },
+                           onCallerAfter: function (target, values) {
+                               //console.log("22222222:"+JSON.stringify(values));
+                               var brandId = values.id;
+                               var brandName = values.name;
+                               var selected = getAllSelected();
+                               $("#fourthSelectedId").val(selected);
+                               $("#brandId").val(brandId);
+                               $("#brandName").val(brandName);
+                               var url = "${basePath}/admin/subCategory/showCategory"
+                               $("#categoryForm").attr("action",url);
+                               $("#categoryForm").attr("target","_self");
+                               $("#categoryForm").submit();
+                           }
+                       });
+                       $('.city-info').show();
+                       $('.city-pavilion').show();
+                       // $('.city-list').show();
+                       $('.city-cont').show();
+                       $(this).hide();
+                       $('.input-search').click();
+                   })
+            });
+
+
+
+
+            // 单选设置城市
+            //singleSelect1.setCityVal('北京市');
+
              <c:if test="${currentPage >1}">
               window.location.href = "#piclist";
             </c:if>
@@ -562,6 +689,7 @@
                 var url = "${basePath}/admin/subCategory/showCategory";
                 $("#fourthSelectedId").val(selected);
                 url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
+                url = url+"&brandId=${brandId}&brandName=${brandName}"
                 window.location.href= url;
             });
 
@@ -578,6 +706,7 @@
                 $("#fourthSelectedId").val(selected);
                 url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
                 url+="&startTime="+startTime+"&endTime="+endTime;
+                url = url+"&brandId=${brandId}&brandName=${brandName}";
                 window.location.href= url;
             });
             //删除
@@ -594,6 +723,7 @@
                 url=url+"?firstSelectedId=${firstSelectedId}&secondSelectedId=${secondSelectedId}&fourthSelectedId="+selected+"&currentPage=1&pageSize="+$("#pageSize").val();
                 url+="&startTime="+startTime+"&endTime="+endTime;
                 url+="&delFlag=true"
+                url = url+"&brandId=${brandId}&brandName=${brandName}";
                 window.location.href= url;
             })
 
@@ -730,7 +860,32 @@
                 $("#categoryForm").attr("action",url);
                 $("#categoryForm").attr("target","_self");
                 $("#categoryForm").submit();
-            })
+            });
+           //品牌搜索.
+            $(".brand_ui li a").click(function () {
+                var selected = getAllSelected();
+                var brandId =  $(this).attr("id");
+                var brandName =  $(this).attr("name");
+                $("#fourthSelectedId").val(selected);
+                $("#brandId").val(brandId);
+                $("#brandName").val(brandName);
+                var url = "${basePath}/admin/subCategory/showCategory"
+                $("#categoryForm").attr("action",url);
+                $("#categoryForm").attr("target","_self");
+                $("#categoryForm").submit();
+            });
+            $("#brandAll").click(function () {
+                var selected = getAllSelected();
+                var brandId =  "";
+                var brandName =  "";
+                $("#fourthSelectedId").val(selected);
+                $("#brandId").val(brandId);
+                $("#brandName").val(brandName);
+                var url = "${basePath}/admin/subCategory/showCategory"
+                $("#categoryForm").attr("action",url);
+                $("#categoryForm").attr("target","_self");
+                $("#categoryForm").submit();
+            });
         })
 
 
@@ -792,6 +947,8 @@
             <!--当前页所有图片id-->
             <input type="hidden" name="ids"id="picIds">
             <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
+            <input type="hidden" name="brandId" id="brandId" value="${brandId}">
+            <input type="hidden" name="brandName" id="brandName" value="${brandName}">
         </form>
     </div>
 
@@ -870,7 +1027,33 @@
                  <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
              </div>
     </div>
-
+        <c:if test="${brandFlag}">
+            <DIV CLASS="BB" STYLE="padding: 4px 0 4px 1px;height: 30px;">
+                <c:set var="allSelectClass" value="selected"></c:set>
+                <c:choose>
+                    <c:when test="${not empty brandName}">
+                        <c:set var="allSelectClass" value=""></c:set>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="allSelect" value="selected"></c:set>
+                    </c:otherwise>
+                </c:choose>
+                <div class="CC" style="color: #999;font-size: 12px;POSITION: absolute;height: 30px;top:144px"><span>品牌</span>：<a id="brandAll" CLASS="${allSelectClass}" style="
+        padding: 5px 4px 5px 7px;
+        border-radius: 1px;
+        display: inline-block;
+        width: 31px;
+        /* height: 20px; */
+        margin-left: 20px;
+        font-size: 14px; cursor: pointer;">全部</a> <span id="searchTxtBtn">搜索品牌</span></div>
+                <div style="LEFT: 126PX;"  class="city-select mod_category_item" id="single-select-1"></div>
+                <c:if test="${not empty brandName}">
+                    <ui class="brand_ui">
+                        <li class=" li_item leaf_item selected"  > <a id="${brandId}" href="javascript:void()" name="${brandName}" >${brandName}</a> </li>
+                    </ui>
+                </c:if>
+            </DIV>
+        </c:if>
          <div id="leaf_category">
         <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
             <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
@@ -942,7 +1125,9 @@
             </div>
         </c:if>
         <!--推荐-->
-    </div>
+
+
+        </div>
 
 
     <div class="operation" style="position: relative">

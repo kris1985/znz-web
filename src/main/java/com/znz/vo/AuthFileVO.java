@@ -35,18 +35,9 @@ public class AuthFileVO {
         return authId.hashCode();
     }
 
-    public static void  main(String args[]){
 
-        AuthFileVO vo = new AuthFileVO();
-        vo.setAuthName("TEST");
-
-        AuthFileVO vo1 = new AuthFileVO();
-        vo1.setAuthName("TEST");
-        vo1.setCheckBox("ww");
-
-        List<AuthFileVO> list = new ArrayList<AuthFileVO>();
-        list.add(vo);
-
-        System.out.println(list.contains(vo1));
+    public static void main(String[] args) {
+        System.out.println("2#f#d".replaceAll("#","."));
+        System.out.println("2#f#d".replaceAll("\\.","#"));
     }
 }

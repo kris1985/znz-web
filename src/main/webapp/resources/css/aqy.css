@@ -205,18 +205,17 @@
 
 .navbar-ul li {    float: left;}
 
-.navbar-ul li a {
-padding-top: 15px;
-padding-bottom: 15px;
-position: relative;
-display: block;
-padding: 10px 15px;
-line-height: 25px;
-color: white;
-font-size: 17px;
-font-family: "黑体";
-}
-
+  .navbar-ul li a {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      position: relative;
+      display: block;
+      padding: 10px 8px;
+      line-height: 25px;
+      color: white;
+      font-size: 17px;
+      font-family: "黑体";
+  }
 	.mod-page {
     padding: 20px 0;
     text-align: center;
