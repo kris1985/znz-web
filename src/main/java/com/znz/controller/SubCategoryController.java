@@ -198,11 +198,13 @@ public class SubCategoryController {
                 deletePictrues(fileQueryVO);
             }else{
                 List<Picture> pictures;
+                if("3610".equals(queryParam.getFirstSelectedId())){
+                    fileQueryVO.setSortFiled("sort");
+                }
                 if(noFourthSelectedId && brandId==null){
                     pictures = pictureMapper.selectBySimplePage(fileQueryVO);
                 }else{
                     List<Integer> ids = fileQueryVO.getCategoryConditions().stream().flatMap(s->s.stream()).collect(Collectors.toList());
-                    log.info("ids==================:{}",ids);
                     pictures =  pictureMapper.selectByPage(fileQueryVO);
                 }
                 int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)

@@ -134,6 +134,9 @@ public class FileController {
                     picture.setSize(String.valueOf(size));
                     picture.setWidth(String.valueOf(sourceImg.getWidth()));
                     picture.setHeight(String.valueOf(sourceImg.getHeight()));
+                    if (originalName.startsWith("品牌_")) {
+                        picture.setSort(originalName.substring(originalName.indexOf("_", 4) + 1));
+                    }
                     pictureMapper.insert(picture);
 
                     for (String c : categorys) {

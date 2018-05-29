@@ -48,11 +48,11 @@
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.Picture" >
     insert into t_picture (id, name, file_path, 
       click_times, download_times, create_time, 
-      create_user,sec_category,rec_id,gid,width,height,size)
+      create_user,sec_category,rec_id,gid,width,height,size,sort)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
       #{clickTimes,jdbcType=INTEGER}, #{downloadTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createUser,jdbcType=VARCHAR},#{secCategory,jdbcType=INTEGER},#{recId,jdbcType=VARCHAR},#{gid,jdbcType=VARCHAR},
-      #{width,jdbcType=VARCHAR},#{height,jdbcType=VARCHAR},#{size,jdbcType=VARCHAR}
+      #{width,jdbcType=VARCHAR},#{height,jdbcType=VARCHAR},#{size,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR}
       )
   </insert>
 
@@ -143,7 +143,12 @@
 
   <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
    <include refid="querySql"/>
-    order by id desc
+    <if test="sortFiled!=null">
+      order by sort desc,id desc
+    </if>
+    <if test="sortFiled==null">
+      order by id desc
+    </if>
   </select>
 
 
@@ -199,7 +204,13 @@
     <if test="recommendId!=null">
       and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} and partion_code= #{partionCode,jdbcType=INTEGER} )
     </if>
-     order by id desc
+    <if test="sortFiled!=null">
+      order by sort desc,id desc
+    </if>
+    <if test="sortFiled==null">
+      order by id desc
+    </if>
+
   </select>
 
 </mapper>

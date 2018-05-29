@@ -27,4 +27,6 @@ public class FileQueryVO {
 
     private Integer partionCode;
 
+    private String sortFiled;
+
 }
