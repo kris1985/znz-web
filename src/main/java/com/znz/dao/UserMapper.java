@@ -23,4 +23,7 @@ public interface UserMapper {
     List<User> selectByFirstCategory(String firstCategoryId);
 
     User selectByToken(String token);
+
+    void updateToken();
+
 }

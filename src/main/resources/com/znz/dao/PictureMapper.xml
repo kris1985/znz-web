@@ -144,7 +144,7 @@
   <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
    <include refid="querySql"/>
     <if test="sortFiled!=null">
-      order by sort desc,id desc
+      order by sort+0 desc,id desc
     </if>
     <if test="sortFiled==null">
       order by id desc
@@ -156,10 +156,15 @@
     select
     <include refid="Base_Column_List" />
     from t_picture where id in
-        <foreach item="subItem" index="subIndex" collection="list"  open="(" separator="," close=")">
+        <foreach item="subItem" index="subIndex" collection="listIds"  open="(" separator="," close=")">
           #{subItem}
         </foreach>
-    order by id desc
+    <if test="sortFiled!=null">
+      order by sort+0 desc,id desc
+    </if>
+    <if test="sortFiled==null">
+      order by id desc
+    </if>
   </select>
 
 
@@ -205,7 +210,7 @@
       and id IN (SELECT picture_id from  t_pic_recommend where user_id = #{recommendId,jdbcType=INTEGER} and partion_code= #{partionCode,jdbcType=INTEGER} )
     </if>
     <if test="sortFiled!=null">
-      order by sort desc,id desc
+      order by sort+0 desc,id desc
     </if>
     <if test="sortFiled==null">
       order by id desc

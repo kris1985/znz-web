@@ -28,6 +28,7 @@ import com.znz.config.AppConfig;
 import com.znz.dao.*;
 import com.znz.model.*;
 import com.znz.service.CategoryService;
+import com.znz.util.CategoryUtil;
 import com.znz.util.PartionCodeHoder;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -198,7 +199,7 @@ public class SubCategoryController {
                 deletePictrues(fileQueryVO);
             }else{
                 List<Picture> pictures;
-                if("3610".equals(queryParam.getFirstSelectedId())){
+                if(CategoryUtil.isSortByName(queryParam.getFirstSelectedId())){
                     fileQueryVO.setSortFiled("sort");
                 }
                 if(noFourthSelectedId && brandId==null){

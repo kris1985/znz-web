@@ -176,6 +176,9 @@ public class MobileController {
             fileQueryVO.setPage(pageParameter);
             List<Picture> pictures ;
             Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(queryParams.getSecondCategoryId()));
+            if(CategoryUtil.isSortByName(String.valueOf(categoryService.getParentId(Integer.parseInt(queryParams.getSecondCategoryId()))))){
+                fileQueryVO.setSortFiled("sort");
+            }
             fileQueryVO.setPartionCode(partionCode);
             PartionCodeHoder.set(String.valueOf(partionCode));
             if(StringUtils.isEmpty(categoryIds)){

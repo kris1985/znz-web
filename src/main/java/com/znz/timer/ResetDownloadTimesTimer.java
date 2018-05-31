@@ -23,6 +23,7 @@ public class ResetDownloadTimesTimer {
     private void reset(){
         log.info("----------start jobs------------");
         int i =  userMapper.downloadTimes();
+        userMapper.updateToken();
         log.info("----------end jobs------------"+i);
     }
 

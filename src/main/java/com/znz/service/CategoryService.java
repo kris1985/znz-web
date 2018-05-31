@@ -62,5 +62,14 @@ public class CategoryService {
     }
 
 
+    public Integer getParentId(Integer cagotyCode){
+        SubCategory thirdCategory = subCategoryMapper.selectByPrimaryKey(cagotyCode);//四级栏目
+        if(thirdCategory == null){
+            return null;
+        }
+        return thirdCategory.getParentId();
+    }
+
+
 
 }

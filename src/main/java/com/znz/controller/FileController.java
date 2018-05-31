@@ -45,6 +45,7 @@ import com.znz.model.PictureCategory;
 import com.znz.model.SubCategory;
 import com.znz.model.User;
 import com.znz.service.CategoryService;
+import com.znz.util.CategoryUtil;
 import com.znz.util.Constants;
 import com.znz.util.PartionCodeHoder;
 import com.znz.util.PermissionUtil;
@@ -135,7 +136,7 @@ public class FileController {
                     picture.setWidth(String.valueOf(sourceImg.getWidth()));
                     picture.setHeight(String.valueOf(sourceImg.getHeight()));
                     if (originalName.startsWith("品牌_")) {
-                        picture.setSort(originalName.substring(originalName.indexOf("_", 4) + 1));
+                        picture.setSort(CategoryUtil.getNumbers(originalName));
                     }
                     pictureMapper.insert(picture);
 
@@ -292,10 +293,15 @@ public class FileController {
                           String fourthSelectedId, Integer currentPage, Integer totalPage, Integer totalCount,
                           Integer pageSize, Integer recommendId, Model model) {
         Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondSelectedId));
+        Integer firstCategoryId = categoryService.getParentId(Integer.parseInt(secondSelectedId));
         PartionCodeHoder.set(String.valueOf(partionCode));
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(
             Collectors.toList());
-        List<Picture> pictures = pictureMapper.selectByIds(listIds);
+        String sortFiled = null;
+        if(CategoryUtil.isSortByName(String.valueOf(firstCategoryId))){
+            sortFiled = "sort";
+        }
+        List<Picture> pictures = pictureMapper.selectByIds(listIds,sortFiled);
         Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
         PartionCodeHoder.clear();
         for (Picture p : pictures) {
