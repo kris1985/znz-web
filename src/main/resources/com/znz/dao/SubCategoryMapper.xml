@@ -112,7 +112,7 @@
   <select id="selectByPpid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from t_sub_category where ppid =  #{ppid,jdbcType=INTEGER}
+    from t_sub_category where ppid =  #{ppid,jdbcType=INTEGER} order by name
   </select>
 
   <select id="selectSingleByPpid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
