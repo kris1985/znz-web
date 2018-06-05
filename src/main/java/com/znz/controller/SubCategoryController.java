@@ -199,7 +199,7 @@ public class SubCategoryController {
                 deletePictrues(fileQueryVO);
             }else{
                 List<Picture> pictures;
-                if(CategoryUtil.isSortByName(queryParam.getFirstSelectedId())){
+                if(categoryService.isSortByName(queryParam.getSecondSelectedId())){
                     fileQueryVO.setSortFiled("sort");
                 }
                 if(noFourthSelectedId && brandId==null){

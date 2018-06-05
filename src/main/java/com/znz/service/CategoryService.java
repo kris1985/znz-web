@@ -70,6 +70,11 @@ public class CategoryService {
         return thirdCategory.getParentId();
     }
 
-
-
+    public boolean isSortByName(String secondSelectedId) {
+        SubCategory thirdCategory = subCategoryMapper.selectByPrimaryKey(Integer.parseInt(secondSelectedId));
+        if(thirdCategory == null){
+            return false;
+        }
+        return "name".equalsIgnoreCase(thirdCategory.getSortField());
+    }
 }

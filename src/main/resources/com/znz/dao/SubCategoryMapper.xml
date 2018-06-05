@@ -9,9 +9,11 @@
     <result column="category_level" property="categoryLevel" jdbcType="INTEGER" />
     <result column="all_flag" property="allFlag" jdbcType="VARCHAR" />
     <result column="partion_code" property="partionCode" jdbcType="INTEGER" />
+    <result column="sort_field" property="sortField" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, sort_id, parent_id ,category_level,all_flag,partion_code
+    id, name, sort_id, parent_id ,category_level,all_flag,partion_code,sort_field
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

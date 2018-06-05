@@ -19,6 +19,8 @@ public class SubCategory implements Serializable {
 
     private Integer ppid;
 
+    private String sortField;
+
     public Integer getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class SubCategory implements Serializable {
 
     public void setPpid(Integer ppid) {
         this.ppid = ppid;
+    }
+
+    public String getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
     }
 }

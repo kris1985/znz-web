@@ -55,7 +55,7 @@
     #searchTxtBtn:hover{color: #699f00;}
     .city-info{display: none;}
     .brand_ui{    position: absolute;
-        left: 610px;
+        left: 620px;
         top: 145px;
         word-wrap: break-word;
         width: 100%;}

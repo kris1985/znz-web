@@ -417,7 +417,7 @@
 
         //显示对应索引的城市列表
         this.$selector.find('dl').addClass('hide').siblings('.city-'+ letter).removeClass('hide');
-
+        $(".city-_ dt").text("#");
         //切换列表回调
         configure.onTabsAfter.call(this, $target);
         $(".city-cont").show();
