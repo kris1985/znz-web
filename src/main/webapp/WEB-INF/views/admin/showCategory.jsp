@@ -55,7 +55,7 @@
     #searchTxtBtn:hover{color: #699f00;}
     .city-info{display: none;}
     .brand_ui{    position: absolute;
-        left: 620px;
+        left: 606px;
         top: 145px;
         word-wrap: break-word;
         width: 100%;}
@@ -1177,7 +1177,7 @@
                         <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
                            href="javascript:void(0)" class="site-piclist_pic_link" attach="${item.attach}">
                             <img class="lazy" alt="${item.name}" title="${item.name}" style="border: 0"
-                                 src="${basePath}/resources/img/grey.gif" width="386" height="274"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_274,w_386${watermarkParam}">
+                                 src="${basePath}/resources/img/grey.gif" width="384" height="288"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_288,w_384${watermarkParam}">
                         </a>
                     </div>
                 </li>
