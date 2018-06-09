@@ -464,6 +464,7 @@
 
         //选择之后的回调
         configure.onCallerAfter.call(this, $target, this.values[0]);
+
     }
 
     functionality.multiAchieve = function (event) {

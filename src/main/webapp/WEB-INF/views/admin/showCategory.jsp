@@ -27,73 +27,73 @@
     <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/newcitydata.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/citySelect-1.0.3.js"></script>
-<style>
-    .BB +div {border-top: 1px dotted #d5d5d5}
-    .close_btn{position: absolute;right:20px;top:0px}
-    .close_btn a {
-        border-bottom: 1px solid transparent;
-        font-size: 14px;
-        color: #666;
-        padding: 0 6px;
-        height: 36px;
-        line-height: 36px;
-        text-align: center;
-        position: relative;
-        bottom: -1px;
-        -moz-transition: all 1s;
-        -o-transition: all 1s;
-        -webkit-transition: all 1s;
-        transition: all 1s;
-    }
-    #searchTxtBtn{width: 90px;
-        cursor: pointer;
-        display: inline-block;
-        margin-left: 20px;
-        font-size: 14px;
-        padding: 4px;
-        background: url(../../resources/icon/icon_search.png) 62px 50% no-repeat;}
-    #searchTxtBtn:hover{color: #699f00;}
-    .city-info{display: none;}
-    .brand_ui{    position: absolute;
-        left: 606px;
-        top: 145px;
-        word-wrap: break-word;
-        width: 100%;}
-    .brand_ui li {
-        white-space: nowrap;
-        float: left;
-        display: inline;
-        margin: 0 20px 6px 0;
-        line-height: 22px;
-        font-size: 12px;
-    }
-    .brand_ui .selected a {
-        background: #699f00;
-        padding: 1px 7px 2px;
-        color: #fff;
-        border-radius: 1px;
-    }
-    .CC  .selected {
-        background: #699f00;
-        padding: 1px 7px 2px;
-        color: #fff;
-        border-radius: 1px;
-    }
-    .brand_ui a {
-        display: inline-block;
-        padding: 1px 7px 2px;
-        font-size: 14px;
-    }
-    .brand_ui .selected a {
-        background: #699f00;
-        padding: 1px 7px 2px;
-        color: #fff;
-        border-radius: 1px;
-    }
-/*
-    .city-tabs{position: relative}
-*/
-</style>
+    <style>
+        .BB +div {border-top: 1px dotted #d5d5d5}
+        .close_btn{position: absolute;right:20px;top:0px}
+        .close_btn a {
+            border-bottom: 1px solid transparent;
+            font-size: 14px;
+            color: #666;
+            padding: 0 6px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            position: relative;
+            bottom: -1px;
+            -moz-transition: all 1s;
+            -o-transition: all 1s;
+            -webkit-transition: all 1s;
+            transition: all 1s;
+        }
+        #searchTxtBtn{width: 90px;
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 20px;
+            font-size: 14px;
+            padding: 4px;
+            background: url(../../resources/icon/icon_search.png) 62px 50% no-repeat;}
+        #searchTxtBtn:hover{color: #699f00;}
+        .city-info{display: none;}
+        .brand_ui{    position: absolute;
+            left: 606px;
+            top: 145px;
+            word-wrap: break-word;
+            width: 100%;}
+        .brand_ui li {
+            white-space: nowrap;
+            float: left;
+            display: inline;
+            margin: 0 20px 6px 0;
+            line-height: 22px;
+            font-size: 12px;
+        }
+        .brand_ui .selected a {
+            background: #699f00;
+            padding: 1px 7px 2px;
+            color: #fff;
+            border-radius: 1px;
+        }
+        .CC  .selected {
+            background: #699f00;
+            padding: 1px 7px 2px;
+            color: #fff;
+            border-radius: 1px;
+        }
+        .brand_ui a {
+            display: inline-block;
+            padding: 1px 7px 2px;
+            font-size: 14px;
+        }
+        .brand_ui .selected a {
+            background: #699f00;
+            padding: 1px 7px 2px;
+            color: #fff;
+            border-radius: 1px;
+        }
+        /*
+            .city-tabs{position: relative}
+        */
+    </style>
     <script>
         var basePath = getContextPath();
 
@@ -134,41 +134,42 @@
 
         $(function () {
             $("#searchTxtBtn").click(function(){
-                   var ppid = parseInt($("#no_leaf_item").find(".selected").attr("id"));//选中的二级目录
-                   $.get("${basePath}/admin/subCategory/brand/"+ppid,function(data){
-                       var singleSelect1 = $('#single-select-1').citySelect({
-                           dataJson: data,
-                           multiSelect: false,
-                           whole: true,
-                           shorthand: true,
-                           search: true,
-                           onInit: function () {
-                               console.log(this);
-                           },
-                           onTabsAfter: function (target) {
-                               console.log("1111111:"+target)
-                           },
-                           onCallerAfter: function (target, values) {
-                               //console.log("22222222:"+JSON.stringify(values));
-                               var brandId = values.id;
-                               var brandName = values.name;
-                               var selected = getAllSelected();
-                               $("#fourthSelectedId").val(selected);
-                               $("#brandId").val(brandId);
-                               $("#brandName").val(brandName);
-                               var url = "${basePath}/admin/subCategory/showCategory"
-                               $("#categoryForm").attr("action",url);
-                               $("#categoryForm").attr("target","_self");
-                               $("#categoryForm").submit();
-                           }
-                       });
-                       $('.city-info').show();
-                       $('.city-pavilion').show();
-                       // $('.city-list').show();
-                       $('.city-cont').show();
-                       $(this).hide();
-                       $('.input-search').click();
-                   })
+                var ppid = parseInt($("#no_leaf_item").find(".selected").attr("id"));//选中的二级目录
+                $.get("${basePath}/admin/subCategory/brand/"+ppid,function(data){
+                    var singleSelect1 = $('#single-select-1').citySelect({
+                        dataJson: data,
+                        multiSelect: false,
+                        whole: true,
+                        shorthand: true,
+                        search: true,
+                        onInit: function () {
+                            console.log(this);
+                        },
+                        onTabsAfter: function (target) {
+                            console.log("1111111:"+target)
+                        },
+                        onCallerAfter: function (target, values) {
+                            //console.log("22222222:"+JSON.stringify(values));
+                            var brandId = values.id;
+                            var brandName = values.name;
+                            var selected = getAllSelected();
+                            $("#fourthSelectedId").val(selected);
+                            $("#brandId").val(brandId);
+                            $("#brandName").val(brandName);
+                            var url = "${basePath}/admin/subCategory/showCategory"
+                            $("#categoryForm").attr("action",url);
+                            $("#categoryForm").attr("target","_self");
+                            $("#categoryForm").submit();
+                        }
+                    });
+                    $('.city-info').show();
+                    $('.city-pavilion').show();
+                    // $('.city-list').show();
+                    $('.city-cont').show();
+                    $(this).hide();
+                    $('.input-search').click();
+                    $(".city-z dt").text("全部");
+                })
             });
 
 
@@ -177,38 +178,38 @@
             // 单选设置城市
             //singleSelect1.setCityVal('北京市');
 
-             <c:if test="${currentPage >1}">
-              window.location.href = "#piclist";
+            <c:if test="${currentPage >1}">
+            window.location.href = "#piclist";
             </c:if>
-             <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
-                //栏目排序 左右
-                $(".mod_category_item").sortable({
-                    update: function (event, ui) {
-                        var array = $(this).children();
-                        var data = "";
-                        for (var i = 0; i < array.length; i++) {
-                            if ("" == array[i].id || array[i].id.indexOf("all")!=-1) {
-                                continue;
-                            }
-                            //console.log(array[i].id);
-                            data += array[i].id + ":" + i + ";";
+            <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 }">
+            //栏目排序 左右
+            $(".mod_category_item").sortable({
+                update: function (event, ui) {
+                    var array = $(this).children();
+                    var data = "";
+                    for (var i = 0; i < array.length; i++) {
+                        if ("" == array[i].id || array[i].id.indexOf("all")!=-1) {
+                            continue;
                         }
-                        // console.log(data);
-                        $.ajax({
-                            type: "POST",
-                            url: basePath + "/admin/subCategory/sort",
-                            data: "param=" + data,
-                            cache: false,
-                            success: function (msg) {
-                                //alert( "Data Saved: " + msg );
-                            },
-                            error: function (msg) {
-                                alert("服务器出错了");
-                            }
-                        });
+                        //console.log(array[i].id);
+                        data += array[i].id + ":" + i + ";";
                     }
-                });
-                $(".mod_category_item").disableSelection();
+                    // console.log(data);
+                    $.ajax({
+                        type: "POST",
+                        url: basePath + "/admin/subCategory/sort",
+                        data: "param=" + data,
+                        cache: false,
+                        success: function (msg) {
+                            //alert( "Data Saved: " + msg );
+                        },
+                        error: function (msg) {
+                            alert("服务器出错了");
+                        }
+                    });
+                }
+            });
+            $(".mod_category_item").disableSelection();
 
             $( "#leaf_category" ).sortable({
                 update: function (event, ui) {
@@ -238,207 +239,207 @@
             });
             $( "#leaf_category" ).disableSelection();
 
-                $('.noLeaf').contextMenu('myMenu1', {
-                    bindings: {
-                        'add': function (t) {
-                            var url = basePath + "/admin/subCategory/add";
-                            var id = $("#" + t.id);
+            $('.noLeaf').contextMenu('myMenu1', {
+                bindings: {
+                    'add': function (t) {
+                        var url = basePath + "/admin/subCategory/add";
+                        var id = $("#" + t.id);
 
-                            $("#categoryLevel").val(id.attr("categoryLevel"));
-                            $("#parentId").val(id.attr("parentId"));
-                            //console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
-                            var sortId = id.parent().children().length + 1;
-                            $("#sortId").val(sortId);
-                            //console.log( $("#dialog"));
-                            $("#dialog").dialog({
-                                height: 150,
-                                modal: true,
-                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                                buttons: [
-                                    {
-                                        text: "提交",
-                                        icons: {
-                                            primary: "ui-icon-heart"
-                                        },
-                                        click: function () {
-                                            $("#categoryForm").attr("action", url);
-                                            $("#categoryForm").submit();
-                                        }
-                                    }]
-                            });
-                        },
-
-                        'addSub': function (t) {
-                            var url = basePath + "/admin/subCategory/add";
-                            var id = $("#" + t.id);
-                            var parentId = t.id;
-                            var sortId = id.parent().children().length + 1;
-                            $("#sortId").val(sortId);
-                            $("#parentId").val(parentId);
-                            $("#categoryLevel").val(parseInt(id.attr("categoryLevel"))+1);
-                            $("#dialog").dialog({
-                                height: 150,
-                                modal: true,
-                                title:"新增子类别",
-                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                                buttons: [
-                                    {
-                                        text: "提交",
-                                        icons: {
-                                            primary: "ui-icon-heart"
-                                        },
-                                        click: function () {
-                                            $("#categoryForm").attr("action", url);
-                                            $("#categoryForm").submit();
-                                        }
-                                    }]
-                            });
-                        },
-
-                        'rename': function (t) {
-                            var url = basePath + "/admin/subCategory/update";
-                            var id = t.id;
-                            var oldName = $.trim($("#" + t.id) .text());
-                            $("#categoryName").val(oldName);
-                            $("#dialog").dialog({
-                                height: 150,
-                                modal: true,
-                                title:"重命名q",
-                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                                buttons: [
-                                    {
-                                        text: "提交",
-                                        icons: {
-                                            primary: "ui-icon-heart"
-                                        },
-                                        click: function () {
-                                           var name =  $.trim($("#categoryName").val());
-                                           if(oldName == name){
-                                             return;
-                                           }
-                                            $.ajax({
-                                                   type: "POST",
-                                                   url: basePath + "/admin/subCategory/update",
-                                                    data: { name: name, id: id ,oldName:oldName},
-                                                   cache: false,
-                                                   async: false,
-                                                   success: function (ret) {
-                                                       if (ret.code == 0) {
-                                                           $("#" + t.id).find("a").text(name);
-                                                           $("#dialog").dialog("close");
-                                                       } else {
-                                                           alert(ret.msg);
-                                                       }
-                                                   },
-                                                   error: function (msg) {
-                                                       alert("服务器出错了");
-                                                   }
-                                             });
-                                        }
-                                    }]
-                            });
-
-                        }
-                        ,'delete1':function (t) {
-                            var url = basePath + "/admin/subCategory/delete/"+t.id;
-                            if(confirm("确认要删除吗？")){
-                                $.get(url,function (data) {
-                                    if(data.code!=0){
-                                        alert(data.msg);
-                                    }else{
-                                        $("#"+t.id).hide(1000);
+                        $("#categoryLevel").val(id.attr("categoryLevel"));
+                        $("#parentId").val(id.attr("parentId"));
+                        //console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
+                        var sortId = id.parent().children().length + 1;
+                        $("#sortId").val(sortId);
+                        //console.log( $("#dialog"));
+                        $("#dialog").dialog({
+                            height: 150,
+                            modal: true,
+                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                            buttons: [
+                                {
+                                    text: "提交",
+                                    icons: {
+                                        primary: "ui-icon-heart"
+                                    },
+                                    click: function () {
+                                        $("#categoryForm").attr("action", url);
+                                        $("#categoryForm").submit();
                                     }
-                                });
-                            }
-                        }
-                    }
-                });
+                                }]
+                        });
+                    },
 
-                $('.leaf_item').contextMenu('myMenu2', {
-                    bindings: {
-                        'add2': function (t) {
-                            var url = basePath + "/admin/subCategory/add";
-                            var id = $("#" + t.id);
+                    'addSub': function (t) {
+                        var url = basePath + "/admin/subCategory/add";
+                        var id = $("#" + t.id);
+                        var parentId = t.id;
+                        var sortId = id.parent().children().length + 1;
+                        $("#sortId").val(sortId);
+                        $("#parentId").val(parentId);
+                        $("#categoryLevel").val(parseInt(id.attr("categoryLevel"))+1);
+                        $("#dialog").dialog({
+                            height: 150,
+                            modal: true,
+                            title:"新增子类别",
+                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                            buttons: [
+                                {
+                                    text: "提交",
+                                    icons: {
+                                        primary: "ui-icon-heart"
+                                    },
+                                    click: function () {
+                                        $("#categoryForm").attr("action", url);
+                                        $("#categoryForm").submit();
+                                    }
+                                }]
+                        });
+                    },
 
-                            $("#categoryLevel").val(id.attr("categoryLevel"));
-                            $("#parentId").val(id.attr("parentId"));
-                            // console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
-                            var sortId = id.parent().children().length + 1;
-                            $("#sortId").val(sortId);
-                            $("#dialog").dialog({
-                                height: 150,
-                                modal: true,
-                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                                buttons: [
-                                    {
-                                        text: "提交",
-                                        icons: {
-                                            primary: "ui-icon-heart"
-                                        },
-                                        click: function () {
-                                            $("#categoryForm").attr("action", url);
-                                            $("#categoryForm").submit();
+                    'rename': function (t) {
+                        var url = basePath + "/admin/subCategory/update";
+                        var id = t.id;
+                        var oldName = $.trim($("#" + t.id) .text());
+                        $("#categoryName").val(oldName);
+                        $("#dialog").dialog({
+                            height: 150,
+                            modal: true,
+                            title:"重命名q",
+                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                            buttons: [
+                                {
+                                    text: "提交",
+                                    icons: {
+                                        primary: "ui-icon-heart"
+                                    },
+                                    click: function () {
+                                        var name =  $.trim($("#categoryName").val());
+                                        if(oldName == name){
+                                            return;
                                         }
-                                    }]
-                            });
-                        },
-                        'rename2': function (t) {
-                            var oldName = $.trim($("#" + t.id) .text());
-                            var id = t.id;
-                            $("#categoryName").val(oldName);
-                            $("#dialog").dialog({
-                                height: 150,
-                                title:"重命名21",
-                                modal: true,
-                                position: {my: "left top", at: "left bottom", of: "#" + t.id},
-                                buttons: [
-                                    {
-                                        text: "提交",
-                                        icons: {
-                                            primary: "ui-icon-heart"
-                                        },
-                                        click: function () {
-                                            var name =  $.trim($("#categoryName").val());
-                                            if(oldName == name){
-                                                return;
-                                            }
-                                            $.ajax({
-                                                type: "POST",
-                                                url: basePath + "/admin/subCategory/update",
-                                                data: { name: name, id: id ,oldName:oldName},
-                                                cache: false,
-                                                async: false,
-                                                success: function (ret) {
-                                                    if (ret.code == 0) {
-                                                        $("#" + t.id).find("a").text(name);
-                                                        $("#dialog").dialog("close");
-                                                    } else {
-                                                        alert(ret.msg);
-                                                    }
-                                                },
-                                                error: function (msg) {
-                                                    alert("服务器出错了");
+                                        $.ajax({
+                                            type: "POST",
+                                            url: basePath + "/admin/subCategory/update",
+                                            data: { name: name, id: id ,oldName:oldName},
+                                            cache: false,
+                                            async: false,
+                                            success: function (ret) {
+                                                if (ret.code == 0) {
+                                                    $("#" + t.id).find("a").text(name);
+                                                    $("#dialog").dialog("close");
+                                                } else {
+                                                    alert(ret.msg);
                                                 }
-                                            });
-                                        }
-                                    }]
-                            });
-
-                        }
-                        ,'delete2':function (t) {
-                            var url = basePath + "/admin/subCategory/delete/"+t.id;
-                            if(confirm("确认要删除吗？")){
-                                $.get(url,function (data) {
-                                    if(data.code!=0){
-                                        alert(data.msg);
-                                    }else{
-                                        $("#"+t.id).hide(1000);
+                                            },
+                                            error: function (msg) {
+                                                alert("服务器出错了");
+                                            }
+                                        });
                                     }
-                                });
-                            }
+                                }]
+                        });
+
+                    }
+                    ,'delete1':function (t) {
+                        var url = basePath + "/admin/subCategory/delete/"+t.id;
+                        if(confirm("确认要删除吗？")){
+                            $.get(url,function (data) {
+                                if(data.code!=0){
+                                    alert(data.msg);
+                                }else{
+                                    $("#"+t.id).hide(1000);
+                                }
+                            });
                         }
                     }
-                });
+                }
+            });
+
+            $('.leaf_item').contextMenu('myMenu2', {
+                bindings: {
+                    'add2': function (t) {
+                        var url = basePath + "/admin/subCategory/add";
+                        var id = $("#" + t.id);
+
+                        $("#categoryLevel").val(id.attr("categoryLevel"));
+                        $("#parentId").val(id.attr("parentId"));
+                        // console.log($("#parentId").val()+"--i---"+$("#categoryLevel").val());
+                        var sortId = id.parent().children().length + 1;
+                        $("#sortId").val(sortId);
+                        $("#dialog").dialog({
+                            height: 150,
+                            modal: true,
+                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                            buttons: [
+                                {
+                                    text: "提交",
+                                    icons: {
+                                        primary: "ui-icon-heart"
+                                    },
+                                    click: function () {
+                                        $("#categoryForm").attr("action", url);
+                                        $("#categoryForm").submit();
+                                    }
+                                }]
+                        });
+                    },
+                    'rename2': function (t) {
+                        var oldName = $.trim($("#" + t.id) .text());
+                        var id = t.id;
+                        $("#categoryName").val(oldName);
+                        $("#dialog").dialog({
+                            height: 150,
+                            title:"重命名21",
+                            modal: true,
+                            position: {my: "left top", at: "left bottom", of: "#" + t.id},
+                            buttons: [
+                                {
+                                    text: "提交",
+                                    icons: {
+                                        primary: "ui-icon-heart"
+                                    },
+                                    click: function () {
+                                        var name =  $.trim($("#categoryName").val());
+                                        if(oldName == name){
+                                            return;
+                                        }
+                                        $.ajax({
+                                            type: "POST",
+                                            url: basePath + "/admin/subCategory/update",
+                                            data: { name: name, id: id ,oldName:oldName},
+                                            cache: false,
+                                            async: false,
+                                            success: function (ret) {
+                                                if (ret.code == 0) {
+                                                    $("#" + t.id).find("a").text(name);
+                                                    $("#dialog").dialog("close");
+                                                } else {
+                                                    alert(ret.msg);
+                                                }
+                                            },
+                                            error: function (msg) {
+                                                alert("服务器出错了");
+                                            }
+                                        });
+                                    }
+                                }]
+                        });
+
+                    }
+                    ,'delete2':function (t) {
+                        var url = basePath + "/admin/subCategory/delete/"+t.id;
+                        if(confirm("确认要删除吗？")){
+                            $.get(url,function (data) {
+                                if(data.code!=0){
+                                    alert(data.msg);
+                                }else{
+                                    $("#"+t.id).hide(1000);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
 
             $('.choice_item').contextMenu('myMenu3', {
                 bindings: {
@@ -501,18 +502,18 @@
 
 
 
-                //用户管理
-                $("#userManagerBtn").click(function () {
-                    var url = "${basePath}/admin/user/users";
-                    art.dialog.open(url,
-                        {
-                            "id": "2347",
-                            title: "用户管理",
-                            width: 1200,
-                            height: 800
-                        }
-                    );
-                })
+            //用户管理
+            $("#userManagerBtn").click(function () {
+                var url = "${basePath}/admin/user/users";
+                art.dialog.open(url,
+                    {
+                        "id": "2347",
+                        title: "用户管理",
+                        width: 1200,
+                        height: 800
+                    }
+                );
+            })
 
 
             </c:if>
@@ -629,40 +630,40 @@
             });
             </c:if>
             <c:if test="${userSession.user.userType ==1 and userSession.user.recommendFlag == 1}">
-                 $('.site-piclist li').contextMenu('menuPic', {
-                    bindings: {
-                        'rec': function (t) {
-                            var id = $(t).attr("item");
-                            var url = "${basePath}/admin/subCategory/recommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
-                            if($(t).find(".my_rec").css("display") =="block"){
-                                alert("您已推荐过该图片");
-                                return;
-                            }
-                            $.get(url,function (data) {
-                                if(data.code ==0 ||data.code ==1){
-                                    $(t).find(".my_rec").show();
-                                }else{
-                                    alert(data.msg)
-                                }
-                            })
-                        },
-                        'cancleRec': function (t) {
-                            var id = $(t).attr("item");
-                            var url = "${basePath}/admin/subCategory/cancelRecommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
-                            if($(t).find(".my_rec").css("display") =="none"){
-                                alert("您还没推荐过该图片");
-                                return;
-                            }
-                            $.get(url,function (data) {
-                                if(data.code ==0 || data.code ==1){
-                                    $(t).find(".my_rec").hide();
-                                } else{
-                                    alert(data.msg)
-                                }
-                            })
+            $('.site-piclist li').contextMenu('menuPic', {
+                bindings: {
+                    'rec': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/subCategory/recommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
+                        if($(t).find(".my_rec").css("display") =="block"){
+                            alert("您已推荐过该图片");
+                            return;
                         }
+                        $.get(url,function (data) {
+                            if(data.code ==0 ||data.code ==1){
+                                $(t).find(".my_rec").show();
+                            }else{
+                                alert(data.msg)
+                            }
+                        })
+                    },
+                    'cancleRec': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/subCategory/cancelRecommend/"+id+"?secondSelectedId="+$("#secondSelectedId").val();
+                        if($(t).find(".my_rec").css("display") =="none"){
+                            alert("您还没推荐过该图片");
+                            return;
+                        }
+                        $.get(url,function (data) {
+                            if(data.code ==0 || data.code ==1){
+                                $(t).find(".my_rec").hide();
+                            } else{
+                                alert(data.msg)
+                            }
+                        })
                     }
-                 });
+                }
+            });
             </c:if>
             //图片懒加载
             $("img.lazy").lazyload({
@@ -672,12 +673,12 @@
             //叶子节点,点击类别
             $(".leaf_item").click(function () {
 
-                         if ($(this).hasClass("selected")) {
-                             return;
-                         }else {
-                             $(this).addClass("selected");
-                             $(this).siblings().removeClass("selected");
-                         }
+                if ($(this).hasClass("selected")) {
+                    return;
+                }else {
+                    $(this).addClass("selected");
+                    $(this).siblings().removeClass("selected");
+                }
 
 
 
@@ -737,31 +738,31 @@
             //分页
             $.jqPaginator('#pagination1', {
                 <c:choose>
-                    <c:when test="${totalPage ==0}">
-                        totalPages: 1,
-                    </c:when>
-                    <c:otherwise>
-                         totalPages: ${totalPage},
-                    </c:otherwise>
+                <c:when test="${totalPage ==0}">
+                totalPages: 1,
+                </c:when>
+                <c:otherwise>
+                totalPages: ${totalPage},
+                </c:otherwise>
                 </c:choose>
-                  visiblePages: 10,
-                  prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
-                  next: '<li class="next"><a href="javascript:void(0);" style="width:58px">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
-                  page: '<li class="page"><a href="javascript:void(0);" style="width:40px">{{page}}<\/a><\/li>',
-                  currentPage: ${currentPage},
+                visiblePages: 10,
+                prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
+                next: '<li class="next"><a href="javascript:void(0);" style="width:58px">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
+                page: '<li class="page"><a href="javascript:void(0);" style="width:40px">{{page}}<\/a><\/li>',
+                currentPage: ${currentPage},
 
-                    onPageChange: function (num, type) {
-                            if(type!="init"){
-                               var selected = getAllSelected();
-                               var url = "${basePath}/admin/subCategory/showCategory"
-                               $("#fourthSelectedId").val(selected);
-                               $("#currentPage").val(num);
-                                $("#categoryForm").attr("target", "_self");
-                               $("#categoryForm").attr("action", url);
-                               $("#categoryForm").submit();
-                            }
+                onPageChange: function (num, type) {
+                    if(type!="init"){
+                        var selected = getAllSelected();
+                        var url = "${basePath}/admin/subCategory/showCategory"
+                        $("#fourthSelectedId").val(selected);
+                        $("#currentPage").val(num);
+                        $("#categoryForm").attr("target", "_self");
+                        $("#categoryForm").attr("action", url);
+                        $("#categoryForm").submit();
                     }
-                });
+                }
+            });
             //共多少页面
             $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}张</a></li>')
             $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:160px;border:0">到第<input type="text" style="  width: 34px; margin: 0px 5px;height: 18px;padding:2px;text-align: center " id="switchToPage" value="${currentPage}">页<input type="button" value="确定" id="switchToPageBtn" style=" cursor: pointer; width: 50px;  height: 24px;margin-left:10px  "></a></li>');
@@ -790,24 +791,24 @@
             //点击图片看大图
 
 
-           $(".site-piclist_pic a").click(function () {
-               var selectedImg = $(this).attr("id");
-               var ids="";
-               $(".site-piclist_pic a").each(function (i) {
-                   ids=ids+$(this).attr("id")+",";
-               });
-               $("#selectedId").val(selectedImg);
-               $("#picIds").val(ids);
-               var selected = getAllSelected();
-               $("#fourthSelectedId").val(selected);
-               var url = "${basePath}/admin/file/listImg"
-               $("#categoryForm").attr("action",url);
-               $("#categoryForm").attr("target","_blank");
-               $("#categoryForm").submit();
-           })
+            $(".site-piclist_pic a").click(function () {
+                var selectedImg = $(this).attr("id");
+                var ids="";
+                $(".site-piclist_pic a").each(function (i) {
+                    ids=ids+$(this).attr("id")+",";
+                });
+                $("#selectedId").val(selectedImg);
+                $("#picIds").val(ids);
+                var selected = getAllSelected();
+                $("#fourthSelectedId").val(selected);
+                var url = "${basePath}/admin/file/listImg"
+                $("#categoryForm").attr("action",url);
+                $("#categoryForm").attr("target","_blank");
+                $("#categoryForm").submit();
+            })
 
 
-           $(".openBtn").click(function(){
+            $(".openBtn").click(function(){
                 if( $(this).find("em").text()=="更多"){
                     $(this).parent().css("height","auto");
                     $.cookie($(this).parent().attr("id"), "auto");
@@ -819,7 +820,7 @@
                     $(this).find("em").text("更多");
                     $(this).find("i").css("background-position", "-19px -10px")
                 }
-           })
+            })
 
             $(".mod_sear_list").each(function (i) {
                 var height = $.cookie($(this).attr("id"));
@@ -838,12 +839,12 @@
                 }
             })
 
-           $(".site-piclist_pic").hover(
-               function () {
-               $(this).css("border","2px solid #699f00");
-           },function () {
-                   $(this).css("border","2px solid white");
-           })
+            $(".site-piclist_pic").hover(
+                function () {
+                    $(this).css("border","2px solid #699f00");
+                },function () {
+                    $(this).css("border","2px solid white");
+                })
 
             //推荐
             $("#recommend_list li").click(function () {
@@ -861,7 +862,7 @@
                 $("#categoryForm").attr("target","_self");
                 $("#categoryForm").submit();
             });
-           //品牌搜索.
+            //品牌搜索.
             $(".brand_ui li a").click(function () {
                 var selected = getAllSelected();
                 var brandId =  $(this).attr("id");
@@ -904,18 +905,18 @@
             <ul class="navbar-ul mod_category_item">
 
 
-            <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
-                <c:if test="${item.categoryLevel == 0 && firstSelectedId == item.id  }">
-                    <li id="${item.id}" class="li_item selected noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
-                            href="${bathPath}/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a>
-                    </li>
-                </c:if>
-                <c:if test="${item.categoryLevel == 0 && firstSelectedId != item.id  }">
-                    <li id="${item.id}" class="li_item noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
-                            href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a>
-                    </li>
-                </c:if>
-            </c:forEach>
+                <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
+                    <c:if test="${item.categoryLevel == 0 && firstSelectedId == item.id  }">
+                        <li id="${item.id}" class="li_item selected noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
+                                href="${bathPath}/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a>
+                        </li>
+                    </c:if>
+                    <c:if test="${item.categoryLevel == 0 && firstSelectedId != item.id  }">
+                        <li id="${item.id}" class="li_item noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
+                                href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${item.id}">${item.name}</a>
+                        </li>
+                    </c:if>
+                </c:forEach>
             </ul>
         </div>
     </div>
@@ -976,7 +977,7 @@
                 <li id="delete3"> 删除</li>
             </ul>
         </div>
-  </c:if>
+    </c:if>
 
     <c:choose>
         <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
@@ -1006,27 +1007,27 @@
 
 
     <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
-         <div class="mod_sear_list" id="mod_${firstSelectedId}">
-        <h3>目录：</h3>
-        <ul class="mod_category_item" id="no_leaf_item">
-            <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
-                <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
-                    <li id="${item.id}" class="li_item selected noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
-                          href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
-                    </li>
-                </c:if>
-                <c:if test="${item.parentId == firstSelectedId && secondSelectedId != item.id  }">
-                    <li id="${item.id}" class="li_item noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
-                            href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
-                    </li>
-                </c:if>
+        <div class="mod_sear_list" id="mod_${firstSelectedId}">
+            <h3>目录：</h3>
+            <ul class="mod_category_item" id="no_leaf_item">
+                <c:forEach var="item" items="${subCategoryVOs}" varStatus="status">
+                    <c:if test="${item.parentId == firstSelectedId && secondSelectedId == item.id  }">
+                        <li id="${item.id}" class="li_item selected noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
+                                href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
+                        </li>
+                    </c:if>
+                    <c:if test="${item.parentId == firstSelectedId && secondSelectedId != item.id  }">
+                        <li id="${item.id}" class="li_item noLeaf" categoryLevel="${item.categoryLevel}" parentId="${item.parentId}"><a
+                                href="${basePath}/admin/subCategory/showCategory?firstSelectedId=${firstSelectedId}&secondSelectedId=${item.id}">${item.name}</a>
+                        </li>
+                    </c:if>
 
-            </c:forEach>
-        </ul>
-             <div class="openBtn">
-                 <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
-             </div>
-    </div>
+                </c:forEach>
+            </ul>
+            <div class="openBtn">
+                <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
+            </div>
+        </div>
         <c:if test="${brandFlag}">
             <DIV CLASS="BB" STYLE="padding: 4px 0 4px 1px;height: 30px;">
                 <c:set var="allSelectClass" value="selected"></c:set>
@@ -1054,45 +1055,45 @@
                 </c:if>
             </DIV>
         </c:if>
-         <div id="leaf_category">
-        <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
-            <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
-                <div class="mod_sear_list" id="${item.id}">
-                    <h3 id="${item.id}" class="choice_item"><span>${item.name}</span>：</h3>
-                    <ul class="mod_category_item ">
-                        <li id="all_${item.id}" class="li_item leaf_item all_item " categoryLevel="${item.categoryLevel +1}" parentId="${item.id}"><a id="aa"
-                                                                                               href="javascript:void()"
-                                                                                               class="">全部</a></li>
+        <div id="leaf_category">
+            <c:forEach var="item" items="${subCategoryVOs}" varStatus="status" >
+                <c:if test="${item.categoryLevel == 2 && item.parentId == secondSelectedId}">
+                    <div class="mod_sear_list" id="${item.id}">
+                        <h3 id="${item.id}" class="choice_item"><span>${item.name}</span>：</h3>
+                        <ul class="mod_category_item ">
+                            <li id="all_${item.id}" class="li_item leaf_item all_item " categoryLevel="${item.categoryLevel +1}" parentId="${item.id}"><a id="aa"
+                                                                                                                                                          href="javascript:void()"
+                                                                                                                                                          class="">全部</a></li>
 
-                        <c:forEach var="category" items="${item.childrens}" varStatus="status2">
-                            <c:set var="iscontain" value="false" />
-                            <c:forEach items="${fourthSet}" var="c">
-                                <c:if test="${c == category.id}">
-                                    <c:set var="iscontain" value="true" />
-                                </c:if>
-                            </c:forEach>
+                            <c:forEach var="category" items="${item.childrens}" varStatus="status2">
+                                <c:set var="iscontain" value="false" />
+                                <c:forEach items="${fourthSet}" var="c">
+                                    <c:if test="${c == category.id}">
+                                        <c:set var="iscontain" value="true" />
+                                    </c:if>
+                                </c:forEach>
 
-                            <c:choose>
-                                <c:when test="${iscontain}">
-                                    <li id="${category.id}"  class=" li_item leaf_item selected"
-                                        categoryLevel="${category.categoryLevel}" parentId="${category.parentId}"> <a id="a_${category.id}" href="javascript:void()"
-                                                                                                                      class="">${category.name}</a> </li>
-                                </c:when>
-                                <c:otherwise>
-                                    <li id="${category.id}"  class=" li_item leaf_item
+                                <c:choose>
+                                    <c:when test="${iscontain}">
+                                        <li id="${category.id}"  class=" li_item leaf_item selected"
+                                            categoryLevel="${category.categoryLevel}" parentId="${category.parentId}"> <a id="a_${category.id}" href="javascript:void()"
+                                                                                                                          class="">${category.name}</a> </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li id="${category.id}"  class=" li_item leaf_item
                                 "  categoryLevel="${category.categoryLevel}" parentId="${category.parentId}"> <a id="a_${category.id}" href="javascript:void()"
                                                                                                                  class="">${category.name} </a> </li>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </ul>
-                    <div class="openBtn">
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </ul>
+                        <div class="openBtn">
                             <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
-                     </div>
-                </div>
-            </c:if>
-        </c:forEach>
-    </div>
+                        </div>
+                    </div>
+                </c:if>
+            </c:forEach>
+        </div>
         <!--推荐-->
         <c:if test="${not empty users}">
             <div class="mod_sear_list" id="recommend_list">
@@ -1127,7 +1128,7 @@
         <!--推荐-->
 
 
-        </div>
+    </div>
 
 
     <div class="operation" style="position: relative">
@@ -1157,7 +1158,7 @@
     <div  class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
     </div>
-     <a name="piclist"></a>
+    <a name="piclist"></a>
     <div class="wrapper-piclist" style="    margin-left: -10px;">
         <ul class="site-piclist">
 
@@ -1185,9 +1186,9 @@
         </ul>
     </div>
 
-  <div class="mod-page">
-    <ul class="pagination" id="pagination1"></ul>
-  </div>
+    <div class="mod-page">
+        <ul class="pagination" id="pagination1"></ul>
+    </div>
     <div id="scrollTop" >
         <div class="level-2"></div>
         <div class="level-3"></div>
@@ -1196,7 +1197,7 @@
 
     <div id="1000000000046" class="ad-wrapper clearfix">
         <div class="divide-green-h"></div>
-   </div>
+    </div>
 </div>
 
 
