@@ -119,6 +119,7 @@
 
         //分类的城市
         parameter.filterCity = {
+            z: [],
             A: [],
             B: [],
             C: [],
@@ -150,6 +151,7 @@
 
         $.each(configure.contain, function (key, value) {
             //匹配城市数据
+            parameter.filterCity.z.push(value);
             switch (value.letter) {
                 case ('A'):
                         parameter.filterCity.A.push(value);
@@ -287,6 +289,7 @@
         '<div class="city-pavilion hide">',
             '<div class="city-tabs">',
         '<div class="close_btn" id="close_btn"><a href="javascript:void(0);" onclick="closeSelect()">关闭</a></div>',
+                 '<a href="javascript:;" class="tab-a" data-letter="z">全部</a>',
 				 '<a href="javascript:;" class="tab-a" data-letter="A">A</a>',
 				 '<a href="javascript:;" class="tab-a" data-letter="B">B</a>',
                 '<a href="javascript:;" class="tab-a" data-letter="C">C</a>',
@@ -345,6 +348,7 @@
     }
     
     functionality.groupArray = [
+        'z',
 		'A',
 		'B',
         'C',
@@ -418,6 +422,7 @@
         //显示对应索引的城市列表
         this.$selector.find('dl').addClass('hide').siblings('.city-'+ letter).removeClass('hide');
         $(".city-_ dt").text("#");
+        $(".city-z dt").text("全部");
         //切换列表回调
         configure.onTabsAfter.call(this, $target);
         $(".city-cont").show();

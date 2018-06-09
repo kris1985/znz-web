@@ -72,13 +72,10 @@
   <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select
     <include refid="Base_Column_List" />
-    from t_sub_category
-    <where>
+    from t_sub_category where parent_id!=-1
       <if test="parentId != null" >
-        parent_id = #{parentId,jdbcType=INTEGER}
+       and parent_id = #{parentId,jdbcType=INTEGER}
       </if>
-      parent_id!=-1
-    </where>
     order by category_level, sort_id
   </select>
 
