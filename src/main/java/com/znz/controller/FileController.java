@@ -306,7 +306,7 @@ public class FileController {
         PartionCodeHoder.clear();
         for (Picture p : pictures) {
             if (StringUtils.isNoneBlank(p.getAttach())) {
-                p.setAttach(p.getFilePath() + "|" + p.getName() + "," + p.getAttach());//加上原图
+                p.setAttach(p.getFilePath() + "|" + p.getName() + ";" + p.getAttach());//加上原图
             }
         }
         int currentIndex = listIds.indexOf(selectedId);

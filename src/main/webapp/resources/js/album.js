@@ -112,7 +112,7 @@ var uerType = getUserType();
                 $("#recBtn").css("color","#777");
             }
             if(attachs!=undefined && attachs!=""  && attachs!=null){
-                var arr =  attachs.split(",");
+                var arr =  attachs.split(";");
                 var res="";
                 var attachSrc = "";
                 var attachAlt = "";
