@@ -259,7 +259,7 @@ public class FileController {
                 Picture pic = new Picture();
                 pic.setId(pictureId);
                 if (!StringUtils.isEmpty(picture.getAttach())) {
-                    pic.setAttach(picture.getAttach() + "," + attach + "|" + fileName);
+                    pic.setAttach(picture.getAttach() + ";" + attach + "|" + fileName);
                 } else {
                     pic.setAttach(attach + "|" + fileName);
                 }
