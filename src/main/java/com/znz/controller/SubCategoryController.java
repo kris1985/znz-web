@@ -278,7 +278,7 @@ public class SubCategoryController {
                         keys.add(p.getFilePath());
                         String attach = p.getAttach();
                         if (StringUtils.isNoneBlank(attach)) {
-                            List<String> attachs = Arrays.stream(attach.split(",")).map(s->s.substring(0,s.indexOf("|"))).collect(Collectors.toList());
+                            List<String> attachs = Arrays.stream(attach.split(";")).map(s->s.substring(0,s.indexOf("|"))).collect(Collectors.toList());
                             if (!CollectionUtils.isEmpty(attachs)) {
                                 keys.addAll(attachs);
                             }

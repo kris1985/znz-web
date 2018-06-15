@@ -105,7 +105,7 @@ var uerType = getUserType();
             //console.log("currentItem:"+ currentItem.find("a:first").attr("attachs"))
             var attachs =   currentItem.find("a:first").attr("attachs");
             //console.log("attachs:"+attachs)
-            console.log("myRec--------------"+myRec)
+            //console.log("myRec--------------"+myRec)
             if(myRec == "true"){
                 $("#recBtn").css("color","red");
             }else{
