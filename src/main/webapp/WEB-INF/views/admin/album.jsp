@@ -92,7 +92,7 @@
 </form>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>
-<script type="text/javascript" src="${basePath}/resources/js/album.js"></script>
+<script type="text/javascript" src="${basePath}/resources/js/album_v1.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-latest.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.mousewheel.min.js"></script>

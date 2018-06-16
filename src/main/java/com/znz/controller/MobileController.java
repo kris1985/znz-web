@@ -216,7 +216,7 @@ public class MobileController {
                 String attachs = p.getAttach();
                 if (!StringUtils.isEmpty(attachs)) {
                     try {
-                        picture.setAttachs(Arrays.stream(attachs.split(";")).map(s->s.split("\\|")[0]).collect(Collectors.toList()));
+                        picture.setAttachs(Arrays.stream(attachs.split(FileController.ATTACH_SEPARATOR)).map(s->s.split("\\|")[0]).collect(Collectors.toList()));
                     } catch (Exception e) {
                         log.error(e.getLocalizedMessage(), e);
                     }

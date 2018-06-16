@@ -75,6 +75,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/admin/file")
 public class FileController {
 
+    public static final String ATTACH_SEPARATOR = "#";
     @Resource
     private AppConfig appConfig;
 
@@ -259,7 +260,7 @@ public class FileController {
                 Picture pic = new Picture();
                 pic.setId(pictureId);
                 if (!StringUtils.isEmpty(picture.getAttach())) {
-                    pic.setAttach(picture.getAttach() + ";" + attach + "|" + fileName);
+                    pic.setAttach(picture.getAttach() + ATTACH_SEPARATOR + attach + "|" + fileName);
                 } else {
                     pic.setAttach(attach + "|" + fileName);
                 }
@@ -306,7 +307,7 @@ public class FileController {
         PartionCodeHoder.clear();
         for (Picture p : pictures) {
             if (StringUtils.isNoneBlank(p.getAttach())) {
-                p.setAttach(p.getFilePath() + "|" + p.getName() + ";" + p.getAttach());//加上原图
+                p.setAttach(p.getFilePath() + "|" + p.getName() + ATTACH_SEPARATOR + p.getAttach());//加上原图
             }
         }
         int currentIndex = listIds.indexOf(selectedId);
