@@ -567,7 +567,7 @@ public class FileController {
             out = response.getOutputStream();
             response.reset(); // 非常重要
             response.setContentType("applicatoin/octet-stream");
-            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(UUID.randomUUID().toString()+".jpg", "UTF-8"));
             while ((len = reader.read(buf)) > 0) { out.write(buf, 0, len); }
         } finally {
             if (out != null) {
