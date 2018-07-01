@@ -218,4 +218,11 @@
 
   </select>
 
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_picture
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

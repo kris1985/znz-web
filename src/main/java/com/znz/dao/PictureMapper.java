@@ -36,4 +36,6 @@ public interface PictureMapper {
     void deleteByGids(List<String> gids);
 
     List<Picture> selectBySimplePage(FileQueryVO fileQueryVO);
+
+    List<Picture> selectByName(@Param("name") String name);
 }

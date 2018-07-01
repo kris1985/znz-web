@@ -53,4 +53,12 @@ public class User implements Serializable {
 
     private Integer limitImeiFlag;
 
+    public static void main(String[] args) {
+        String originalName= "2016年8月时装女凉-粗跟-时尚-橱窗_001_副图01.JPG";
+        String name = originalName.substring(0,originalName.indexOf("_副图"))+".JPG";
+        String b = originalName.substring(originalName.indexOf("_副图")+1);
+        System.out.println(name);
+        System.out.println(b);
+    }
+
 }

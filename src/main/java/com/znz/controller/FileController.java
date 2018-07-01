@@ -76,6 +76,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileController {
 
     public static final String ATTACH_SEPARATOR = "#";
+    public static final String ATTACH = "_副图";
     @Resource
     private AppConfig appConfig;
 
@@ -119,54 +120,69 @@ public class FileController {
             for (MultipartFile file : files) {
                 String originalName = file.getOriginalFilename();
                 String uuid = UUID.randomUUID().toString();
-                String path = uuid + getSuffix(originalName);
+                String suffix = getSuffix(originalName);
+                String path = uuid + suffix;
                 boolean b = upload(ossClient, file, path);
                 if (b) {
-                    Picture picture = new Picture();
-                    picture.setName(originalName);
-                    picture.setFilePath(path);
-                    picture.setCreateTime(new Date());
-                    picture.setCreateUser(userSession.getUser().getUserName());
-                    picture.setClickTimes(0);
-                    picture.setDownloadTimes(0);
-                    picture.setGid(partionCode + "_" + uuid);
-                    BigDecimal size = new BigDecimal(file.getSize());
-                    BufferedImage sourceImg = ImageIO.read(file.getInputStream());
-                    size = size.divide(new BigDecimal(1024), BigDecimal.ROUND_HALF_UP).setScale(0);
-                    picture.setSize(String.valueOf(size));
-                    picture.setWidth(String.valueOf(sourceImg.getWidth()));
-                    picture.setHeight(String.valueOf(sourceImg.getHeight()));
-                    if (originalName.startsWith("品牌_")) {
-                        picture.setSort(originalName.substring(originalName.indexOf("_", 4) + 1));
-                    }
-                    pictureMapper.insert(picture);
-
-                    for (String c : categorys) {
-                        PictureCategory pictureCategory = new PictureCategory();
-                        pictureCategory.setPictureId(picture.getId());
-                        pictureCategory.setSubCategoryId(Integer.parseInt(c));
-                        pictureCategories.add(pictureCategory);
-                    }
-                    if (originalName.startsWith("品牌_")) {
-                        String brandName = originalName.split("_")[1];
-                        if(brandName.contains(",")){
-                            brandName = brandName.replaceAll(",",".");
+                    if(originalName.contains(ATTACH)){
+                        String name = originalName.substring(0,originalName.indexOf(ATTACH))+suffix;
+                        List<Picture>  pictures = pictureMapper.selectByName(name);
+                        if(CollectionUtils.isEmpty(pictures)){
+                            continue;
                         }
-                        SubCategory subCategory = new SubCategory();
-                        subCategory.setCategoryLevel(4);
-                        subCategory.setParentId(-1);
-                        subCategory.setPpid(Integer.parseInt(secondCategory));
-                        subCategory.setName(brandName);
-                        subCategory.setSortId(0);
-                        saveCategory(subCategory);
-                        Integer categoryId = saveCategory(subCategory);
-                        PictureCategory pictureCategory = new PictureCategory();
-                        pictureCategory.setPictureId(picture.getId());
-                        pictureCategory.setSubCategoryId(categoryId);
-                        pictureCategories.add(pictureCategory);
-                    }
+                        Picture p = pictures.get(0);
+                        if (!StringUtils.isEmpty(p.getAttach())) {
+                            p.setAttach(p.getAttach() + ATTACH_SEPARATOR + path + "|" + originalName);
+                        } else {
+                            p.setAttach(path + "|" + originalName);
+                        }
+                        pictureMapper.updateByPrimaryKeySelective(p);
+                    }else{
+                        Picture picture = new Picture();
+                        picture.setName(originalName);
+                        picture.setFilePath(path);
+                        picture.setCreateTime(new Date());
+                        picture.setCreateUser(userSession.getUser().getUserName());
+                        picture.setClickTimes(0);
+                        picture.setDownloadTimes(0);
+                        picture.setGid(partionCode + "_" + uuid);
+                        BigDecimal size = new BigDecimal(file.getSize());
+                        BufferedImage sourceImg = ImageIO.read(file.getInputStream());
+                        size = size.divide(new BigDecimal(1024), BigDecimal.ROUND_HALF_UP).setScale(0);
+                        picture.setSize(String.valueOf(size));
+                        picture.setWidth(String.valueOf(sourceImg.getWidth()));
+                        picture.setHeight(String.valueOf(sourceImg.getHeight()));
+                        if (originalName.startsWith("品牌_")) {
+                            picture.setSort(originalName.substring(originalName.indexOf("_", 4) + 1));
+                        }
+                        pictureMapper.insert(picture);
 
-                    pictureCategoryMapper.batchInsert(pictureCategories);
+                        for (String c : categorys) {
+                            PictureCategory pictureCategory = new PictureCategory();
+                            pictureCategory.setPictureId(picture.getId());
+                            pictureCategory.setSubCategoryId(Integer.parseInt(c));
+                            pictureCategories.add(pictureCategory);
+                        }
+                        if (originalName.startsWith("品牌_")) {
+                            String brandName = originalName.split("_")[1];
+                            if(brandName.contains(",")){
+                                brandName = brandName.replaceAll(",",".");
+                            }
+                            SubCategory subCategory = new SubCategory();
+                            subCategory.setCategoryLevel(4);
+                            subCategory.setParentId(-1);
+                            subCategory.setPpid(Integer.parseInt(secondCategory));
+                            subCategory.setName(brandName);
+                            subCategory.setSortId(0);
+                            saveCategory(subCategory);
+                            Integer categoryId = saveCategory(subCategory);
+                            PictureCategory pictureCategory = new PictureCategory();
+                            pictureCategory.setPictureId(picture.getId());
+                            pictureCategory.setSubCategoryId(categoryId);
+                            pictureCategories.add(pictureCategory);
+                        }
+                        pictureCategoryMapper.batchInsert(pictureCategories);
+                    }
                 }
             }
         } catch (Exception e) {
