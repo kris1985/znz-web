@@ -322,14 +322,14 @@ div:after, ul:after, dl:after {
 
   .site-piclist_pic{
       border: 2px solid white;
-     height: 274px;
+     height: 288px;
      position: relative;
-     width: 387px;
+     width: 384px;
   }
 
 .lazy {
-width: 387px;
-height: 274px;
+width: 384px;
+height: 288px;
 }
 
 
