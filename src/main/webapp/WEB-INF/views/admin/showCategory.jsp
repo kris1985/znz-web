@@ -55,7 +55,8 @@
         #searchTxtBtn:hover{color: #699f00;}
         .city-info{display: none;}
         .brand_ui{    position: absolute;
-            left: 606px;
+            position: absolute;
+            left: 590px;
             top: 145px;
             word-wrap: break-word;
             width: 100%;}
@@ -73,7 +74,7 @@
             color: #fff;
             border-radius: 1px;
         }
-        .CC  .selected {
+        .CC  .selected a {
             background: #699f00;
             padding: 1px 7px 2px;
             color: #fff;
@@ -1028,7 +1029,7 @@
                 <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
             </div>
         </div>
-        <c:if test="${brandFlag}">
+        <c:if test="${not empty brandFlag}">
             <DIV CLASS="BB" STYLE="padding: 4px 0 4px 1px;height: 30px;">
                 <c:set var="allSelectClass" value="selected"></c:set>
                 <c:choose>
