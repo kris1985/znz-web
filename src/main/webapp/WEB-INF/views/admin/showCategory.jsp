@@ -1029,7 +1029,7 @@
                 <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
             </div>
         </div>
-        <c:if test="${not empty brandFlag}">
+        <c:if test="${brandFlag}">
             <DIV CLASS="BB" STYLE="padding: 4px 0 4px 1px;height: 30px;">
                 <c:set var="allSelectClass" value="selected"></c:set>
                 <c:choose>
