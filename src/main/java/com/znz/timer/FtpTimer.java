@@ -20,8 +20,8 @@ public class FtpTimer {
         List<String> list = Lists.newArrayList(".","..","a","cfj","css","data","flash","group","gxjy","images","img","include","m","plus","special","templets","uploads");
         FTPClient ftpClient = new FTPClient();
         String parentPath = "/www";
-        ftpClient.connect("cd2012.gotoip.net");
-        ftpClient.login("vh480580","6730011asA");
+        ftpClient.connect("cd1057.gotoip.net");
+        ftpClient.login("480580","6730011asA");
         FTPFile[] ftpFiles = ftpClient.listDirectories(parentPath);
         for (FTPFile ftpFile:ftpFiles){
             String fileName = ftpFile.getName();
