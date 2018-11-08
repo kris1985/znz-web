@@ -20,8 +20,9 @@ public class FtpTimer {
         List<String> list = Lists.newArrayList(".","..","a","cfj","css","data","flash","group","gxjy","images","img","include","m","plus","special","templets","uploads");
         FTPClient ftpClient = new FTPClient();
         String parentPath = "/www";
-        ftpClient.connect("cd1057.gotoip.net");
+        ftpClient.connect("cd1057.gotoip.net",21);
         ftpClient.login("480580","6730011asA");
+        ftpClient.enterLocalPassiveMode();
         FTPFile[] ftpFiles = ftpClient.listDirectories(parentPath);
         for (FTPFile ftpFile:ftpFiles){
             String fileName = ftpFile.getName();
@@ -32,8 +33,7 @@ public class FtpTimer {
            log.info("delete Directory success:{}",success);
         }
     }
-/*
-    public static void main(String[] args) throws IOException {
-        reset();
+    /*public static void main(String[] args) throws IOException {
+        new FtpTimer().reset();
     }*/
 }
