@@ -20,10 +20,9 @@
 
 	     $(function() {
 			 setTimeout(function(){
-
          			$('#file_upload').uploadify({
                         'onUploadStart' : function(file) {
-                            var obj={'category' : "${category}",'secondCategory': "${secondCategory}", 'picType':$("input[name='picType']:checked").val()};
+                            var obj={'secondCategory': "${param.secondCategory}", 'bookId':"${param.bookId}"};
                             $("#file_upload").uploadify("settings", "formData", obj);
                          },
          			//	'auto':false,
@@ -31,7 +30,7 @@
          				'fileObjName':'files',
          				'buttonText' : '选择文件',
          				'swf'      : '${basePath}/resources/uploadify.swf',
-         				'uploader' : '${basePath}/admin/file/upload',
+         				'uploader' : '${basePath}/admin/file/uploadBookPic',
          				'onUploadSuccess' : function(file, data, response) {
          				                var htm = '文件 ' + file.name + ' 已经成功上传 ' + response + ':' + data
          				                $("#result").show();
@@ -87,8 +86,6 @@
 		<div id="queue"></div>
 		<input id="file_upload" name="file_upload" type="files" multiple="true">
 	 	<input type = "hidden" name="category" id="category" value="${category}">
-        普通图片<input type = "radio" name="picType" id="picType0" value="0" checked>
-        书封面<input type = "radio" name="picType" id="picType1" value="1">
         <input type = "hidden" name="secondCategory" id="secondCategory" value="${secondCategory}">
 <div id="result" >
 </div>

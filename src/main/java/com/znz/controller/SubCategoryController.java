@@ -205,7 +205,7 @@ public class SubCategoryController {
                 if(noFourthSelectedId && brandId==null){
                     pictures = pictureMapper.selectBySimplePage(fileQueryVO);
                 }else{
-                    List<Integer> ids = fileQueryVO.getCategoryConditions().stream().flatMap(s->s.stream()).collect(Collectors.toList());
+                    //List<Integer> ids = fileQueryVO.getCategoryConditions().stream().flatMap(s->s.stream()).collect(Collectors.toList());
                     pictures =  pictureMapper.selectByPage(fileQueryVO);
                 }
                 int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
@@ -213,6 +213,9 @@ public class SubCategoryController {
                 model.addAttribute("totalPage",totalPage);
                 model.addAttribute("totalCount",pageParameter.getTotalCount());
                 model.addAttribute("pictures",pictures);
+                if(!CollectionUtils.isEmpty(pictures)){
+                    model.addAttribute("picType",pictures.get(0).getPicType());
+                }
             }
         }
         String key = queryParam.getSecondSelectedId();

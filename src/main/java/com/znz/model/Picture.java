@@ -37,6 +37,10 @@ public class Picture implements Serializable {
 
     private String sort;
 
+    private Long bookId;
+
+    private Integer picType;
+
     public static void main(String[] args) {
         String originalName = "品牌_Nike_2018年05月18日_0132_13_17.jpg";
         System.out.println(originalName.substring(originalName.indexOf("_",4)+1));

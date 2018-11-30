@@ -16,9 +16,11 @@
     <result column="width" property="width" jdbcType="VARCHAR" />
     <result column="height" property="height" jdbcType="VARCHAR" />
     <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="book_id" property="bookId" jdbcType="BIGINT" />
+    <result column="pic_type" property="picType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, file_path, click_times, download_times, create_time, create_user,attach,sec_category,rec_id,gid,width,height,size
+    id, name, file_path, click_times, download_times, create_time, create_user,attach,sec_category,rec_id,gid,width,height,size,book_id,pic_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -48,11 +50,12 @@
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.znz.model.Picture" >
     insert into t_picture (id, name, file_path, 
       click_times, download_times, create_time, 
-      create_user,sec_category,rec_id,gid,width,height,size,sort)
+      create_user,sec_category,rec_id,gid,width,height,size,sort,book_id,pic_type)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
       #{clickTimes,jdbcType=INTEGER}, #{downloadTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createUser,jdbcType=VARCHAR},#{secCategory,jdbcType=INTEGER},#{recId,jdbcType=VARCHAR},#{gid,jdbcType=VARCHAR},
       #{width,jdbcType=VARCHAR},#{height,jdbcType=VARCHAR},#{size,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR}
+      ,#{bookId,jdbcType=BIGINT}, #{picType,jdbcType=INTEGER}
       )
   </insert>
 
@@ -224,5 +227,13 @@
     from t_picture
     where name = #{name,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByBookId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_picture
+    where book_id = #{bookId,jdbcType=BIGINT} order by id desc
+  </select>
+
 
 </mapper>

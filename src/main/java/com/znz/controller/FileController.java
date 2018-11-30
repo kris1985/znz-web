@@ -77,6 +77,7 @@ public class FileController {
 
     public static final String ATTACH_SEPARATOR = "#";
     public static final String ATTACH = "_副图";
+    public static final String BOOK = "_鞋书";
     @Resource
     private AppConfig appConfig;
 
@@ -107,7 +108,7 @@ public class FileController {
     public
     @ResponseBody
     void processUpload(HttpServletRequest request, @RequestParam MultipartFile[] files, String category,
-                       String secondCategory) throws IOException {
+                       String secondCategory,Long bookId,Integer picType) throws IOException {
         UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
@@ -139,6 +140,8 @@ public class FileController {
                         pictureMapper.updateByPrimaryKeySelective(p);
                     }else{
                         Picture picture = new Picture();
+                        picture.setBookId(bookId);//设置父类
+                        picture.setPicType(picType);//0 图片，1书
                         picture.setName(originalName);
                         picture.setFilePath(path);
                         picture.setCreateTime(new Date());
@@ -156,7 +159,6 @@ public class FileController {
                             picture.setSort(originalName.substring(originalName.indexOf("_", 4) + 1));
                         }
                         pictureMapper.insert(picture);
-
                         for (String c : categorys) {
                             PictureCategory pictureCategory = new PictureCategory();
                             pictureCategory.setPictureId(picture.getId());
@@ -312,21 +314,35 @@ public class FileController {
         Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondSelectedId));
         Integer firstCategoryId = categoryService.getParentId(Integer.parseInt(secondSelectedId));
         PartionCodeHoder.set(String.valueOf(partionCode));
+        Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
         List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(
             Collectors.toList());
-        String sortFiled = null;
-        if(CategoryUtil.isSortByName(String.valueOf(firstCategoryId))){
-            sortFiled = "sort";
+        int currentIndex = listIds.indexOf(selectedId);
+        List<Picture> pictures = new ArrayList<>();
+        String returnUrl = "";
+        if(picture.getPicType()!=null&& picture.getPicType()==1){
+            if(picture.getId()!=null){
+                pictures = pictureMapper.selectByBookId(picture.getId());
+            }
+            currentPage = 1;
+            totalPage = 1;
+            totalCount = pictures.size();
+            returnUrl = "admin/bookList";
+        }else{
+            String sortFiled = null;
+            if(CategoryUtil.isSortByName(String.valueOf(firstCategoryId))){
+                sortFiled = "sort";
+            }
+            pictures = pictureMapper.selectByIds(listIds,sortFiled);
+            returnUrl = "admin/album";
         }
-        List<Picture> pictures = pictureMapper.selectByIds(listIds,sortFiled);
-        Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
+        long totalIndex = (currentIndex + 1) + pageSize * (currentPage - 1);
         PartionCodeHoder.clear();
         for (Picture p : pictures) {
             if (StringUtils.isNoneBlank(p.getAttach())) {
                 p.setAttach(p.getFilePath() + "|" + p.getName() + ATTACH_SEPARATOR + p.getAttach());//加上原图
             }
         }
-        int currentIndex = listIds.indexOf(selectedId);
         model.addAttribute("selectedImg", picture.getFilePath());
         model.addAttribute("selectedName", picture.getName());
         model.addAttribute("attachs", picture.getFilePath());
@@ -339,8 +355,8 @@ public class FileController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("recommendId", recommendId);
-        model.addAttribute("totalIndex", (currentIndex + 1) + pageSize * (currentPage - 1));
-        return "admin/album";
+        model.addAttribute("totalIndex", totalIndex);
+        return returnUrl;
     }
 
     @RequestMapping(value = "/reloadListImg", method = RequestMethod.POST)
@@ -650,5 +666,53 @@ public class FileController {
             }
         }
     }
+
+    @RequestMapping(value = "/uploadBookPic", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    void uploadBookPic(HttpServletRequest request, @RequestParam MultipartFile[] files,
+                       String secondCategory,Long bookId) throws IOException {
+        UserSession userSession = (UserSession)request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!PermissionUtil.checkPermisson(request)) {
+            throw new RuntimeException("无权限操作");
+        }
+        try {
+            Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondCategory));
+            PartionCodeHoder.set(String.valueOf(partionCode));
+            for (MultipartFile file : files) {
+                String originalName = file.getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String suffix = getSuffix(originalName);
+                String path = uuid + suffix;
+                boolean b = upload(ossClient, file, path);
+                if (b) {
+                        Picture picture = new Picture();
+                        picture.setBookId(bookId);//设置父类
+                        picture.setName(originalName);
+                        picture.setFilePath(path);
+                        picture.setCreateTime(new Date());
+                        picture.setCreateUser(userSession.getUser().getUserName());
+                        picture.setClickTimes(0);
+                        picture.setDownloadTimes(0);
+                        picture.setGid(partionCode + "_" + uuid);
+                        BigDecimal size = new BigDecimal(file.getSize());
+                        BufferedImage sourceImg = ImageIO.read(file.getInputStream());
+                        size = size.divide(new BigDecimal(1024), BigDecimal.ROUND_HALF_UP).setScale(0);
+                        picture.setSize(String.valueOf(size));
+                        picture.setWidth(String.valueOf(sourceImg.getWidth()));
+                        picture.setHeight(String.valueOf(sourceImg.getHeight()));
+                        if (originalName.startsWith("品牌_")) {
+                            picture.setSort(originalName.substring(originalName.indexOf("_", 4) + 1));
+                        }
+                        pictureMapper.insert(picture);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            PartionCodeHoder.clear();
+        }
+    }
+
 
 }
