@@ -44,9 +44,13 @@
             <a href="#next-image" class="album-image-btn-next" id="album-image-btn-next">›</a>
             <p class="album-image-loading-overlay hide" id="album-image-loading-overlay" style="display: block">
                 <!--<img src="${basePath}/resources/img/loading.gif" alt="loading..." width="100" height="100" /></p>-->
-            <div class="attachs" id="attachs" >
+            <div class='updown' id='but_up' style="position: absolute;top: 0;z-index: 99999999"></div>
+            <div class="attachs_warp" >
+                <div class="attachs" id="attachs" style="position: relative">
 
+                </div>
             </div>
+            <div class='updown' id='but_down'></div>
         </div>
 
     </div>
@@ -81,7 +85,7 @@
 
 </div>
 <form id="albumForm" method="post" action = "${basePath}/admin/file/reloadListImg">
-             <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
+            <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
             <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
             <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
             <input type="hidden" id="pageSize" name = "pageSize" value="120">
@@ -96,6 +100,7 @@
 <script type="text/javascript" src="${basePath}/resources/js/jquery-ui-latest.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="${basePath}/resources/js/jq_scroll.js"></script>
 <script type="text/javascript">
 
 
@@ -107,7 +112,6 @@
     }
 
     var Album;
-
     $(function(){
         var image = new Image();
         image.src = $("#album-image").attr("src");
@@ -308,7 +312,7 @@
             }
         });
 
-        document.oncontextmenu=function(){return false;}
+        //document.oncontextmenu=function(){return false;}
 
         var myRec = $(".album-carousel-thumb-selected a").attr("myrec");;
         //console.log("myRec:"+myRec)
@@ -347,6 +351,35 @@
             }
         })
         </c:if>
+            var blw=95;
+            //var i=0;
+            var maxSize = 6;
+           var diff;
+            $("#but_down").click(function(){
+                var length = $(".attachs").children(".attach_item").length;
+                var diff = length - 6;
+                //console.log("diff:"+diff+"i:"+attachIndex);
+                //点击i加1
+                if(attachIndex<diff ){
+                    attachIndex++;
+                    $("#attachs").css("top",-(blw*attachIndex)+"px");
+                    //子元素集合向左移动，距离为子元素的宽度乘以i。
+                }
+            });
+            $("#but_up").click(function(){
+               // console.log("i2:"+attachIndex);
+                attachIndex--;
+                //点击i减1
+                if(attachIndex>0){
+                    $("#attachs").css("top",-(blw*attachIndex));
+                    //子元素集合向右移动，距离为子元素的宽度乘以i。
+                }else{
+                    attachIndex=0;
+                    $("#attachs").css("top",0);
+                    //超出可移动范围后点击不再移动。最前几个子元素被显示时i为0。
+                }
+            });
+
     });
 
     function setTitle(){

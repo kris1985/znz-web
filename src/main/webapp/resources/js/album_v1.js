@@ -1,11 +1,36 @@
 /**
  * @author Yaohaixiao
  */
+
+var attachIndex = 0;
 function back2Normal(){
     $("#album-image").get(0).style.zoom='normal';
     $("#album-image").css({"margin-top":-$("#album-image").height()/2,"margin-left":-$("#album-image").width()/2});
-    $("#album-image").css({"left":"50%","top":"50%"})
+    $("#album-image").css({"left":"50%","top":"50%"});
+    $("#attachs").css("top","0px");
+    attachIndex =0;
+    showAttachBar();
 }
+
+function showAttachBar() {
+    var length = $(".attachs").children(".attach_item").length;
+    showAttachBar1(length);
+}
+
+function showAttachBar1(length) {
+    console.log("length:"+length);
+    if(length==0){
+        $(".attachs_warp").hide();
+    }else{
+        $(".attachs_warp").show();
+    }
+    if(length<=6){
+        $(".updown").hide();
+    }else{
+        $(".updown").show();
+    }
+}
+
 var maxHeight,maxWidth;
 var ossPath = getOssPath();
 var basePath = getContextPath();
@@ -82,7 +107,6 @@ var uerType = getUserType();
             // 改变图片
             // 绑定相册程序各个DOM节点的事件处理函数
             this.select().change().bindEvent();
-
             return this;
         },
         /**
@@ -134,6 +158,7 @@ var uerType = getUserType();
             }else{
                 $("#attachs").html("");
             }
+            showAttachBar1(arr.length);
             // 开始显示loading
             overlay.removeClass(CLS_HIDE);
             this.isloading = true;

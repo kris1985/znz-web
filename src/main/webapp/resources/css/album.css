@@ -309,6 +309,7 @@ bottom: 45px;z-index:1999;
 .fixedBtns li:hover{font-weight:bold;color:#01bd0c}
 ..bs-glyphicons-list{margin:0;margin-top:5px;}
 
+/*
 .attachs{
 	position: absolute;
 	left: 70px;
@@ -318,6 +319,7 @@ bottom: 45px;z-index:1999;
 	background: #FAFAFA;
 	z-index: 9999;
 }
+*/
 
 .attachs img{
 	cursor: pointer;
@@ -364,4 +366,37 @@ z-index: 999999;
 bottom: 42px;
 font-family: "微软雅黑";
 color: rgb(165, 165, 165);
+}
+.attachs_warp{position: absolute;
+	left: 70px;
+	border: 0px solid #24F055;
+	width: 130px;
+	top: 50px;
+	/*background: #FAFAFA;*/
+	z-index: 9999;overflow: hidden;height: 570px
+}
+
+.updown{position: absolute;
+	top: 630px;
+	z-index: 99999999;
+	left: 110px;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	background: url("../img/arrow_down.png")}
+.updown:hover{
+	background: url("../img/arrow_down_red.png")
+}
+
+
+#but_up{position: absolute;
+	top: 0px;
+	cursor: pointer;
+	z-index: 99999999;
+	left: 110px;
+	width: 48px;
+	height: 48px;
+	background: url("../img/arrow_up.png")}
+#but_up:hover{
+	background: url("../img/arrow_up_red.png")
 }

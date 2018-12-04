@@ -459,6 +459,9 @@ public class FileController {
     public
     @ResponseBody
     ResultVO deleteAttach(HttpServletRequest request, Long pictureId, String attachPath, Integer secondSelectedId) {
+        log.info("pictureId:{}",pictureId,attachPath);
+        log.info("attachPath:{}",attachPath);
+        log.info("secondSelectedId:{}",secondSelectedId);
         ResultVO result = new ResultVO();
         if (!PermissionUtil.checkPermisson(request)) {
             throw new RuntimeException("无权限操作");
@@ -470,10 +473,10 @@ public class FileController {
             Picture picture = pictureMapper.selectByPrimaryKey(pictureId);
             String attach = picture.getAttach();
             if (StringUtils.isNoneBlank(attach)) {
-                List<String> list = Arrays.stream(attach.split(",")).filter(s -> !s.substring(0, s.indexOf("|"))
+                List<String> list = Arrays.stream(attach.split("#")).filter(s -> !s.substring(0, s.indexOf("|"))
                     .equals(attachPath)).collect(Collectors.toList());
                 if (!CollectionUtils.isEmpty(list)) {
-                    attach = StringUtils.join(list, ",");
+                    attach = StringUtils.join(list, "#");
                 } else {
                     attach = "";
                 }
@@ -704,6 +707,7 @@ public class FileController {
                         if (originalName.startsWith("品牌_")) {
                             picture.setSort(originalName.substring(originalName.indexOf("_", 4) + 1));
                         }
+                        picture.setPicType(2);//
                         pictureMapper.insert(picture);
                 }
             }

@@ -39,6 +39,9 @@ public class Picture implements Serializable {
 
     private Long bookId;
 
+    /**
+     * 0 普通图片 1 书封面 2 书图片
+     */
     private Integer picType;
 
     public static void main(String[] args) {

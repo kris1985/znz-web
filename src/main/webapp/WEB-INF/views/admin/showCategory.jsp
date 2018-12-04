@@ -998,8 +998,12 @@
         <c:when test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
             <div class="contextMenu" id="menuPic" style="display: none">
                 <ul>
-                    <li id="addAttach"> 上传附图</li>
-                    <li id="addBookPic">上传鞋书</li>
+                    <c:if test="${picType==1}">
+                        <li id="addBookPic">上传鞋书</li>
+                    </c:if>
+                    <c:if test="${picType!=1}">
+                        <li id="addAttach"> 上传附图</li>
+                    </c:if>
                     <li id="delete"> 删除</li>
                     <c:if test="${userSession.user.recommendFlag == 1}">
                         <li id="rec"> 推荐</li>
@@ -1197,7 +1201,7 @@
                                  src="${basePath}/resources/img/grey.gif" width="384" height="288"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_288,w_384${watermarkParam}">
                         </a>
                         <c:if test="${picType==1}">
-                            <div style="padding: 3px;color: #7a7b7b">${fn:substring(item.name, 0, fn:indexOf(item.name,'.'))}</div>
+                            <div style="padding: 5px 0px;color: #7a7b7b;font-size: 14px">${fn:substring(item.name, 0, fn:indexOf(item.name,'.'))}</div>
                         </c:if>
                     </div>
                 </li>
