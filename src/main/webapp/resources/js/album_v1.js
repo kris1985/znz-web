@@ -3,11 +3,13 @@
  */
 
 var attachIndex = 0;
+var ahight = 0;
 function back2Normal(){
     $("#album-image").get(0).style.zoom='normal';
     $("#album-image").css({"margin-top":-$("#album-image").height()/2,"margin-left":-$("#album-image").width()/2});
     $("#album-image").css({"left":"50%","top":"50%"});
-    $("#attachs").css("top","0px");
+
+    $("#attachs").css({"top":"0px"});
     attachIndex =0;
     showAttachBar();
 }
@@ -22,12 +24,14 @@ function showAttachBar1(length) {
     if(length==undefined){
         length =0;
     }
+    ahight = $(window).height()-116;
+    $(".attachs_warp").css("height",ahight+"px");
     if(length==0){
         $(".attachs_warp").hide();
     }else{
         $(".attachs_warp").show();
     }
-    if(length<=6){
+    if(length*89<=ahight){
         $(".updown").hide();
     }else{
         $(".updown").show();

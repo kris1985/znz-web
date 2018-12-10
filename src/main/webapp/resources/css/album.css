@@ -329,7 +329,7 @@ bottom: 45px;z-index:1999;
 
 #album-image-ft{display: none}
 .attach_item{
-	border: 2px solid #9B9B9B;
+	border: 2px solid #ffffff;
 	width: 124px;
 	margin: 5px auto;position: relative;
 }
@@ -377,7 +377,7 @@ color: rgb(165, 165, 165);
 }
 
 .updown{position: absolute;
-	top: 630px;
+	bottom: 2px;
 	z-index: 99999999;
 	left: 110px;
 	width: 48px;

@@ -169,7 +169,7 @@
         })*/
 
         $(".attachs img").live("click",function(){
-            $(".attach_item").css("border"," 2px solid #ECECEC");
+            $(".attach_item").css("border"," 2px solid #ffffff");
             $(this).parent().css("border"," 2px solid #699f00");
             var src = $(this).attr("origin_src");
             preload(src);
@@ -348,7 +348,7 @@
             }
         })
         </c:if>
-            var blw=95;
+            var blw=100;
             //var i=0;
             var maxSize = 6;
            var diff;
