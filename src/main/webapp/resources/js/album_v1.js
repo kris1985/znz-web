@@ -19,6 +19,9 @@ function showAttachBar() {
 
 function showAttachBar1(length) {
     console.log("length:"+length);
+    if(length==undefined){
+        length =0;
+    }
     if(length==0){
         $(".attachs_warp").hide();
     }else{
@@ -140,8 +143,8 @@ var uerType = getUserType();
                 var res="";
                 var attachSrc = "";
                 var attachAlt = "";
-
-                for( var i=0;i<arr.length;i++){
+                var len = arr.length;
+                for( var i=0;i<len;i++){
                     attachSrc =  arr[i].substr(0,arr[i].indexOf("|"));
                     attachAlt =  arr[i].substr(arr[i].indexOf("|")+1);
                     //console.log("uerType:"+uerType)
@@ -158,7 +161,7 @@ var uerType = getUserType();
             }else{
                 $("#attachs").html("");
             }
-            showAttachBar1(arr.length);
+            showAttachBar1(len);
             // 开始显示loading
             overlay.removeClass(CLS_HIDE);
             this.isloading = true;
