@@ -594,6 +594,34 @@
                             }
                         );
                     },
+                    'modifyDate':function (t) {
+                        var id = $(t).attr("item");
+                        var gid = $(t).attr("gid");
+                        var picDate = $("#"+id).nextAll().eq(1).text();
+                        var url = "${basePath}/admin/subCategory/modifyPicDate/"+gid;
+                        $("#tDate").val(picDate)
+                        $("#dialog2").dialog({
+                            height: 180,
+                            modal: true,
+                            title:"修改日期",
+                            position: {my: "left top", at: "left bottom", of: "#pic_itme_"+id},
+                            buttons: [
+                                {
+                                    text: "提交",
+                                    icons: {
+                                        primary: "ui-icon-heart"
+                                    },
+                                    click: function () {
+                                       var d =  $("#tDate").val();
+                                       url = url +"?picDate="+d;
+                                       $.get(url,function(){
+                                           $("#"+id).nextAll().eq(1).text(d)
+                                           $('#dialog2').dialog( "close" );
+                                       });
+                                    }
+                                }]
+                        });
+                    },
                     'delete': function (t) {
                         if(!confirm("确认要删除吗？")){
                             return;
@@ -968,6 +996,10 @@
         </form>
     </div>
 
+    <div id="dialog2" title="修改日期" style="display:none">
+        <input type="text" id="tDate" name="name">
+    </div>
+
     <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0}">
         <div class="contextMenu" id="myMenu1" style="display: none">
             <ul>
@@ -1000,6 +1032,7 @@
                 <ul>
                     <c:if test="${picType==1}">
                         <li id="addBookPic">上传鞋书</li>
+                        <li id="modifyDate">修改日期</li>
                     </c:if>
                     <c:if test="${picType!=1}">
                         <li id="addAttach"> 上传附图</li>
@@ -1192,7 +1225,7 @@
                 <c:if test="${not empty item.recId}">
                     <c:set var="recDisplay" value="block" />
                 </c:if>
-                <li item="${item.id}">
+                <li item="${item.id}" id="pic_itme_${item.id}" gid="${item.gid}">
                     <div class="site-piclist_pic">
                         <div class="my_rec" style="display: ${myRec}">我推荐的</div>
                         <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
@@ -1201,7 +1234,8 @@
                                  src="${basePath}/resources/img/grey.gif" width="384" height="288"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_288,w_384${watermarkParam}">
                         </a>
                         <c:if test="${picType==1}">
-                            <div style="padding: 5px 0px;color: #7a7b7b;font-size: 14px">${fn:substring(item.name, 0, fn:indexOf(item.name,'.'))}</div>
+                            <div style="padding: 5px 0px;color: #7a7b7b;font-size: 14px">${fn:substring(item.name, fn:indexOf(item.name,'_')+1, fn:indexOf(item.name,'.'))}</div>
+                            <div style="padding: 5px 0px;color: #7a7b7b;font-size: 14px" gid="${item.gid}">${fn:substring(item.name, 0, fn:indexOf(item.name,'_'))}</div>
                         </c:if>
                     </div>
                 </li>

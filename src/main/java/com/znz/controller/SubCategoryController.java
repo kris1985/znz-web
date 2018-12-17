@@ -560,5 +560,16 @@ public class SubCategoryController {
         return brandVOS;
     }
 
+    @RequestMapping(value = "/modifyPicDate/{gid}", method = RequestMethod.GET)
+    public @ResponseBody String getBrand(HttpServletRequest request, @PathVariable String gid,String picDate) {
+        PartionCodeHoder.set(gid.substring(0,gid.indexOf("_")));
+        Picture picture = pictureMapper.selectByGid(gid);
+        picture.setName(picDate+"_"+picture.getName().substring(picture.getName().indexOf("_")+1));
+        pictureMapper.updateByPrimaryKeySelective(picture);
+        PartionCodeHoder.clear();
+        return "0";
+    }
+
+
 
 }
