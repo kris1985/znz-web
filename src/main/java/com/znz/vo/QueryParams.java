@@ -15,4 +15,5 @@ public class QueryParams {
     private Integer referrerId;
     private Integer currentPage;
     private Integer pageSize;
+    private Integer brandId;
 }

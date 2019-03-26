@@ -12,6 +12,7 @@ public class CategoryInfo {
     private Integer id;
     private String name;
     private Integer sortId;
+    private boolean brandFlag;
     private List<ReferrerInfo> referrerInfos;
     private List<CategoryInfo> childrens;
 }

@@ -5,6 +5,7 @@ import com.znz.model.SubCategory;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface SubCategoryMapper {
     int deleteByPrimaryKey(Integer id);
@@ -32,4 +33,12 @@ public interface SubCategoryMapper {
     List<SubCategory> selectByPpid(Integer ppid);
 
     SubCategory selectSingleByPpid(Integer ppid);
+
+    /**
+     *  查询有品牌的类别ID
+     * @return
+     */
+    Set<Integer> selectBrandCategoryIds();
+
+
 }

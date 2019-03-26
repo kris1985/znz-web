@@ -1,6 +1,8 @@
 package com.znz.controller;
 
 import com.alibaba.fastjson.JSON;
+
+import com.google.common.collect.Sets;
 import com.sun.org.apache.regexp.internal.RE;
 import com.znz.config.AppConfig;
 import com.znz.dao.*;
@@ -20,6 +22,7 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -91,8 +94,8 @@ public class MobileController {
         CommonResponse<List<CategoryInfo>> commonResponse = new CommonResponse();
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         try{
-            checkSign(baseRequest);
-            checkToken(baseRequest.getToken());
+            //checkSign(baseRequest);
+            //checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
             List<UserAuth> userAuths =  userAuthMapper.listByUserId(user.getUserId());
@@ -105,6 +108,10 @@ public class MobileController {
                 return commonResponse;
             }
             List<SubCategory> categories = allcategories.stream().filter(s->ids.contains(s.getId())).collect(Collectors.toList());
+            Set<Integer> brandIds =  subCategoryMapper.selectBrandCategoryIds();
+            brandIds.stream().forEach(s->{
+                log.info("brandId:{}",s);
+            });
             CategoryInfo categoryInfo ;
             for(SubCategory subCategory:categories){
                 categoryInfo = new CategoryInfo();
@@ -114,6 +121,11 @@ public class MobileController {
                 categoryInfo.setChildrens(CategoryUtil.getChildren(categoryInfo.getId(),allcategories));
                 if(subCategory.getCategoryLevel() == 0){
                     categoryInfo.setReferrerInfos(getReferrers(categoryInfo.getId()));
+                }
+                for(CategoryInfo info :categoryInfo.getChildrens()){
+                    if(brandIds.contains(info.getId())){
+                        info.setBrandFlag(true);
+                    }
                 }
                 categoryInfos.add(categoryInfo);
             }
@@ -153,7 +165,6 @@ public class MobileController {
             User user = getUserByToken(baseRequest);
             Integer userId = user.getUserId();
             String waterMark = WaterMarkUtil.getWaterMark(user.getWatermark());
-            ;
             FileQueryVO fileQueryVO = new FileQueryVO();
             QueryParams queryParams = baseRequest.getData();
             if (queryParams == null) {
@@ -181,7 +192,11 @@ public class MobileController {
             }
             fileQueryVO.setPartionCode(partionCode);
             PartionCodeHoder.set(String.valueOf(partionCode));
-            if(StringUtils.isEmpty(categoryIds)){
+            Integer brandId = queryParams.getBrandId();
+            if(brandId!=null){
+                fileQueryVO.getCategoryConditions().add(Sets.newHashSet(brandId));
+            }
+            if(StringUtils.isEmpty(categoryIds) && brandId==null){
                 pictures = pictureMapper.selectBySimplePage(fileQueryVO);
             }else{
                 Set<Integer> set ;
@@ -338,6 +353,10 @@ public class MobileController {
             if(!StringUtils.isEmpty(request.getSecondCategoryId())){
                 paramMap.put("secondCategoryId",request.getSecondCategoryId());
             }
+            if(!StringUtils.isEmpty(request.getBrandId())){
+                paramMap.put("brandId",request.getBrandId());
+            }
+
         }else if(obj instanceof  PictureRequest) {
             PictureRequest request = (PictureRequest)obj;
             paramMap.put("id",request.getId());
@@ -483,6 +502,36 @@ public class MobileController {
         }
         return commonResponse;
     }
+
+    @RequestMapping(value = "/brand/{ppid}", method = RequestMethod.POST)
+    public @ResponseBody CommonResponse<List<BrandVO>> getBrand(HttpServletRequest request,@RequestBody BaseRequest baseRequest, @PathVariable Integer ppid) {
+        CommonResponse commonResponse = new CommonResponse();
+        List<SubCategory> subCategories = subCategoryMapper.selectByPpid(ppid);
+        if(CollectionUtils.isEmpty(subCategories)){
+            return new CommonResponse();
+        }
+        List<BrandVO> brandVOS = new ArrayList<>();
+        for(SubCategory subCategory:subCategories){
+            BrandVO brandVO = new BrandVO();
+            brandVO.setId(subCategory.getId());
+            brandVO.setCityCode(subCategory.getId());
+            brandVO.setName(subCategory.getName());
+            brandVO.setParentId(ppid);
+            brandVO.setPinyin(subCategory.getName());
+            brandVO.setShortName(subCategory.getName());
+            char letter = brandVO.getName().toUpperCase().charAt(0);
+            brandVO.setLetter(String.valueOf(letter));
+            if(letter<65 || letter>90 ){
+                brandVO.setLetter("_");
+            }
+            brandVOS.add(brandVO);
+        }
+        commonResponse.setResult(brandVOS);
+        return commonResponse;
+    }
+
+
+
 
 
 

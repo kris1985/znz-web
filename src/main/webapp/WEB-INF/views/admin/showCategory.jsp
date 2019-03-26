@@ -1225,7 +1225,14 @@
                 <c:if test="${not empty item.recId}">
                     <c:set var="recDisplay" value="block" />
                 </c:if>
-                <li item="${item.id}" id="pic_itme_${item.id}" gid="${item.gid}">
+                <c:if test="${picType==1}">
+                    <li item="${item.id}" id="pic_itme_${item.id}" gid="${item.gid}" style="margin-bottom: 35px;
+                    height: 320px;">
+                </c:if>
+                <c:if test="${picType!=1}">
+                    <li item="${item.id}" id="pic_itme_${item.id}" gid="${item.gid}">
+                </c:if>
+
                     <div class="site-piclist_pic">
                         <div class="my_rec" style="display: ${myRec}">我推荐的</div>
                         <a id="${item.id}" path="${item.filePath}"  title="${item.name}"
@@ -1234,8 +1241,8 @@
                                  src="${basePath}/resources/img/grey.gif" width="384" height="288"   data-original="${ossPath}/${item.filePath}?x-oss-process=image/resize,m_pad,h_288,w_384${watermarkParam}">
                         </a>
                         <c:if test="${picType==1}">
-                            <div style="padding: 5px 0px;color: #7a7b7b;font-size: 14px">${fn:substring(item.name, fn:indexOf(item.name,'_')+1, fn:indexOf(item.name,'.'))}</div>
-                            <div style="padding: 5px 0px;color: #7a7b7b;font-size: 14px" gid="${item.gid}">${fn:substring(item.name, 0, fn:indexOf(item.name,'_'))}</div>
+                            <div style="padding: 5px 3px 5px 5px;color: #7a7b7b;font-size: 14px">${fn:substring(item.name, fn:indexOf(item.name,'_')+1, fn:indexOf(item.name,'.'))}</div>
+                            <div style="padding: 3px 3px 3px 5px;;color: #7a7b7b;font-size: 14px" gid="${item.gid}">${fn:substring(item.name, 0, fn:indexOf(item.name,'_'))}</div>
                         </c:if>
                     </div>
                 </li>

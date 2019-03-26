@@ -115,10 +115,17 @@
   </select>
 
   <select id="selectSingleByPpid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from t_sub_category where ppid =  #{ppid,jdbcType=INTEGER} limit 1
+  select
+  <include refid="Base_Column_List" />
+  from t_sub_category where ppid =  #{ppid,jdbcType=INTEGER} limit 1
+</select>
+
+  <select id="selectBrandCategoryIds" resultType="integer"  >
+    SELECT id  FROM  `znz`.`t_sub_category`  WHERE id in(
+      SELECT DISTINCT(`ppid`)  FROM `znz`.`t_sub_category` WHERE `parent_id` =-1 and `category_level`  = 4
+    )
   </select>
+
 
 
 </mapper>
