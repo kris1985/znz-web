@@ -160,7 +160,7 @@ public class MobileController {
         CommonResponse<PictureInfo> commonResponse = new CommonResponse();
         try {
             Device device = DeviceUtils.getCurrentDevice(request);
-            checkSign(baseRequest);
+            //checkSign(baseRequest);
             checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);
             Integer userId = user.getUserId();
@@ -181,7 +181,6 @@ public class MobileController {
             }
             List<Set<Integer>> categoryConditions = new ArrayList<>();
             String categoryIds = queryParams.getCategoryIds();
-            String[] ids = categoryIds.split("[,]");
             PageParameter pageParameter = new PageParameter(queryParams.getCurrentPage(), queryParams.getPageSize());
             fileQueryVO.setRecommendId(queryParams.getReferrerId());
             fileQueryVO.setPage(pageParameter);
@@ -193,22 +192,25 @@ public class MobileController {
             fileQueryVO.setPartionCode(partionCode);
             PartionCodeHoder.set(String.valueOf(partionCode));
             Integer brandId = queryParams.getBrandId();
-            if(brandId!=null){
-                fileQueryVO.getCategoryConditions().add(Sets.newHashSet(brandId));
-            }
             if(StringUtils.isEmpty(categoryIds) && brandId==null){
                 pictures = pictureMapper.selectBySimplePage(fileQueryVO);
             }else{
-                Set<Integer> set ;
-                for(String x:ids){
-                    set = new HashSet<>();
-                    set.add(Integer.parseInt(x));
-                    if(!CollectionUtils.isEmpty(set)){
-                        categoryConditions.add(set);
+                if(!StringUtils.isEmpty(categoryIds)){
+                    String[] ids = categoryIds.split("[,]");
+                    Set<Integer> set ;
+                    for(String x:ids){
+                        set = new HashSet<>();
+                        set.add(Integer.parseInt(x));
+                        if(!CollectionUtils.isEmpty(set)){
+                            categoryConditions.add(set);
+                        }
                     }
                 }
                 //categoryConditions.add(Arrays.stream(ids).map(s -> Integer.parseInt(s.trim())).collect(Collectors.toSet()));
                 fileQueryVO.setCategoryConditions(categoryConditions);
+                if(brandId!=null){
+                    fileQueryVO.getCategoryConditions().add(Sets.newHashSet(brandId));
+                }
                 pictures = pictureMapper.selectByPage(fileQueryVO);
             }
             PartionCodeHoder.clear();
