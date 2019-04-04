@@ -167,12 +167,12 @@ public class MobileController {
             String waterMark = WaterMarkUtil.getWaterMark(user.getWatermark());
             FileQueryVO fileQueryVO = new FileQueryVO();
             QueryParams queryParams = baseRequest.getData();
-            if (queryParams == null) {
+           /* if (queryParams == null) {
                 throw new ServiceException("1008", "参数不合法");
             }
             if (StringUtils.isEmpty(queryParams.getSecondCategoryId())) {
                 throw new ServiceException("1008", "分类不能为空");
-            }
+            }*/
             if (queryParams.getCurrentPage() == null) {
                 queryParams.setCurrentPage(1);
             }
@@ -184,15 +184,29 @@ public class MobileController {
             PageParameter pageParameter = new PageParameter(queryParams.getCurrentPage(), queryParams.getPageSize());
             fileQueryVO.setRecommendId(queryParams.getReferrerId());
             fileQueryVO.setPage(pageParameter);
+            String gid = queryParams.getBookId();
             List<Picture> pictures ;
-            Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(queryParams.getSecondCategoryId()));
-            if(categoryService.isSortByName(queryParams.getSecondCategoryId())){
-                fileQueryVO.setSortFiled("sort");
+            log.info("gid:{}",gid);
+            String partionCode = null;
+            if(!StringUtils.isEmpty(gid)){
+                partionCode = gid.substring(0,gid.indexOf("_"));
+                log.info("partionCode:{}",partionCode);
+            }else{
+                partionCode = String.valueOf(categoryService.getPartionCodeBy2(Integer.parseInt(queryParams.getSecondCategoryId())));
+                if(categoryService.isSortByName(queryParams.getSecondCategoryId())){
+                    fileQueryVO.setSortFiled("sort");
+                }
             }
-            fileQueryVO.setPartionCode(partionCode);
-            PartionCodeHoder.set(String.valueOf(partionCode));
+            if(!StringUtils.isEmpty(partionCode)){
+                fileQueryVO.setPartionCode(Integer.parseInt(partionCode));
+            }
+            PartionCodeHoder.set(partionCode);
             Integer brandId = queryParams.getBrandId();
-            if(StringUtils.isEmpty(categoryIds) && brandId==null){
+            if(!StringUtils.isEmpty(gid)){
+                //按书id查询
+                Picture picture =  pictureMapper.selectByGid(queryParams.getBookId());
+                pictures = pictureMapper.selectByBookId(picture.getId());
+            }else if(StringUtils.isEmpty(categoryIds) && brandId==null){
                 pictures = pictureMapper.selectBySimplePage(fileQueryVO);
             }else{
                 if(!StringUtils.isEmpty(categoryIds)){
@@ -257,13 +271,14 @@ public class MobileController {
             //?x-oss-process=image/resize,m_pad,h_199,w_280
             //?x-oss-process=image/resize,m_pad,h_199,w_280/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
             //?x-oss-process=image/watermark,image_d2F0ZXJtYXJrX-m7hOawuOemj--8iOiOq--8iS5wbmc_eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsUF8xMDA,t_20,g_center
-            PictureInfo.PictureProperty p = new PictureInfo.PictureProperty();
-            p.setUrl(appConfig.getOssPath());
-            p.setSizeParam(resizeParam);
-            p.setParamPrefix(paramPrefix);
-            p.setWaterMark(waterMark);
+            PictureInfo.PictureProperty property = new PictureInfo.PictureProperty();
+            property.setUrl(appConfig.getOssPath());
+            property.setSizeParam(resizeParam);
+            property.setParamPrefix(paramPrefix);
+            property.setWaterMark(waterMark);
+            property.setPicType(pictures.get(0).getPicType());
             pictureInfo.setPictures(list);
-            pictureInfo.setPictureProperty(p);
+            pictureInfo.setPictureProperty(property);
             pictureInfo.setTotalPage(totalPage);
             pictureInfo.setTotalCount(pageParameter.getTotalCount());
             pictureInfo.setPageSize(queryParams.getPageSize());

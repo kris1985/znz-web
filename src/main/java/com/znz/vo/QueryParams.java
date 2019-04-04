@@ -16,4 +16,5 @@ public class QueryParams {
     private Integer currentPage;
     private Integer pageSize;
     private Integer brandId;
+    private String bookId;
 }

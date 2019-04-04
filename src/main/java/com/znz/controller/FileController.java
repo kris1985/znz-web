@@ -141,7 +141,7 @@ public class FileController {
                     }else{
                         Picture picture = new Picture();
                         picture.setBookId(bookId);//设置父类
-                        picture.setPicType(picType);//0 图片，1书
+                        picture.setPicType(picType);//0 图片，1书封面， 2 书详情
                         picture.setName(originalName);
                         picture.setFilePath(path);
                         picture.setCreateTime(new Date());

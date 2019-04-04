@@ -37,5 +37,6 @@ public class PictureInfo {
         private String paramPrefix;
         private String sizeParam;
         private String waterMark;
+        private Integer picType;
     }
 }
