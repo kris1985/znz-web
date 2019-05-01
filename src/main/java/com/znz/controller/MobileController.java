@@ -1,19 +1,51 @@
 package com.znz.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Sets;
-import com.sun.org.apache.regexp.internal.RE;
 import com.znz.config.AppConfig;
-import com.znz.dao.*;
+import com.znz.dao.PicRecommendMapper;
+import com.znz.dao.PictureMapper;
+import com.znz.dao.SubCategoryMapper;
+import com.znz.dao.UserAuthMapper;
+import com.znz.dao.UserMapper;
 import com.znz.exception.ServiceException;
-import com.znz.model.*;
+import com.znz.model.PicRecommend;
+import com.znz.model.Picture;
+import com.znz.model.SubCategory;
+import com.znz.model.User;
+import com.znz.model.UserAuth;
 import com.znz.service.CategoryService;
 import com.znz.util.CategoryUtil;
 import com.znz.util.PartionCodeHoder;
 import com.znz.util.SignUtil;
 import com.znz.util.WaterMarkUtil;
-import com.znz.vo.*;
+import com.znz.vo.BaseRequest;
+import com.znz.vo.BrandVO;
+import com.znz.vo.CategoryInfo;
+import com.znz.vo.CheckUpdateVO;
+import com.znz.vo.CommonResponse;
+import com.znz.vo.FileQueryVO;
+import com.znz.vo.PageParameter;
+import com.znz.vo.PictureInfo;
+import com.znz.vo.PictureRequest;
+import com.znz.vo.QueryParams;
+import com.znz.vo.ReferrerInfo;
+import com.znz.vo.SignInRequest;
+import com.znz.vo.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.mobile.device.Device;
@@ -27,13 +59,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.PrintWriter;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2017/5/9.
@@ -205,7 +230,8 @@ public class MobileController {
             if(!StringUtils.isEmpty(gid)){
                 //按书id查询
                 Picture picture =  pictureMapper.selectByGid(queryParams.getBookId());
-                pictures = pictureMapper.selectByBookId(picture.getId());
+                fileQueryVO.setBookId(picture.getId());
+                pictures = pictureMapper.selectByBookIdPage(fileQueryVO);
             }else if(StringUtils.isEmpty(categoryIds) && brandId==null){
                 pictures = pictureMapper.selectBySimplePage(fileQueryVO);
             }else{
@@ -241,7 +267,7 @@ public class MobileController {
                 picture.setId(p.getGid());
                 picture.setClickTimes(p.getClickTimes());
                 picture.setDownloadTimes(p.getDownloadTimes());
-                picture.setName(p.getName());
+                picture.setName(p.getName().substring(0,p.getName().indexOf(".")));
                 picture.setFilePath(p.getFilePath());
                 picture.setMyRecommend(p.getRecId() != null && p.getRecId().contains(String.valueOf(userId)));
                 String attachs = p.getAttach();
@@ -539,13 +565,17 @@ public class MobileController {
             char letter = brandVO.getName().toUpperCase().charAt(0);
             brandVO.setLetter(String.valueOf(letter));
             if(letter<65 || letter>90 ){
-                brandVO.setLetter("_");
+                brandVO.setLetter("#");
             }
             brandVOS.add(brandVO);
         }
+        brandVOS = brandVOS.stream().sorted(Comparator.comparing(BrandVO::getLetter).reversed()).collect(
+            Collectors.toList());
         commonResponse.setResult(brandVOS);
         return commonResponse;
     }
+
+
 
 
 
@@ -584,5 +614,6 @@ public class MobileController {
         System.out.println(JSON.toJSONString(pictureInfoCommonResponse));
 
         BaseRequest<QueryParams> queryParamsBaseRequest = new BaseRequest<>();*/
+
     }
 }
