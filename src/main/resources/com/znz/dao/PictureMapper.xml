@@ -235,5 +235,18 @@
     where book_id = #{bookId,jdbcType=BIGINT} order by id desc
   </select>
 
+  <select id="selectByBookIdPage" resultMap="BaseResultMap" parameterType="com.znz.vo.FileQueryVO" >
+    select
+    <include refid="Base_Column_List" />
+    from t_picture
+    where book_id = #{bookId,jdbcType=BIGINT}
+    <if test="sortFiled!=null">
+      order by sort desc,id desc
+    </if>
+    <if test="sortFiled==null">
+      order by id desc
+    </if>
+  </select>
+
 
 </mapper>

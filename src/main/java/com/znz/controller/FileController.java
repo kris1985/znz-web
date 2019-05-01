@@ -125,6 +125,7 @@ public class FileController {
                 String path = uuid + suffix;
                 boolean b = upload(ossClient, file, path);
                 if (b) {
+                    BufferedImage sourceImg = ImageIO.read(file.getInputStream());
                     if(originalName.contains(ATTACH)){
                         String name = originalName.substring(0,originalName.indexOf(ATTACH))+suffix;
                         List<Picture>  pictures = pictureMapper.selectByName(name);
@@ -150,7 +151,6 @@ public class FileController {
                         picture.setDownloadTimes(0);
                         picture.setGid(partionCode + "_" + uuid);
                         BigDecimal size = new BigDecimal(file.getSize());
-                        BufferedImage sourceImg = ImageIO.read(file.getInputStream());
                         size = size.divide(new BigDecimal(1024), BigDecimal.ROUND_HALF_UP).setScale(0);
                         picture.setSize(String.valueOf(size));
                         picture.setWidth(String.valueOf(sourceImg.getWidth()));

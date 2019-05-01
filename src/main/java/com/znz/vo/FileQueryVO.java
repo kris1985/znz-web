@@ -29,4 +29,6 @@ public class FileQueryVO {
 
     private String sortFiled;
 
+    private Long bookId;
+
 }

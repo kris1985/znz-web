@@ -40,4 +40,6 @@ public interface PictureMapper {
     List<Picture> selectByName(@Param("name") String name);
 
     List<Picture> selectByBookId(@Param("bookId") Long bookId);
+
+    List<Picture> selectByBookIdPage(FileQueryVO fileQueryVO);
 }
