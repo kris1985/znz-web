@@ -29,6 +29,7 @@ public class PictureInfo {
         private Integer width;
         private Integer height;
         private Integer size;
+        private List<String> attachs2;
     }
 
     @Data

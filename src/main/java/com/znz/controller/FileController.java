@@ -78,6 +78,7 @@ public class FileController {
     public static final String ATTACH_SEPARATOR = "#";
     public static final String ATTACH = "_副图";
     public static final String BOOK = "_鞋书";
+    public static final String ATTACH_SIZE_SEPARATOR = "&";
     @Resource
     private AppConfig appConfig;
 
@@ -133,10 +134,11 @@ public class FileController {
                             continue;
                         }
                         Picture p = pictures.get(0);
+                        String s = ATTACH_SIZE_SEPARATOR+sourceImg.getWidth()+"x"+sourceImg.getHeight();
                         if (!StringUtils.isEmpty(p.getAttach())) {
-                            p.setAttach(p.getAttach() + ATTACH_SEPARATOR + path + "|" + originalName);
+                            p.setAttach(p.getAttach() + ATTACH_SEPARATOR + path + "|" + originalName+s);
                         } else {
-                            p.setAttach(path + "|" + originalName);
+                            p.setAttach(path + "|" + originalName+s);
                         }
                         pictureMapper.updateByPrimaryKeySelective(p);
                     }else{
@@ -277,10 +279,12 @@ public class FileController {
                 String attach = childPath;
                 Picture pic = new Picture();
                 pic.setId(pictureId);
+                BufferedImage sourceImg = ImageIO.read(file.getInputStream());
+                String s = ATTACH_SIZE_SEPARATOR+sourceImg.getWidth()+"x"+sourceImg.getHeight();
                 if (!StringUtils.isEmpty(picture.getAttach())) {
-                    pic.setAttach(picture.getAttach() + ATTACH_SEPARATOR + attach + "|" + fileName);
+                    pic.setAttach(picture.getAttach() + ATTACH_SEPARATOR + attach + "|" + fileName+s);
                 } else {
-                    pic.setAttach(attach + "|" + fileName);
+                    pic.setAttach(attach + "|" + fileName+s);
                 }
                 pictureMapper.updateByPrimaryKeySelective(pic);
             }
@@ -340,6 +344,12 @@ public class FileController {
         PartionCodeHoder.clear();
         for (Picture p : pictures) {
             if (StringUtils.isNoneBlank(p.getAttach())) {
+                List<String> list =    Arrays.stream(p.getAttach().split(ATTACH_SEPARATOR)).map(s->{
+                        if(s.indexOf(ATTACH_SIZE_SEPARATOR)!=-1){
+                            return s.substring(0,s.lastIndexOf(ATTACH_SIZE_SEPARATOR));
+                        }return s;
+                }).collect(Collectors.toList());
+                p.setAttach(String.join(ATTACH_SEPARATOR,list));
                 p.setAttach(p.getFilePath() + "|" + p.getName() + ATTACH_SEPARATOR + p.getAttach());//加上原图
             }
         }
@@ -401,6 +411,12 @@ public class FileController {
         Picture picture = pictures.get(0);
         for (Picture p : pictures) {
             if (StringUtils.isNoneBlank(p.getAttach())) {
+                List<String> list =    Arrays.stream(p.getAttach().split(ATTACH_SEPARATOR)).map(s->{
+                    if(s.indexOf(ATTACH_SIZE_SEPARATOR)!=-1){
+                        return s.substring(0,s.lastIndexOf(ATTACH_SIZE_SEPARATOR));
+                    }return s;
+                }).collect(Collectors.toList());
+                p.setAttach(String.join(ATTACH_SEPARATOR,list));
                 p.setAttach(p.getFilePath() + "|" + p.getName() + "," + p.getAttach());//加上原图
             }
         }

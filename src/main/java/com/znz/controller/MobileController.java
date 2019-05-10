@@ -270,17 +270,26 @@ public class MobileController {
                 picture.setName(p.getName().substring(0,p.getName().indexOf(".")));
                 picture.setFilePath(p.getFilePath());
                 picture.setMyRecommend(p.getRecId() != null && p.getRecId().contains(String.valueOf(userId)));
+                picture.setWidth(StringUtils.isEmpty(p.getWidth())?1400:Integer.parseInt(p.getWidth()));
+                picture.setHeight(StringUtils.isEmpty(p.getHeight())?1000:Integer.parseInt(p.getHeight()));
+                picture.setSize(StringUtils.isEmpty(p.getSize())?100:Integer.parseInt(p.getSize()));
                 String attachs = p.getAttach();
+                final  Integer width = picture.getWidth();
+                final  Integer height = picture.getHeight();
                 if (!StringUtils.isEmpty(attachs)) {
                     try {
                         picture.setAttachs(Arrays.stream(attachs.split(FileController.ATTACH_SEPARATOR)).map(s->s.split("\\|")[0]).collect(Collectors.toList()));
+                        picture.setAttachs2(Arrays.stream(attachs.split(FileController.ATTACH_SEPARATOR)).map(
+                            s->{
+                                if(s.indexOf(FileController.ATTACH_SIZE_SEPARATOR)!=-1){
+                                    return s.split("\\|")[0]+s.substring(s.lastIndexOf(FileController.ATTACH_SIZE_SEPARATOR));
+                                }return s.split("\\|")[0]+FileController.ATTACH_SIZE_SEPARATOR+width+"x"+height;
+                            }
+                        ).collect(Collectors.toList()));
                     } catch (Exception e) {
                         log.error(e.getLocalizedMessage(), e);
                     }
                 }
-                picture.setWidth(StringUtils.isEmpty(p.getWidth())?1400:Integer.parseInt(p.getWidth()));
-                picture.setHeight(StringUtils.isEmpty(p.getHeight())?1000:Integer.parseInt(p.getHeight()));
-                picture.setSize(StringUtils.isEmpty(p.getSize())?100:Integer.parseInt(p.getSize()));
                 list.add(picture);
             }
             String width;
@@ -330,7 +339,7 @@ public class MobileController {
     public User getUserByToken(BaseRequest baseRequest) {
         User user =  userMapper.selectByToken(baseRequest.getToken());
         if(user==null){
-            throw new ServiceException("1008","token不存在或已过期");
+            throw new ServiceException("1008","登录超时,请重新登录");
         }
         return user;
     }
