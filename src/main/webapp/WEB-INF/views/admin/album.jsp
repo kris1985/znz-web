@@ -5,10 +5,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-     <meta name="renderer" content="webkit"/>
+    <meta name="renderer" content="webkit"/>
     <link rel="icon" href="../../favicon.ico">
     <title>指南针鞋讯-大图2 ${watermarkParam}</title>
-     <%@ include file="../common/common.jsp"%>
+    <%@ include file="../common/common.jsp"%>
     <link href="${basePath}/resources/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/docs-min.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/pure-min.css" rel="stylesheet" type="text/css" media="all" />
@@ -17,10 +17,10 @@
     <link href="${basePath}/resources/css/album.css" rel="stylesheet" type="text/css" media="all" />
     <link href="${basePath}/resources/css/base.css" rel="stylesheet" type="text/css" media="all" />
 
-   <c:set var="watermarkParamProcess" value="" />
-                 <c:if test="${ not empty watermarkParam  }">
-                      <c:set var="watermarkParamProcess" value="?x-oss-process=image${watermarkParam}" />
-                  </c:if>
+    <c:set var="watermarkParamProcess" value="" />
+    <c:if test="${ not empty watermarkParam  }">
+        <c:set var="watermarkParamProcess" value="?x-oss-process=image${watermarkParam}" />
+    </c:if>
 </head>
 <body class="trs-tags" style="background:black;overflow-x:hidden;overflow-y:hidden" sroll="no">
 <div class="content1">
@@ -29,9 +29,9 @@
         <div class="ite_btn" >
             <span id="addSizeBtn" class="glyphicon glyphicon-zoom-in" aria-hidden="true" title="放大"></span>
             <span id="subSizeBtn" class="glyphicon glyphicon-zoom-out" aria-hidden="true" title="缩小"></span>
-			<span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true" title="下载"></span>
+            <span id="downloadBtn" class="glyphicon glyphicon-download-alt" aria-hidden="true" title="下载"></span>
             <c:if test="${userSession.user.recommendFlag == 1 &&pictures.size()>0}">
-                 <span id="recBtn" class="glyphicon  glyphicon-thumbs-up" aria-hidden="true" title="推荐"></span>
+                <span id="recBtn" class="glyphicon  glyphicon-thumbs-up" aria-hidden="true" title="推荐"></span>
             </c:if>
         </div>
 
@@ -82,14 +82,14 @@
 
 </div>
 <form id="albumForm" method="post" action = "${basePath}/admin/file/reloadListImg">
-            <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
-            <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
-            <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
-            <input type="hidden" id="pageSize" name = "pageSize" value="120">
-            <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
-            <input type="hidden" id="moveFlag" name = "moveFlag">
-            <input type="hidden" id="totalCount" name = "totalCount" value="${totalCount}">
-            <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
+    <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
+    <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
+    <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
+    <input type="hidden" id="pageSize" name = "pageSize" value="120">
+    <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
+    <input type="hidden" id="moveFlag" name = "moveFlag">
+    <input type="hidden" id="totalCount" name = "totalCount" value="${totalCount}">
+    <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
 </form>
 <script type="text/javascript" src="${basePath}/resources/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="${basePath}/resources/js/carousel.js"></script>
@@ -119,7 +119,7 @@
             maxWidth = $(window).width();
             w = $("#album-image").width();
             h = $("#album-image").height();
-           // console.log("$(#album-image):" + $("#album-image").attr("src"));
+            // console.log("$(#album-image):" + $("#album-image").attr("src"));
             //console.log(w + "-" + h + "-" + maxWidth + "-" + maxHeight);
             if (w > h) {
                 maxWidth = maxHeight * (w / h);
@@ -129,11 +129,11 @@
             Album = new jQuery.Album({
                 // 当前显示图片在缩略图的中索引值
                 <c:choose>
-                    <c:when test="${moveFlag eq 'pre'}">
-                         curIndex:${pageSize-1},
-                    </c:when>
+                <c:when test="${moveFlag eq 'pre'}">
+                curIndex:${pageSize-1},
+                </c:when>
                 <c:otherwise>
-                    curIndex: ${currentIndex},
+                curIndex: ${currentIndex},
                 </c:otherwise>
                 </c:choose>
                 // 大图片显示区域的最大宽度
@@ -146,27 +146,27 @@
 
 
 
-             $(".del").live("click",function(evt){
-                 evt.preventDefault();
-                 evt.stopPropagation();
-                 var parent = $(this).parent();
-                var pictureId = parent.find("img").attr("parentId");
-                var attachPath = parent.find("img").attr("path");
-                var url = "${basePath}/admin/file/deleteAttach?pictureId="+pictureId+"&attachPath="+attachPath+"&secondSelectedId=${secondSelectedId}";
+        $(".del").live("click",function(evt){
+            evt.preventDefault();
+            evt.stopPropagation();
+            var parent = $(this).parent();
+            var pictureId = parent.find("img").attr("parentId");
+            var attachPath = parent.find("img").attr("path");
+            var url = "${basePath}/admin/file/deleteAttach?pictureId="+pictureId+"&attachPath="+attachPath+"&secondSelectedId=${secondSelectedId}";
 
-                $.get(url,function (data) {
-                    if(data.code == 0){
-                        parent.hide(500);
-                    }else {
-                        alert(data.msg);
-                    }
-                });
-            })
+            $.get(url,function (data) {
+                if(data.code == 0){
+                    parent.hide(500);
+                }else {
+                    alert(data.msg);
+                }
+            });
+        })
         </c:if>
 
-     /*   $(".attachs img").click(function () {
-          $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
-        })*/
+        /*   $(".attachs img").click(function () {
+             $("#album-image-bd img").attr("src", $(this).attr("origin_src") );
+           })*/
 
         $(".attachs img").live("click",function(){
             $(".attach_item").css("border"," 2px solid #ffffff");
@@ -174,7 +174,7 @@
             var src = $(this).attr("origin_src");
             preload(src);
         });
-		//setTitle();
+        //setTitle();
         if($.cookie('albumBackground') !=undefined){
             $("body").css("background",$.cookie('albumBackground'));
             $("#album").css("background",$.cookie('albumBackground'));
@@ -270,14 +270,14 @@
                 //$("#album-image-md").height(height-50)
             }
         });
-        
+
         $("#downloadBtn").click(function(){
             var imgpath = $("#album-image").attr("src");
             var alt = $("#album-image").attr("alt");
             window.open("${basePath}/admin/file/download?imgPath=" + imgpath+"&fileName="+alt)
         });
 
-     //   document.oncontextmenu=function(){return false;}
+        //   document.oncontextmenu=function(){return false;}
 
         document.onkeydown=function(e){
             e=window.event||e;
@@ -309,7 +309,7 @@
             }
         });
 
-        //document.oncontextmenu=function(){return false;}
+        document.oncontextmenu=function(){return false;}
 
         var myRec = $(".album-carousel-thumb-selected a").attr("myrec");;
         //console.log("myRec:"+myRec)
@@ -348,34 +348,34 @@
             }
         })
         </c:if>
-            var blw=100;
-            //var i=0;
-            var maxSize = 6;
-           var diff;
-            $("#but_down").click(function(){
-                var length = $(".attachs").children(".attach_item").length;
-                var diff = length - 6;
-                //console.log("diff:"+diff+"i:"+attachIndex);
-                //点击i加1
-                if(attachIndex<diff ){
-                    attachIndex++;
-                    $("#attachs").css("top",-(blw*attachIndex)+"px");
-                    //子元素集合向左移动，距离为子元素的宽度乘以i。
-                }
-            });
-            $("#but_up").click(function(){
-               // console.log("i2:"+attachIndex);
-                attachIndex--;
-                //点击i减1
-                if(attachIndex>0){
-                    $("#attachs").css("top",-(blw*attachIndex));
-                    //子元素集合向右移动，距离为子元素的宽度乘以i。
-                }else{
-                    attachIndex=0;
-                    $("#attachs").css("top",0);
-                    //超出可移动范围后点击不再移动。最前几个子元素被显示时i为0。
-                }
-            });
+        var blw=100;
+        //var i=0;
+        var maxSize = 6;
+        var diff;
+        $("#but_down").click(function(){
+            var length = $(".attachs").children(".attach_item").length;
+            var diff = length - 6;
+            //console.log("diff:"+diff+"i:"+attachIndex);
+            //点击i加1
+            if(attachIndex<diff ){
+                attachIndex++;
+                $("#attachs").css("top",-(blw*attachIndex)+"px");
+                //子元素集合向左移动，距离为子元素的宽度乘以i。
+            }
+        });
+        $("#but_up").click(function(){
+            // console.log("i2:"+attachIndex);
+            attachIndex--;
+            //点击i减1
+            if(attachIndex>0){
+                $("#attachs").css("top",-(blw*attachIndex));
+                //子元素集合向右移动，距离为子元素的宽度乘以i。
+            }else{
+                attachIndex=0;
+                $("#attachs").css("top",0);
+                //超出可移动范围后点击不再移动。最前几个子元素被显示时i为0。
+            }
+        });
 
     });
 
@@ -388,7 +388,7 @@
         $(preloader).load(function(evt){
             var width = preloader.width,
                 height = preloader.height,
-            percent = width / height;
+                percent = width / height;
             if (width > maxWidth) {
                 width = maxWidth;
                 height = width / percent;

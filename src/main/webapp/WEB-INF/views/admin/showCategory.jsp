@@ -54,9 +54,9 @@
             background: url(../../resources/icon/icon_search.png) 62px 50% no-repeat;}
         #searchTxtBtn:hover{color: #699f00;}
         .city-info{display: none;}
-        .brand_ui{    position: absolute;
+        .brand_ui{
             position: absolute;
-            left: 590px;
+            left: 330px;
             top: 145px;
             word-wrap: break-word;
             width: 100%;}

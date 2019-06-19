@@ -579,14 +579,14 @@ public class FileController {
             printWriter.flush();
             printWriter.close();
         }
-        downLoad(imgPath, fileName, response);
+        downLoad(imgPath, fileName, response,user.getUserName());
         user.setDownloadPerDay(user.getDownloadPerDay() + 1);
         user.setDownloadTotal(user.getDownloadTotal() + 1);
         user.setUserId(userSession.getUser().getUserId());
         userMapper.updateByPrimaryKeySelective(user);
     }
 
-    public void downLoad(String filePath, String fileName, HttpServletResponse response) throws Exception {
+    public void downLoad(String filePath, String fileName, HttpServletResponse response,String userName) throws Exception {
         byte[] buf = new byte[1024];
         int len = 0;
         BufferedInputStream reader = null;
@@ -596,13 +596,18 @@ public class FileController {
             /*ossClient = new OSSClient(appConfig.getEndpoint(), appConfig.getAccessKeyId(), appConfig
             .getAccessKeySecret());
             OSSObject ossObject = ossClient.getObject(appConfig.getBucketName(), filePath);*/
+            if(!userName.equals("ht")&& !userName.equals("znz")){
+               fileName = UUID.randomUUID().toString()+".jpg";
+            }else{
+                fileName =  URLEncoder.encode(fileName, "UTF-8");
+            }
             URL url = new URL(filePath);
             URLConnection con = url.openConnection();
             reader = new BufferedInputStream(con.getInputStream());
             out = response.getOutputStream();
             response.reset(); // 非常重要
             response.setContentType("applicatoin/octet-stream");
-            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(UUID.randomUUID().toString()+".jpg", "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
             while ((len = reader.read(buf)) > 0) { out.write(buf, 0, len); }
         } finally {
             if (out != null) {
