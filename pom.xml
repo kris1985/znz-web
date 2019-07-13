@@ -395,7 +395,7 @@
         </repository>
     </repositories>
     <build>
-        <finalName>ROOT</finalName>
+        <finalName>v2</finalName>
         <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
