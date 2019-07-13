@@ -95,15 +95,58 @@
             .city-tabs{position: relative}
         */
     </style>
+
     <script>
         var basePath = getContextPath();
         $(function(){
-            $(".site-piclist_pic").hover(
-                function () {
-                    $(this).css("border","2px solid #699f00");
-                },function () {
-                    $(this).css("border","2px solid white");
-                });
+
+            //分页
+            $.jqPaginator('#pagination1', {
+                <c:choose>
+                <c:when test="${totalPage ==0}">
+                totalPages: 1,
+                </c:when>
+                <c:otherwise>
+                totalPages: ${totalPage},
+                </c:otherwise>
+                </c:choose>
+                visiblePages: 10,
+                prev: '<li class="prev"><a href="javascript:void(0);" style="width:58px"><i class="arrow arrow2"><\/i>上一页<\/a><\/li>',
+                next: '<li class="next"><a href="javascript:void(0);" style="width:58px">下一页<i class="arrow arrow3"><\/i><\/a><\/li>',
+                page: '<li class="page"><a href="javascript:void(0);" style="width:40px">{{page}}<\/a><\/li>',
+                currentPage: ${currentPage},
+
+                onPageChange: function (num, type) {
+                    if(type!="init"){
+                        var url = "${basePath}/admin/file/listImg"
+                        $("#currentPage").val(num);
+                        $("#categoryForm").attr("target", "_self");
+                        $("#categoryForm").attr("action", url);
+                        $("#categoryForm").submit();
+                    }
+                }
+            });
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}张</a></li>')
+            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:160px;border:0">到第<input type="text" style="  width: 34px; margin: 0px 5px;height: 18px;padding:2px;text-align: center " id="switchToPage" value="${currentPage}">页<input type="button" value="确定" id="switchToPageBtn" style=" cursor: pointer; width: 50px;  height: 24px;margin-left:10px  "></a></li>');
+            $("#switchToPageBtn").live("click",function(evt){
+                var currentPage = $.trim($("#switchToPage").val());
+                console.log(currentPage);
+                if(isNaN(currentPage)){
+                    alert("请输入数字")
+                    return;
+                }else{
+                    if(parseInt(currentPage)==0){
+                        currentPage = 1;
+                    }else if(parseInt(currentPage)>${totalPage}){
+                        currentPage = "${totalPage}";
+                    }
+                    var url = "${basePath}/admin/file/listImg"
+                    $("#currentPage").val(currentPage);
+                    $("#categoryForm").attr("target", "_self");
+                    $("#categoryForm").attr("action", url);
+                    $("#categoryForm").submit();
+                }
+            });
 
             $(".site-piclist_pic a").click(function () {
                 var selectedImg = $(this).attr("id");
@@ -118,47 +161,8 @@
                 $("#categoryForm").attr("target","_blank");
                 $("#categoryForm").submit();
             });
-
-            <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
-
-
-            //上传附图 删除
-            $('.site-piclist li').contextMenu('menuPic', {
-                bindings: {
-                    'addAttach': function (t) {
-                        var id = $(t).attr("item");
-                        var url = "${basePath}/admin/file/toUploadAttach?id="+id+"&secondCategory=${secondSelectedId}";
-                        art.dialog.open(url,
-                            {
-                                "id": "2345",
-                                title: "上传文件",
-                                width: 500,
-                                height: 400,
-                                close: function () {
-                                }
-                            }
-                        );
-                    },
-                    'delete': function (t) {
-                        if(!confirm("确认要删除吗？")){
-                            return;
-                        }
-                        var id = $(t).attr("item");
-                        var url = "${basePath}/admin/file/delete?pictureId="+id+"&secondSelectedId="+$("#secondSelectedId").val();
-                        $.get(url,function (data) {
-                            if(data.code ==0 ){
-                                $(t).hide();
-                            }else{
-                                alert(data.msg)
-                            }
-                        })
-                    }
-                }
-            });
-            </c:if>
         })
     </script>
-
 </head>
 
 <body>
@@ -170,7 +174,7 @@
     <input type="hidden" id="firstSelectedId" name="firstSelectedId" value="${firstSelectedId}">
     <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="${secondSelectedId}">
     <input type="hidden" id="thirdSelectedId" name="thirdSelectedId" value="${thirdSelectedId}">
-    <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${fourthSelectedId}">
+    <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="${ids}">
     <input type="hidden" id="currentPage" name = "currentPage" value="${currentPage}">
     <input type="hidden" id="pageSize" name = "pageSize" value="120">
     <input type="hidden" id="totalPage" name = "totalPage" value="${totalPage}">
@@ -178,23 +182,16 @@
     <input id="startTime1" name="startTime" type="hidden" />
     <input id="endTime1"    name="endTime" type="hidden"/>
     <!--点击大图选择的图片id-->
-    <input type="hidden" name="selectedId" id="selectedId">
+    <input type="hidden" name="selectedId" id="selectedId" value="${selectedId}">
     <!--当前页所有图片id-->
-    <input type="hidden" name="ids"id="picIds">
+    <input type="hidden" name="ids"id="picIds" value="${ids}">
     <input type="hidden" name="recommendId" id="recommendId" value="${recommendId}">
     <input type="hidden" name="brandId" id="brandId" value="${brandId}">
     <input type="hidden" name="brandName" id="brandName" value="${brandName}">
 </form>
 <div id="container" class="site-main">
 
-    <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
-        <div class="contextMenu" id="menuPic" style="display: none">
-            <ul>
-                <li id="addAttach"> 上传附图</li>
-                <li id="delete"> 删除</li>
-            </ul>
-        </div>
-    </c:if>
+
 
     <div style="text-align: center;
     padding: 15px 0 0 0;
@@ -219,6 +216,11 @@
                 </li>
             </c:forEach>
         </ul>
+    </div>
+
+
+    <div class="mod-page">
+        <ul class="pagination" id="pagination1"></ul>
     </div>
 
     <div id="1000000000046" class="ad-wrapper clearfix">

@@ -12,15 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -315,21 +307,30 @@ public class FileController {
     public String listImg(Long selectedId, String ids, String secondSelectedId,
                           String fourthSelectedId, Integer currentPage, Integer totalPage, Integer totalCount,
                           Integer pageSize, Integer recommendId, Model model) {
+        log.info("selectedId:{},secondSelectedId:{}:{},currentPage:{},totalPage:{},fourthSelectedId:{}",selectedId+"_"+secondSelectedId+"_"+currentPage+"_"+totalPage+"_"+fourthSelectedId);
         Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondSelectedId));
         Integer firstCategoryId = categoryService.getParentId(Integer.parseInt(secondSelectedId));
         PartionCodeHoder.set(String.valueOf(partionCode));
         Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
-        List<Long> listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(
-            Collectors.toList());
-        int currentIndex = listIds.indexOf(selectedId);
+        List<Long> listIds = new ArrayList<>();
+        int currentIndex = 0;
+        if(StringUtils.isNoneBlank(ids)){
+            listIds = Arrays.asList(ids.split(",")).stream().map(s -> Long.parseLong(s)).collect(
+                    Collectors.toList());
+            currentIndex = listIds.indexOf(selectedId);
+        }
         List<Picture> pictures = new ArrayList<>();
         String returnUrl = "";
-        if(picture.getPicType()!=null&& picture.getPicType()==1){
+        PageParameter pageParameter = new PageParameter(currentPage, pageSize);
+         if(picture.getPicType()!=null&& picture.getPicType()==1){
             if(picture.getId()!=null){
-                pictures = pictureMapper.selectByBookId(picture.getId());
+                FileQueryVO fileQueryVO = new FileQueryVO();
+                fileQueryVO.setPage(pageParameter);
+                fileQueryVO.setBookId(picture.getId());
+                pictures = pictureMapper.selectByBookIdPage(fileQueryVO);
             }
-            currentPage = 1;
-            totalPage = 1;
+            totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
+                    / pageParameter.getPageSize();
             totalCount = pictures.size();
             returnUrl = "admin/bookList";
         }else{
@@ -366,18 +367,21 @@ public class FileController {
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("recommendId", recommendId);
         model.addAttribute("totalIndex", totalIndex);
+        model.addAttribute("selectedId", selectedId);
+        model.addAttribute("ids", ids);
         return returnUrl;
     }
 
     @RequestMapping(value = "/reloadListImg", method = RequestMethod.POST)
     public String reloadListImg(String fourthSelectedId, String secondSelectedId, Integer currentPage, Integer pageSize,
-                                String moveFlag, Integer totalCount, Integer recommendId, Model model) {
+                                String moveFlag, Integer totalCount, Integer recommendId, Model model,Long selectedId) {
         if ("pre".equals(moveFlag)) {
             currentPage = currentPage - 1;
         } else {
             currentPage = currentPage + 1;
         }
         Integer partionCode = categoryService.getPartionCodeBy2(Integer.parseInt(secondSelectedId));
+        log.info("fourthSelectedId:"+fourthSelectedId+"secondSelectedId:"+secondSelectedId+"partionCode:"+partionCode+"selectedId:"+selectedId);
         PartionCodeHoder.set(String.valueOf(partionCode));
         PageParameter pageParameter = new PageParameter(currentPage, pageSize);
         List<Set<Integer>> categoryConditions = new ArrayList<>();
@@ -385,7 +389,12 @@ public class FileController {
         fileQueryVO.setPage(pageParameter);
         fileQueryVO.setRecommendId(recommendId);
         List<Picture> pictures;
-        if (!StringUtils.isBlank(fourthSelectedId)) {
+        if(selectedId!=null){
+            Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
+            fileQueryVO.setBookId(picture.getBookId());
+            pictures = pictureMapper.selectByBookIdPage(fileQueryVO);
+        }
+       else if (!StringUtils.isBlank(fourthSelectedId)) {
             String[] ids = fourthSelectedId.split("[;]");
             Set<Integer> set;
             for (String x : ids) {
@@ -438,6 +447,7 @@ public class FileController {
         }
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("recommendId", recommendId);
+        model.addAttribute("selectedId", selectedId);
         return "admin/album";
     }
 

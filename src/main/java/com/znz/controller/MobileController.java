@@ -255,6 +255,7 @@ public class MobileController {
             }
             PartionCodeHoder.clear();
             if (CollectionUtils.isEmpty(pictures)) {
+                commonResponse.setSuccess(true);
                 return commonResponse;
             }
             int totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
@@ -540,7 +541,7 @@ public class MobileController {
         try {
             CheckUpdateVO vo = new CheckUpdateVO();
             // Android 版本为1.0，IOS为1.0.1 升级为1.1.1
-            if(baseRequest.getAppVersion().length() ==5 && !"1.1.1".equals(baseRequest.getAppVersion())){
+            if(baseRequest.getAppVersion().length() ==5 && !"1.2.2".equals(baseRequest.getAppVersion())){
                 vo.setDownloadUrl("https://itunes.apple.com/us/app/%E6%8C%87%E5%8D%97%E9%92%88%E9%9E%8B%E8%AE%AF/id1270152609?l=zh&ls=1&mt=8");
             }
             commonResponse.setResult(vo);
