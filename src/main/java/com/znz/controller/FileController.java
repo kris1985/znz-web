@@ -389,9 +389,9 @@ public class FileController {
         fileQueryVO.setPage(pageParameter);
         fileQueryVO.setRecommendId(recommendId);
         List<Picture> pictures;
-        if(selectedId!=null){
-            Picture picture = pictureMapper.selectByPrimaryKey(selectedId);
-            fileQueryVO.setBookId(picture.getBookId());
+        Picture picture1 = pictureMapper.selectByPrimaryKey(selectedId);
+        if(selectedId!=null && picture1.getPicType() ==1){
+            fileQueryVO.setBookId(picture1.getBookId());
             pictures = pictureMapper.selectByBookIdPage(fileQueryVO);
         }
        else if (!StringUtils.isBlank(fourthSelectedId)) {
