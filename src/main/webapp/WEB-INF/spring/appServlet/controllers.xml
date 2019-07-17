@@ -23,6 +23,7 @@
 	<mvc:view-controller path="/admin/subCategory/listSubCategory" view-name="admin/subCategoryList"/>
 	<mvc:view-controller path="/admin/file/toUploadAttach" view-name="admin/uploadAttach"/>
 	<mvc:view-controller path="/admin/file/toUploadBookPic" view-name="admin/uploadBookPic"/>
+	<mvc:view-controller path="/admin/picture" view-name="admin/picture"/>
 
 
 
