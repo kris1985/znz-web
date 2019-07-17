@@ -135,9 +135,6 @@
                         var name = item.name;
                         var sortId = item.sortId;
                         var selectClass = "";
-                        if(i==0){
-                            selectClass = " selected";
-                        }
                         res3 +='<div class="mod_sear_list" > <h3 id="4758" class="choice_item"><span>'+name+'</span>：</h3>';
                         res3+='<ul class="mod_category_item  ui-sortable">';
                         res3+='<li id="all_4758" class="li_item leaf_item all_item  selected" categorylevel="3" parentid="4758"><a id="aa" href="javascript:void()" class="">全部</a></li>';
