@@ -97,63 +97,114 @@
     </style>
     <script>
         var basePath = getContextPath();
-        $.post(basePath+"/categorys",{token:"8f837a356ef43988d7fc7db4b63f53d3"},function(result){
-            $.each(result, function(i, item) {
+            $.ajax({
+                type:'post',
+                url:basePath+"/categorys",
+                contentType :'application/json;charset=utf-8',
+                data:'{"token":"8f837a356ef43988d7fc7db4b63f53d3"}',
+                success:function(data){
+                    console.log(data.result);
                 //循环获取数据
-                var id = item.id;
-                var name = item.name;
-                var sortId = item.sortId;
-                $(".nav_warp").html(
-                    "<li id=id class='li_item selected noLeaf'>  <a href=\"#\">"
-                    + title+
-                   "</li>");
-
-            /*     <li id="68" class="li_item selected noLeaf" categorylevel="0" parentid="0">
-                    <a href="/admin/subCategory/showCategory?firstSelectedId=68"></a>
-                </li>*/
+                    var res = "";
+                    $.each(data.result, function(i, item) {
+                       // var id = item.id;
+                        var name = item.name;
+                        var sortId = item.sortId;
+                        var selectClass = "";
+                        if(i==0){
+                            selectClass = " selected";
+                        }
+                        res +="<li id=id class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
+                    });
+                    $(".navbar-ul").html(res);
+                    //二级栏目
+                    var res2 = "";
+                    $.each(data.result[0].childrens, function(i, item) {
+                        var name = item.name;
+                        var sortId = item.sortId;
+                        var selectClass = "";
+                        if(i==0){
+                            selectClass = " selected";
+                        }
+                        res2 +="<li id=id class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
+                    });
+                    $("#no_leaf_item").html(res2);
+                    //三级栏目
+                    var res3 = "";
+                    $.each(data.result[0].childrens[0].childrens, function(i, item) {
+                        var name = item.name;
+                        var sortId = item.sortId;
+                        var selectClass = "";
+                        if(i==0){
+                            selectClass = " selected";
+                        }
+                        res3 +='<div class="mod_sear_list" > <h3 id="4758" class="choice_item"><span>'+name+'</span>：</h3>';
+                        res3+='<ul class="mod_category_item  ui-sortable">';
+                        res3+='<li id="all_4758" class="li_item leaf_item all_item  selected" categorylevel="3" parentid="4758"><a id="aa" href="javascript:void()" class="">全部</a></li>';
+                        $.each(item.childrens, function(j, item) {
+                            var name = item.name;
+                            res3+=' <li id="4759" class=" li_item leaf_item" > <a id="a_4759" href="javascript:void()">'+name+'</a></li>';
+                        });
+                        res3+= '</ul></div>';
+                    });
+                    $("#leaf_category").html(res3);
+             }
         });
     </script>
 
 </head>
 
 <body>
-<div class="header">
-    <div class="nav_bar">
-        <div class="logo">
-            <a href="/"><img src="${basePath}/resources/img/logo.png" height="38"> </a>
+    <div class="header">
+        <div class="nav_bar">
+            <div class="logo">
+                <a href="/"><img src="${basePath}/resources/img/logo.png" height="38"> </a>
+            </div>
+            <!--一级栏目-->
+            <div class="nav_warp">
+                <ul class="navbar-ul mod_category_item">
+                </ul>
+            </div>
         </div>
-        <div class="nav_warp">
-            <ul class="navbar-ul mod_category_item">
+    </div>
 
-            </ul>
+
+  <div id="container" class="site-main">
+        <div class="ad-wrapper clearfix">
+            <div class="divide-green-h"></div>
+        </div>
+
+        <div class="mod_sear_menu mt20 " style="margin-bottom: 20px;">
+            <!--二级栏目-->
+            <div class="mod_sear_list" id="mod_68">
+                <h3>目录：</h3>
+                <ul class="mod_category_item ui-sortable" id="no_leaf_item">
+                    <li id="1038" class="li_item selected noLeaf" ><a href="#">热门下载</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="leaf_category" class="ui-sortable">
+                <!--三级栏目-->
+
+            </div>
+        </div>
+
+    </div>
+        <div  class="ad-wrapper clearfix">
+            <div class="divide-green-h"></div>
+        </div>
+
+        <div class="mod-page">
+            <ul class="pagination" id="pagination1"></ul>
+        </div>
+        <div id="scrollTop" >
+            <div class="level-2"></div>
+            <div class="level-3"></div>
+        </div>
+        <div id="1000000000046" class="ad-wrapper clearfix">
+            <div class="divide-green-h"></div>
         </div>
     </div>
-</div>
-
-<div id="container" class="site-main">
-    <div  class="ad-wrapper clearfix">
-        <div class="divide-green-h"></div>
-    </div>
-
-
-
-    <div  class="ad-wrapper clearfix">
-        <div class="divide-green-h"></div>
-    </div>
-
-    <div class="mod-page">
-        <ul class="pagination" id="pagination1"></ul>
-    </div>
-    <div id="scrollTop" >
-        <div class="level-2"></div>
-        <div class="level-3"></div>
-    </div>
-
-
-    <div id="1000000000046" class="ad-wrapper clearfix">
-        <div class="divide-green-h"></div>
-    </div>
-</div>
 
 
 <div class="footerN1214">
