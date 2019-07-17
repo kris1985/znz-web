@@ -97,6 +97,7 @@
     </style>
     <script>
         var basePath = getContextPath();
+        var nav ;
             $.ajax({
                 type:'post',
                 url:basePath+"/categorys",
@@ -107,6 +108,7 @@
                 //循环获取数据
                     var res = "";
                     $.each(data.result, function(i, item) {
+                        nav = item;
                        // var id = item.id;
                         var name = item.name;
                         var sortId = item.sortId;
@@ -118,35 +120,45 @@
                     });
                     $(".navbar-ul").html(res);
                     //二级栏目
-                    var res2 = "";
-                    $.each(data.result[0].childrens, function(i, item) {
-                        var name = item.name;
-                        var sortId = item.sortId;
-                        var selectClass = "";
-                        if(i==0){
-                            selectClass = " selected";
-                        }
-                        res2 +="<li id=id class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
-                    });
-                    $("#no_leaf_item").html(res2);
+                    showNav2(0);
                     //三级栏目
-                    var res3 = "";
-                    $.each(data.result[0].childrens[0].childrens, function(i, item) {
-                        var name = item.name;
-                        var sortId = item.sortId;
-                        var selectClass = "";
-                        res3 +='<div class="mod_sear_list" > <h3 id="4758" class="choice_item"><span>'+name+'</span>：</h3>';
-                        res3+='<ul class="mod_category_item  ui-sortable">';
-                        res3+='<li id="all_4758" class="li_item leaf_item all_item  selected" categorylevel="3" parentid="4758"><a id="aa" href="javascript:void()" class="">全部</a></li>';
-                        $.each(item.childrens, function(j, item) {
-                            var name = item.name;
-                            res3+=' <li id="4759" class=" li_item leaf_item" > <a id="a_4759" href="javascript:void()">'+name+'</a></li>';
-                        });
-                        res3+= '</ul></div>';
-                    });
-                    $("#leaf_category").html(res3);
+                    showNav3(0);
+
              }
         });
+
+          function  showNav2(index){
+            var res2 = "";
+            $.each(data.result[index].childrens, function(i, item) {
+                var name = item.name;
+                var sortId = item.sortId;
+                var selectClass = "";
+                if(i==0){
+                    selectClass = " selected";
+                }
+                res2 +="<li id=id class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
+            });
+            $("#no_leaf_item").html(res2);
+        }
+
+        function  showNav3(index) {
+            var res3 = "";
+            $.each(data.result[0].childrens[0].childrens, function(i, item) {
+                var name = item.name;
+                var sortId = item.sortId;
+                var selectClass = "";
+                res3 +='<div class="mod_sear_list" > <h3 id="4758" class="choice_item"><span>'+name+'</span>：</h3>';
+                res3+='<ul class="mod_category_item  ui-sortable">';
+                res3+='<li id="all_4758" class="li_item leaf_item all_item  selected" categorylevel="3" parentid="4758">' +
+                    '<a id="aa" href="javascript:void()" class="">全部</a></li>';
+                $.each(item.childrens, function(j, item) {
+                    var name = item.name;
+                    res3+=' <li id="4759" class=" li_item leaf_item" > <a id="a_4759" href="javascript:void()">'+name+'</a></li>';
+                });
+                res3+= '</ul></div>';
+            });
+            $("#leaf_category").html(res3);
+        }
     </script>
 
 </head>
