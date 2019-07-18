@@ -138,6 +138,19 @@
              }
         });
 
+            $(".openBtn").live("click",function(evt){
+                if( $(this).find("em").text()=="更多"){
+                    $(this).parent().css("height","auto");
+                    $.cookie($(this).parent().attr("id"), "auto");
+                    $(this).find("em").text("收起");
+                    $(this).find("i").css("background-position", "0 -10px")
+                }else{
+                    $(this).parent().css("height","29px");
+                    $.cookie($(this).parent().attr("id"), "29px");
+                    $(this).find("em").text("更多");
+                    $(this).find("i").css("background-position", "-19px -10px")
+                }
+            })
 
         //点击栏目
         $(".li_item").live("click",function(evt){
@@ -159,7 +172,7 @@
                 //二级栏目
                 if($(this).parent().hasClass("no_leaf_item")){
                     var rootId = parseInt($(".navbar-ul").find(".selected").attr("id"));
-                    var id = parseInt($(this).attr("id"));
+                    var id = parseInt($.trim($(this).attr("id")));
                     console.log(rootId+"_"+id);
                     var index ;
                     var subIndex ;
@@ -177,6 +190,9 @@
                     showNav3(index,subIndex);
                 }
                 showPic();
+                if( $(this).parent().children().length>15){
+                    //location.hash="piclist"; //解决栏目太多看不到图片切换
+                }
         });
 
 
@@ -184,17 +200,25 @@
         });
           function  showNav2(index){
             var res2 = "";
+            var len = 0;
             $.each(nav[index].childrens, function(i, item) {
                 var id = item.id;
                 var name = item.name;
-                var sortId = item.sortId;
+                len +=name.length;
+                var brandFlag = item.brandFlag;
                 var selectClass = "";
                 if(i==0){
                     selectClass = " selected";
                 }
-                res2 +="<li id="+id+" class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
+                res2 +='<li brandFlag="'+brandFlag+'" id=\"'+id+'\" class="li_item  noLeaf' +selectClass+'">  <a href=\"#\">' + name+'</a></li>';
             });
             $("#no_leaf_item").html(res2);
+            if(len>40){
+                $("#no_leaf_item +.openBtn").show();
+            }else{
+                $("#no_leaf_item +.openBtn").hide();
+            }
+
         }
 
         function  showNav3(index,subIndex) {
@@ -208,12 +232,20 @@
                 res3+='<ul class="mod_category_item  ui-sortable">';
                 res3+='<li id="all_4758" class="li_item leaf_item all_item  selected" categorylevel="3" parentid="4758">' +
                     '<a id="aa" href="javascript:void()" class="">全部</a></li>';
+                var len=0;
                 $.each(item.childrens, function(j, item) {
                     var id = item.id;
                     var name = item.name;
-                    res3+=' <li id='+id+' class=" li_item leaf_item" > <a id="a_4759" href="javascript:void()">'+name+'</a></li>';
+                    len += name.length;
+                    res3+=' <li id='+id+' class=" li_item leaf_item"> <a id="a_4759" href="javascript:void()">'+name+'</a></li>';
                 });
-                res3+= '</ul></div>';
+                var display = "none";
+                if(len>40){
+                    display = "block";
+                }
+                res3+= '</ul><div class="openBtn" style="display:'+display+ '">'+
+                    '                            <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>\n' +
+                    '                        </div></div>';
             });
             $("#leaf_category").html(res3);
         }
@@ -264,6 +296,7 @@
                         +' </a></div></li>';
                     });
                     $(".site-piclist").html(res);
+
                 }
             });
 
@@ -300,6 +333,9 @@
                 <ul class="mod_category_item ui-sortable no_leaf_item" id="no_leaf_item">
 
                 </ul>
+                <div class="openBtn" style="display: none;">
+                    <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
+                </div>
             </div>
             <div id="leaf_category" class="ui-sortable">
                 <!--三级栏目-->
