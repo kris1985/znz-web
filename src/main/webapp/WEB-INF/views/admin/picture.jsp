@@ -97,53 +97,76 @@
     </style>
     <script>
         var basePath = getContextPath();
-        var nav ;
+        var  nav ;
+        $(function(){
             $.ajax({
                 type:'post',
                 url:basePath+"/categorys",
                 contentType :'application/json;charset=utf-8',
-                data:'{"token":"8f837a356ef43988d7fc7db4b63f53d3"}',
+                data:'{"token":"64622566a6f61f6daa29e48bf444ec5a"}',
                 success:function(data){
-                    console.log(data.result);
+                    nav = data.result;
+                    console.log("---"+data.result);
+                    console.log("-1--"+data.result[0].childrens);
+                    console.log("-2--"+nav[0].childrens);
                 //循环获取数据
                     var res = "";
-                    $.each(data.result, function(i, item) {
-                        nav = item;
-                       // var id = item.id;
+                    $.each(nav, function(i, item) {
+                        var id = item.id;
                         var name = item.name;
                         var sortId = item.sortId;
                         var selectClass = "";
                         if(i==0){
                             selectClass = " selected";
                         }
-                        res +="<li id=id class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
+                        res +="<li id="+id+" class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
                     });
                     $(".navbar-ul").html(res);
                     //二级栏目
                     showNav2(0);
                     //三级栏目
                     showNav3(0);
-
              }
         });
 
+
+            $(".li_item").live("click",function(evt){
+                if($(this).parent().hasClass("navbar-ul")){
+                    var id = parseInt($(this).attr("id"));
+                    $.each(nav, function(i, item) {
+                        if(item.id == id){
+                            showNav2(i);
+                            showNav3(i);
+                        }
+                    });
+                }
+                if ($(this).hasClass("selected")) {
+                    return;
+                }else {
+                    $(this).addClass("selected");
+                    $(this).siblings().removeClass("selected");
+                }
+            });
+        });
           function  showNav2(index){
             var res2 = "";
-            $.each(data.result[index].childrens, function(i, item) {
+            $.each(nav[index].childrens, function(i, item) {
+                var id = item.id;
                 var name = item.name;
                 var sortId = item.sortId;
                 var selectClass = "";
                 if(i==0){
                     selectClass = " selected";
                 }
-                res2 +="<li id=id class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
+                res2 +="<li id="+id+" class='li_item  noLeaf" +selectClass+"'>  <a href=\"#\">" + name+"</a></li>";
             });
             $("#no_leaf_item").html(res2);
         }
 
         function  showNav3(index) {
             var res3 = "";
-            $.each(data.result[0].childrens[0].childrens, function(i, item) {
+            $.each(nav[index].childrens[0].childrens, function(i, item) {
+                var id = item.id;
                 var name = item.name;
                 var sortId = item.sortId;
                 var selectClass = "";
@@ -152,8 +175,9 @@
                 res3+='<li id="all_4758" class="li_item leaf_item all_item  selected" categorylevel="3" parentid="4758">' +
                     '<a id="aa" href="javascript:void()" class="">全部</a></li>';
                 $.each(item.childrens, function(j, item) {
+                    var id = item.id;
                     var name = item.name;
-                    res3+=' <li id="4759" class=" li_item leaf_item" > <a id="a_4759" href="javascript:void()">'+name+'</a></li>';
+                    res3+=' <li id='+id+' class=" li_item leaf_item" > <a id="a_4759" href="javascript:void()">'+name+'</a></li>';
                 });
                 res3+= '</ul></div>';
             });
@@ -188,8 +212,7 @@
             <div class="mod_sear_list" id="mod_68">
                 <h3>目录：</h3>
                 <ul class="mod_category_item ui-sortable" id="no_leaf_item">
-                    <li id="1038" class="li_item selected noLeaf" ><a href="#">热门下载</a>
-                    </li>
+
                 </ul>
             </div>
             <div id="leaf_category" class="ui-sortable">
