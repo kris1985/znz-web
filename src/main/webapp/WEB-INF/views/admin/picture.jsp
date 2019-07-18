@@ -100,6 +100,15 @@
         var  nav ;
         var pics ;
         $(function(){
+            $("img.lazy").lazyload({
+                threshold : 600
+            }).removeClass("lazy");
+            $(document).ajaxStop(function(){
+                $("img.lazy").lazyload({
+                    threshold : 600
+                }).removeClass("lazy");
+            });
+
             $.ajax({
                 type:'post',
                 url:basePath+"/categorys",
@@ -130,49 +139,48 @@
         });
 
 
-            $(".li_item").live("click",function(evt){
-                if ($(this).hasClass("selected")) {
-                    return;
+        //点击栏目
+        $(".li_item").live("click",function(evt){
+            if ($(this).hasClass("selected")) {
+                return;
+            }
+                $(this).addClass("selected");
+                $(this).siblings().removeClass("selected");
+                //一级栏目
+                if($(this).parent().hasClass("navbar-ul")){
+                    var id = parseInt($(this).attr("id"));
+                    $.each(nav, function(i, item) {
+                        if(item.id == id){
+                            showNav2(i);
+                            showNav3(i,0);
+                        }
+                    });
                 }
-                    $(this).addClass("selected");
-                    $(this).siblings().removeClass("selected");
-                    //一级栏目
-                    if($(this).parent().hasClass("navbar-ul")){
-                        var id = parseInt($(this).attr("id"));
-                        $.each(nav, function(i, item) {
-                            if(item.id == id){
-                                showNav2(i);
-                                showNav3(i,0);
-                            }
-                        });
-                    }
-                    //二级栏目
-                    if($(this).parent().hasClass("no_leaf_item")){
-                        var rootId = parseInt($(".navbar-ul").find(".selected").attr("id"));
-                        var id = parseInt($(this).attr("id"));
-                        console.log(rootId+"_"+id);
-                        var index ;
-                        var subIndex ;
-                        $.each(nav, function(i, item) {
-                            if(item.id == rootId){
-                                index = i;
-                            }
-                        });
-                        $.each(nav[index].childrens, function(i, item) {
-                            if(item.id == id){
-                                subIndex = i;
-                            }
-                        });
-                        console.log(index+"_"+subIndex);
-                        showNav3(index,subIndex);
-                    }
-                    showPic();
-            });
+                //二级栏目
+                if($(this).parent().hasClass("no_leaf_item")){
+                    var rootId = parseInt($(".navbar-ul").find(".selected").attr("id"));
+                    var id = parseInt($(this).attr("id"));
+                    console.log(rootId+"_"+id);
+                    var index ;
+                    var subIndex ;
+                    $.each(nav, function(i, item) {
+                        if(item.id == rootId){
+                            index = i;
+                        }
+                    });
+                    $.each(nav[index].childrens, function(i, item) {
+                        if(item.id == id){
+                            subIndex = i;
+                        }
+                    });
+                    console.log(index+"_"+subIndex);
+                    showNav3(index,subIndex);
+                }
+                showPic();
+        });
 
-            //图片懒加载
-            $("img.lazy").lazyload({
-                threshold : 600
-            });
+
+
         });
           function  showNav2(index){
             var res2 = "";
@@ -237,7 +245,7 @@
                 data:'{"token":"64622566a6f61f6daa29e48bf444ec5a","data":{\n' +
                     '\t"categoryIds":\"'+selected+'\",\n"secondCategoryId":\"' +secondCategoryId+"\""+
                     ' ,   "currentPage":1,\n' +
-                    '    "pageSize" :20\n' +
+                    '    "pageSize" :120\n' +
                     '\t}}',
                 success:function(data){
                     //循环获取数据
@@ -252,13 +260,15 @@
                                 '<div class="site-piclist_pic" style="border: 2px solid white;">' +
                                     ' <a id="953551" path="" title="" href="javascript:void(0)" class="site-piclist_pic_link" attach="">' +
                                         '<img class="lazy" alt="" title="" style="border: 0px; display: inline;" src="/resources/img/grey.gif" width="384" height="288" ' +
-                                        'data-original="${ossPath}/'+filePath+'?x-oss-process=image/resize,m_pad,h_288,w_384">'
-                            + name+'</a></div></li>';
+                                        'data-original="${ossPath}/'+filePath+'?x-oss-process=image/resize,m_pad,h_288,w_384'+data.result.pictureProperty.waterMark+'">'
+                        +' </a></div></li>';
                     });
                     $(".site-piclist").html(res);
                 }
             });
+
         }
+
     </script>
 
 </head>
@@ -296,16 +306,7 @@
 
             </div>
         </div>
-      <div class="operation" style="position: relative">
-          <input type="button" id="userManagerBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理">
-          <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传">
-          <div style="position: absolute;right: 5px;top: 0;">
-              时间  从<input id="startTime" name="startTime" type="text" value="" onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})">
-              至<input id="endTime" name="endTime" type="text" value="" onclick="WdatePicker({startDate:'%y-%M-01 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})">
-              <input type="button" id="queryBtn" class="ui-state-default ui-corner-all ui-button" value="查询">
-              <input type="button" id="delBtn" class="ui-state-default ui-corner-all ui-button" value="删除">
-          </div>
-      </div>
+
       <div class="ad-wrapper clearfix">
           <div class="divide-green-h"></div>
       </div>
