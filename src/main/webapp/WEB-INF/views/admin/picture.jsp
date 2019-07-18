@@ -98,6 +98,7 @@
     <script>
         var basePath = getContextPath();
         var  nav ;
+        var pics ;
         $(function(){
             $.ajax({
                 type:'post',
@@ -106,9 +107,6 @@
                 data:'{"token":"64622566a6f61f6daa29e48bf444ec5a"}',
                 success:function(data){
                     nav = data.result;
-                    console.log("---"+data.result);
-                    console.log("-1--"+data.result[0].childrens);
-                    console.log("-2--"+nav[0].childrens);
                 //循环获取数据
                     var res = "";
                     $.each(nav, function(i, item) {
@@ -125,27 +123,55 @@
                     //二级栏目
                     showNav2(0);
                     //三级栏目
-                    showNav3(0);
+                    showNav3(0,0);
+                    //显示图片
+                    showPic();
              }
         });
 
 
             $(".li_item").live("click",function(evt){
-                if($(this).parent().hasClass("navbar-ul")){
-                    var id = parseInt($(this).attr("id"));
-                    $.each(nav, function(i, item) {
-                        if(item.id == id){
-                            showNav2(i);
-                            showNav3(i);
-                        }
-                    });
-                }
                 if ($(this).hasClass("selected")) {
                     return;
-                }else {
+                }
                     $(this).addClass("selected");
                     $(this).siblings().removeClass("selected");
-                }
+                    //一级栏目
+                    if($(this).parent().hasClass("navbar-ul")){
+                        var id = parseInt($(this).attr("id"));
+                        $.each(nav, function(i, item) {
+                            if(item.id == id){
+                                showNav2(i);
+                                showNav3(i,0);
+                            }
+                        });
+                    }
+                    //二级栏目
+                    if($(this).parent().hasClass("no_leaf_item")){
+                        var rootId = parseInt($(".navbar-ul").find(".selected").attr("id"));
+                        var id = parseInt($(this).attr("id"));
+                        console.log(rootId+"_"+id);
+                        var index ;
+                        var subIndex ;
+                        $.each(nav, function(i, item) {
+                            if(item.id == rootId){
+                                index = i;
+                            }
+                        });
+                        $.each(nav[index].childrens, function(i, item) {
+                            if(item.id == id){
+                                subIndex = i;
+                            }
+                        });
+                        console.log(index+"_"+subIndex);
+                        showNav3(index,subIndex);
+                    }
+                    showPic();
+            });
+
+            //图片懒加载
+            $("img.lazy").lazyload({
+                threshold : 600
             });
         });
           function  showNav2(index){
@@ -163,9 +189,9 @@
             $("#no_leaf_item").html(res2);
         }
 
-        function  showNav3(index) {
+        function  showNav3(index,subIndex) {
             var res3 = "";
-            $.each(nav[index].childrens[0].childrens, function(i, item) {
+            $.each(nav[index].childrens[subIndex].childrens, function(i, item) {
                 var id = item.id;
                 var name = item.name;
                 var sortId = item.sortId;
@@ -182,6 +208,56 @@
                 res3+= '</ul></div>';
             });
             $("#leaf_category").html(res3);
+        }
+
+        function getAllSelected() {
+            var selected = "";
+            $(".all_item").each(function (i) {
+                if(!$(this).hasClass("selected")){ //如果非全选，获取所有兄弟节点的id
+                    $.each($(this).parent().children().filter(".selected"), function (i, n) {
+                        id = $(this).attr("id");
+                        selected += id + ","
+                    });
+
+                }
+            });
+            if(selected!=""){
+                selected = selected.substring(0,selected.length-1);
+            }
+            return selected;
+        }
+
+        function  showPic() {
+       var selected = getAllSelected();
+       var secondCategoryId = $("#no_leaf_item").find(".selected").attr("id");
+            $.ajax({
+                type:'post',
+                url:basePath+"/pictures",
+                contentType :'application/json;charset=utf-8',
+                data:'{"token":"64622566a6f61f6daa29e48bf444ec5a","data":{\n' +
+                    '\t"categoryIds":\"'+selected+'\",\n"secondCategoryId":\"' +secondCategoryId+"\""+
+                    ' ,   "currentPage":1,\n' +
+                    '    "pageSize" :20\n' +
+                    '\t}}',
+                success:function(data){
+                    //循环获取数据
+                    var res = "";
+                    pics = data;
+                    console.log("data:"+data);
+                    $.each(data.result.pictures, function(i, item) {
+                        var id = item.id;
+                        var name = item.name;
+                        var filePath= item.filePath;
+                        res +='<li item="953551" id="pic_itme_953551" gid="">  ' +
+                                '<div class="site-piclist_pic" style="border: 2px solid white;">' +
+                                    ' <a id="953551" path="" title="" href="javascript:void(0)" class="site-piclist_pic_link" attach="">' +
+                                        '<img class="lazy" alt="" title="" style="border: 0px; display: inline;" src="/resources/img/grey.gif" width="384" height="288" ' +
+                                        'data-original="${ossPath}/'+filePath+'?x-oss-process=image/resize,m_pad,h_288,w_384">'
+                            + name+'</a></div></li>';
+                    });
+                    $(".site-piclist").html(res);
+                }
+            });
         }
     </script>
 
@@ -211,7 +287,7 @@
             <!--二级栏目-->
             <div class="mod_sear_list" id="mod_68">
                 <h3>目录：</h3>
-                <ul class="mod_category_item ui-sortable" id="no_leaf_item">
+                <ul class="mod_category_item ui-sortable no_leaf_item" id="no_leaf_item">
 
                 </ul>
             </div>
@@ -220,8 +296,26 @@
 
             </div>
         </div>
+      <div class="operation" style="position: relative">
+          <input type="button" id="userManagerBtn" class="ui-state-default ui-corner-all ui-button" value="用户管理">
+          <input type="button" id="uploadBtn" class="ui-state-default ui-corner-all ui-button" value="上传">
+          <div style="position: absolute;right: 5px;top: 0;">
+              时间  从<input id="startTime" name="startTime" type="text" value="" onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})">
+              至<input id="endTime" name="endTime" type="text" value="" onclick="WdatePicker({startDate:'%y-%M-01 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})">
+              <input type="button" id="queryBtn" class="ui-state-default ui-corner-all ui-button" value="查询">
+              <input type="button" id="delBtn" class="ui-state-default ui-corner-all ui-button" value="删除">
+          </div>
+      </div>
+      <div class="ad-wrapper clearfix">
+          <div class="divide-green-h"></div>
+      </div>
+      <a name="piclist"></a>
 
-    </div>
+      <div class="wrapper-piclist" style="    margin-left: -10px;">
+          <ul class="site-piclist">
+              <!--图片列表-->
+          </ul>
+      </div>
         <div  class="ad-wrapper clearfix">
             <div class="divide-green-h"></div>
         </div>
