@@ -173,6 +173,7 @@
                 if($(this).parent().hasClass("no_leaf_item")){
                     var rootId = parseInt($(".navbar-ul").find(".selected").attr("id"));
                     var id = parseInt($.trim($(this).attr("id")));
+                    var hasFlag = $(this).attr("brandFlag");
                     console.log(rootId+"_"+id);
                     var index ;
                     var subIndex ;
@@ -186,7 +187,11 @@
                             subIndex = i;
                         }
                     });
-                    console.log(index+"_"+subIndex);
+                    if(hasFlag=="true"){
+                        $(".BB").show();
+                    }else{
+                        $(".BB").hide();
+                    }
                     showNav3(index,subIndex);
                 }
                 showPic();
@@ -238,6 +243,7 @@
           function  showNav2(index){
             var res2 = "";
             var len = 0;
+            var hasFlag;
             $.each(nav[index].childrens, function(i, item) {
                 var id = item.id;
                 var name = item.name;
@@ -245,6 +251,7 @@
                 var brandFlag = item.brandFlag;
                 var selectClass = "";
                 if(i==0){
+                    hasFlag = brandFlag;
                     selectClass = " selected";
                 }
                 res2 +='<li brandFlag="'+brandFlag+'" id=\"'+id+'\" class="li_item  noLeaf' +selectClass+'">  <a href=\"#\">' + name+'</a></li>';
@@ -255,7 +262,11 @@
             }else{
                 $("#no_leaf_item +.openBtn").hide();
             }
-
+            if(hasFlag=="true"){
+                $(".BB").show();
+            }else{
+                $(".BB").hide();
+            }
         }
 
         function  showNav3(index,subIndex) {
@@ -374,7 +385,7 @@
                     <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
                 </div>
             </div>
-            <div class="BB" style="padding: 4px 0 4px 1px;height: 30px;">
+            <div class="BB" style="padding: 4px 0 4px 1px;height: 30px; display: none">
 
 
 
