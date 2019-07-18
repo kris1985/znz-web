@@ -195,7 +195,44 @@
                 }
         });
 
-
+            $("#searchTxtBtn").click(function(){
+                var ppid = parseInt($("#no_leaf_item").find(".selected").attr("id"));//选中的二级目录
+                $.get("${basePath}/admin/subCategory/brand/"+ppid,function(data){
+                    var singleSelect1 = $('#single-select-1').citySelect({
+                        dataJson: data,
+                        multiSelect: false,
+                        whole: true,
+                        shorthand: true,
+                        search: true,
+                        onInit: function () {
+                            console.log(this);
+                        },
+                        onTabsAfter: function (target) {
+                            console.log("1111111:"+target)
+                        },
+                        onCallerAfter: function (target, values) {
+                            //console.log("22222222:"+JSON.stringify(values));
+                            var brandId = values.id;
+                            var brandName = values.name;
+                            var selected = getAllSelected();
+                            $("#fourthSelectedId").val(selected);
+                            $("#brandId").val(brandId);
+                            $("#brandName").val(brandName);
+                            var url = "${basePath}/admin/subCategory/showCategory"
+                            $("#categoryForm").attr("action",url);
+                            $("#categoryForm").attr("target","_self");
+                            $("#categoryForm").submit();
+                        }
+                    });
+                    $('.city-info').show();
+                    $('.city-pavilion').show();
+                    // $('.city-list').show();
+                    $('.city-cont').show();
+                    $(this).hide();
+                    $('.input-search').click();
+                    $(".city-z dt").text("全部");
+                })
+            });
 
         });
           function  showNav2(index){
@@ -336,6 +373,25 @@
                 <div class="openBtn" style="display: none;">
                     <a class="openBtn-txt" href="javascript:;" j-delegate="action"><em class="vm-inline">更多</em><i class="site-icons ico-explain-b"></i></a>
                 </div>
+            </div>
+            <div class="BB" style="padding: 4px 0 4px 1px;height: 30px;">
+
+
+
+
+
+
+
+                <div class="CC" style="color: #999;font-size: 12px;POSITION: absolute;height: 30px;top:144px"><span>品牌</span>：<a id="brandAll" class="selected" style="
+        padding: 5px 4px 5px 7px;
+        border-radius: 1px;
+        display: inline-block;
+        width: 31px;
+        /* height: 20px; */
+        margin-left: 20px;
+        font-size: 14px; cursor: pointer;">全部</a> <span id="searchTxtBtn">搜索品牌</span></div>
+                <div style="LEFT: 126PX;" class="city-select mod_category_item ui-sortable" id="single-select-1"></div>
+
             </div>
             <div id="leaf_category" class="ui-sortable">
                 <!--三级栏目-->
