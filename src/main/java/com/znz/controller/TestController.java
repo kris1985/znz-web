@@ -23,7 +23,7 @@ public class TestController {
     @RequestMapping(value = "/test-thread", method = RequestMethod.GET)
     public @ResponseBody
     String  testThread(HttpServletRequest request) {
-        executorService.execute(()->{
+        /*executorService.execute(()->{
             for(int i=0;i<1000;i++){
                 threadLocal.set(addUser());
                 try {
@@ -32,7 +32,7 @@ public class TestController {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
         return "ok";
     }
