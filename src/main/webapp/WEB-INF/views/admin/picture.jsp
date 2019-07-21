@@ -53,7 +53,7 @@
             padding: 4px;
             background: url(../../resources/icon/icon_search.png) 62px 50% no-repeat;}
         #searchTxtBtn:hover{color: #699f00;}
-        .city-info{display: none;}
+
         .brand_ui{
             position: absolute;
             left: 330px;
@@ -91,9 +91,17 @@
             color: #fff;
             border-radius: 1px;
         }
+        .city-info{display: none;}
         /*
             .city-tabs{position: relative}
         */
+        .brand_item{padding: 5px 7px 5px 7px;
+            border-radius: 1px;
+            display: inline-block;
+            /* height: 20px; */
+            margin-left: 20px;
+            font-size: 14px;
+            cursor: pointer;}
     </style>
     <script>
         var basePath = getContextPath();
@@ -113,7 +121,7 @@
                 type:'post',
                 url:basePath+"/categorys",
                 contentType :'application/json;charset=utf-8',
-                data:'{"token":"64622566a6f61f6daa29e48bf444ec5a"}',
+                data:'{"token":"6910514dea127287198790ee76cbb3b1"}',
                 success:function(data){
                     nav = data.result;
                 //循环获取数据
@@ -134,7 +142,7 @@
                     //三级栏目
                     showNav3(0,0);
                     //显示图片
-                    showPic();
+                    showPic(null);
              }
         });
 
@@ -194,7 +202,7 @@
                     }
                     showNav3(index,subIndex);
                 }
-                showPic();
+                showPic(null);
                 if( $(this).parent().children().length>15){
                     //location.hash="piclist"; //解决栏目太多看不到图片切换
                 }
@@ -210,7 +218,7 @@
                         shorthand: true,
                         search: true,
                         onInit: function () {
-                            console.log(this);
+                            console.log("----"+this);
                         },
                         onTabsAfter: function (target) {
                             console.log("1111111:"+target)
@@ -219,17 +227,17 @@
                             //console.log("22222222:"+JSON.stringify(values));
                             var brandId = values.id;
                             var brandName = values.name;
-                            var selected = getAllSelected();
-                            $("#fourthSelectedId").val(selected);
-                            $("#brandId").val(brandId);
-                            $("#brandName").val(brandName);
-                            var url = "${basePath}/admin/subCategory/showCategory"
-                            $("#categoryForm").attr("action",url);
-                            $("#categoryForm").attr("target","_self");
-                            $("#categoryForm").submit();
+                            showPic(brandId);
+                            $("#brandAll").removeClass("selected");
+                            $('.city-info').hide();
+                            $('.city-pavilion').hide();
+                            // $('.city-list').show();
+                            $('.city-cont').hide();
+                            $("#brandSelected").show(brandName);
+                            $("#brandSelected").text(brandName);
                         }
                     });
-                    $('.city-info').show();
+                   $('.city-info').show();
                     $('.city-pavilion').show();
                     // $('.city-list').show();
                     $('.city-cont').show();
@@ -239,11 +247,20 @@
                 })
             });
 
+            $("#brandAll").click(function () {
+                $(".city-info span").attr("data-id","");
+                $(".city-info span").text("")
+               // $("#single-select-1").hide()
+                showPic(null);
+                $(this).addClass("selected");
+                $("#brandSelected").hide();
+            });
+
         });
           function  showNav2(index){
             var res2 = "";
             var len = 0;
-            var hasFlag;
+            var hasFlag="";
             $.each(nav[index].childrens, function(i, item) {
                 var id = item.id;
                 var name = item.name;
@@ -262,7 +279,8 @@
             }else{
                 $("#no_leaf_item +.openBtn").hide();
             }
-            if(hasFlag=="true"){
+            console.log("hasFlag:"+hasFlag)
+            if(hasFlag==true){
                 $(".BB").show();
             }else{
                 $(".BB").hide();
@@ -315,14 +333,22 @@
             return selected;
         }
 
-        function  showPic() {
-       var selected = getAllSelected();
-       var secondCategoryId = $("#no_leaf_item").find(".selected").attr("id");
+        function  showPic(brandId) {
+           var brandId = $(".city-info span").attr("data-id")
+           var selected = getAllSelected();
+           var secondCategoryId = $("#no_leaf_item").find(".selected").attr("id");
+           if(brandId!=null &&brandId!=undefined && brandId!="" ){
+               if(selected == ""){
+                   selected = brandId;
+               }else{
+                   selected = selected+","+brandId;
+               }
+             }
             $.ajax({
                 type:'post',
                 url:basePath+"/pictures",
                 contentType :'application/json;charset=utf-8',
-                data:'{"token":"64622566a6f61f6daa29e48bf444ec5a","data":{\n' +
+                data:'{"token":"6910514dea127287198790ee76cbb3b1","data":{\n' +
                     '\t"categoryIds":\"'+selected+'\",\n"secondCategoryId":\"' +secondCategoryId+"\""+
                     ' ,   "currentPage":1,\n' +
                     '    "pageSize" :120\n' +
@@ -332,6 +358,10 @@
                     var res = "";
                     pics = data;
                     console.log("data:"+data);
+                    if(data.result==null){
+                        $(".site-piclist").empty();
+                        return;
+                    }
                     $.each(data.result.pictures, function(i, item) {
                         var id = item.id;
                         var name = item.name;
@@ -350,6 +380,17 @@
 
         }
 
+        function closeSelect(){
+            $("#close_btn").click(function(){
+                $('.city-info').hide();
+                $('.city-pavilion').hide();
+                if($('.city-list').css("display")=="block"){
+                    $('.city-list').hide();
+                }
+                $("#searchTxtBtn").show();
+                $(".input-search").val("");
+            })
+        }
     </script>
 
 </head>
@@ -386,23 +427,13 @@
                 </div>
             </div>
             <div class="BB" style="padding: 4px 0 4px 1px;height: 30px; display: none">
-
-
-
-
-
-
-
-                <div class="CC" style="color: #999;font-size: 12px;POSITION: absolute;height: 30px;top:144px"><span>品牌</span>：<a id="brandAll" class="selected" style="
-        padding: 5px 4px 5px 7px;
-        border-radius: 1px;
-        display: inline-block;
-        width: 31px;
-        /* height: 20px; */
-        margin-left: 20px;
-        font-size: 14px; cursor: pointer;">全部</a> <span id="searchTxtBtn">搜索品牌</span></div>
+                <div class="CC" style="color: #999;font-size: 12px;POSITION: absolute;height: 30px;top:144px">
+                    <span>品牌</span>：
+                    <a id="brandAll" class="selected brand_item" >全部</a>
+                    <span id="searchTxtBtn">搜索品牌</span>
+                    <a id="brandSelected"  class="selected brand_item" style="display: none" ></a>
+                </div>
                 <div style="LEFT: 126PX;" class="city-select mod_category_item ui-sortable" id="single-select-1"></div>
-
             </div>
             <div id="leaf_category" class="ui-sortable">
                 <!--三级栏目-->
