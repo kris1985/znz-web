@@ -124,7 +124,7 @@ public class MobileController {
             if(StringUtils.isEmpty(baseRequest.getImei())){
                 //web 端
                 log.info("token:"+request.getSession().getId());
-                baseRequest.setToken(request.getSession().getId());
+                baseRequest.setToken(String.valueOf(request.getSession().getAttribute("uid")));
             }
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
@@ -192,7 +192,7 @@ public class MobileController {
             Device device = DeviceUtils.getCurrentDevice(request);
             if(StringUtils.isEmpty(baseRequest.getImei())){
                 //web 端
-                baseRequest.setToken(request.getSession().getId());
+                baseRequest.setToken(String.valueOf(request.getSession().getAttribute("uid")));
             }
             //checkSign(baseRequest);
             checkToken(baseRequest.getToken());

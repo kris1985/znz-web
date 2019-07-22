@@ -40,6 +40,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -131,7 +132,8 @@ public class LoginController {
             response.addCookie(cookie);
         }
        // MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
-
+        String uid = UUID.randomUUID().toString();
+        request.getSession().setAttribute("uid",uid);
         return  "redirect:"+Constants.INDEX_PAGE+"admin/picture";
 
     }
@@ -228,9 +230,11 @@ public class LoginController {
         if(islogin){
             user.setSessionId(request.getSession().getId());//如果已经登陆，覆盖之前的sessionId
         }*/
-        user.setToken(request.getSession().getId());
+        String uid = UUID.randomUUID().toString();
+        user.setToken(uid);
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
+        request.getSession().setAttribute("uid",uid);
         Cookie cookie = new Cookie("MAC","FDSGHJ3");
         response.addCookie(cookie);
         return  "redirect:/admin/picture";
