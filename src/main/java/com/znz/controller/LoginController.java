@@ -132,7 +132,7 @@ public class LoginController {
         }
        // MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
 
-        return  "redirect:"+Constants.INDEX_PAGE+"admin/subCategory/showCategory";
+        return  "redirect:"+Constants.INDEX_PAGE+"admin/picture";
 
     }
 
