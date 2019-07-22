@@ -139,9 +139,6 @@ public class MobileController {
             }
             List<SubCategory> categories = allcategories.stream().filter(s->ids.contains(s.getId())).collect(Collectors.toList());
             Set<Integer> brandIds =  subCategoryMapper.selectBrandCategoryIds();
-            brandIds.stream().forEach(s->{
-                log.info("brandId:{}",s);
-            });
             CategoryInfo categoryInfo ;
             for(SubCategory subCategory:categories){
                 categoryInfo = new CategoryInfo();

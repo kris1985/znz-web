@@ -109,7 +109,9 @@ public class LoginController {
         String watermarkParam = WaterMarkUtil.getWaterMark(user.getWatermark());
         request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
         user.setLastLoginTime(new Date());
-        user.setToken(request.getSession().getId());
+        String uid = UUID.randomUUID().toString();
+        request.getSession().setAttribute("uid",uid);
+        user.setToken(uid);
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         if(1==userLoginVO.getRemember()){
@@ -132,8 +134,6 @@ public class LoginController {
             response.addCookie(cookie);
         }
        // MySessionLister.setActiveSessions(MySessionLister.getActiveSessions() + 1);
-        String uid = UUID.randomUUID().toString();
-        request.getSession().setAttribute("uid",uid);
         return  "redirect:"+Constants.INDEX_PAGE+"admin/picture";
 
     }
@@ -232,9 +232,9 @@ public class LoginController {
         }*/
         String uid = UUID.randomUUID().toString();
         user.setToken(uid);
+        request.getSession().setAttribute("uid",uid);
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
-        request.getSession().setAttribute("uid",uid);
         Cookie cookie = new Cookie("MAC","FDSGHJ3");
         response.addCookie(cookie);
         return  "redirect:/admin/picture";
