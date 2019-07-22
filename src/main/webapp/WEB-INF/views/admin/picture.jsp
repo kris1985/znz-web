@@ -162,13 +162,16 @@
 
         //点击栏目
         $(".li_item").live("click",function(evt){
-            if ($(this).hasClass("selected")) {
-                return;
-            }
+                if ($(this).hasClass("selected")) {
+                    return;
+                }
                 $(this).addClass("selected");
                 $(this).siblings().removeClass("selected");
                 //一级栏目
                 if($(this).parent().hasClass("navbar-ul")){
+                    $(".city-info span").attr("data-id","");//切换栏目时清空品牌id
+                    $(".BB").hide();
+                    $("#brandSelected").hide();
                     var id = parseInt($(this).attr("id"));
                     $.each(nav, function(i, item) {
                         if(item.id == id){
@@ -179,6 +182,9 @@
                 }
                 //二级栏目
                 if($(this).parent().hasClass("no_leaf_item")){
+                    $(".city-info span").attr("data-id","");//切换栏目时清空品牌id
+                    $(".BB").hide();
+                    $("#brandSelected").hide();
                     var rootId = parseInt($(".navbar-ul").find(".selected").attr("id"));
                     var id = parseInt($.trim($(this).attr("id")));
                     var hasFlag = $(this).attr("brandFlag");
