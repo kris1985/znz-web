@@ -233,7 +233,7 @@ public class LoginController {
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         Cookie cookie = new Cookie("MAC","FDSGHJ3");
         response.addCookie(cookie);
-        return  "redirect:/admin/subCategory/showCategory";
+        return  "redirect:/admin/picture";
     }
 
 
