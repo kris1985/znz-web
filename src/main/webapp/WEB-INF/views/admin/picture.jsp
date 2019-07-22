@@ -51,7 +51,6 @@
                 type:'post',
                 url:basePath+"/categorys",
                 contentType :'application/json;charset=utf-8',
-                data:'{"token":"d745de2ca149ac5460262bcfb4528a18"}',
                 success:function(data){
                     nav = data.result;
                 //循环获取数据
@@ -312,7 +311,7 @@
                 type:'post',
                 url:basePath+"/pictures",
                 contentType :'application/json;charset=utf-8',
-                data:'{"token":"d745de2ca149ac5460262bcfb4528a18","data":{\n' +
+                data:'{"data":{\n' +
                     '\t"categoryIds":\"'+selected+'\",\n"secondCategoryId":\"' +secondCategoryId+"\""+
                     ' ,   "currentPage":'+currentPage+'\n,' +
                     '    "pageSize" :120\n' +
@@ -333,7 +332,6 @@
 
 
                     $.each(data.result.pictures, function(i, item) {
-                        var picText = "";
                         var id = item.readId;
                         var name = item.name;
                         var filePath= item.filePath;

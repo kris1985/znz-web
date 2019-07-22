@@ -115,12 +115,16 @@ public class MobileController {
     }
 
     @RequestMapping(value = "/categorys" , method= RequestMethod.POST)
-    public @ResponseBody CommonResponse<List<CategoryInfo>> category(@RequestBody BaseRequest baseRequest) {
+    public @ResponseBody CommonResponse<List<CategoryInfo>> category(HttpServletRequest request,@RequestBody BaseRequest baseRequest) {
         CommonResponse<List<CategoryInfo>> commonResponse = new CommonResponse();
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         try{
             //checkSign(baseRequest);
             //checkToken(baseRequest.getToken());
+            if(StringUtils.isEmpty(baseRequest.getImei())){
+                //web 端
+                baseRequest.setToken(request.getSession().getId());
+            }
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
             List<UserAuth> userAuths =  userAuthMapper.listByUserId(user.getUserId());
@@ -185,6 +189,10 @@ public class MobileController {
         CommonResponse<PictureInfo> commonResponse = new CommonResponse();
         try {
             Device device = DeviceUtils.getCurrentDevice(request);
+            if(StringUtils.isEmpty(baseRequest.getImei())){
+                //web 端
+                baseRequest.setToken(request.getSession().getId());
+            }
             //checkSign(baseRequest);
             checkToken(baseRequest.getToken());
             User user = getUserByToken(baseRequest);

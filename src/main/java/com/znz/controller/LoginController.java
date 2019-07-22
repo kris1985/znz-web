@@ -108,6 +108,7 @@ public class LoginController {
         String watermarkParam = WaterMarkUtil.getWaterMark(user.getWatermark());
         request.getSession().setAttribute(Constants.WATERMARK_PARAM,watermarkParam);
         user.setLastLoginTime(new Date());
+        user.setToken(request.getSession().getId());
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         if(1==userLoginVO.getRemember()){
@@ -227,6 +228,7 @@ public class LoginController {
         if(islogin){
             user.setSessionId(request.getSession().getId());//如果已经登陆，覆盖之前的sessionId
         }*/
+        user.setToken(request.getSession().getId());
         userMapper.updateByPrimaryKeySelective(user);
         request.getSession().setAttribute(Constants.USER_SESSION,userSession);
         Cookie cookie = new Cookie("MAC","FDSGHJ3");
