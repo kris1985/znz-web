@@ -122,9 +122,10 @@ public class MobileController {
             //checkSign(baseRequest);
             //checkToken(baseRequest.getToken());
             if(StringUtils.isEmpty(baseRequest.getImei())){
+                String uid = String.valueOf(request.getSession().getAttribute("uid"));
                 //web 端
-                log.info("token:"+request.getSession().getId());
-                baseRequest.setToken(String.valueOf(request.getSession().getAttribute("uid")));
+                log.info("token:"+uid);
+                baseRequest.setToken(uid);
             }
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
