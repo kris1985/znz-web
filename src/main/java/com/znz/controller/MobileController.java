@@ -90,7 +90,7 @@ public class MobileController {
     private PicRecommendMapper picRecommendMapper;
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate redisTemplate;
 
     @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
     public @ResponseBody CommonResponse<UserInfo> signIn(@RequestBody BaseRequest<SignInRequest> baseRequest) {
@@ -137,12 +137,15 @@ public class MobileController {
                 baseRequest.setToken(uid);
             }
             String redisKey = CATEGORY_KEY+baseRequest.getToken();
-            String redisValus = redisTemplate.opsForValue().get(redisKey);
-            if(!StringUtils.isEmpty(redisValus)){
-                log.info("load category from redis");
-                categoryInfos = JSON.parseArray(redisValus,CategoryInfo.class);
-                commonResponse.setResult(categoryInfos);
-                return commonResponse;
+            Object object = redisTemplate.opsForValue().get(redisKey);
+            if(object!=null ){
+                 String redisValus = (String)object;
+                 if(!StringUtils.isEmpty(redisValus)){
+                     log.info("load category from redis");
+                     categoryInfos = JSON.parseArray(redisValus,CategoryInfo.class);
+                     commonResponse.setResult(categoryInfos);
+                     return commonResponse;
+                 }
             }
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
