@@ -53,7 +53,14 @@
                 contentType :'application/json;charset=utf-8',
                 data:'{"token":"d745de2ca149ac5460262bcfb4528a18"}',
                 success:function(data){
-                   // if(data.errorCode)
+                    if(!data.success){
+                        if(data.errorCode=="1008"){
+                            alert(data.errorMsg);
+                            window.location.href="/";
+                        }else{
+                            alert(data.errorMsg);
+                        }
+                    }
                     nav = data.result;
                 //循环获取数据
                     var res = "";
@@ -331,14 +338,15 @@
                     $("#totalCount").val( data.result.totalCount);
                     $("#pageSize").val(data.result.pageSize);
                     var picType = data.result.pictureProperty.picType;
-
-
+                    var liStyle="";
+                    if(picType ==1){
+                        liStyle ="margin-bottom: 35px; height: 320px;"
+                    }
                     $.each(data.result.pictures, function(i, item) {
                         var id = item.readId;
                         var name = item.name;
                         var filePath= item.filePath;
-                        res +='<li item=""'+id+' id="pic_itme_'+id+'" style="margin-bottom: 35px;\n' +
-                            '                    height: 320px;">  ' +
+                        res +='<li item=""'+id+' id="pic_itme_'+id+'" style="' +liStyle+ '">' +
                                 '<div class="site-piclist_pic" style="border: 2px solid white;">' +
                                     ' <a id="'+id+'" path="" title="" href="javascript:void(0)" class="site-piclist_pic_link" attach="">' +
                                         '<img class="lazy"  title="'+name+'" style="border: 0px; display: inline;" src="/resources/img/grey.gif" width="384" height="288" ' +

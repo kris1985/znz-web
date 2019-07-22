@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -48,6 +49,8 @@ import com.znz.vo.SignInRequest;
 import com.znz.vo.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.map.HashedMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -68,6 +71,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MobileController {
 
     public static final String SALT = LoginController.EKY;
+    public static final String UID = "uid";
+    public static final String CATEGORY_KEY = "category_key:";
+
     @Resource
     private UserMapper userMapper;
     @Resource
@@ -82,6 +88,9 @@ public class MobileController {
     private CategoryService categoryService;
     @Resource
     private PicRecommendMapper picRecommendMapper;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
 
     @RequestMapping(value = "/signIn" , method= RequestMethod.POST)
     public @ResponseBody CommonResponse<UserInfo> signIn(@RequestBody BaseRequest<SignInRequest> baseRequest) {
@@ -122,10 +131,18 @@ public class MobileController {
             //checkSign(baseRequest);
             //checkToken(baseRequest.getToken());
             if(StringUtils.isEmpty(baseRequest.getImei())){
-                String uid = String.valueOf(request.getSession().getAttribute("uid"));
+                String uid = String.valueOf(request.getSession().getAttribute(UID));
                 //web 端
                 log.info("token:"+uid);
                 baseRequest.setToken(uid);
+            }
+            String redisKey = CATEGORY_KEY+baseRequest.getToken();
+            String redisValus = redisTemplate.opsForValue().get(redisKey);
+            if(!StringUtils.isEmpty(redisValus)){
+                log.info("load category from redis");
+                categoryInfos = JSON.parseArray(redisValus,CategoryInfo.class);
+                commonResponse.setResult(categoryInfos);
+                return commonResponse;
             }
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
@@ -156,6 +173,7 @@ public class MobileController {
                     }
                 }
                 categoryInfos.add(categoryInfo);
+                redisTemplate.opsForValue().set(redisKey,JSON.toJSONString(categoryInfos),30, TimeUnit.MINUTES);
             }
         }catch (ServiceException e){
             commonResponse.setErrorCode(e.getErrCode());
@@ -190,7 +208,7 @@ public class MobileController {
             Device device = DeviceUtils.getCurrentDevice(request);
             if(StringUtils.isEmpty(baseRequest.getImei())){
                 //web 端
-                baseRequest.setToken(String.valueOf(request.getSession().getAttribute("uid")));
+                baseRequest.setToken(String.valueOf(request.getSession().getAttribute(UID)));
             }
             //checkSign(baseRequest);
             checkToken(baseRequest.getToken());
