@@ -136,7 +136,7 @@ public class MobileController {
                 log.info("token:"+uid);
                 baseRequest.setToken(uid);
             }
-            String redisKey = CATEGORY_KEY+baseRequest.getToken();
+            /*String redisKey = CATEGORY_KEY+baseRequest.getToken();
             Object object = redisTemplate.opsForValue().get(redisKey);
             if(object!=null ){
                  String redisValus = (String)object;
@@ -146,7 +146,7 @@ public class MobileController {
                      commonResponse.setResult(categoryInfos);
                      return commonResponse;
                  }
-            }
+            }*/
             User user = getUserByToken(baseRequest);
             commonResponse.setResult(categoryInfos);
             List<UserAuth> userAuths =  userAuthMapper.listByUserId(user.getUserId());
@@ -176,7 +176,7 @@ public class MobileController {
                     }
                 }
                 categoryInfos.add(categoryInfo);
-                redisTemplate.opsForValue().set(redisKey,JSON.toJSONString(categoryInfos),30, TimeUnit.MINUTES);
+               // redisTemplate.opsForValue().set(redisKey,JSON.toJSONString(categoryInfos),30, TimeUnit.MINUTES);
             }
         }catch (ServiceException e){
             commonResponse.setErrorCode(e.getErrCode());
