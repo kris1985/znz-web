@@ -266,6 +266,7 @@ public class MobileController {
             for (Picture p : pictures) {
                 picture = new PictureInfo.Picture();
                 picture.setId(p.getGid());
+                picture.setReadId(p.getId());
                 picture.setClickTimes(p.getClickTimes());
                 picture.setDownloadTimes(p.getDownloadTimes());
                 picture.setName(p.getName().substring(0,p.getName().indexOf(".")));

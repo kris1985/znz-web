@@ -107,8 +107,9 @@
         var basePath = getContextPath();
         var  nav ;
         var pics ;
-        var totalPage =0;
-        var totalCount =0;
+        var gtotalPage =0;
+        var gtotalCount =0;
+        var gpageSize = 0;
         $(function(){
             $("img.lazy").lazyload({
                 threshold : 600
@@ -131,7 +132,6 @@
                     $.each(nav, function(i, item) {
                         var id = item.id;
                         var name = item.name;
-                        var sortId = item.sortId;
                         var selectClass = "";
                         if(i==0){
                             selectClass = " selected";
@@ -231,9 +231,6 @@
                     onTabsAfter: function (target) {
                     },
                     onCallerAfter: function (target, values) {
-                        //console.log("22222222:"+JSON.stringify(values));
-                        var brandId = values.id;
-                        var brandName = values.name;
                         showPic(1);
                         $("#brandAll").removeClass("selected");
                         $('.city-info').hide();
@@ -261,6 +258,27 @@
             showPic(1);
             $(this).addClass("selected");
             $("#brandSelected").hide();
+        });
+
+        //点击图片看大图
+         $(".site-piclist_pic a").live("click",function(evt){
+            var selectedImg = $(this).attr("id");
+            var ids="";
+            $(".site-piclist_pic a").each(function (i) {
+                ids=ids+$(this).attr("id")+",";
+            });
+            $("#selectedId").val(selectedImg);
+            $("#picIds").val(ids);
+            var selected = getAllSelected();
+            $("#fourthSelectedId").val(selected);
+            var secondSelectedId = parseInt($("#no_leaf_item").find(".selected").attr("id"));
+            $("#secondSelectedId").val(secondSelectedId);
+            var currentPage = $("#cpage").attr("data-value");
+             $("#currentPage").val(currentPage);
+            var url = "${basePath}/admin/file/listImg"
+            $("#categoryForm").attr("action",url);
+            $("#categoryForm").attr("target","_blank");
+            $("#categoryForm").submit();
         });
 
 
@@ -332,11 +350,18 @@
                         id = $(this).attr("id");
                         selected += id + ","
                     });
-
                 }
             });
             if(selected!=""){
                 selected = selected.substring(0,selected.length-1);
+            }
+            var brandId = $(".city-info span").attr("data-id");
+            if(brandId!=null &&brandId!=undefined && brandId!="" ){
+                if(selected == ""){
+                    selected = brandId;
+                }else{
+                    selected = selected+","+brandId;
+                }
             }
             return selected;
         }
@@ -345,16 +370,8 @@
            if(currentPage == null || currentPage==""){
                currentPage = 1;
            }
-           var brandId = $(".city-info span").attr("data-id")
            var selected = getAllSelected();
            var secondCategoryId = $("#no_leaf_item").find(".selected").attr("id");
-           if(brandId!=null &&brandId!=undefined && brandId!="" ){
-               if(selected == ""){
-                   selected = brandId;
-               }else{
-                   selected = selected+","+brandId;
-               }
-             }
             $.ajax({
                 type:'post',
                 url:basePath+"/pictures",
@@ -373,14 +390,16 @@
                         return;
                     }
                     var totalPage =  data.result.totalPage;
-                    var totalCount = data.result.totalCount;
+                    $("#totalPage").val( data.result.totalPage);
+                    $("#totalCount").val( data.result.totalCount);
+                    $("#pageSize").val(data.result.pageSize);
                     $.each(data.result.pictures, function(i, item) {
                         var id = item.id;
                         var name = item.name;
                         var filePath= item.filePath;
-                        res +='<li item="953551" id="pic_itme_953551" gid="">  ' +
+                        res +='<li item=""'+id+' id="pic_itme_'+id+'953551" gid="">  ' +
                                 '<div class="site-piclist_pic" style="border: 2px solid white;">' +
-                                    ' <a id="953551" path="" title="" href="javascript:void(0)" class="site-piclist_pic_link" attach="">' +
+                                    ' <a id="'+id+'" path="" title="" href="javascript:void(0)" class="site-piclist_pic_link" attach="">' +
                                         '<img class="lazy" alt="" title="" style="border: 0px; display: inline;" src="/resources/img/grey.gif" width="384" height="288" ' +
                                         'data-original="${ossPath}/'+filePath+'?x-oss-process=image/resize,m_pad,h_288,w_384'+data.result.pictureProperty.waterMark+'">'
                         +' </a></div></li>';
@@ -519,6 +538,19 @@
         2017 TYULAN.COM
     </p>
 </div>
+
+    <form id="categoryForm" method="POST">
+        <input type="hidden" id="secondSelectedId" name="secondSelectedId" value="">
+        <input type="hidden" id="fourthSelectedId" name="fourthSelectedId" value="">
+        <input type="hidden" id="currentPage" name = "currentPage" value="">
+        <input type="hidden" id="pageSize" name = "pageSize" value="120">
+        <input type="hidden" id="totalPage" name = "totalPage" value="">
+        <input type="hidden" id="totalCount" name="totalCount" value="">
+        <!--点击大图选择的图片id-->
+        <input type="hidden" name="selectedId" id="selectedId">
+        <!--当前页所有图片id-->
+        <input type="hidden" name="ids"id="picIds">
+    </form>
 <script type="text/javascript" src="${basePath}/resources/js/top.js"></script>
 </body>
 

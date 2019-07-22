@@ -20,6 +20,7 @@ public class PictureInfo {
 
     @Data
     public static class Picture{
+        //GID
         private String id;
         private String name;
         private String filePath;
@@ -31,6 +32,8 @@ public class PictureInfo {
         private Integer height;
         private Integer size;
         private List<String> attachs2;
+        //真实id
+        private Long readId;
     }
 
     @Data
