@@ -51,6 +51,7 @@
                 type:'post',
                 url:basePath+"/categorys",
                 contentType :'application/json;charset=utf-8',
+                data:'{"token":"d745de2ca149ac5460262bcfb4528a18"}',
                 success:function(data){
                     nav = data.result;
                 //循环获取数据

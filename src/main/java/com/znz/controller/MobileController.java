@@ -123,6 +123,7 @@ public class MobileController {
             //checkToken(baseRequest.getToken());
             if(StringUtils.isEmpty(baseRequest.getImei())){
                 //web 端
+                log.info("token:"+request.getSession().getId());
                 baseRequest.setToken(request.getSession().getId());
             }
             User user = getUserByToken(baseRequest);
