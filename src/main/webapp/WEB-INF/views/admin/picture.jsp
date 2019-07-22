@@ -394,7 +394,7 @@
                     $("#totalCount").val( data.result.totalCount);
                     $("#pageSize").val(data.result.pageSize);
                     $.each(data.result.pictures, function(i, item) {
-                        var id = item.id;
+                        var id = item.readId;
                         var name = item.name;
                         var filePath= item.filePath;
                         res +='<li item=""'+id+' id="pic_itme_'+id+'953551" gid="">  ' +
