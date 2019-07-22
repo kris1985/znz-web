@@ -107,6 +107,8 @@
         var basePath = getContextPath();
         var  nav ;
         var pics ;
+        var totalPage =0;
+        var totalCount =0;
         $(function(){
             $("img.lazy").lazyload({
                 threshold : 600
@@ -142,23 +144,23 @@
                     //三级栏目
                     showNav3(0,0);
                     //显示图片
-                    showPic(null);
+                    showPic(1);
              }
         });
 
-            $(".openBtn").live("click",function(evt){
-                if( $(this).find("em").text()=="更多"){
-                    $(this).parent().css("height","auto");
-                    $.cookie($(this).parent().attr("id"), "auto");
-                    $(this).find("em").text("收起");
-                    $(this).find("i").css("background-position", "0 -10px")
-                }else{
-                    $(this).parent().css("height","29px");
-                    $.cookie($(this).parent().attr("id"), "29px");
-                    $(this).find("em").text("更多");
-                    $(this).find("i").css("background-position", "-19px -10px")
-                }
-            })
+        $(".openBtn").live("click",function(evt){
+            if( $(this).find("em").text()=="更多"){
+                $(this).parent().css("height","auto");
+                $.cookie($(this).parent().attr("id"), "auto");
+                $(this).find("em").text("收起");
+                $(this).find("i").css("background-position", "0 -10px")
+            }else{
+                $(this).parent().css("height","29px");
+                $.cookie($(this).parent().attr("id"), "29px");
+                $(this).find("em").text("更多");
+                $(this).find("i").css("background-position", "-19px -10px")
+            }
+        });
 
         //点击栏目
         $(".li_item").live("click",function(evt){
@@ -208,61 +210,61 @@
                     }
                     showNav3(index,subIndex);
                 }
-                showPic(null);
+                showPic(1);
                 if( $(this).parent().children().length>15){
                     //location.hash="piclist"; //解决栏目太多看不到图片切换
                 }
         });
 
-            $("#searchTxtBtn").click(function(){
-                var ppid = parseInt($("#no_leaf_item").find(".selected").attr("id"));//选中的二级目录
-                $.get("${basePath}/admin/subCategory/brand/"+ppid,function(data){
-                    var singleSelect1 = $('#single-select-1').citySelect({
-                        dataJson: data,
-                        multiSelect: false,
-                        whole: true,
-                        shorthand: true,
-                        search: true,
-                        onInit: function () {
-                            console.log("----"+this);
-                        },
-                        onTabsAfter: function (target) {
-                            console.log("1111111:"+target)
-                        },
-                        onCallerAfter: function (target, values) {
-                            //console.log("22222222:"+JSON.stringify(values));
-                            var brandId = values.id;
-                            var brandName = values.name;
-                            showPic(brandId);
-                            $("#brandAll").removeClass("selected");
-                            $('.city-info').hide();
-                            $('.city-pavilion').hide();
-                            // $('.city-list').show();
-                            $('.city-cont').hide();
-                            $("#brandSelected").show(brandName);
-                            $("#brandSelected").text(brandName);
-                        }
-                    });
-                   $('.city-info').show();
-                    $('.city-pavilion').show();
-                    // $('.city-list').show();
-                    $('.city-cont').show();
-                    $(this).hide();
-                    $('.input-search').click();
-                    $(".city-z dt").text("全部");
-                })
-            });
-
-            $("#brandAll").click(function () {
-                $(".city-info span").attr("data-id","");
-                $(".city-info span").text("")
-               // $("#single-select-1").hide()
-                showPic(null);
-                $(this).addClass("selected");
-                $("#brandSelected").hide();
-            });
-
+        //品牌搜索
+        $("#searchTxtBtn").click(function(){
+            var ppid = parseInt($("#no_leaf_item").find(".selected").attr("id"));//选中的二级目录
+            $.get("${basePath}/admin/subCategory/brand/"+ppid,function(data){
+                var singleSelect1 = $('#single-select-1').citySelect({
+                    dataJson: data,
+                    multiSelect: false,
+                    whole: true,
+                    shorthand: true,
+                    search: true,
+                    onInit: function () {
+                    },
+                    onTabsAfter: function (target) {
+                    },
+                    onCallerAfter: function (target, values) {
+                        //console.log("22222222:"+JSON.stringify(values));
+                        var brandId = values.id;
+                        var brandName = values.name;
+                        showPic(1);
+                        $("#brandAll").removeClass("selected");
+                        $('.city-info').hide();
+                        $('.city-pavilion').hide();
+                        // $('.city-list').show();
+                        $('.city-cont').hide();
+                        $("#brandSelected").show(brandName);
+                        $("#brandSelected").text(brandName);
+                    }
+                });
+               $('.city-info').show();
+                $('.city-pavilion').show();
+                // $('.city-list').show();
+                $('.city-cont').show();
+                $(this).hide();
+                $('.input-search').click();
+                $(".city-z dt").text("全部");
+            })
         });
+        //品牌全部
+        $("#brandAll").click(function () {
+            $(".city-info span").attr("data-id","");
+            $(".city-info span").text("")
+           // $("#single-select-1").hide()
+            showPic(1);
+            $(this).addClass("selected");
+            $("#brandSelected").hide();
+        });
+
+
+    });
           function  showNav2(index){
             var res2 = "";
             var len = 0;
@@ -339,7 +341,10 @@
             return selected;
         }
 
-        function  showPic(brandId) {
+        function  showPic(currentPage) {
+           if(currentPage == null || currentPage==""){
+               currentPage = 1;
+           }
            var brandId = $(".city-info span").attr("data-id")
            var selected = getAllSelected();
            var secondCategoryId = $("#no_leaf_item").find(".selected").attr("id");
@@ -356,11 +361,10 @@
                 contentType :'application/json;charset=utf-8',
                 data:'{"token":"6910514dea127287198790ee76cbb3b1","data":{\n' +
                     '\t"categoryIds":\"'+selected+'\",\n"secondCategoryId":\"' +secondCategoryId+"\""+
-                    ' ,   "currentPage":1,\n' +
+                    ' ,   "currentPage":'+currentPage+'\n,' +
                     '    "pageSize" :120\n' +
                     '\t}}',
                 success:function(data){
-                    //循环获取数据
                     var res = "";
                     pics = data;
                     console.log("data:"+data);
@@ -368,6 +372,8 @@
                         $(".site-piclist").empty();
                         return;
                     }
+                    var totalPage =  data.result.totalPage;
+                    var totalCount = data.result.totalCount;
                     $.each(data.result.pictures, function(i, item) {
                         var id = item.id;
                         var name = item.name;
@@ -380,7 +386,36 @@
                         +' </a></div></li>';
                     });
                     $(".site-piclist").html(res);
-
+                   /* var cpage =  $("#cpage").attr("data-value");
+                    if(cpage==undefined || cpage==null || cpage=="" ){
+                        cpage = 1;
+                    }*/
+                    //分页
+                    var  currentPage = parseInt($("#cpage").attr("data-value"));
+                    var if_firstime = true;
+                    $('#pagination1').jqPaginator({
+                        //pageCount为查询结果数量经过计算后的总页数
+                        totalPages: totalPage,
+                        visiblePages: 10,
+                        currentPage: currentPage,
+                        first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+                        prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
+                        next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
+                        last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
+                        page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+                        onPageChange: function (currentPage) {
+                            if(if_firstime){
+                                if_firstime = false;
+                                return;
+                            }else  {
+                                console.log("currentPage:"+currentPage);
+                                $("#cpage").attr("data-value",currentPage);
+                                showPic(currentPage);
+                                if_firstime = true;
+                            }
+                        }
+                    });
+                    console.log("cpage:"+cpage);
                 }
             });
 
@@ -464,6 +499,7 @@
         <div class="mod-page">
             <ul class="pagination" id="pagination1"></ul>
         </div>
+      <div style="display: none" id ="cpage"  data-value="1"></div>
         <div id="scrollTop" >
             <div class="level-2"></div>
             <div class="level-3"></div>
