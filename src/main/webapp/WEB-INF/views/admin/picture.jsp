@@ -28,80 +28,7 @@
     <script type="text/javascript" src="${basePath}/resources/js/newcitydata.js"></script>
     <script type="text/javascript" src="${basePath}/resources/js/citySelect-1.0.3.js"></script>
     <style>
-        .BB +div {border-top: 1px dotted #d5d5d5}
-        .close_btn{position: absolute;right:20px;top:0px}
-        .close_btn a {
-            border-bottom: 1px solid transparent;
-            font-size: 14px;
-            color: #666;
-            padding: 0 6px;
-            height: 36px;
-            line-height: 36px;
-            text-align: center;
-            position: relative;
-            bottom: -1px;
-            -moz-transition: all 1s;
-            -o-transition: all 1s;
-            -webkit-transition: all 1s;
-            transition: all 1s;
-        }
-        #searchTxtBtn{width: 90px;
-            cursor: pointer;
-            display: inline-block;
-            margin-left: 20px;
-            font-size: 14px;
-            padding: 4px;
-            background: url(../../resources/icon/icon_search.png) 62px 50% no-repeat;}
-        #searchTxtBtn:hover{color: #699f00;}
 
-        .brand_ui{
-            position: absolute;
-            left: 330px;
-            top: 145px;
-            word-wrap: break-word;
-            width: 100%;}
-        .brand_ui li {
-            white-space: nowrap;
-            float: left;
-            display: inline;
-            margin: 0 20px 6px 0;
-            line-height: 22px;
-            font-size: 12px;
-        }
-        .brand_ui .selected a {
-            background: #699f00;
-            padding: 1px 7px 2px;
-            color: #fff;
-            border-radius: 1px;
-        }
-        .CC  .selected a {
-            background: #699f00;
-            padding: 1px 7px 2px;
-            color: #fff;
-            border-radius: 1px;
-        }
-        .brand_ui a {
-            display: inline-block;
-            padding: 1px 7px 2px;
-            font-size: 14px;
-        }
-        .brand_ui .selected a {
-            background: #699f00;
-            padding: 1px 7px 2px;
-            color: #fff;
-            border-radius: 1px;
-        }
-        .city-info{display: none;}
-        /*
-            .city-tabs{position: relative}
-        */
-        .brand_item{padding: 5px 7px 5px 7px;
-            border-radius: 1px;
-            display: inline-block;
-            /* height: 20px; */
-            margin-left: 20px;
-            font-size: 14px;
-            cursor: pointer;}
     </style>
     <script>
         var basePath = getContextPath();
@@ -124,7 +51,7 @@
                 type:'post',
                 url:basePath+"/categorys",
                 contentType :'application/json;charset=utf-8',
-                data:'{"token":"6910514dea127287198790ee76cbb3b1"}',
+                data:'{"token":"d745de2ca149ac5460262bcfb4528a18"}',
                 success:function(data){
                     nav = data.result;
                 //循环获取数据
@@ -167,6 +94,7 @@
                 if ($(this).hasClass("selected")) {
                     return;
                 }
+                $("#cpage").attr("data-value","1");//每次点击后页码从第一页开始
                 $(this).addClass("selected");
                 $(this).siblings().removeClass("selected");
                 //一级栏目
@@ -232,6 +160,7 @@
                     },
                     onCallerAfter: function (target, values) {
                         showPic(1);
+                        var brandName = values.name;
                         $("#brandAll").removeClass("selected");
                         $('.city-info').hide();
                         $('.city-pavilion').hide();
@@ -275,14 +204,21 @@
             $("#secondSelectedId").val(secondSelectedId);
             var currentPage = $("#cpage").attr("data-value");
              $("#currentPage").val(currentPage);
-            var url = "${basePath}/admin/file/listImg"
+            var url = "${basePath}/admin/file/listImg";
             $("#categoryForm").attr("action",url);
             $("#categoryForm").attr("target","_blank");
             $("#categoryForm").submit();
         });
 
 
-    });
+        $('.site-piclist_pic').live('hover',function(event){
+            if(event.type=='mouseenter'){
+                $(this).css("border","2px solid #699f00");
+            }else{
+                $(this).css("border","2px solid white");
+            }
+        });
+ });
           function  showNav2(index){
             var res2 = "";
             var len = 0;
@@ -376,7 +312,7 @@
                 type:'post',
                 url:basePath+"/pictures",
                 contentType :'application/json;charset=utf-8',
-                data:'{"token":"6910514dea127287198790ee76cbb3b1","data":{\n' +
+                data:'{"token":"d745de2ca149ac5460262bcfb4528a18","data":{\n' +
                     '\t"categoryIds":\"'+selected+'\",\n"secondCategoryId":\"' +secondCategoryId+"\""+
                     ' ,   "currentPage":'+currentPage+'\n,' +
                     '    "pageSize" :120\n' +
@@ -390,19 +326,30 @@
                         return;
                     }
                     var totalPage =  data.result.totalPage;
-                    $("#totalPage").val( data.result.totalPage);
+                    $("#totalPage").val( data.result.totalPage);//用于查看大图时传递参数
                     $("#totalCount").val( data.result.totalCount);
                     $("#pageSize").val(data.result.pageSize);
+                    var picType = data.result.pictureProperty.picType;
+
+
                     $.each(data.result.pictures, function(i, item) {
+                        var picText = "";
                         var id = item.readId;
                         var name = item.name;
                         var filePath= item.filePath;
-                        res +='<li item=""'+id+' id="pic_itme_'+id+'953551" gid="">  ' +
+                        res +='<li item=""'+id+' id="pic_itme_'+id+'" style="margin-bottom: 35px;\n' +
+                            '                    height: 320px;">  ' +
                                 '<div class="site-piclist_pic" style="border: 2px solid white;">' +
                                     ' <a id="'+id+'" path="" title="" href="javascript:void(0)" class="site-piclist_pic_link" attach="">' +
-                                        '<img class="lazy" alt="" title="" style="border: 0px; display: inline;" src="/resources/img/grey.gif" width="384" height="288" ' +
+                                        '<img class="lazy"  title="'+name+'" style="border: 0px; display: inline;" src="/resources/img/grey.gif" width="384" height="288" ' +
                                         'data-original="${ossPath}/'+filePath+'?x-oss-process=image/resize,m_pad,h_288,w_384'+data.result.pictureProperty.waterMark+'">'
-                        +' </a></div></li>';
+                        +' </a>';
+                        if(picType ==1){
+                            //书封面增加文字说明
+                            res+='<div class="picTxt">'+name.split("_")[1]+'</div>';
+                            res+=' <div class="picTxt" style="padding: 3px 3px 3px 5px;" gid="'+id+'">'+name.split("_")[0]+'</div>';
+                        }
+                        res+='</div></li>';
                     });
                     $(".site-piclist").html(res);
                    /* var cpage =  $("#cpage").attr("data-value");
@@ -434,10 +381,8 @@
                             }
                         }
                     });
-                    console.log("cpage:"+cpage);
                 }
             });
-
         }
 
         function closeSelect(){

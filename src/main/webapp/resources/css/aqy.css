@@ -405,3 +405,78 @@ div:after, ul:after, dl:after {
     color: white;
 }
 
+.BB +div {border-top: 1px dotted #d5d5d5}
+.close_btn{position: absolute;right:20px;top:0px}
+.close_btn a {
+    border-bottom: 1px solid transparent;
+    font-size: 14px;
+    color: #666;
+    padding: 0 6px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    position: relative;
+    bottom: -1px;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+}
+#searchTxtBtn{width: 70px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 14px;
+    padding: 4px;
+    background: url(../../resources/icon/icon_search.png) 62px 50% no-repeat;}
+#searchTxtBtn:hover{color: #699f00;}
+
+.brand_ui{
+    position: absolute;
+    left: 330px;
+    top: 145px;
+    word-wrap: break-word;
+    width: 100%;}
+.brand_ui li {
+    white-space: nowrap;
+    float: left;
+    display: inline;
+    margin: 0 20px 6px 0;
+    line-height: 22px;
+    font-size: 12px;
+}
+.brand_ui .selected a {
+    background: #699f00;
+    padding: 1px 7px 2px;
+    color: #fff;
+    border-radius: 1px;
+}
+.CC  .selected a {
+    background: #699f00;
+    padding: 1px 7px 2px;
+    color: #fff;
+    border-radius: 1px;
+}
+.brand_ui a {
+    display: inline-block;
+    padding: 1px 7px 2px;
+    font-size: 14px;
+}
+.brand_ui .selected a {
+    background: #699f00;
+    padding: 1px 7px 2px;
+    color: #fff;
+    border-radius: 1px;
+}
+.city-info{display: none;}
+/*
+    .city-tabs{position: relative}
+*/
+.brand_item{padding: 5px 7px 5px 7px;
+    border-radius: 1px;
+    display: inline-block;
+    /* height: 20px; */
+    margin-left: 20px;
+    font-size: 14px;
+    cursor: pointer;}
+.picTxt{padding: 5px 3px 5px 5px;color: #7a7b7b;font-size: 14px}
