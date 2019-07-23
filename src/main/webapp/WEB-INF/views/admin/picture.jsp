@@ -39,11 +39,11 @@
         var gpageSize = 0;
         $(function(){
             $("img.lazy").lazyload({
-                threshold : 600
+                threshold : 800
             }).removeClass("lazy");
             $(document).ajaxStop(function(){
                 $("img.lazy").lazyload({
-                    threshold : 600
+                    threshold : 800
                 }).removeClass("lazy");
             });
 
@@ -387,6 +387,8 @@
                                 showPic(currentPage);
                                 if_firstime = true;
                             }
+                           // $('html,body').animate({scrollTop:'0'},500);
+                            $('html,body').animate({scrollTop:$('#piclist').offset().top}, 800);
                         }
                     });
                 }
@@ -453,11 +455,18 @@
 
             </div>
         </div>
+      <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==3  or userSession.user.userType ==0}">
+          <div class="operation">
+              <input type="button" id="userManagerBtn"
+              class="ui-state-default ui-corner-all ui-button" value="跳转到老版本"
+                     onclick="javascript:window.open('/admin/subCategory/showCategory','_blank') ">
+           </div>
+      </c:if>
 
       <div class="ad-wrapper clearfix">
           <div class="divide-green-h"></div>
       </div>
-      <a name="piclist"></a>
+      <a name="piclist" id="piclist"></a>
 
       <div class="wrapper-piclist" style="    margin-left: -10px;">
           <ul class="site-piclist">
