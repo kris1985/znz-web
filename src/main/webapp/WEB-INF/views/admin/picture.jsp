@@ -372,23 +372,21 @@
                         totalPages: totalPage,
                         visiblePages: 10,
                         currentPage: currentPage,
-                        first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
-                        prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
-                        next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
-                        last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
-                        page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+                        prev: '<li class="prev"><a href="javascript:void(0);" style="width: 58px">上一页</a></li>',
+                        next: '<li class="next"><a href="javascript:void(0);" style="width: 58px">下一页</a></li>',
+                        page: '<li class="page"><a href="javascript:void(0);" >{{page}}</a></li>',
                         onPageChange: function (currentPage) {
                             if(if_firstime){
                                 if_firstime = false;
                                 return;
                             }else  {
-                                console.log("currentPage:"+currentPage);
                                 $("#cpage").attr("data-value",currentPage);
                                 showPic(currentPage);
                                 if_firstime = true;
                             }
                            // $('html,body').animate({scrollTop:'0'},500);
                             $('html,body').animate({scrollTop:$('#piclist').offset().top}, 800);
+                           // <li class="next"><a href="javascript:void(0);">共{{totalPages}}页</a> </li>
                         }
                     });
                 }

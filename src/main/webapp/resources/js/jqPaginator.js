@@ -233,8 +233,31 @@
             });
         };
 
-        self.init();
+        self.searchContent=function(){
+            var totalCount = $("#totalCount").val();
+            $('#pagination1').append($('<li class="next"><a href="javascript:void(0);" style="width:68px">共'+self.options.totalPages+'页 </a></li>'));
+            $('#pagination1').append($('<li class="next"><a href="javascript:void(0);" style="width:88px">共'+totalCount+'张</a></li>'));
+            $('#pagination1').append($('<li class="next"><a href="javascript:void(0);" style="width:160px;border: 0">到第' +
+                '<input type="text" style="  width: 34px; margin: 0px 5px;height: 18px;padding:2px;text-align: center " id="switchToPage" value="'+$("#cpage").attr("data-value")+'" >页 ' +
+                '<input type="button" value="确定" id="switchToPageBtn" style=" cursor: pointer; width: 50px;  height: 24px;margin-left:10px  "></a></li>'));
 
+            //self.$container.next().find('.input-search').val(self.options.currentPage);
+        };
+       self.searchBtn=function(){
+            $('#switchToPageBtn').live('click',function(){
+                var gotoPage = parseInt($('#switchToPage').val());
+                console.log("switchToPage:"+gotoPage);
+                if(gotoPage>self.options.totalPages){
+                    gotoPage = self.options.totalPages;
+                    $('#switchToPage').val(gotoPage);
+                }
+                self.switchPage(gotoPage);
+                self.options.onPageChange(gotoPage);
+            });
+        };
+        self.init();
+        self.searchContent();
+        self.searchBtn();
         return self.$container;
     };
 
