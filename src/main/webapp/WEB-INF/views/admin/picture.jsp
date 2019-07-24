@@ -343,6 +343,8 @@
                             return;
                         }
                     }
+                    $(".site-piclist").empty();
+                    //$('html,body').animate({scrollTop:$('#piclist').offset().top}, 0);
                     var totalPage =  data.result.totalPage;
                     $("#totalPage").val( data.result.totalPage);//用于查看大图时传递参数
                     $("#totalCount").val( data.result.totalCount);
@@ -369,6 +371,7 @@
                         }
                         res+='</div></li>';
                     });
+
                     $(".site-piclist").html(res);
                    /* var cpage =  $("#cpage").attr("data-value");
                     if(cpage==undefined || cpage==null || cpage=="" ){
@@ -395,7 +398,7 @@
                                 if_firstime = true;
                             }
                            // $('html,body').animate({scrollTop:'0'},500);
-                            $('html,body').animate({scrollTop:$('#piclist').offset().top}, 800);
+                            $('html,body').animate({scrollTop:$('#piclist').offset().top}, 0);
                            // <li class="next"><a href="javascript:void(0);">共{{totalPages}}页</a> </li>
                         }
                     });
@@ -485,9 +488,12 @@
             <div class="divide-green-h"></div>
         </div>
 
-        <div class="mod-page">
-            <ul class="pagination" id="pagination1"></ul>
-        </div>
+ <%--     <div class="mod-page" style="position: sticky;padding: 0;top:0;z-index: 999">
+          <ul class="pagination" id="pagination1" style="margin: 0"></ul>
+      </div>--%>
+      <div class="mod-page" >
+          <ul class="pagination" id="pagination1"></ul>
+      </div>
       <div style="display: none" id ="cpage"  data-value="1"></div>
         <div id="scrollTop" >
             <div class="level-2"></div>
