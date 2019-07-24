@@ -57,8 +57,9 @@
                         if(data.errorCode=="1008"){
                             alert(data.errorMsg);
                             window.location.href="/";
-                        }else{
+                        }else if(data.errorMsg!=null &&data.errorMsg!=""){
                             alert(data.errorMsg);
+                            return;
                         }
                     }
                     nav = data.result;
@@ -332,6 +333,15 @@
                     if(data.result==null){
                         $(".site-piclist").empty();
                         return;
+                    }
+                    if(!data.success){
+                        if(data.errorCode=="1008"){
+                            alert(data.errorMsg);
+                            window.location.href="/";
+                        }else if(data.errorMsg!=null &&data.errorMsg!=""){
+                            alert(data.errorMsg);
+                            return;
+                        }
                     }
                     var totalPage =  data.result.totalPage;
                     $("#totalPage").val( data.result.totalPage);//用于查看大图时传递参数

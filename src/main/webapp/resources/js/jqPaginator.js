@@ -247,9 +247,10 @@
             $('#switchToPageBtn').live('click',function(){
                 var gotoPage = parseInt($('#switchToPage').val());
                 console.log("switchToPage:"+gotoPage);
-                if(gotoPage>self.options.totalPages){
-                    gotoPage = self.options.totalPages;
-                    $('#switchToPage').val(gotoPage);
+                var totalPage = parseInt($('#totalPage').val());
+                if(gotoPage>totalPage){
+                   alert("不能超过最大页数");
+                   return;
                 }
                 self.switchPage(gotoPage);
                 self.options.onPageChange(gotoPage);
