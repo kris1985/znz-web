@@ -37,7 +37,8 @@
         var gtotalPage =0;
         var gtotalCount =0;
         var gpageSize = 0;
-        $(function(){
+        var jqPaginator;
+            $(function(){
             $("img.lazy").lazyload({
                 threshold : 800
             }).removeClass("lazy");
@@ -227,6 +228,7 @@
                 $(this).css("border","2px solid white");
             }
         });
+
  });
           function  showNav2(index){
             var res2 = "";
@@ -379,8 +381,9 @@
                     }*/
                     //分页
                     var  currentPage = parseInt($("#cpage").attr("data-value"));
+                    console.log("currentPage:"+currentPage)
                     var if_firstime = true;
-                    $('#pagination1').jqPaginator({
+                    jqPaginator =  $('#pagination1').jqPaginator({
                         //pageCount为查询结果数量经过计算后的总页数
                         totalPages: totalPage,
                         visiblePages: 10,
@@ -388,18 +391,15 @@
                         prev: '<li class="prev"><a href="javascript:void(0);" style="width: 58px">上一页</a></li>',
                         next: '<li class="next"><a href="javascript:void(0);" style="width: 58px">下一页</a></li>',
                         page: '<li class="page"><a href="javascript:void(0);" >{{page}}</a></li>',
-                        onPageChange: function (currentPage) {
-                            if(if_firstime){
-                                if_firstime = false;
+                        onPageChange: function (currentPage,type) {
+                            console.log("type:"+type);
+                            if(type=="init"){
                                 return;
                             }else  {
                                 $("#cpage").attr("data-value",currentPage);
                                 showPic(currentPage);
-                                if_firstime = true;
                             }
-                           // $('html,body').animate({scrollTop:'0'},500);
                             $('html,body').animate({scrollTop:$('#piclist').offset().top}, 0);
-                           // <li class="next"><a href="javascript:void(0);">共{{totalPages}}页</a> </li>
                         }
                     });
                 }

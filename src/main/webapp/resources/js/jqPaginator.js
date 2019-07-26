@@ -225,7 +225,6 @@
                 if ($el.hasClass(opts.disableClass) || $el.hasClass(opts.activeClass)) {
                     return;
                 }
-
                 var pageIndex = +$el.attr('jp-data');
                 if (self.fireEvent(pageIndex, 'change')) {
                     self.switchPage(pageIndex);
@@ -244,16 +243,19 @@
             //self.$container.next().find('.input-search').val(self.options.currentPage);
         };
        self.searchBtn=function(){
-            $('#switchToPageBtn').live('click',function(){
+            $('#switchToPageBtn').off();
+            $('#switchToPageBtn').on('click',function(){
                 var gotoPage = parseInt($('#switchToPage').val());
+               // alert(gotoPage);
                 console.log("switchToPage:"+gotoPage);
                 var totalPage = parseInt($('#totalPage').val());
                 if(gotoPage>totalPage){
                    alert("不能超过最大页数");
                    return;
                 }
-                self.switchPage(gotoPage);
-                self.options.onPageChange(gotoPage);
+                if (self.fireEvent(gotoPage, 'change')) {
+                    self.switchPage(gotoPage);
+                }
             });
         };
         self.init();
