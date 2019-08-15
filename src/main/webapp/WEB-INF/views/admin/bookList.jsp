@@ -161,6 +161,44 @@
                 $("#categoryForm").attr("target","_blank");
                 $("#categoryForm").submit();
             });
+
+            <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+
+
+            //上传附图 删除
+            $('.site-piclist li').contextMenu('menuPic', {
+                bindings: {
+                    'addAttach': function (t) {
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/file/toUploadAttach?id="+id+"&secondCategory=${secondSelectedId}";
+                        art.dialog.open(url,
+                            {
+                                "id": "2345",
+                                title: "上传文件",
+                                width: 500,
+                                height: 400,
+                                close: function () {
+                                }
+                            }
+                        );
+                    },
+                    'delete': function (t) {
+                        if(!confirm("确认要删除吗？")){
+                            return;
+                        }
+                        var id = $(t).attr("item");
+                        var url = "${basePath}/admin/file/delete?pictureId="+id+"&secondSelectedId="+$("#secondSelectedId").val();
+                        $.get(url,function (data) {
+                            if(data.code ==0 ){
+                                $(t).hide();
+                            }else{
+                                alert(data.msg)
+                            }
+                        })
+                    }
+                }
+            });
+            </c:if>
         })
     </script>
 </head>
@@ -191,7 +229,14 @@
 </form>
 <div id="container" class="site-main">
 
-
+    <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">
+        <div class="contextMenu" id="menuPic" style="display: none">
+            <ul>
+                <li id="addAttach"> 上传附图</li>
+                <li id="delete"> 删除</li>
+            </ul>
+        </div>
+    </c:if>
 
     <div style="text-align: center;
     padding: 15px 0 0 0;
