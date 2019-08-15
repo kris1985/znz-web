@@ -99,7 +99,10 @@
             }
         });
 
-        //点击栏目
+        document.oncontextmenu = function(){
+            return false;
+        }
+                //点击栏目
         $(".li_item").live("click",function(evt){
                 if ($(this).hasClass("selected")) {
                     return;
