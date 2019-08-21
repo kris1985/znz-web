@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit"/>
     <link rel="icon" href="../../favicon.ico">
-    <title>指南针鞋讯-目录1</title>
+    <title>指南针鞋讯-目录</title>
     <%@ include file="../common/common.jsp" %>
 
     <link href="${basePath}/resources/css/jquery-ui-1.8.24.custom.css" rel="stylesheet"  />
@@ -126,7 +126,7 @@
                     }
                 }
             });
-            $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}张</a></li>')
+           // $("#pagination1").append('<li class="next"  ><a href="javascript:void(0);" style="width:68px">共${totalPage}页</a></li><li class="next"  ><a href="javascript:void(0);" style="width:88px">共${totalCount}张</a></li>')
             $("#switchToPage").val('${currentPage}');
             /* $("#switchToPageBtn").live("click",function(evt){
                 var currentPage = $.trim($("#switchToPage").val());

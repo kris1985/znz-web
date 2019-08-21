@@ -390,7 +390,7 @@ public class FileController {
         fileQueryVO.setRecommendId(recommendId);
         List<Picture> pictures;
         Picture picture1 = pictureMapper.selectByPrimaryKey(selectedId);
-        if(selectedId!=null && picture1.getPicType() ==1){
+        if(selectedId!=null && picture1.getBookId()!=null){
             fileQueryVO.setBookId(picture1.getBookId());
             pictures = pictureMapper.selectByBookIdPage(fileQueryVO);
         }
