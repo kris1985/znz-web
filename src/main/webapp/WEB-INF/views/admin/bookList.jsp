@@ -156,10 +156,11 @@
                 });
                 $("#selectedId").val(selectedImg);
                 $("#picIds").val(ids);
-                var url = "${basePath}/admin/file/listImg"
+                var url = "${basePath}/admin/file/listImg";
                 $("#categoryForm").attr("action",url);
                 $("#categoryForm").attr("target","_blank");
                 $("#categoryForm").submit();
+                $("#selectedId").val("${selectedId}");//解决点击大图后，点击下一页也跳进大图页
             });
 
             <c:if test="${userSession.user.userType ==2 or userSession.user.userType ==0 or userSession.user.userType ==3}">

@@ -326,7 +326,12 @@ public class FileController {
             if(picture.getId()!=null){
                 FileQueryVO fileQueryVO = new FileQueryVO();
                 fileQueryVO.setPage(pageParameter);
-                fileQueryVO.setBookId(picture.getId());
+                if(picture.getBookId()!=null){
+                    //解决鞋书列表页点击图片后selectedId 由书封面id变为图片id
+                    fileQueryVO.setBookId(picture.getBookId());
+                }else{
+                    fileQueryVO.setBookId(picture.getId());
+                }
                 pictures = pictureMapper.selectByBookIdPage(fileQueryVO);
             }
             totalPage = (pageParameter.getTotalCount() + pageParameter.getPageSize() - 1)
@@ -367,7 +372,12 @@ public class FileController {
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("recommendId", recommendId);
         model.addAttribute("totalIndex", totalIndex);
-        model.addAttribute("selectedId", selectedId);
+        if(returnUrl.equals("admin/bookList") && picture.getBookId()!=null){
+            ////解决鞋书页点击大图后，点击下一页也跳进大图页
+            model.addAttribute("selectedId", picture.getBookId());
+        }else{
+            model.addAttribute("selectedId", selectedId);
+        }
         model.addAttribute("ids", ids);
         return returnUrl;
     }
