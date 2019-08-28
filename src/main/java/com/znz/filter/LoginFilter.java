@@ -32,6 +32,7 @@ public  class LoginFilter implements Filter {
         }
         Object obj = session.getAttribute(Constants.USER_SESSION);
         if(obj == null){
+            chain.doFilter(request, response);
            // redirect(request2,response2,"8888");
         }else{
             UserSession userSession = (UserSession)session.getAttribute(Constants.USER_SESSION);
