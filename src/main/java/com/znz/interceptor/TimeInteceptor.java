@@ -44,10 +44,10 @@ public class TimeInteceptor implements HandlerInterceptor  {
             sb.append("URI       : ").append(request.getRequestURI()).append("  ip:").append(ip);
             log.info(sb.toString());
         }
-        if(request.getRequestURI().indexOf("/admin")!=-1 && request.getSession().getAttribute(Constants.USER_SESSION) == null){
+        /*if(request.getRequestURI().indexOf("/admin")!=-1 && request.getSession().getAttribute(Constants.USER_SESSION) == null){
             redirect(response,"8888");
             return false;
-        }
+        }*/
         return true;
     }
 
