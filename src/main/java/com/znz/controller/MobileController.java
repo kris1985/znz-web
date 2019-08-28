@@ -148,12 +148,18 @@ public class MobileController {
                  }
             }*/
             User user = getUserByToken(baseRequest);
-            commonResponse.setResult(categoryInfos);
-            List<UserAuth> userAuths =  userAuthMapper.listByUserId(user.getUserId());
-            if(CollectionUtils.isEmpty(userAuths)){
-                return commonResponse;
+            Set<Integer> ids ;
+            if(user!=null){
+                commonResponse.setResult(categoryInfos);
+                List<UserAuth> userAuths =  userAuthMapper.listByUserId(user.getUserId());
+                if(CollectionUtils.isEmpty(userAuths)){
+                    return commonResponse;
+                }
+                ids = userAuths.stream().map(s->Integer.parseInt(s.getAuthId())).collect(Collectors.toSet());
+            }else {
+                //招聘
+                ids = Sets.newHashSet(21347569);
             }
-            Set<Integer> ids = userAuths.stream().map(s->Integer.parseInt(s.getAuthId())).collect(Collectors.toSet());
             List<SubCategory> allcategories = subCategoryMapper.selectAll(null);
             if(CollectionUtils.isEmpty(allcategories)){
                 return commonResponse;

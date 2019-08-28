@@ -224,7 +224,10 @@ public class SubCategoryController {
         if(StringUtils.isNotBlank(brandName)){
             brandFlag = true;
         }else{
-            SubCategory subCategory = subCategoryMapper.selectSingleByPpid(Integer.parseInt(queryParam.getSecondSelectedId()));
+            SubCategory subCategory = null;
+            if(StringUtils.isNoneBlank(queryParam.getSecondSelectedId())){
+                subCategory = subCategoryMapper.selectSingleByPpid(Integer.parseInt(queryParam.getSecondSelectedId()));
+            }
             if(subCategory!=null){
                 brandFlag = true;
                 brandMap.put(key,subCategory.getName());
