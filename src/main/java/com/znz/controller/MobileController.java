@@ -374,9 +374,9 @@ public class MobileController {
 
     public User getUserByToken(BaseRequest baseRequest) {
         User user =  userMapper.selectByToken(baseRequest.getToken());
-        if(user==null){
+        /*if(user==null){
             throw new ServiceException("1008","登录超时,请重新登录");
-        }
+        }*/
         return user;
     }
 
